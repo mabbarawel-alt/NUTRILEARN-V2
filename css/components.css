@@ -1106,6 +1106,182 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
 
+/* ==========================================================================
+   4-SCREEN AUTH FLOW STYLES (Matching user screenshots)
+   ========================================================================== */
+
+.auth-display-title {
+  font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  font-size: 1.95rem;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.auth-display-subtitle {
+  font-size: 0.92rem;
+  color: #64748B;
+  margin: 0 0 1.35rem 0;
+  line-height: 1.4;
+}
+
+.auth-role-select-title {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #64748B;
+  margin-bottom: 1.15rem;
+}
+
+.auth-back-btn {
+  background: transparent;
+  border: none;
+  color: #475569;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: color 0.15s ease;
+}
+
+.auth-back-btn:hover {
+  color: #0E3D26;
+}
+
+/* Signing in as badge (Screenshot 4) */
+.signing-in-as-card {
+  background: #EFECE4;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.35rem;
+}
+
+.signing-in-as-icon {
+  font-size: 1.6rem;
+  line-height: 1;
+}
+
+.signing-in-as-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1.2;
+}
+
+.signing-in-as-sub {
+  font-size: 0.78rem;
+  color: #64748B;
+  font-weight: 500;
+}
+
+/* Demo accounts box (Screenshot 4) */
+.demo-accounts-card {
+  background: #EFECE4;
+  border-radius: 12px;
+  padding: 0.9rem 1.15rem;
+  margin-top: 1.35rem;
+  font-size: 0.84rem;
+  text-align: left;
+}
+
+.demo-accounts-heading {
+  font-weight: 700;
+  color: #1E293B;
+  margin-bottom: 0.45rem;
+  font-size: 0.86rem;
+}
+
+.demo-account-item {
+  color: #475569;
+  padding: 3px 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.demo-account-item:hover {
+  color: #0E3D26;
+  font-weight: 600;
+}
+
+.demo-role-label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.demo-role-val {
+  color: #64748B;
+}
+
+/* Button variants matching screenshots */
+.btn-auth-continue {
+  background: #8FA89B;
+  color: #FFFFFF;
+  font-size: 0.96rem;
+  font-weight: 600;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: block;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.btn-auth-continue:hover {
+  background: #7B9587;
+  transform: translateY(-1px);
+}
+
+.btn-auth-submit {
+  background: #2D6A4F;
+  color: #FFFFFF;
+  font-size: 0.96rem;
+  font-weight: 700;
+  padding: 0.85rem 1.25rem;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: block;
+  text-align: center;
+  margin-top: 0.75rem;
+}
+
+.btn-auth-submit:hover {
+  background: #1B4332;
+  transform: translateY(-1px);
+}
+
+.auth-footer-prompt {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #64748B;
+  margin-top: 1.25rem;
+}
+
+.auth-footer-prompt a {
+  color: #0D766E;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.auth-footer-prompt a:hover {
+  color: #0F514D;
+  text-decoration: underline;
+}
+
 .btn-signout {
   background: rgba(239, 68, 68, 0.15);
   color: #FECACA;

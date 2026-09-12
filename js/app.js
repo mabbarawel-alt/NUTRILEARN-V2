@@ -38,8 +38,7 @@ const NutriApp = {
     this.showStartupScreen();
   },
 
-  // Show Startup Authentication Gateway (Hides app workspace)
-  // Show Startup Authentication Gateway (Opens on Part 1: Portal Selection)
+  // Show Startup Authentication Gateway
   showStartupScreen() {
     const startupScreen = document.getElementById('startup-auth-screen');
     const workspace = document.getElementById('app-workspace');
@@ -50,203 +49,232 @@ const NutriApp = {
     if (workspace) {
       workspace.style.display = 'none';
     }
-    this.setStartupPhase(1);
+    this.goToRoleSelectSignIn();
   },
 
-  // Switch between Phase 1 (Portal Selection), Phase 2 (Sign In only), and Phase 3 (Sign Up only)
-  setStartupPhase(phase, actionOverride) {
-    const part1 = document.getElementById('startup-part-1');
-    const phaseSignin = document.getElementById('startup-phase-signin');
-    const phaseSignup = document.getElementById('startup-phase-signup');
-
-    if (phase === 1 || phase === 'role-select') {
-      if (part1) part1.style.display = 'block';
-      if (phaseSignin) phaseSignin.style.display = 'none';
-      if (phaseSignup) phaseSignup.style.display = 'none';
-      this.selectStartupRoleCard(this.currentAuthRole || 'parent');
-      this.portalAction = actionOverride || this.portalAction || 'signin';
-      this.currentAuthMode = this.portalAction;
-      this.setPortalAction(this.portalAction);
-    } else if (phase === 2 || phase === 'signin') {
-      if (part1) part1.style.display = 'none';
-      if (phaseSignin) phaseSignin.style.display = 'block';
-      if (phaseSignup) phaseSignup.style.display = 'none';
-      this.currentAuthMode = 'signin';
-      this.portalAction = 'signin';
-      this.updateStartupFormDisplay('signin');
-    } else if (phase === 3 || phase === 'signup') {
-      if (part1) part1.style.display = 'none';
-      if (phaseSignin) phaseSignin.style.display = 'none';
-      if (phaseSignup) phaseSignup.style.display = 'block';
-      this.currentAuthMode = 'signup';
-      this.portalAction = 'signup';
-      this.updateStartupFormDisplay('signup');
+  // Hide Startup Authentication Gateway
+  hideStartupScreen() {
+    const startupScreen = document.getElementById('startup-auth-screen');
+    const workspace = document.getElementById('app-workspace');
+    if (startupScreen) {
+      startupScreen.style.display = 'none';
+      document.body.style.overflow = '';
     }
+    if (workspace) {
+      workspace.style.display = 'block';
+    }
+  },
+
+  // Switch between the 4 screens
+  switchAuthScreen(screenId) {
+    ['screen-role-signin', 'screen-role-signup', 'screen-auth-details', 'screen-auth-signin'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = (id === screenId) ? 'block' : 'none';
+    });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 
-  // Set Portal Action on Phase 1 (Toggle between Sign In and Sign Up)
-  setPortalAction(action) {
-    this.portalAction = action;
-    const tabSignin = document.getElementById('tab-portal-signin');
-    const tabSignup = document.getElementById('tab-portal-signup');
-    const lblTabSignin = document.getElementById('lbl-tab-signin');
-    const lblTabSignup = document.getElementById('lbl-tab-signup');
-    const continueBtn = document.getElementById('btn-portal-continue');
-    const footerLink = document.getElementById('portal-footer-link');
-    const footerRegister = document.getElementById('portal-footer-register-link');
-    const part1Instruction = document.getElementById('startup-part-1-instruction');
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
-
-    if (lblTabSignin) lblTabSignin.textContent = isFil ? 'Mag-sign In' : 'Sign In';
-    if (lblTabSignup) lblTabSignup.textContent = isFil ? 'Magparehistro' : 'Register';
-
-    if (tabSignin) {
-      tabSignin.classList.toggle('active', action === 'signin');
-      tabSignin.style.background = action === 'signin' ? '#0E3D26' : 'transparent';
-      tabSignin.style.color = action === 'signin' ? '#FFFFFF' : '#475569';
-    }
-    if (tabSignup) {
-      tabSignup.classList.toggle('active', action === 'signup');
-      tabSignup.style.background = action === 'signup' ? '#0E3D26' : 'transparent';
-      tabSignup.style.color = action === 'signup' ? '#FFFFFF' : '#475569';
-    }
-
-    const roleNamesFil = {
-      parent: 'Magulang',
-      chw: 'Health Worker (BHW)',
-      collector: 'Data Collector',
-      mho: 'Administrator'
-    };
-    const roleNamesEn = {
-      parent: 'Parent',
-      chw: 'Health Worker',
-      collector: 'Data Collector',
-      mho: 'Administrator'
-    };
-    const activeRole = this.currentAuthRole || 'parent';
-    const activeRoleName = isFil ? (roleNamesFil[activeRole] || activeRole) : (roleNamesEn[activeRole] || activeRole);
-
-    if (part1Instruction) {
-      if (action === 'signup') {
-        part1Instruction.textContent = isFil
-          ? 'Piliin kung anong Portal ang nais irehistro:'
-          : 'Choose which Portal you want to register:';
-        part1Instruction.style.background = '#ECFDF5';
-        part1Instruction.style.borderColor = '#10B981';
-        part1Instruction.style.color = '#065F46';
-      } else {
-        part1Instruction.textContent = isFil
-          ? 'Piliin ang iyong Portal / Select Portal:'
-          : 'Select your Portal / Piliin ang Portal:';
-        part1Instruction.style.background = '#F1F5F9';
-        part1Instruction.style.borderColor = '#E2E8F0';
-        part1Instruction.style.color = '#1E293B';
-      }
-    }
-
-    if (continueBtn) {
-      if (action === 'signup') {
-        continueBtn.textContent = isFil
-          ? `Magpatuloy sa Pagrehistro bilang ${activeRoleName} →`
-          : `Continue to Register as ${activeRoleName} →`;
-        continueBtn.style.background = '#0E3D26';
-        continueBtn.style.color = '#FFFFFF';
-      } else {
-        continueBtn.textContent = isFil
-          ? `Magpatuloy sa Pag-sign In bilang ${activeRoleName} →`
-          : `Continue to Sign In as ${activeRoleName} →`;
-        continueBtn.style.background = '';
-        continueBtn.style.color = '';
-      }
-    }
-
-    const updateRegisterHtml = (container) => {
-      if (!container) return;
-      if (action === 'signin') {
-        const prompt = isFil ? 'Wala kang account?' : "Don't have an account?";
-        const linkText = isFil ? 'Magparehistro dito' : 'Register here';
-        container.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">${linkText}</a>`;
-      } else {
-        const prompt = isFil ? 'May account ka na?' : 'Already have an account?';
-        const linkText = isFil ? 'Mag-sign in dito' : 'Sign in here';
-        container.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signin')">${linkText}</a>`;
-      }
-    };
-
-    updateRegisterHtml(footerLink);
-    updateRegisterHtml(footerRegister);
+  // Screen 1: Select role to continue (Sign In Flow)
+  goToRoleSelectSignIn() {
+    this.portalAction = 'signin';
+    this.switchAuthScreen('screen-role-signin');
+    this.updateRoleCardSelection('signin', this.currentAuthRole || 'parent');
   },
 
-  // Select a role card in Part 1 (radio selection matching screenshot)
-  selectStartupRoleCard(role) {
+  // Screen 2: Create account - Who are you registering as? (Sign Up Flow)
+  goToRoleSelectSignUp() {
+    this.portalAction = 'signup';
+    this.switchAuthScreen('screen-role-signup');
+    this.updateRoleCardSelection('signup', this.currentAuthRole || 'parent');
+  },
+
+  // User clicks a role card on Screen 1 or Screen 2
+  selectRole(role, context) {
     this.currentAuthRole = role;
-    
-    // Update visual active state on portal cards
-    const cards = document.querySelectorAll('.portal-choice-card');
+    this.updateRoleCardSelection(context || 'signin', role);
+  },
+
+  updateRoleCardSelection(context, role) {
+    const screenId = context === 'signup' ? 'screen-role-signup' : 'screen-role-signin';
+    const container = document.getElementById(screenId);
+    if (!container) return;
+
+    const cards = container.querySelectorAll('.portal-choice-card');
     cards.forEach(card => {
       const cardRole = card.getAttribute('data-role');
-      if (cardRole === role) {
-        card.classList.add('selected');
-      } else {
-        card.classList.remove('selected');
-      }
+      card.classList.toggle('selected', cardRole === role);
     });
-
-    // Dynamically update the Continue button label to reflect the newly picked role
-    this.setPortalAction(this.portalAction || 'signin');
   },
 
-  // User clicks "Continue" -> proceed to Sign In or Sign Up based on selected action
-  proceedWithSelectedRole() {
-    if (this.portalAction === 'signup') {
-      this.setStartupPhase('signup');
-    } else {
-      this.setStartupPhase('signin');
+  // Screen 1 Continue clicked -> Proceed to Screen 4 (Sign In Credentials)
+  proceedToSignInCredentials() {
+    const role = this.currentAuthRole || 'parent';
+    this.switchAuthScreen('screen-auth-signin');
+
+    const roleNames = {
+      parent: { en: 'Parent / Guardian', fil: 'Magulang / Tagapag-alaga', icon: '👩‍👧', email: 'maria.parent@nutrilearn.ph' },
+      chw: { en: 'Health Worker', fil: 'Manggagawa sa Kalusugan (BHW)', icon: '🩺', email: 'teresa.bhw@nutrilearn.ph' },
+      mho: { en: 'Administrator', fil: 'Administrator (MHO)', icon: '📊', email: 'admin.mho@nutrilearn.ph' }
+    };
+    const info = roleNames[role] || roleNames.parent;
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+
+    const badgeIcon = document.getElementById('signin-badge-icon');
+    const badgeTitle = document.getElementById('signin-badge-title');
+    const badgeSub = document.getElementById('signin-badge-sub');
+    const emailInput = document.getElementById('input-signin-email');
+    const passInput = document.getElementById('input-signin-password');
+
+    if (badgeIcon) badgeIcon.textContent = info.icon;
+    if (badgeTitle) badgeTitle.textContent = isFil ? info.fil : info.en;
+    if (badgeSub) badgeSub.textContent = isFil ? 'Pumapasok bilang' : 'Signing in as';
+    if (emailInput) emailInput.value = info.email;
+    if (passInput) passInput.value = 'password123';
+  },
+
+  // Screen 2 Continue clicked -> Proceed to Screen 3 (Your Details Registration Form)
+  proceedToSignUpDetails() {
+    const role = this.currentAuthRole || 'parent';
+    this.switchAuthScreen('screen-auth-details');
+
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const btnSubmit = document.getElementById('btn-details-submit');
+    if (btnSubmit) {
+      if (role === 'parent') {
+        btnSubmit.textContent = isFil ? 'Kasunod: Magdagdag ng Bata →' : 'Next: Add Children →';
+      } else {
+        btnSubmit.textContent = isFil ? 'Kumpletuhin ang Pagrehistro →' : 'Create Account →';
+      }
     }
   },
 
-  // User clicks "Register here" -> Stay on Part 1 so they can CHOOSE their role first!
-  proceedToRegister() {
-    this.setStartupPhase(1, 'signup');
-    this.setPortalAction('signup');
-  },
-
-  // Role Chooser Tabs inside Registration Form
-  selectSignupRole(role) {
+  // Click a demo account in Demo Accounts box (Screenshot 4)
+  fillDemoLogin(role) {
     this.currentAuthRole = role;
-    this.selectStartupRoleCard(role);
-    this.updateStartupFormDisplay('signup');
-    this.updateSignupRolePills(role);
+    const roleEmails = {
+      parent: 'maria.parent@nutrilearn.ph',
+      chw: 'teresa.bhw@nutrilearn.ph',
+      mho: 'admin.mho@nutrilearn.ph'
+    };
+    this.proceedToSignInCredentials();
+    const emailInput = document.getElementById('input-signin-email');
+    const passInput = document.getElementById('input-signin-password');
+    if (emailInput) emailInput.value = roleEmails[role] || 'maria.parent@nutrilearn.ph';
+    if (passInput) passInput.value = 'password123';
+
+    // Auto submit demo login for frictionless testing
+    this.submitSignIn();
   },
 
-  updateSignupRolePills(role) {
-    ['parent', 'chw', 'collector', 'mho'].forEach(r => {
-      const btn = document.getElementById(`btn-reg-role-${r}`);
-      if (btn) {
-        if (r === role) {
-          btn.style.border = '2px solid #0E3D26';
-          btn.style.background = '#F0FDF4';
-          btn.style.color = '#0E3D26';
-          btn.style.fontWeight = '700';
-        } else {
-          btn.style.border = '1.5px solid #CBD5E1';
-          btn.style.background = '#FFFFFF';
-          btn.style.color = '#475569';
-          btn.style.fontWeight = '600';
-        }
-      }
-    });
+  // Submit Sign In (Screen 4)
+  submitSignIn(event) {
+    if (event) event.preventDefault();
+    const form = document.getElementById('form-auth-signin');
+    const email = form ? form.elements['signinEmail'].value.trim() : 'maria.parent@nutrilearn.ph';
+    const password = form ? form.elements['signinPassword'].value : 'password123';
+
+    const result = NutriStorage.loginUser(email, password, this.currentAuthRole || 'parent');
+    if (result.success) {
+      this.hideStartupScreen();
+      this.switchRole(result.user.role);
+      this.updateUserHeaderBadge();
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const welcome = isFil
+        ? `👋 Maligayang pagdating, ${result.user.name}! Naka-log in na.`
+        : `👋 Welcome, ${result.user.name}! Portal unlocked.`;
+      this.showToast(welcome, 'success');
+    } else {
+      this.showToast(result.message, 'warning');
+    }
   },
 
-  // Direct choice and proceed (alias)
-  choosePortalAndProceed(role) {
-    this.selectStartupRoleCard(role);
-    this.proceedWithSelectedRole();
+  // Submit Registration (Screen 3)
+  submitRegistration(event) {
+    if (event) event.preventDefault();
+    const form = document.getElementById('form-auth-details');
+    if (!form) return;
+
+    const name = form.elements['regFullName'].value.trim();
+    const barangay = form.elements['regBarangayAddress'].value.trim();
+    const email = form.elements['regEmailAddress'].value.trim();
+    const password = form.elements['regPassword'].value;
+    const confirmPassword = form.elements['regConfirmPassword'].value;
+
+    if (!name || !barangay || !email || !password) {
+      this.showToast('Please fill in all required fields.', 'warning');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      this.showToast(isFil ? 'Hindi magkatugma ang mga password.' : 'Passwords do not match.', 'warning');
+      return;
+    }
+
+    const userData = {
+      name,
+      email,
+      password,
+      barangay,
+      role: this.currentAuthRole || 'parent'
+    };
+
+    if (this.currentAuthRole === 'parent') {
+      userData.childName = 'Ethan Santos';
+      userData.childAge = 18;
+    } else if (this.currentAuthRole === 'chw') {
+      userData.bhwId = 'BHW-' + Math.floor(1000 + Math.random() * 9000);
+    } else if (this.currentAuthRole === 'mho') {
+      userData.department = 'Municipal Health Office';
+      userData.designation = 'Nutrition Officer';
+    }
+
+    const newUser = NutriStorage.registerUser(userData);
+    this.hideStartupScreen();
+    this.switchRole(newUser.role);
+    this.updateUserHeaderBadge();
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const msg = isFil
+      ? `🎉 Matagumpay na nakarehistro si ${newUser.name}!`
+      : `🎉 Registration successful for ${newUser.name}!`;
+    this.showToast(msg, 'success');
   },
 
-  selectStartupRole(role) {
-    this.choosePortalAndProceed(role);
+  // Backward compatibility aliases
+  setStartupPhase(phase) {
+    if (phase === 1 || phase === 'role-select') {
+      this.goToRoleSelectSignIn();
+    } else if (phase === 2 || phase === 'signin') {
+      this.proceedToSignInCredentials();
+    } else if (phase === 3 || phase === 'signup') {
+      this.proceedToSignUpDetails();
+    }
+  },
+  proceedWithSelectedRole() {
+    this.proceedToSignInCredentials();
+  },
+  proceedToRegister() {
+    this.goToRoleSelectSignUp();
+  },
+  selectStartupRoleCard(role) {
+    this.selectRole(role, 'signin');
+  },
+  setPortalAction(action) {
+    if (action === 'signup') this.goToRoleSelectSignUp();
+    else this.goToRoleSelectSignIn();
+  },
+  selectSignupRole(role) {
+    this.selectRole(role, 'signup');
+  },
+  updateSignupRolePills() {},
+  startupQuickDemoLogin() {
+    this.fillDemoLogin(this.currentAuthRole || 'parent');
+  },
+  submitStartupSignIn(e) {
+    this.submitSignIn(e);
+  },
+  submitStartupSignUp(e) {
+    this.submitRegistration(e);
   },
 
   // Hide Startup Authentication Gateway (Shows app workspace after successful login)

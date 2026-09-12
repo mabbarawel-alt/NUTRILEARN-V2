@@ -74,67 +74,112 @@ const NutriI18n = {
       headerLangLabel.textContent = lang === 'fil' ? '🇵🇭 Filipino' : '🇺🇸 English';
     }
 
-    // 2. Translate Startup Screen Cards
-    const cardParentTitle = document.querySelector('[data-role="parent"] .portal-card-title');
-    const cardParentDesc = document.querySelector('[data-role="parent"] .portal-card-desc');
-    if (cardParentTitle) cardParentTitle.textContent = t.card_parent_title;
-    if (cardParentDesc) cardParentDesc.textContent = t.card_parent_desc;
+    // Screen 1: Select Role for Sign In
+    const signinRoleSelectTitle = document.getElementById('lbl-signin-role-select-title');
+    if (signinRoleSelectTitle) signinRoleSelectTitle.textContent = t.signin_role_select_title;
 
-    const cardChwTitle = document.querySelector('[data-role="chw"] .portal-card-title');
-    const cardChwDesc = document.querySelector('[data-role="chw"] .portal-card-desc');
-    if (cardChwTitle) cardChwTitle.textContent = t.card_chw_title;
-    if (cardChwDesc) cardChwDesc.textContent = t.card_chw_desc;
+    const cardSigninParentTitle = document.getElementById('card-signin-parent-title');
+    const cardSigninParentDesc = document.getElementById('card-signin-parent-desc');
+    if (cardSigninParentTitle) cardSigninParentTitle.textContent = t.card_parent_title;
+    if (cardSigninParentDesc) cardSigninParentDesc.textContent = t.card_parent_desc;
 
-    const cardColTitle = document.querySelector('[data-role="collector"] .portal-card-title');
-    const cardColDesc = document.querySelector('[data-role="collector"] .portal-card-desc');
-    if (cardColTitle) cardColTitle.textContent = t.card_col_title;
-    if (cardColDesc) cardColDesc.textContent = t.card_col_desc;
+    const cardSigninChwTitle = document.getElementById('card-signin-chw-title');
+    const cardSigninChwDesc = document.getElementById('card-signin-chw-desc');
+    if (cardSigninChwTitle) cardSigninChwTitle.textContent = t.card_chw_title;
+    if (cardSigninChwDesc) cardSigninChwDesc.textContent = t.card_chw_desc;
 
-    const cardMhoTitle = document.querySelector('[data-role="mho"] .portal-card-title');
-    const cardMhoDesc = document.querySelector('[data-role="mho"] .portal-card-desc');
-    if (cardMhoTitle) cardMhoTitle.textContent = t.card_mho_title;
-    if (cardMhoDesc) cardMhoDesc.textContent = t.card_mho_desc;
+    const cardSigninMhoTitle = document.getElementById('card-signin-mho-title');
+    const cardSigninMhoDesc = document.getElementById('card-signin-mho-desc');
+    if (cardSigninMhoTitle) cardSigninMhoTitle.textContent = t.card_mho_title;
+    if (cardSigninMhoDesc) cardSigninMhoDesc.textContent = t.card_mho_desc;
 
-    // Refresh Startup Portal Action (Tabs, Instruction, Continue Button, Footer Links)
-    if (window.NutriApp && typeof NutriApp.setPortalAction === 'function') {
-      NutriApp.setPortalAction(NutriApp.portalAction || 'signin');
+    const btnSigninContinue = document.getElementById('btn-signin-role-continue');
+    if (btnSigninContinue) btnSigninContinue.textContent = t.btn_continue;
+
+    const footerPromptSignin = document.getElementById('footer-prompt-signin');
+    if (footerPromptSignin) {
+      footerPromptSignin.innerHTML = `${t.footer_no_account_text} <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignUp()">${t.footer_register_link}</a>`;
     }
 
-    // Phase 2 & Phase 3 Cross Links
-    const signinNoAccountPrompt = document.getElementById('signin-no-account-prompt');
-    const signinRegisterLink = document.getElementById('signin-register-link');
-    if (signinNoAccountPrompt) signinNoAccountPrompt.textContent = t.footer_no_account_text;
-    if (signinRegisterLink) signinRegisterLink.textContent = t.footer_register_link;
+    // Screen 2: Create Account - Who are you registering as?
+    const signupTitle = document.getElementById('lbl-signup-title');
+    const signupSubtitle = document.getElementById('lbl-signup-subtitle');
+    if (signupTitle) signupTitle.textContent = t.signup_heading;
+    if (signupSubtitle) signupSubtitle.textContent = t.signup_role_subtitle;
 
-    const signupHaveAccountPrompt = document.getElementById('signup-have-account-prompt');
-    const signupSigninLink = document.getElementById('signup-signin-link');
-    if (signupHaveAccountPrompt) signupHaveAccountPrompt.textContent = t.footer_have_account_text;
-    if (signupSigninLink) signupSigninLink.textContent = t.footer_signin_link;
+    const cardSignupParentTitle = document.getElementById('card-signup-parent-title');
+    const cardSignupParentDesc = document.getElementById('card-signup-parent-desc');
+    if (cardSignupParentTitle) cardSignupParentTitle.textContent = t.card_parent_title;
+    if (cardSignupParentDesc) cardSignupParentDesc.textContent = t.card_signup_parent_desc;
 
-    const lblSignupChooser = document.getElementById('lbl-signup-role-chooser');
-    if (lblSignupChooser) {
-      lblSignupChooser.textContent = lang === 'fil' 
-        ? 'Piliin kung anong Role ang irerehistro / Register as:'
-        : 'Select which Role you are registering as:';
+    const cardSignupChwTitle = document.getElementById('card-signup-chw-title');
+    const cardSignupChwDesc = document.getElementById('card-signup-chw-desc');
+    if (cardSignupChwTitle) cardSignupChwTitle.textContent = t.card_chw_title;
+    if (cardSignupChwDesc) cardSignupChwDesc.textContent = t.card_signup_chw_desc;
+
+    const cardSignupMhoTitle = document.getElementById('card-signup-mho-title');
+    const cardSignupMhoDesc = document.getElementById('card-signup-mho-desc');
+    if (cardSignupMhoTitle) cardSignupMhoTitle.textContent = t.card_mho_title;
+    if (cardSignupMhoDesc) cardSignupMhoDesc.textContent = t.card_signup_mho_desc;
+
+    const btnSignupContinue = document.getElementById('btn-signup-role-continue');
+    if (btnSignupContinue) btnSignupContinue.textContent = t.btn_continue;
+
+    const footerPromptSignup = document.getElementById('footer-prompt-signup');
+    if (footerPromptSignup) {
+      footerPromptSignup.innerHTML = `${t.footer_have_account_text} <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignIn()">${t.footer_signin_link}</a>`;
     }
 
-    const langTitleLbl = document.getElementById('lbl-language-title');
-    if (langTitleLbl) {
-      langTitleLbl.textContent = t.lbl_select_language;
+    // Screen 3: Your Details
+    const detailsTitle = document.getElementById('lbl-details-title');
+    const detailsSubtitle = document.getElementById('lbl-details-subtitle');
+    if (detailsTitle) detailsTitle.textContent = t.details_title;
+    if (detailsSubtitle) detailsSubtitle.textContent = t.details_subtitle;
+
+    const btnBackSignup = document.getElementById('btn-back-to-signup-roles');
+    if (btnBackSignup) btnBackSignup.textContent = t.btn_back;
+
+    const lblRegName = document.getElementById('lbl-reg-fullname');
+    if (lblRegName) lblRegName.textContent = t.lbl_reg_fullname;
+    const lblRegBrgy = document.getElementById('lbl-reg-barangay');
+    if (lblRegBrgy) lblRegBrgy.textContent = t.lbl_reg_barangay;
+    const lblRegEmail = document.getElementById('lbl-reg-email');
+    if (lblRegEmail) lblRegEmail.textContent = t.lbl_reg_email;
+    const lblRegPass = document.getElementById('lbl-reg-password');
+    if (lblRegPass) lblRegPass.textContent = t.lbl_reg_password;
+    const lblRegConfirm = document.getElementById('lbl-reg-confirm-password');
+    if (lblRegConfirm) lblRegConfirm.textContent = t.lbl_reg_confirm_password;
+
+    // Screen 4: Sign In Credentials
+    const btnBackSignin = document.getElementById('btn-back-to-signin-roles');
+    if (btnBackSignin) btnBackSignin.textContent = t.btn_back;
+
+    const signinTitle = document.getElementById('lbl-signin-title');
+    const signinSubtitle = document.getElementById('lbl-signin-subtitle');
+    if (signinTitle) signinTitle.textContent = t.signin_heading;
+    if (signinSubtitle) signinSubtitle.textContent = t.signin_subtitle;
+
+    const signinBadgeSub = document.getElementById('signin-badge-sub');
+    if (signinBadgeSub) signinBadgeSub.textContent = t.signin_badge_sub;
+
+    const lblSigninEmail = document.getElementById('lbl-signin-email');
+    if (lblSigninEmail) lblSigninEmail.textContent = t.lbl_signin_email;
+    const lblSigninPassword = document.getElementById('lbl-signin-password');
+    if (lblSigninPassword) lblSigninPassword.textContent = t.lbl_signin_password;
+
+    const btnSigninSubmit = document.getElementById('btn-signin-submit');
+    if (btnSigninSubmit) btnSigninSubmit.textContent = t.btn_signin;
+
+    const demoHeading = document.getElementById('lbl-demo-accounts-heading');
+    if (demoHeading) demoHeading.textContent = t.demo_accounts_heading;
+
+    // Refresh active badge text if on screen 4
+    const badgeTitle = document.getElementById('signin-badge-title');
+    if (badgeTitle && window.NutriApp) {
+      const r = NutriApp.currentAuthRole || 'parent';
+      const map = { parent: t.card_parent_title, chw: t.card_chw_title, mho: t.card_mho_title };
+      badgeTitle.textContent = map[r] || t.card_parent_title;
     }
-
-    // Sign in screen elements
-    const signinHeading = document.getElementById('startup-signin-heading');
-    if (signinHeading) signinHeading.textContent = t.signin_heading;
-
-    const signupHeading = document.getElementById('startup-signup-heading');
-    if (signupHeading) signupHeading.textContent = t.signup_heading;
-
-    const btnSubmitSignin = document.getElementById('btn-startup-submit-signin');
-    if (btnSubmitSignin) btnSubmitSignin.textContent = t.btn_signin;
-
-    const btnSubmitSignup = document.getElementById('btn-startup-submit-signup');
-    if (btnSubmitSignup) btnSubmitSignup.textContent = t.btn_create_account;
 
     // Sub-navigation Links
     document.querySelectorAll('.parent-sub-link').forEach(link => {
@@ -174,6 +219,7 @@ const NutriI18n = {
   translations: {
     fil: {
       lbl_select_language: 'Piliin ang Wika / Select Language:',
+      signin_role_select_title: 'Piliin ang iyong role para magpatuloy',
       card_parent_title: 'Magulang / Tagapag-alaga',
       card_parent_desc: 'Makakuha ng mga aralin sa nutrisyon, mga plano sa pagkain, at subaybayan ang paglaki ng iyong anak.',
       card_chw_title: 'Manggagawa sa Kalusugan (BHW)',
@@ -182,6 +228,7 @@ const NutriI18n = {
       card_col_desc: 'Mangalap ng datos sa nutrisyon, magrehistro ng bata, at magpatunay ng paglaki.',
       card_mho_title: 'Administrator (MHO)',
       card_mho_desc: 'Tingnan ang mga tala ng field, analytics, at pamahalaan ang nilalaman ng programa.',
+      btn_continue: 'Magpatuloy',
       btn_continue_signin: 'Magpatuloy sa Pag-sign In',
       btn_continue_signup: 'Magpatuloy sa Pagrehistro',
       footer_no_account_text: 'Wala kang account?',
@@ -189,7 +236,24 @@ const NutriI18n = {
       footer_have_account_text: 'May account ka na?',
       footer_signin_link: 'Mag-sign in dito',
       signin_heading: 'Mag-sign In',
+      signin_subtitle: 'Ilagay ang iyong credentials para ma-access ang NutriLearn',
+      signin_badge_sub: 'Pumapasok bilang',
+      lbl_signin_email: 'Email address',
+      lbl_signin_password: 'Password',
+      demo_accounts_heading: 'Mga Demo Account',
       signup_heading: 'Gumawa ng Account',
+      signup_role_subtitle: 'Sino ang nais mong irehistro?',
+      card_signup_parent_desc: 'Subaybayan ang nutrisyon ng bata at i-access ang learning modules.',
+      card_signup_chw_desc: 'Subaybayan ang mga pamilya, itala ang datos ng bata, at ipamahagi ang anunsyo.',
+      card_signup_mho_desc: 'Pamahalaan ang datos ng programa, mga gumagamit, at anunsyo sa kalusugan.',
+      details_title: 'Iyong mga detalye',
+      details_subtitle: 'Gumawa ng iyong NutriLearn account',
+      btn_back: '← Bumalik',
+      lbl_reg_fullname: 'Buong Pangalan *',
+      lbl_reg_barangay: 'Barangay / Tirahan *',
+      lbl_reg_email: 'Email Address *',
+      lbl_reg_password: 'Password *',
+      lbl_reg_confirm_password: 'Kumpirmahin ang Password *',
       btn_signin: 'Mag-sign In',
       btn_create_account: 'Gumawa ng Account',
       btn_signout: 'Mag-sign Out',
@@ -222,22 +286,41 @@ const NutriI18n = {
     },
     en: {
       lbl_select_language: 'Select Language / Piliin ang Wika:',
+      signin_role_select_title: 'Select your role to continue',
       card_parent_title: 'Parent / Guardian',
       card_parent_desc: 'Access nutrition lessons, meal plans, and track your child\'s growth.',
-      card_chw_title: 'Health Worker (BHW/BNS)',
+      card_chw_title: 'Health Worker',
       card_chw_desc: 'Manage parent groups, post announcements, and submit child records.',
       card_col_title: 'Field Data Collector',
       card_col_desc: 'Collect anthropometric field surveys, register children, and verify growth.',
-      card_mho_title: 'Administrator (MHO)',
-      card_mho_desc: 'Manage user accounts, update nutrition content, and review analytics.',
+      card_mho_title: 'Administrator',
+      card_mho_desc: 'View field records, analytics, and manage program content.',
+      btn_continue: 'Continue',
       btn_continue_signin: 'Continue to Sign In',
       btn_continue_signup: 'Continue to Sign Up',
       footer_no_account_text: 'Don\'t have an account?',
       footer_register_link: 'Register here',
       footer_have_account_text: 'Already have an account?',
-      footer_signin_link: 'Sign in here',
-      signin_heading: 'Sign In',
-      signup_heading: 'Create Account',
+      footer_signin_link: 'Sign in',
+      signin_heading: 'Sign in',
+      signin_subtitle: 'Enter your credentials to access NutriLearn',
+      signin_badge_sub: 'Signing in as',
+      lbl_signin_email: 'Email address',
+      lbl_signin_password: 'Password',
+      demo_accounts_heading: 'Demo accounts',
+      signup_heading: 'Create account',
+      signup_role_subtitle: 'Who are you registering as?',
+      card_signup_parent_desc: 'Track your child\'s nutrition and access learning modules.',
+      card_signup_chw_desc: 'Monitor families, record child data, and relay announcements.',
+      card_signup_mho_desc: 'Oversee program data, users, and post health announcements.',
+      details_title: 'Your details',
+      details_subtitle: 'Create your NutriLearn account',
+      btn_back: '← Back',
+      lbl_reg_fullname: 'Full Name *',
+      lbl_reg_barangay: 'Barangay / Address *',
+      lbl_reg_email: 'Email Address *',
+      lbl_reg_password: 'Password *',
+      lbl_reg_confirm_password: 'Confirm Password *',
       btn_signin: 'Sign In',
       btn_create_account: 'Create Account',
       btn_signout: 'Sign Out',

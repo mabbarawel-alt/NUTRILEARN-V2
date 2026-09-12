@@ -59,37 +59,20 @@
 
       <div class="startup-card">
         <!-- ====================================================================
-             PART 1: SELECT YOUR USER PORTAL (Matches user screenshot)
+             SCREEN 1: SELECT YOUR ROLE TO CONTINUE (SIGN IN FLOW)
              ==================================================================== -->
-        <div id="startup-part-1">
-          <!-- Action Mode Switcher Tabs (Sign In vs Register) -->
-          <div class="portal-action-tabs" style="display: flex; gap: 8px; margin-bottom: 0.85rem; background: #F1F5F9; padding: 4px; border-radius: 12px; border: 1.5px solid #E2E8F0;">
-            <button type="button" id="tab-portal-signin" class="portal-action-tab active" onclick="NutriApp.setPortalAction('signin')"
-              style="flex: 1; padding: 8px 12px; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #0E3D26; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 6px;">
-              <span>🔑</span> <span id="lbl-tab-signin">Mag-sign In</span>
-            </button>
-            <button type="button" id="tab-portal-signup" class="portal-action-tab" onclick="NutriApp.setPortalAction('signup')"
-              style="flex: 1; padding: 8px 12px; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px;">
-              <span>📝</span> <span id="lbl-tab-signup">Magparehistro</span>
-            </button>
-          </div>
+        <div id="screen-role-signin">
+          <div class="auth-role-select-title" id="lbl-signin-role-select-title">Select your role to continue</div>
 
-          <!-- Instruction Header (Adapts dynamically to Sign In or Register) -->
-          <div id="startup-part-1-instruction" style="text-align: center; margin-bottom: 0.85rem; font-size: 0.88rem; font-weight: 700; color: #1E293B; background: #F1F5F9; padding: 7px 12px; border-radius: 8px; border: 1px solid #E2E8F0;">
-            Piliin ang iyong Portal / Select Portal:
-          </div>
-
-          <!-- 4 Vertical Portal Choice Cards -->
           <div class="portal-choices-list">
             <!-- Option 1: Parent / Guardian -->
-            <div class="portal-choice-card selected" data-role="parent"
-              onclick="NutriApp.selectStartupRoleCard('parent')">
+            <div class="portal-choice-card selected" data-role="parent" onclick="NutriApp.selectRole('parent', 'signin')">
               <div class="portal-card-icon">
-                <span class="portal-emoji-icon">👩‍👧</span>
+                <span style="font-size: 1.5rem;">👩‍👧</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title">Parent / Guardian</div>
-                <div class="portal-card-desc">Access nutrition lessons, meal plans, and track your child's growth.</div>
+                <div class="portal-card-title" id="card-signin-parent-title">Parent / Guardian</div>
+                <div class="portal-card-desc" id="card-signin-parent-desc">Access nutrition lessons, meal plans, and track your child's growth.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -97,41 +80,27 @@
             </div>
 
             <!-- Option 2: Health Worker -->
-            <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectStartupRoleCard('chw')">
+            <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signin')">
               <div class="portal-card-icon">
-                <span class="portal-emoji-icon">🩺</span>
+                <span style="font-size: 1.5rem;">🩺</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title">Health Worker</div>
-                <div class="portal-card-desc">Manage parent groups, post announcements, and submit child records.</div>
+                <div class="portal-card-title" id="card-signin-chw-title">Health Worker</div>
+                <div class="portal-card-desc" id="card-signin-chw-desc">Manage parent groups, post announcements, and submit child records.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
               </div>
             </div>
 
-            <!-- Option 3: Field Data Collector -->
-            <div class="portal-choice-card" data-role="collector" onclick="NutriApp.selectStartupRoleCard('collector')">
+            <!-- Option 3: Administrator -->
+            <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signin')">
               <div class="portal-card-icon">
-                <span class="portal-emoji-icon">📋</span>
+                <span style="font-size: 1.5rem;">📊</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title">Field Data Collector</div>
-                <div class="portal-card-desc">Collect anthropometric field surveys, register children, and verify growth.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
-            </div>
-
-            <!-- Option 4: Administrator -->
-            <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectStartupRoleCard('mho')">
-              <div class="portal-card-icon">
-                <span class="portal-emoji-icon">📊</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title">Administrator</div>
-                <div class="portal-card-desc">Manage user accounts, update nutrition content, and review analytics.</div>
+                <div class="portal-card-title" id="card-signin-mho-title">Administrator</div>
+                <div class="portal-card-desc" id="card-signin-mho-desc">View field records, analytics, and manage program content.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -140,283 +109,203 @@
           </div>
 
           <!-- Continue Button -->
-          <button type="button" id="btn-portal-continue" class="btn-portal-continue"
-            onclick="NutriApp.proceedWithSelectedRole()">
+          <button type="button" id="btn-signin-role-continue" class="btn-auth-continue"
+            onclick="NutriApp.proceedToSignInCredentials()">
             Continue
           </button>
 
-          <!-- Register Footer Link -->
-          <div class="portal-footer-register" id="portal-footer-register-link">
-            Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">Register here</a>
-          </div>
-
-          <!-- Select Language (Filipino / English) -->
-          <div class="portal-language-selector" style="margin-top: 1.5rem; padding-top: 1.1rem; border-top: 1.5px dashed #CBD5E1; text-align: center;">
-            <div style="font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;" id="lbl-language-title">
-              🌐 Piliin ang Wika / Select Language:
-            </div>
-            <div class="lang-switch-pills" style="display: inline-flex; background: #FFFFFF; padding: 4px; border-radius: 9999px; border: 2px solid #0E3D26; gap: 4px; box-shadow: 0 3px 8px rgba(14,61,38,0.12);">
-              <button type="button" class="btn-lang-choice active" id="btn-lang-fil" onclick="NutriI18n.setLanguage('fil')" style="padding: 7px 18px; border-radius: 9999px; border: none; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #0E3D26; color: #FFFFFF;">
-                🇵🇭 Filipino
-              </button>
-              <button type="button" class="btn-lang-choice" id="btn-lang-en" onclick="NutriI18n.setLanguage('en')" style="padding: 7px 18px; border-radius: 9999px; border: none; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569;">
-                🇺🇸 English
-              </button>
-            </div>
+          <!-- Footer Link to Register -->
+          <div class="auth-footer-prompt" id="footer-prompt-signin">
+            Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignUp()" id="link-goto-register">Register here</a>
           </div>
         </div>
 
         <!-- ====================================================================
-             PHASE 2: DEDICATED SIGN IN ONLY (1 Phase Only)
+             SCREEN 2: CREATE ACCOUNT - WHO ARE YOU REGISTERING AS? (SIGN UP FLOW)
              ==================================================================== -->
-        <div id="startup-phase-signin" style="display: none;">
-          <div class="startup-form-card">
-            <!-- Header with Back button -->
-            <div class="auth-role-banner" style="margin-bottom: 1.25rem;">
-              <div>
-                <div
-                  style="font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 600; letter-spacing: 0.04em;">
-                  Sign In</div>
-                <div id="startup-signin-role-title" style="font-weight: 700; font-size: 1.15rem; color: #1E293B;">
-                  Parent / Guardian
-                </div>
+        <div id="screen-role-signup" style="display: none;">
+          <h2 class="auth-display-title" id="lbl-signup-title">Create account</h2>
+          <div class="auth-display-subtitle" id="lbl-signup-subtitle">Who are you registering as?</div>
+
+          <div class="portal-choices-list">
+            <!-- Option 1: Parent / Guardian -->
+            <div class="portal-choice-card selected" data-role="parent" onclick="NutriApp.selectRole('parent', 'signup')">
+              <div class="portal-card-icon">
+                <span style="font-size: 1.5rem;">👩‍👧</span>
               </div>
-              <button type="button" class="btn btn-outline btn-sm" onclick="NutriApp.setStartupPhase(1)"
-                style="border-color: #CBD5E1; color: #475569; padding: 0.35rem 0.75rem; font-size: 0.82rem;">
-                ← Back
-              </button>
+              <div class="portal-card-text">
+                <div class="portal-card-title" id="card-signup-parent-title">Parent / Guardian</div>
+                <div class="portal-card-desc" id="card-signup-parent-desc">Track your child's nutrition and access learning modules.</div>
+              </div>
+              <div class="portal-radio">
+                <div class="portal-radio-dot"></div>
+              </div>
             </div>
 
-            <!-- Sign In Form -->
-            <form id="startup-signin-form" onsubmit="NutriApp.submitStartupSignIn(event)">
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label class="form-label"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Email
-                  or Username</label>
-                <input type="text" id="startup-login-username" name="loginUsername" class="form-control" required
-                  placeholder="name@nutrilearn.ph" value="maria.parent@nutrilearn.ph"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
+            <!-- Option 2: Health Worker -->
+            <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signup')">
+              <div class="portal-card-icon">
+                <span style="font-size: 1.5rem;">🩺</span>
               </div>
-
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label class="form-label"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Password</label>
-                <input type="password" name="loginPassword" class="form-control" required value="password123"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
+              <div class="portal-card-text">
+                <div class="portal-card-title" id="card-signup-chw-title">Health Worker</div>
+                <div class="portal-card-desc" id="card-signup-chw-desc">Monitor families, record child data, and relay announcements.</div>
               </div>
-
-              <button type="submit" id="btn-startup-submit-signin" class="btn-portal-continue"
-                style="margin-top: 0.5rem; margin-bottom: 1rem;">
-                Sign In
-              </button>
-
-              <!-- Quick Demo Login -->
-              <div class="auth-demo-box"
-                style="background: #FBF9F5; border: 1px dashed #C8D8C9; border-radius: 10px; padding: 0.75rem;">
-                <button type="button" class="btn btn-outline btn-sm" id="btn-startup-demo-login"
-                  onclick="NutriApp.startupQuickDemoLogin()"
-                  style="width: 100%; background: #FFFFFF; border-color: #CBD5E1; color: #334155; font-weight: 600;">
-                  Demo Login as <strong>Maria Ramos (Parent)</strong>
-                </button>
+              <div class="portal-radio">
+                <div class="portal-radio-dot"></div>
               </div>
+            </div>
 
-              <!-- Phase 2 Footer Link to Register -->
-              <div class="portal-footer-register" style="margin-top: 1rem; text-align: center; font-size: 0.86rem; color: #475569;">
-                <span id="signin-no-account-prompt">Wala kang account?</span> <a href="javascript:void(0)" onclick="NutriApp.proceedToRegister()" style="color: #0E3D26; font-weight: 700; text-decoration: underline;" id="signin-register-link">Magparehistro dito</a>
+            <!-- Option 3: Administrator -->
+            <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signup')">
+              <div class="portal-card-icon">
+                <span style="font-size: 1.5rem;">📊</span>
               </div>
-            </form>
+              <div class="portal-card-text">
+                <div class="portal-card-title" id="card-signup-mho-title">Administrator</div>
+                <div class="portal-card-desc" id="card-signup-mho-desc">Oversee program data, users, and post health announcements.</div>
+              </div>
+              <div class="portal-radio">
+                <div class="portal-radio-dot"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Continue Button -->
+          <button type="button" id="btn-signup-role-continue" class="btn-auth-continue"
+            onclick="NutriApp.proceedToSignUpDetails()">
+            Continue
+          </button>
+
+          <!-- Footer Link to Sign In -->
+          <div class="auth-footer-prompt" id="footer-prompt-signup">
+            Already have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignIn()" id="link-goto-signin">Sign in</a>
           </div>
         </div>
 
         <!-- ====================================================================
-             PHASE 3: DEDICATED SIGN UP / REGISTRATION ONLY (1 Phase Only)
+             SCREEN 3: YOUR DETAILS (CREATE ACCOUNT DETAILS FORM)
              ==================================================================== -->
-        <div id="startup-phase-signup" style="display: none;">
-          <div class="startup-form-card">
-            <!-- Header with Back button -->
-            <div class="auth-role-banner" style="margin-bottom: 1.25rem;">
-              <div>
-                <div
-                  style="font-size: 0.75rem; text-transform: uppercase; color: #64748B; font-weight: 600; letter-spacing: 0.04em;">
-                  Create Account</div>
-                <div id="startup-signup-role-title" style="font-weight: 700; font-size: 1.15rem; color: #1E293B;">
-                  Parent / Guardian
-                </div>
-              </div>
-              <button type="button" class="btn btn-outline btn-sm" onclick="NutriApp.setStartupPhase(1)"
-                style="border-color: #CBD5E1; color: #475569; padding: 0.35rem 0.75rem; font-size: 0.82rem;">
-                ← Back
-              </button>
+        <div id="screen-auth-details" style="display: none;">
+          <button type="button" class="auth-back-btn" onclick="NutriApp.goToRoleSelectSignUp()" id="btn-back-to-signup-roles">
+            ← Back
+          </button>
+
+          <h2 class="auth-display-title" id="lbl-details-title">Your details</h2>
+          <div class="auth-display-subtitle" id="lbl-details-subtitle">Create your NutriLearn account</div>
+
+          <form id="form-auth-details" onsubmit="NutriApp.submitRegistration(event)">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" id="lbl-reg-fullname" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                Full Name *
+              </label>
+              <input type="text" id="reg-fullname-input" name="regFullName" class="form-control" required placeholder="e.g. Maria Santos"
+                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
             </div>
 
-            <!-- Sign Up Form -->
-            <form id="startup-signup-form" onsubmit="NutriApp.submitStartupSignUp(event)">
-              <!-- Interactive Role Chooser Tabs on Registration Form -->
-              <div style="margin-bottom: 1.25rem;">
-                <label class="form-label" id="lbl-signup-role-chooser"
-                  style="font-size: 0.85rem; font-weight: 700; color: #1E293B; margin-bottom: 0.45rem; display: block;">
-                  Piliin kung anong Role ang irerehistro / Register as:
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" id="lbl-reg-barangay" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                Barangay / Address *
+              </label>
+              <input type="text" id="reg-barangay-input" name="regBarangayAddress" class="form-control" required placeholder="e.g. Barangay Pinyahan, Quezon City"
+                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" id="lbl-reg-email" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                Email Address *
+              </label>
+              <input type="email" id="reg-email-input" name="regEmailAddress" class="form-control" required placeholder="you@example.com"
+                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+            </div>
+
+            <div class="grid-2" style="margin-bottom: 1.25rem;">
+              <div class="form-group">
+                <label class="form-label" id="lbl-reg-password" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Password *
                 </label>
-                <div class="signup-role-pills" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem;">
-                  <button type="button" class="btn-signup-role-tab active" id="btn-reg-role-parent"
-                    onclick="NutriApp.selectSignupRole('parent')"
-                    style="padding: 0.65rem 0.5rem; border: 2px solid #0E3D26; background: #F0FDF4; border-radius: 8px; font-size: 0.82rem; font-weight: 700; color: #0E3D26; cursor: pointer; text-align: center; transition: all 0.2s;">
-                    👩‍👧 Magulang (Parent)
-                  </button>
-                  <button type="button" class="btn-signup-role-tab" id="btn-reg-role-chw"
-                    onclick="NutriApp.selectSignupRole('chw')"
-                    style="padding: 0.65rem 0.5rem; border: 1.5px solid #CBD5E1; background: #FFFFFF; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #475569; cursor: pointer; text-align: center; transition: all 0.2s;">
-                    🩺 Health Worker (BHW)
-                  </button>
-                  <button type="button" class="btn-signup-role-tab" id="btn-reg-role-collector"
-                    onclick="NutriApp.selectSignupRole('collector')"
-                    style="padding: 0.65rem 0.5rem; border: 1.5px solid #CBD5E1; background: #FFFFFF; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #475569; cursor: pointer; text-align: center; transition: all 0.2s;">
-                    📋 Data Collector
-                  </button>
-                  <button type="button" class="btn-signup-role-tab" id="btn-reg-role-mho"
-                    onclick="NutriApp.selectSignupRole('mho')"
-                    style="padding: 0.65rem 0.5rem; border: 1.5px solid #CBD5E1; background: #FFFFFF; border-radius: 8px; font-size: 0.82rem; font-weight: 600; color: #475569; cursor: pointer; text-align: center; transition: all 0.2s;">
-                    📊 Administrator
-                  </button>
-                </div>
+                <input type="password" id="reg-password-input" name="regPassword" class="form-control" required placeholder="Min. 6 characters" minlength="6"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
               </div>
-
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label class="form-label"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Full
-                  Name</label>
-                <input type="text" name="regName" class="form-control" required placeholder="e.g. Maria Santos"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
+              <div class="form-group">
+                <label class="form-label" id="lbl-reg-confirm-password" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Confirm Password *
+                </label>
+                <input type="password" id="reg-confirm-password-input" name="regConfirmPassword" class="form-control" required placeholder="Repeat password" minlength="6"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
               </div>
+            </div>
 
-              <div class="grid-2" style="margin-bottom: 1rem;">
-                <div class="form-group">
-                  <label class="form-label"
-                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Email
-                    or Mobile</label>
-                  <input type="text" name="regEmail" class="form-control" required placeholder="e.g. maria@gmail.com"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                </div>
-                <div class="form-group">
-                  <label class="form-label"
-                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Password</label>
-                  <input type="password" name="regPassword" class="form-control" required placeholder="Create password"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                </div>
-              </div>
+            <button type="submit" id="btn-details-submit" class="btn-auth-submit">
+              Next: Add Children →
+            </button>
 
-              <!-- Role-Specific Fields for Parent -->
-              <div id="startup-signup-parent">
-                <div class="grid-2" style="margin-bottom: 1rem;">
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Child's
-                      Name</label>
-                    <input type="text" name="regChildName" class="form-control" placeholder="e.g. Ethan Santos"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Child
-                      Age in Months</label>
-                    <input type="number" name="regChildAge" class="form-control" min="6" max="59" value="18"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                  </div>
-                </div>
-                <div class="form-group" style="margin-bottom: 1rem;">
-                  <label class="form-label"
-                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Barangay
-                    Residence</label>
-                  <select name="regBarangay" class="form-select"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                    <option value="Barangay San Jose">Barangay San Jose</option>
-                    <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                    <option value="Barangay San Isidro">Barangay San Isidro</option>
-                    <option value="Barangay Poblacion">Barangay Poblacion</option>
-                  </select>
-                </div>
-              </div>
+            <div class="auth-footer-prompt">
+              Already have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignIn()">Sign in</a>
+            </div>
+          </form>
+        </div>
 
-              <!-- Role-Specific Fields for BHW -->
-              <div id="startup-signup-bhw" style="display: none;">
-                <div class="grid-2" style="margin-bottom: 1rem;">
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">BHW
-                      Accreditation ID</label>
-                    <input type="text" name="regBhwId" class="form-control" placeholder="e.g. BHW-2026-4412"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Barangay
-                      Assignment</label>
-                    <select name="regBhwBarangay" class="form-select"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                      <option value="Barangay San Jose">Barangay San Jose</option>
-                      <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                      <option value="Barangay San Isidro">Barangay San Isidro</option>
-                      <option value="Barangay Poblacion">Barangay Poblacion</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
+        <!-- ====================================================================
+             SCREEN 4: SIGN IN CREDENTIALS SCREEN
+             ==================================================================== -->
+        <div id="screen-auth-signin" style="display: none;">
+          <button type="button" class="auth-back-btn" onclick="NutriApp.goToRoleSelectSignIn()" id="btn-back-to-signin-roles">
+            ← Back
+          </button>
 
-              <!-- Role-Specific Fields for Field Data Collector -->
-              <div id="startup-signup-collector" style="display: none;">
-                <div class="grid-2" style="margin-bottom: 1rem;">
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Survey Unit / Agency</label>
-                    <input type="text" name="regCollectorAgency" class="form-control" value="Community Nutrition Survey Unit"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Field Barangay</label>
-                    <select name="regCollectorBarangay" class="form-select"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                      <option value="Barangay San Jose">Barangay San Jose</option>
-                      <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                      <option value="Barangay San Isidro">Barangay San Isidro</option>
-                      <option value="Barangay Poblacion">Barangay Poblacion</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Role-Specific Fields for Admin -->
-              <div id="startup-signup-mho" style="display: none;">
-                <div class="grid-2" style="margin-bottom: 1rem;">
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Office
-                      / Department</label>
-                    <input type="text" name="regMhoDept" class="form-control" value="Municipal Health Office"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label"
-                      style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">Official
-                      Designation</label>
-                    <input type="text" name="regMhoDesignation" class="form-control"
-                      placeholder="e.g. Municipal Nutrition Action Officer"
-                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.65rem 0.85rem;">
-                  </div>
-                </div>
-              </div>
-
-              <button type="submit" id="btn-startup-submit-signup" class="btn-portal-continue"
-                style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
-                Create Account
-              </button>
-
-              <!-- Phase 3 Footer Link to Sign In -->
-              <div class="portal-footer-register" style="margin-top: 0.75rem; text-align: center; font-size: 0.86rem; color: #475569;">
-                <span id="signup-have-account-prompt">May account ka na?</span> <a href="javascript:void(0)" onclick="NutriApp.setStartupPhase(1, 'signin')" style="color: #0E3D26; font-weight: 700; text-decoration: underline;" id="signup-signin-link">Mag-sign in dito</a>
-              </div>
-            </form>
+          <!-- Signing in as Badge (Screenshot 4) -->
+          <div class="signing-in-as-card">
+            <div class="signing-in-as-icon" id="signin-badge-icon">👩‍👧</div>
+            <div>
+              <div class="signing-in-as-title" id="signin-badge-title">Parent / Guardian</div>
+              <div class="signing-in-as-sub" id="signin-badge-sub">Signing in as</div>
+            </div>
           </div>
+
+          <h2 class="auth-display-title" id="lbl-signin-title">Sign in</h2>
+          <div class="auth-display-subtitle" id="lbl-signin-subtitle">Enter your credentials to access NutriLearn</div>
+
+          <form id="form-auth-signin" onsubmit="NutriApp.submitSignIn(event)">
+            <div class="form-group" style="margin-bottom: 1rem;">
+              <label class="form-label" id="lbl-signin-email" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                Email address
+              </label>
+              <input type="text" id="input-signin-email" name="signinEmail" class="form-control" required placeholder="you@example.com"
+                value="maria.parent@nutrilearn.ph"
+                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 1.25rem;">
+              <label class="form-label" id="lbl-signin-password" style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                Password
+              </label>
+              <input type="password" id="input-signin-password" name="signinPassword" class="form-control" required value="password123" placeholder="••••••••"
+                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+            </div>
+
+            <button type="submit" id="btn-signin-submit" class="btn-auth-submit">
+              Sign in
+            </button>
+
+            <!-- Demo accounts box (Screenshot 4) -->
+            <div class="demo-accounts-card">
+              <div class="demo-accounts-heading" id="lbl-demo-accounts-heading">Demo accounts</div>
+              <div class="demo-account-item" onclick="NutriApp.fillDemoLogin('parent')">
+                <span class="demo-role-label">Parent:</span> <span class="demo-role-val">maria@example.com / demo</span>
+              </div>
+              <div class="demo-account-item" onclick="NutriApp.fillDemoLogin('chw')">
+                <span class="demo-role-label">Health Worker:</span> <span class="demo-role-val">ana@example.com / demo</span>
+              </div>
+              <div class="demo-account-item" onclick="NutriApp.fillDemoLogin('mho')">
+                <span class="demo-role-label">Admin:</span> <span class="demo-role-val">jose@example.com / demo</span>
+              </div>
+            </div>
+
+            <div class="auth-footer-prompt">
+              Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignUp()">Register here</a>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -3098,20 +2987,20 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/config.js?v=2.6"></script>
+  <script src="js/config.js?v=2.7"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabaseClient.js?v=2.6"></script>
+  <script src="js/supabaseClient.js?v=2.7"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=2.6"></script>
-  <script src="js/data.js?v=2.6"></script>
-  <script src="js/exportUtils.js?v=2.6"></script>
-  <script src="js/healthWorker.js?v=2.6"></script>
-  <script src="js/parentLearning.js?v=2.6"></script>
-  <script src="js/mhoDashboard.js?v=2.6"></script>
-  <script src="js/announcements.js?v=2.6"></script>
-  <script src="js/i18n.js?v=2.6"></script>
-  <script src="js/app.js?v=2.6"></script>
+  <script src="js/apiClient.js?v=2.7"></script>
+  <script src="js/data.js?v=2.7"></script>
+  <script src="js/exportUtils.js?v=2.7"></script>
+  <script src="js/healthWorker.js?v=2.7"></script>
+  <script src="js/parentLearning.js?v=2.7"></script>
+  <script src="js/mhoDashboard.js?v=2.7"></script>
+  <script src="js/announcements.js?v=2.7"></script>
+  <script src="js/i18n.js?v=2.7"></script>
+  <script src="js/app.js?v=2.7"></script>
 </body>
 
 </html>
