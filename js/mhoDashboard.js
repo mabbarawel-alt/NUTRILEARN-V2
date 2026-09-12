@@ -41,9 +41,11 @@ const MHODashboard = {
     const elImproved = document.getElementById('mho-kpi-improved');
     const elWasted = document.getElementById('mho-kpi-wasted');
 
+    const targetProgressHtml = `<span style="font-size: 1.25rem; font-weight: 800;">${actualReduction}% pts</span> <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ 10% Goal (${reductionProgressPct}%)</span>`;
+
     if (elTotal) elTotal.textContent = total;
     if (elStuntingRate) elStuntingRate.textContent = `${currentStuntingRate}%`;
-    if (elTargetProgress) elTargetProgress.textContent = `${actualReduction}% pts / 10% Goal (${reductionProgressPct}%)`;
+    if (elTargetProgress) elTargetProgress.innerHTML = targetProgressHtml;
     if (elTargetBar) elTargetBar.style.width = `${reductionProgressPct}%`;
     if (elImproved) elImproved.textContent = improved;
     if (elWasted) elWasted.textContent = wasted;
@@ -57,7 +59,7 @@ const MHODashboard = {
 
     if (elDashTotal) elDashTotal.textContent = total;
     if (elDashStuntingRate) elDashStuntingRate.textContent = `${currentStuntingRate}%`;
-    if (elDashTargetProgress) elDashTargetProgress.textContent = `${actualReduction}% pts / 10% Goal (${reductionProgressPct}%)`;
+    if (elDashTargetProgress) elDashTargetProgress.innerHTML = targetProgressHtml;
     if (elDashTargetBar) elDashTargetBar.style.width = `${reductionProgressPct}%`;
     if (elDashImproved) elDashImproved.textContent = improved;
 
