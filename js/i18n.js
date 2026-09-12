@@ -43,25 +43,30 @@ const NutriI18n = {
     const t = this.translations[lang] || this.translations['fil'];
 
     // 1. Update Language Selector Button States
-    const btnFil = document.getElementById('btn-lang-fil');
-    const btnEn = document.getElementById('btn-lang-en');
-    if (btnFil && btnEn) {
-      if (lang === 'fil') {
-        btnFil.style.background = '#0E3D26';
-        btnFil.style.color = '#FFFFFF';
-        btnFil.style.fontWeight = '700';
-        btnEn.style.background = 'transparent';
-        btnEn.style.color = '#475569';
-        btnEn.style.fontWeight = '600';
-      } else {
-        btnEn.style.background = '#0E3D26';
-        btnEn.style.color = '#FFFFFF';
-        btnEn.style.fontWeight = '700';
-        btnFil.style.background = 'transparent';
-        btnFil.style.color = '#475569';
-        btnFil.style.fontWeight = '600';
+    const syncPills = (idFil, idEn) => {
+      const bFil = document.getElementById(idFil);
+      const bEn = document.getElementById(idEn);
+      if (bFil && bEn) {
+        if (lang === 'fil') {
+          bFil.style.background = '#0E3D26';
+          bFil.style.color = '#FFFFFF';
+          bFil.style.fontWeight = '700';
+          bEn.style.background = 'transparent';
+          bEn.style.color = '#475569';
+          bEn.style.fontWeight = '600';
+        } else {
+          bEn.style.background = '#0E3D26';
+          bEn.style.color = '#FFFFFF';
+          bEn.style.fontWeight = '700';
+          bFil.style.background = 'transparent';
+          bFil.style.color = '#475569';
+          bFil.style.fontWeight = '600';
+        }
       }
-    }
+    };
+
+    syncPills('btn-lang-fil', 'btn-lang-en');
+    syncPills('btn-lang-top-fil', 'btn-lang-top-en');
 
     // Header Language Toggle Button
     const headerLangLabel = document.getElementById('header-lang-label');

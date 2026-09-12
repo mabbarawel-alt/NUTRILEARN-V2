@@ -44,6 +44,17 @@
           <span class="db-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block;"></span>
           <span id="startup-db-status-text">Database: Connecting...</span>
         </div>
+
+        <!-- Top Language Selector Pill (Instantly visible without scrolling) -->
+        <div class="startup-top-lang-pill" style="margin-top: 0.75rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #FFFFFF; padding: 4px 8px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+          <span style="font-size: 0.76rem; font-weight: 700; color: #475569; margin-left: 4px; margin-right: 2px;">🌐 Wika / Lang:</span>
+          <button type="button" class="btn-lang-choice active" id="btn-lang-top-fil" onclick="NutriI18n.setLanguage('fil')" style="padding: 4px 12px; border-radius: 9999px; border: none; font-size: 0.78rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">
+            🇵🇭 Filipino
+          </button>
+          <button type="button" class="btn-lang-choice" id="btn-lang-top-en" onclick="NutriI18n.setLanguage('en')" style="padding: 4px 12px; border-radius: 9999px; border: none; font-size: 0.78rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
+            🇺🇸 English
+          </button>
+        </div>
       </div>
 
       <div class="startup-card">
@@ -124,15 +135,15 @@
           </div>
 
           <!-- Select Language (Filipino / English) -->
-          <div class="portal-language-selector" style="margin-top: 1.5rem; padding-top: 1.1rem; border-top: 1px solid #E2E8F0; text-align: center;">
-            <div style="font-size: 0.78rem; font-weight: 700; color: #64748B; margin-bottom: 0.55rem; text-transform: uppercase; letter-spacing: 0.05em;" id="lbl-language-title">
-              Piliin ang Wika / Select Language:
+          <div class="portal-language-selector" style="margin-top: 1.5rem; padding-top: 1.1rem; border-top: 1.5px dashed #CBD5E1; text-align: center;">
+            <div style="font-size: 0.82rem; font-weight: 700; color: #334155; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.05em;" id="lbl-language-title">
+              🌐 Piliin ang Wika / Select Language:
             </div>
-            <div class="lang-switch-pills" style="display: inline-flex; background: #F1F5F9; padding: 4px; border-radius: 9999px; border: 1.5px solid #CBD5E1; gap: 4px;">
-              <button type="button" class="btn-lang-choice active" id="btn-lang-fil" onclick="NutriI18n.setLanguage('fil')" style="padding: 6px 14px; border-radius: 9999px; border: none; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #0E3D26; color: #FFFFFF;">
+            <div class="lang-switch-pills" style="display: inline-flex; background: #FFFFFF; padding: 4px; border-radius: 9999px; border: 2px solid #0E3D26; gap: 4px; box-shadow: 0 3px 8px rgba(14,61,38,0.12);">
+              <button type="button" class="btn-lang-choice active" id="btn-lang-fil" onclick="NutriI18n.setLanguage('fil')" style="padding: 7px 18px; border-radius: 9999px; border: none; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #0E3D26; color: #FFFFFF;">
                 🇵🇭 Filipino
               </button>
-              <button type="button" class="btn-lang-choice" id="btn-lang-en" onclick="NutriI18n.setLanguage('en')" style="padding: 6px 14px; border-radius: 9999px; border: none; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569;">
+              <button type="button" class="btn-lang-choice" id="btn-lang-en" onclick="NutriI18n.setLanguage('en')" style="padding: 7px 18px; border-radius: 9999px; border: none; font-size: 0.86rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569;">
                 🇺🇸 English
               </button>
             </div>

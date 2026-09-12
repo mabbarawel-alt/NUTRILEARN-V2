@@ -870,17 +870,19 @@
   background: #FCFAF7; /* Warm light ivory as in screenshot */
   z-index: 2500;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 2rem 1.25rem;
+  justify-content: flex-start;
+  padding: 2.5rem 1.25rem 5rem 1.25rem;
 }
 
 .startup-container {
   max-width: 460px;
   width: 100%;
-  margin: auto;
+  margin: 0 auto;
+  padding-bottom: 2.5rem;
 }
 
 .startup-brand-header {
