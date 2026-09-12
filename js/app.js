@@ -13,6 +13,9 @@ const NutriApp = {
   init() {
     console.log('🌱 Initializing NutriLearn App...');
     NutriStorage.init();
+    if (window.NutriI18n) {
+      NutriI18n.init();
+    }
 
     this.registerServiceWorker();
     this.bindGlobalEvents();
@@ -89,19 +92,28 @@ const NutriApp = {
     const tabSignup = document.getElementById('tab-portal-signup');
     const continueBtn = document.getElementById('btn-portal-continue');
     const footerLink = document.getElementById('portal-footer-link');
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
 
     if (tabSignin) tabSignin.classList.toggle('active', action === 'signin');
     if (tabSignup) tabSignup.classList.toggle('active', action === 'signup');
 
     if (continueBtn) {
-      continueBtn.textContent = action === 'signin' ? 'Continue to Sign In' : 'Continue to Sign Up';
+      if (isFil) {
+        continueBtn.textContent = action === 'signin' ? 'Magpatuloy sa Pag-sign In' : 'Magpatuloy sa Pagrehistro';
+      } else {
+        continueBtn.textContent = action === 'signin' ? 'Continue to Sign In' : 'Continue to Sign Up';
+      }
     }
 
     if (footerLink) {
       if (action === 'signin') {
-        footerLink.innerHTML = `Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">Sign up here</a>`;
+        const prompt = isFil ? 'Wala kang account?' : "Don't have an account?";
+        const linkText = isFil ? 'Magparehistro dito' : 'Sign up here';
+        footerLink.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">${linkText}</a>`;
       } else {
-        footerLink.innerHTML = `Already have an account? <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signin')">Sign in here</a>`;
+        const prompt = isFil ? 'May account ka na?' : 'Already have an account?';
+        const linkText = isFil ? 'Mag-sign in dito' : 'Sign in here';
+        footerLink.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signin')">${linkText}</a>`;
       }
     }
   },
@@ -162,18 +174,32 @@ const NutriApp = {
 
   // Update Startup Form Banner and Fields based on chosen portal
   updateStartupFormDisplay(mode = 'signin') {
-    const titles = {
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    
+    const titles = isFil ? {
+      parent: 'Magulang / Tagapag-alaga',
+      chw: 'Manggagawa sa Kalusugan (BHW/BNS)',
+      collector: 'Tagakolekta ng Datos sa Larangan',
+      mho: 'Administrator (MHO)'
+    } : {
       parent: 'Parent / Guardian',
       chw: 'Health Worker (BHW/BNS)',
       collector: 'Field Data Collector',
       mho: 'Administrator'
     };
-    const demoNames = {
+
+    const demoNames = isFil ? {
+      parent: 'Maria Ramos (Magulang)',
+      chw: 'Sister Teresa Lim (Health Worker)',
+      collector: 'Mark Reyes (Tagakolekta)',
+      mho: 'Dr. Elena Cruz (Administrator)'
+    } : {
       parent: 'Maria Ramos (Parent)',
       chw: 'Sister Teresa Lim (Health Worker)',
       collector: 'Mark Reyes (Data Collector)',
       mho: 'Dr. Elena Cruz (Administrator)'
     };
+
     const defaultEmails = {
       parent: 'maria.parent@nutrilearn.ph',
       chw: 'teresa.bhw@nutrilearn.ph',
@@ -187,11 +213,14 @@ const NutriApp = {
     const emailInput = document.getElementById('startup-login-username');
     const submitBtn = document.getElementById('btn-startup-submit-signin');
 
-    if (signinTitle) signinTitle.textContent = titles[this.currentAuthRole] || 'User Portal';
-    if (signupTitle) signupTitle.textContent = titles[this.currentAuthRole] || 'User Portal';
-    if (demoBtn) demoBtn.innerHTML = `Demo Login as <strong>${demoNames[this.currentAuthRole] || 'Demo User'}</strong>`;
+    if (signinTitle) signinTitle.textContent = titles[this.currentAuthRole] || (isFil ? 'Portal ng Gumagamit' : 'User Portal');
+    if (signupTitle) signupTitle.textContent = titles[this.currentAuthRole] || (isFil ? 'Portal ng Gumagamit' : 'User Portal');
+    if (demoBtn) {
+      const demoPrefix = isFil ? 'Demo Login bilang' : 'Demo Login as';
+      demoBtn.innerHTML = `${demoPrefix} <strong>${demoNames[this.currentAuthRole] || 'Demo User'}</strong>`;
+    }
     if (emailInput) emailInput.value = defaultEmails[this.currentAuthRole] || '';
-    if (submitBtn) submitBtn.textContent = 'Sign In';
+    if (submitBtn) submitBtn.textContent = isFil ? 'Mag-sign In' : 'Sign In';
 
     // Show/hide role specific registration fields in sign-up phase
     const parentFields = document.getElementById('startup-signup-parent');
@@ -853,6 +882,15 @@ const NutriApp = {
     link.click();
     document.body.removeChild(link);
     this.showToast('📥 Downloading NutriLearn-Windows.bat desktop launcher...', 'success');
+  },
+
+  // Language Switcher Handlers
+  setLanguage(lang) {
+    if (window.NutriI18n) NutriI18n.setLanguage(lang);
+  },
+
+  toggleLanguage() {
+    if (window.NutriI18n) NutriI18n.toggleLanguage();
   }
 };
 

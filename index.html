@@ -118,9 +118,24 @@
           </button>
 
           <!-- Register Footer Link -->
-          <div class="portal-footer-register">
+          <div class="portal-footer-register" id="portal-footer-register-link">
             Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.setStartupPhase('signup')">Register
               here</a>
+          </div>
+
+          <!-- Select Language (Filipino / English) -->
+          <div class="portal-language-selector" style="margin-top: 1.5rem; padding-top: 1.1rem; border-top: 1px solid #E2E8F0; text-align: center;">
+            <div style="font-size: 0.78rem; font-weight: 700; color: #64748B; margin-bottom: 0.55rem; text-transform: uppercase; letter-spacing: 0.05em;" id="lbl-language-title">
+              Piliin ang Wika / Select Language:
+            </div>
+            <div class="lang-switch-pills" style="display: inline-flex; background: #F1F5F9; padding: 4px; border-radius: 9999px; border: 1.5px solid #CBD5E1; gap: 4px;">
+              <button type="button" class="btn-lang-choice active" id="btn-lang-fil" onclick="NutriI18n.setLanguage('fil')" style="padding: 6px 14px; border-radius: 9999px; border: none; font-size: 0.82rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #0E3D26; color: #FFFFFF;">
+                🇵🇭 Filipino
+              </button>
+              <button type="button" class="btn-lang-choice" id="btn-lang-en" onclick="NutriI18n.setLanguage('en')" style="padding: 6px 14px; border-radius: 9999px; border: none; font-size: 0.82rem; font-weight: 600; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569;">
+                🇺🇸 English
+              </button>
+            </div>
           </div>
         </div>
 
@@ -382,6 +397,11 @@
               <span class="user-badge-role" id="header-user-role">Parent</span>
             </div>
           </div>
+
+          <!-- Language Switcher in Header -->
+          <button class="btn-lang-header-toggle" onclick="NutriI18n.toggleLanguage()" id="btn-header-lang" title="Palitan ang Wika / Switch Language" style="display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.3); border-radius: 9999px; padding: 4px 11px; color: #FFFFFF; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background 0.2s;">
+            <span id="header-lang-label">🇵🇭 Filipino</span>
+          </button>
 
           <!-- Sign Out Button -->
           <button class="btn-signout" onclick="NutriApp.logout()" title="Sign out of NutriLearn">
@@ -3023,6 +3043,7 @@
   <script src="js/parentLearning.js?v=2.4"></script>
   <script src="js/mhoDashboard.js?v=2.4"></script>
   <script src="js/announcements.js?v=2.4"></script>
+  <script src="js/i18n.js?v=2.4"></script>
   <script src="js/app.js?v=2.4"></script>
 </body>
 
