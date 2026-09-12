@@ -447,10 +447,31 @@ const NutriApp = {
 
   // Service Worker Registration for PWA & Offline Access
   registerServiceWorker() {
-    if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-      navigator.serviceWorker.register('./sw.js')
-        .then((reg) => console.log('✓ Service Worker Registered successfully:', reg.scope))
-        .catch((err) => console.warn('Service Worker registration note:', err.message));
+    if ('serviceWorker' in navigator) {
+      // In local development, unregister any stale service workers and clear cache
+      if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        navigator.serviceWorker.getRegistrations().then((regs) => {
+          for (let reg of regs) {
+            reg.unregister();
+            console.log('🔄 [Dev Mode] Unregistered Service Worker to ensure fresh view');
+          }
+        });
+        if ('caches' in window) {
+          caches.keys().then((names) => {
+            for (let name of names) caches.delete(name);
+          });
+        }
+        return;
+      }
+
+      if (window.location.protocol.startsWith('http')) {
+        navigator.serviceWorker.register('./sw.js?v=2.7')
+          .then((reg) => {
+            reg.update();
+            console.log('✓ Service Worker Registered successfully:', reg.scope);
+          })
+          .catch((err) => console.warn('Service Worker registration note:', err.message));
+      }
     }
   },
 
