@@ -112,9 +112,9 @@ const NutriApp = {
     this.switchAuthScreen('screen-auth-signin');
 
     const roleNames = {
-      parent: { en: 'Parent / Guardian', fil: 'Magulang / Tagapag-alaga', icon: '👩‍👧', email: 'maria.parent@nutrilearn.ph' },
-      chw: { en: 'Health Worker', fil: 'Manggagawa sa Kalusugan (BHW)', icon: '🩺', email: 'teresa.bhw@nutrilearn.ph' },
-      mho: { en: 'Administrator', fil: 'Administrator (MHO)', icon: '📊', email: 'admin.mho@nutrilearn.ph' }
+      parent: { en: 'Parent / Guardian', fil: 'Magulang / Tagapag-alaga', icon: '👩‍👧' },
+      chw: { en: 'Health Worker', fil: 'Manggagawa sa Kalusugan (BHW)', icon: '🩺' },
+      mho: { en: 'Administrator', fil: 'Administrator (MHO)', icon: '📊' }
     };
     const info = roleNames[role] || roleNames.parent;
     const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
@@ -128,8 +128,8 @@ const NutriApp = {
     if (badgeIcon) badgeIcon.textContent = info.icon;
     if (badgeTitle) badgeTitle.textContent = isFil ? info.fil : info.en;
     if (badgeSub) badgeSub.textContent = isFil ? 'Pumapasok bilang' : 'Signing in as';
-    if (emailInput) emailInput.value = info.email;
-    if (passInput) passInput.value = 'password123';
+    if (emailInput) emailInput.value = '';
+    if (passInput) passInput.value = '';
   },
 
   // Screen 2 Continue clicked -> Proceed to Screen 3 (Your Details Registration Form)
@@ -148,34 +148,33 @@ const NutriApp = {
     }
   },
 
-  // Click a demo account in Demo Accounts box (Screenshot 4)
-  fillDemoLogin(role) {
-    this.currentAuthRole = role;
-    const roleEmails = {
-      parent: 'maria.parent@nutrilearn.ph',
-      chw: 'teresa.bhw@nutrilearn.ph',
-      mho: 'admin.mho@nutrilearn.ph'
-    };
-    this.proceedToSignInCredentials();
-    const emailInput = document.getElementById('input-signin-email');
-    const passInput = document.getElementById('input-signin-password');
-    if (emailInput) emailInput.value = roleEmails[role] || 'maria.parent@nutrilearn.ph';
-    if (passInput) passInput.value = 'password123';
-
-    // Auto submit demo login for frictionless testing
-    this.submitSignIn();
-  },
-
-  // Submit Sign In (Screen 4)
+  // Submit Sign In (Screen 4 & Modal)
   submitSignIn(event) {
     if (event) event.preventDefault();
-    const form = document.getElementById('form-auth-signin');
-    const email = form ? form.elements['signinEmail'].value.trim() : 'maria.parent@nutrilearn.ph';
-    const password = form ? form.elements['signinPassword'].value : 'password123';
+    const screenForm = document.getElementById('form-auth-signin');
+    const modalForm = document.getElementById('auth-signin-form');
+
+    let email = '';
+    let password = '';
+
+    if (screenForm && screenForm.elements['signinEmail']) {
+      email = (screenForm.elements['signinEmail'].value || '').trim();
+      password = screenForm.elements['signinPassword'] ? screenForm.elements['signinPassword'].value : '';
+    } else if (modalForm && modalForm.elements['loginUsername']) {
+      email = (modalForm.elements['loginUsername'].value || '').trim();
+      password = modalForm.elements['loginPassword'] ? modalForm.elements['loginPassword'].value : '';
+    }
+
+    if (!email || !password) {
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      this.showToast(isFil ? 'Pakilagay ang email at password.' : 'Please enter your email and password.', 'warning');
+      return;
+    }
 
     const result = NutriStorage.loginUser(email, password, this.currentAuthRole || 'parent');
     if (result.success) {
       this.hideStartupScreen();
+      this.closeModal('modal-auth');
       this.switchRole(result.user.role);
       this.updateUserHeaderBadge();
       const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
@@ -267,9 +266,6 @@ const NutriApp = {
     this.selectRole(role, 'signup');
   },
   updateSignupRolePills() {},
-  startupQuickDemoLogin() {
-    this.fillDemoLogin(this.currentAuthRole || 'parent');
-  },
   submitStartupSignIn(e) {
     this.submitSignIn(e);
   },
@@ -306,38 +302,14 @@ const NutriApp = {
       mho: 'Administrator'
     };
 
-    const demoNames = isFil ? {
-      parent: 'Maria Ramos (Magulang)',
-      chw: 'Sister Teresa Lim (Health Worker)',
-      collector: 'Mark Reyes (Tagakolekta)',
-      mho: 'Dr. Elena Cruz (Administrator)'
-    } : {
-      parent: 'Maria Ramos (Parent)',
-      chw: 'Sister Teresa Lim (Health Worker)',
-      collector: 'Mark Reyes (Data Collector)',
-      mho: 'Dr. Elena Cruz (Administrator)'
-    };
-
-    const defaultEmails = {
-      parent: 'maria.parent@nutrilearn.ph',
-      chw: 'teresa.bhw@nutrilearn.ph',
-      collector: 'mark.collector@nutrilearn.ph',
-      mho: 'admin.mho@nutrilearn.ph'
-    };
-
     const signinTitle = document.getElementById('startup-signin-role-title');
     const signupTitle = document.getElementById('startup-signup-role-title');
-    const demoBtn = document.getElementById('btn-startup-demo-login');
     const emailInput = document.getElementById('startup-login-username');
     const submitBtn = document.getElementById('btn-startup-submit-signin');
 
     if (signinTitle) signinTitle.textContent = titles[this.currentAuthRole] || (isFil ? 'Portal ng Gumagamit' : 'User Portal');
     if (signupTitle) signupTitle.textContent = titles[this.currentAuthRole] || (isFil ? 'Portal ng Gumagamit' : 'User Portal');
-    if (demoBtn) {
-      const demoPrefix = isFil ? 'Demo Login bilang' : 'Demo Login as';
-      demoBtn.innerHTML = `${demoPrefix} <strong>${demoNames[this.currentAuthRole] || 'Demo User'}</strong>`;
-    }
-    if (emailInput) emailInput.value = defaultEmails[this.currentAuthRole] || '';
+    if (emailInput) emailInput.value = '';
     if (submitBtn) submitBtn.textContent = isFil ? 'Mag-sign In' : 'Sign In';
 
     // Show/hide role specific registration fields in sign-up phase
@@ -419,18 +391,6 @@ const NutriApp = {
     this.showToast(`🎉 Registration successful! Welcome to NutriLearn, ${newUser.name}.`, 'success');
   },
 
-  // 1-Click Instant Demo Login on Startup Screen
-  startupQuickDemoLogin() {
-    const users = NutriStorage.getUsers();
-    const user = users.find(u => u.role === this.currentAuthRole);
-    if (user) {
-      NutriStorage.setCurrentUser(user);
-      this.hideStartupScreen();
-      this.switchRole(user.role);
-      this.updateUserHeaderBadge();
-      this.showToast(`✨ Signed in as ${user.name} (${user.role.toUpperCase()})`, 'success');
-    }
-  },
 
   // Sign Out / Logout - Enforces return to Startup Gate
   logout() {
@@ -784,39 +744,8 @@ const NutriApp = {
     if (bhwFields) bhwFields.style.display = this.currentAuthRole === 'chw' ? 'block' : 'none';
     if (mhoFields) mhoFields.style.display = this.currentAuthRole === 'mho' ? 'block' : 'none';
 
-    // Update Quick Demo Login Label
-    const demoBtn = document.getElementById('btn-quick-demo-login');
-    if (demoBtn) {
-      const demoNames = {
-        parent: 'Maria Ramos (Parent)',
-        chw: 'Sister Teresa Lim (BHW)',
-        mho: 'Dr. Elena Cruz (Admin)'
-      };
-      demoBtn.innerHTML = `Demo Login as <strong>${demoNames[this.currentAuthRole] || 'User'}</strong>`;
-    }
-
     // Default to signin mode
     this.switchAuthMode('signin');
-  },
-
-  // Handle Sign In submission
-  submitSignIn(event) {
-    if (event) event.preventDefault();
-    const form = document.getElementById('auth-signin-form');
-    if (!form) return;
-
-    const emailOrName = form.elements['loginUsername'].value;
-    const password = form.elements['loginPassword'].value;
-
-    const result = NutriStorage.loginUser(emailOrName, password, this.currentAuthRole);
-    if (result.success) {
-      this.closeModal('modal-auth');
-      this.switchRole(result.user.role);
-      this.updateUserHeaderBadge();
-      this.showToast(`👋 Welcome back, ${result.user.name}!`, 'success');
-    } else {
-      this.showToast(result.message, 'warning');
-    }
   },
 
   // Handle Sign Up registration
@@ -858,20 +787,6 @@ const NutriApp = {
     this.switchRole(newUser.role);
     this.updateUserHeaderBadge();
     this.showToast(`🎉 Registration successful! Welcome to NutriLearn, ${newUser.name}.`, 'success');
-  },
-
-  // One-click demo login
-  quickDemoLogin(role = null) {
-    const targetRole = role || this.currentAuthRole;
-    const users = NutriStorage.getUsers();
-    const user = users.find(u => u.role === targetRole);
-    if (user) {
-      NutriStorage.setCurrentUser(user);
-      this.closeModal('modal-auth');
-      this.switchRole(user.role);
-      this.updateUserHeaderBadge();
-      this.showToast(`✨ Signed in as ${user.name} (${user.role.toUpperCase()})`, 'success');
-    }
   },
 
   // Update Header User Profile details

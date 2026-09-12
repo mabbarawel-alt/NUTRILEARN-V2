@@ -800,14 +800,6 @@
   align-items: center;
 }
 
-.auth-demo-box {
-  background: #F8FAF9;
-  border: 1px solid var(--border-light);
-  border-radius: var(--radius-md);
-  padding: 0.75rem;
-  margin-top: 1rem;
-  text-align: center;
-}
 
 /* User Profile Badge in Header */
 .user-profile-badge {
@@ -1180,44 +1172,6 @@
   font-size: 0.78rem;
   color: #64748B;
   font-weight: 500;
-}
-
-/* Demo accounts box (Screenshot 4) */
-.demo-accounts-card {
-  background: #EFECE4;
-  border-radius: 12px;
-  padding: 0.9rem 1.15rem;
-  margin-top: 1.35rem;
-  font-size: 0.84rem;
-  text-align: left;
-}
-
-.demo-accounts-heading {
-  font-weight: 700;
-  color: #1E293B;
-  margin-bottom: 0.45rem;
-  font-size: 0.86rem;
-}
-
-.demo-account-item {
-  color: #475569;
-  padding: 3px 0;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.demo-account-item:hover {
-  color: #0E3D26;
-  font-weight: 600;
-}
-
-.demo-role-label {
-  font-weight: 600;
-  color: #334155;
-}
-
-.demo-role-val {
-  color: #64748B;
 }
 
 /* Button variants matching screenshots */

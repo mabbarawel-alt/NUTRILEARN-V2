@@ -170,9 +170,6 @@ const NutriI18n = {
     const btnSigninSubmit = document.getElementById('btn-signin-submit');
     if (btnSigninSubmit) btnSigninSubmit.textContent = t.btn_signin;
 
-    const demoHeading = document.getElementById('lbl-demo-accounts-heading');
-    if (demoHeading) demoHeading.textContent = t.demo_accounts_heading;
-
     // Refresh active badge text if on screen 4
     const badgeTitle = document.getElementById('signin-badge-title');
     if (badgeTitle && window.NutriApp) {
@@ -240,7 +237,6 @@ const NutriI18n = {
       signin_badge_sub: 'Pumapasok bilang',
       lbl_signin_email: 'Email address',
       lbl_signin_password: 'Password',
-      demo_accounts_heading: 'Mga Demo Account',
       signup_heading: 'Gumawa ng Account',
       signup_role_subtitle: 'Sino ang nais mong irehistro?',
       card_signup_parent_desc: 'Subaybayan ang nutrisyon ng bata at i-access ang learning modules.',
@@ -307,7 +303,6 @@ const NutriI18n = {
       signin_badge_sub: 'Signing in as',
       lbl_signin_email: 'Email address',
       lbl_signin_password: 'Password',
-      demo_accounts_heading: 'Demo accounts',
       signup_heading: 'Create account',
       signup_role_subtitle: 'Who are you registering as?',
       card_signup_parent_desc: 'Track your child\'s nutrition and access learning modules.',

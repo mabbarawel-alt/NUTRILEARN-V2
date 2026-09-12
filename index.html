@@ -303,7 +303,7 @@
                 Email address
               </label>
               <input type="text" id="input-signin-email" name="signinEmail" class="form-control" required
-                placeholder="you@example.com" value="maria.parent@nutrilearn.ph"
+                placeholder="you@example.com"
                 style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
             </div>
 
@@ -313,28 +313,13 @@
                 Password
               </label>
               <input type="password" id="input-signin-password" name="signinPassword" class="form-control" required
-                value="password123" placeholder="••••••••"
+                placeholder="••••••••"
                 style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
             </div>
 
             <button type="submit" id="btn-signin-submit" class="btn-auth-submit">
               Sign in
             </button>
-
-            <!-- Demo accounts box (Screenshot 4) -->
-            <div class="demo-accounts-card">
-              <div class="demo-accounts-heading" id="lbl-demo-accounts-heading">Demo accounts</div>
-              <div class="demo-account-item" onclick="NutriApp.fillDemoLogin('parent')">
-                <span class="demo-role-label">Parent:</span> <span class="demo-role-val">maria@example.com / demo</span>
-              </div>
-              <div class="demo-account-item" onclick="NutriApp.fillDemoLogin('chw')">
-                <span class="demo-role-label">Health Worker:</span> <span class="demo-role-val">ana@example.com /
-                  demo</span>
-              </div>
-              <div class="demo-account-item" onclick="NutriApp.fillDemoLogin('mho')">
-                <span class="demo-role-label">Admin:</span> <span class="demo-role-val">jose@example.com / demo</span>
-              </div>
-            </div>
 
             <div class="auth-footer-prompt">
               Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignUp()">Register
@@ -2202,26 +2187,18 @@
             <div class="form-group">
               <label class="form-label">Email or Username</label>
               <input type="text" name="loginUsername" class="form-control" required
-                placeholder="e.g. maria.parent@nutrilearn.ph" value="maria.parent@nutrilearn.ph">
+                placeholder="e.g. your.email@example.com">
             </div>
 
             <div class="form-group">
               <label class="form-label">Password</label>
-              <input type="password" name="loginPassword" class="form-control" required value="password123">
+              <input type="password" name="loginPassword" class="form-control" required placeholder="••••••••">
             </div>
 
             <button type="submit" class="btn btn-primary"
               style="width: 100%; padding: 0.75rem; font-size: 0.95rem; font-weight: 600; margin-top: 0.5rem;">
               Sign In
             </button>
-
-            <!-- Quick Demo Shortcut -->
-            <div class="auth-demo-box">
-              <button type="button" class="btn btn-outline btn-sm" id="btn-quick-demo-login"
-                onclick="NutriApp.quickDemoLogin()" style="width: 100%; background: #FFFFFF;">
-                Demo Login
-              </button>
-            </div>
           </form>
 
           <!-- SIGN UP FORM -->
@@ -3020,7 +2997,7 @@
 
           <div class="form-group">
             <label class="form-label">Initial Password: <span style="color: #DC2626;">*</span></label>
-            <input type="text" name="adminUserPass" class="form-control" value="password123" required>
+            <input type="text" name="adminUserPass" class="form-control" placeholder="Enter temporary password" required>
           </div>
 
           <div class="grid-2">
@@ -3054,20 +3031,20 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/config.js?v=2.7"></script>
+  <script src="js/config.js?v=2.8"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabaseClient.js?v=2.7"></script>
+  <script src="js/supabaseClient.js?v=2.8"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=2.7"></script>
-  <script src="js/data.js?v=2.7"></script>
-  <script src="js/exportUtils.js?v=2.7"></script>
-  <script src="js/healthWorker.js?v=2.7"></script>
-  <script src="js/parentLearning.js?v=2.7"></script>
-  <script src="js/mhoDashboard.js?v=2.7"></script>
-  <script src="js/announcements.js?v=2.7"></script>
-  <script src="js/i18n.js?v=2.7"></script>
-  <script src="js/app.js?v=2.7"></script>
+  <script src="js/apiClient.js?v=2.8"></script>
+  <script src="js/data.js?v=2.8"></script>
+  <script src="js/exportUtils.js?v=2.8"></script>
+  <script src="js/healthWorker.js?v=2.8"></script>
+  <script src="js/parentLearning.js?v=2.8"></script>
+  <script src="js/mhoDashboard.js?v=2.8"></script>
+  <script src="js/announcements.js?v=2.8"></script>
+  <script src="js/i18n.js?v=2.8"></script>
+  <script src="js/app.js?v=2.8"></script>
 </body>
 
 </html>

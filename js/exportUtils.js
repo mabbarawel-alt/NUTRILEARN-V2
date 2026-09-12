@@ -109,57 +109,31 @@ const NutriStorage = {
       localStorage.setItem(this.USER_PROGRESS_KEY, JSON.stringify(initialProgress));
     }
 
-    // Default Demo Users
+    // Users storage (No demo accounts)
     if (!localStorage.getItem(this.USERS_KEY)) {
-      const demoUsers = [
-        {
-          id: 'usr-parent-1',
-          name: 'Maria Ramos',
-          email: 'maria.parent@nutrilearn.ph',
-          password: 'password123',
-          role: 'parent',
-          childName: 'Ethan Kyle Ramos',
-          childAge: 18,
-          barangay: 'Barangay San Jose',
-          status: 'Active',
-          registeredDate: '2026-08-15'
-        },
-        {
-          id: 'usr-bhw-1',
-          name: 'Sister Teresa Lim, BNS',
-          email: 'teresa.bhw@nutrilearn.ph',
-          password: 'password123',
-          role: 'chw',
-          bhwId: 'BHW-SJ-2024',
-          barangay: 'Barangay San Jose',
-          status: 'Active',
-          registeredDate: '2026-08-01'
-        },
-        {
-          id: 'usr-col-1',
-          name: 'Mark Reyes, Field Collector',
-          email: 'mark.collector@nutrilearn.ph',
-          password: 'password123',
-          role: 'collector',
-          barangay: 'Barangay San Jose',
-          agency: 'Community Nutrition Survey Unit',
-          status: 'Active',
-          registeredDate: '2026-08-20'
-        },
-        {
-          id: 'usr-admin-1',
-          name: 'Dr. Elena Cruz, MHO',
-          email: 'admin.mho@nutrilearn.ph',
-          password: 'password123',
-          role: 'mho',
-          department: 'Municipal Health Office',
-          designation: 'Municipal Health Officer',
-          status: 'Active',
-          registeredDate: '2026-07-10'
-        }
-      ];
-      localStorage.setItem(this.USERS_KEY, JSON.stringify(demoUsers));
+      localStorage.setItem(this.USERS_KEY, JSON.stringify([]));
+    } else {
+      // Remove any previously stored demo accounts
+      try {
+        const storedUsers = JSON.parse(localStorage.getItem(this.USERS_KEY) || '[]');
+        const filteredUsers = storedUsers.filter(u => 
+          !['usr-parent-1', 'usr-bhw-1', 'usr-col-1', 'usr-admin-1'].includes(u.id) &&
+          !['maria.parent@nutrilearn.ph', 'teresa.bhw@nutrilearn.ph', 'mark.collector@nutrilearn.ph', 'admin.mho@nutrilearn.ph', 'maria@example.com', 'ana@example.com', 'jose@example.com'].includes(u.email)
+        );
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(filteredUsers));
+      } catch (e) {}
     }
+
+    // Reset current active session if it was a demo user
+    try {
+      const activeUser = JSON.parse(localStorage.getItem(this.CURRENT_USER_KEY) || 'null');
+      if (activeUser && (
+        ['usr-parent-1', 'usr-bhw-1', 'usr-col-1', 'usr-admin-1'].includes(activeUser.id) ||
+        ['maria.parent@nutrilearn.ph', 'teresa.bhw@nutrilearn.ph', 'mark.collector@nutrilearn.ph', 'admin.mho@nutrilearn.ph'].includes(activeUser.email)
+      )) {
+        localStorage.removeItem(this.CURRENT_USER_KEY);
+      }
+    } catch (e) {}
   },
 
   // ==========================================================================
