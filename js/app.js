@@ -54,7 +54,7 @@ const NutriApp = {
   },
 
   // Switch between Phase 1 (Portal Selection), Phase 2 (Sign In only), and Phase 3 (Sign Up only)
-  setStartupPhase(phase) {
+  setStartupPhase(phase, actionOverride) {
     const part1 = document.getElementById('startup-part-1');
     const phaseSignin = document.getElementById('startup-phase-signin');
     const phaseSignup = document.getElementById('startup-phase-signup');
@@ -64,8 +64,8 @@ const NutriApp = {
       if (phaseSignin) phaseSignin.style.display = 'none';
       if (phaseSignup) phaseSignup.style.display = 'none';
       this.selectStartupRoleCard(this.currentAuthRole || 'parent');
-      this.portalAction = 'signin';
-      this.currentAuthMode = 'signin';
+      this.portalAction = actionOverride || this.portalAction || 'signin';
+      this.currentAuthMode = this.portalAction;
       this.setPortalAction(this.portalAction);
     } else if (phase === 2 || phase === 'signin') {
       if (part1) part1.style.display = 'none';
@@ -90,14 +90,27 @@ const NutriApp = {
     this.portalAction = action;
     const tabSignin = document.getElementById('tab-portal-signin');
     const tabSignup = document.getElementById('tab-portal-signup');
+    const lblTabSignin = document.getElementById('lbl-tab-signin');
+    const lblTabSignup = document.getElementById('lbl-tab-signup');
     const continueBtn = document.getElementById('btn-portal-continue');
     const footerLink = document.getElementById('portal-footer-link');
     const footerRegister = document.getElementById('portal-footer-register-link');
     const part1Instruction = document.getElementById('startup-part-1-instruction');
     const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
 
-    if (tabSignin) tabSignin.classList.toggle('active', action === 'signin');
-    if (tabSignup) tabSignup.classList.toggle('active', action === 'signup');
+    if (lblTabSignin) lblTabSignin.textContent = isFil ? 'Mag-sign In' : 'Sign In';
+    if (lblTabSignup) lblTabSignup.textContent = isFil ? 'Magparehistro' : 'Register';
+
+    if (tabSignin) {
+      tabSignin.classList.toggle('active', action === 'signin');
+      tabSignin.style.background = action === 'signin' ? '#0E3D26' : 'transparent';
+      tabSignin.style.color = action === 'signin' ? '#FFFFFF' : '#475569';
+    }
+    if (tabSignup) {
+      tabSignup.classList.toggle('active', action === 'signup');
+      tabSignup.style.background = action === 'signup' ? '#0E3D26' : 'transparent';
+      tabSignup.style.color = action === 'signup' ? '#FFFFFF' : '#475569';
+    }
 
     const roleNamesFil = {
       parent: 'Magulang',
@@ -120,7 +133,7 @@ const NutriApp = {
           ? 'Piliin kung anong Portal ang nais irehistro:'
           : 'Choose which Portal you want to register:';
         part1Instruction.style.background = '#ECFDF5';
-        part1Instruction.style.borderColor = '#BBF7D0';
+        part1Instruction.style.borderColor = '#10B981';
         part1Instruction.style.color = '#065F46';
       } else {
         part1Instruction.textContent = isFil
@@ -195,7 +208,7 @@ const NutriApp = {
 
   // User clicks "Register here" -> Stay on Part 1 so they can CHOOSE their role first!
   proceedToRegister() {
-    this.setStartupPhase(1);
+    this.setStartupPhase(1, 'signup');
     this.setPortalAction('signup');
   },
 

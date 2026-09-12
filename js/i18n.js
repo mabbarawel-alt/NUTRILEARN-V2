@@ -95,27 +95,27 @@ const NutriI18n = {
     if (cardMhoTitle) cardMhoTitle.textContent = t.card_mho_title;
     if (cardMhoDesc) cardMhoDesc.textContent = t.card_mho_desc;
 
-    // Continue Button
-    const continueBtn = document.getElementById('btn-portal-continue');
-    if (continueBtn && window.NutriApp) {
-      const action = NutriApp.portalAction || 'signin';
-      continueBtn.textContent = action === 'signup' ? t.btn_continue_signup : t.btn_continue_signin;
+    // Refresh Startup Portal Action (Tabs, Instruction, Continue Button, Footer Links)
+    if (window.NutriApp && typeof NutriApp.setPortalAction === 'function') {
+      NutriApp.setPortalAction(NutriApp.portalAction || 'signin');
     }
 
-    // Register / Signin Footer Link
-    const footerLink = document.getElementById('portal-footer-link');
-    if (footerLink && window.NutriApp) {
-      const action = NutriApp.portalAction || 'signin';
-      if (action === 'signin') {
-        footerLink.innerHTML = `${t.footer_no_account_text} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">${t.footer_register_link}</a>`;
-      } else {
-        footerLink.innerHTML = `${t.footer_have_account_text} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signin')">${t.footer_signin_link}</a>`;
-      }
-    }
+    // Phase 2 & Phase 3 Cross Links
+    const signinNoAccountPrompt = document.getElementById('signin-no-account-prompt');
+    const signinRegisterLink = document.getElementById('signin-register-link');
+    if (signinNoAccountPrompt) signinNoAccountPrompt.textContent = t.footer_no_account_text;
+    if (signinRegisterLink) signinRegisterLink.textContent = t.footer_register_link;
 
-    const regPrompt = document.getElementById('portal-footer-register-link');
-    if (regPrompt) {
-      regPrompt.innerHTML = `${t.footer_no_account_text} <a href="javascript:void(0)" onclick="NutriApp.setStartupPhase('signup')">${t.footer_register_link}</a>`;
+    const signupHaveAccountPrompt = document.getElementById('signup-have-account-prompt');
+    const signupSigninLink = document.getElementById('signup-signin-link');
+    if (signupHaveAccountPrompt) signupHaveAccountPrompt.textContent = t.footer_have_account_text;
+    if (signupSigninLink) signupSigninLink.textContent = t.footer_signin_link;
+
+    const lblSignupChooser = document.getElementById('lbl-signup-role-chooser');
+    if (lblSignupChooser) {
+      lblSignupChooser.textContent = lang === 'fil' 
+        ? 'Piliin kung anong Role ang irerehistro / Register as:'
+        : 'Select which Role you are registering as:';
     }
 
     const langTitleLbl = document.getElementById('lbl-language-title');

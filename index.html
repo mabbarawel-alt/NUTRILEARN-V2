@@ -62,6 +62,18 @@
              PART 1: SELECT YOUR USER PORTAL (Matches user screenshot)
              ==================================================================== -->
         <div id="startup-part-1">
+          <!-- Action Mode Switcher Tabs (Sign In vs Register) -->
+          <div class="portal-action-tabs" style="display: flex; gap: 8px; margin-bottom: 0.85rem; background: #F1F5F9; padding: 4px; border-radius: 12px; border: 1.5px solid #E2E8F0;">
+            <button type="button" id="tab-portal-signin" class="portal-action-tab active" onclick="NutriApp.setPortalAction('signin')"
+              style="flex: 1; padding: 8px 12px; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: #0E3D26; color: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <span>🔑</span> <span id="lbl-tab-signin">Mag-sign In</span>
+            </button>
+            <button type="button" id="tab-portal-signup" class="portal-action-tab" onclick="NutriApp.setPortalAction('signup')"
+              style="flex: 1; padding: 8px 12px; border: none; border-radius: 8px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; background: transparent; color: #475569; display: flex; align-items: center; justify-content: center; gap: 6px;">
+              <span>📝</span> <span id="lbl-tab-signup">Magparehistro</span>
+            </button>
+          </div>
+
           <!-- Instruction Header (Adapts dynamically to Sign In or Register) -->
           <div id="startup-part-1-instruction" style="text-align: center; margin-bottom: 0.85rem; font-size: 0.88rem; font-weight: 700; color: #1E293B; background: #F1F5F9; padding: 7px 12px; border-radius: 8px; border: 1px solid #E2E8F0;">
             Piliin ang iyong Portal / Select Portal:
@@ -206,6 +218,11 @@
                   style="width: 100%; background: #FFFFFF; border-color: #CBD5E1; color: #334155; font-weight: 600;">
                   Demo Login as <strong>Maria Ramos (Parent)</strong>
                 </button>
+              </div>
+
+              <!-- Phase 2 Footer Link to Register -->
+              <div class="portal-footer-register" style="margin-top: 1rem; text-align: center; font-size: 0.86rem; color: #475569;">
+                <span id="signin-no-account-prompt">Wala kang account?</span> <a href="javascript:void(0)" onclick="NutriApp.proceedToRegister()" style="color: #0E3D26; font-weight: 700; text-decoration: underline;" id="signin-register-link">Magparehistro dito</a>
               </div>
             </form>
           </div>
@@ -390,9 +407,14 @@
               </div>
 
               <button type="submit" id="btn-startup-submit-signup" class="btn-portal-continue"
-                style="margin-top: 0.5rem; margin-bottom: 1rem;">
+                style="margin-top: 0.5rem; margin-bottom: 0.5rem;">
                 Create Account
               </button>
+
+              <!-- Phase 3 Footer Link to Sign In -->
+              <div class="portal-footer-register" style="margin-top: 0.75rem; text-align: center; font-size: 0.86rem; color: #475569;">
+                <span id="signup-have-account-prompt">May account ka na?</span> <a href="javascript:void(0)" onclick="NutriApp.setStartupPhase(1, 'signin')" style="color: #0E3D26; font-weight: 700; text-decoration: underline;" id="signup-signin-link">Mag-sign in dito</a>
+              </div>
             </form>
           </div>
         </div>
@@ -3076,20 +3098,20 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/config.js?v=2.4"></script>
+  <script src="js/config.js?v=2.6"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabaseClient.js?v=2.4"></script>
+  <script src="js/supabaseClient.js?v=2.6"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=2.4"></script>
-  <script src="js/data.js?v=2.4"></script>
-  <script src="js/exportUtils.js?v=2.4"></script>
-  <script src="js/healthWorker.js?v=2.4"></script>
-  <script src="js/parentLearning.js?v=2.4"></script>
-  <script src="js/mhoDashboard.js?v=2.4"></script>
-  <script src="js/announcements.js?v=2.4"></script>
-  <script src="js/i18n.js?v=2.4"></script>
-  <script src="js/app.js?v=2.4"></script>
+  <script src="js/apiClient.js?v=2.6"></script>
+  <script src="js/data.js?v=2.6"></script>
+  <script src="js/exportUtils.js?v=2.6"></script>
+  <script src="js/healthWorker.js?v=2.6"></script>
+  <script src="js/parentLearning.js?v=2.6"></script>
+  <script src="js/mhoDashboard.js?v=2.6"></script>
+  <script src="js/announcements.js?v=2.6"></script>
+  <script src="js/i18n.js?v=2.6"></script>
+  <script src="js/app.js?v=2.6"></script>
 </body>
 
 </html>
