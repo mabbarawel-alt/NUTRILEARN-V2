@@ -1,0 +1,13 @@
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+js/config.local.js
+
+# Dependencies and OS
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.agignore
