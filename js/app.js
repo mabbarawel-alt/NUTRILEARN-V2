@@ -92,30 +92,77 @@ const NutriApp = {
     const tabSignup = document.getElementById('tab-portal-signup');
     const continueBtn = document.getElementById('btn-portal-continue');
     const footerLink = document.getElementById('portal-footer-link');
+    const footerRegister = document.getElementById('portal-footer-register-link');
+    const part1Instruction = document.getElementById('startup-part-1-instruction');
     const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
 
     if (tabSignin) tabSignin.classList.toggle('active', action === 'signin');
     if (tabSignup) tabSignup.classList.toggle('active', action === 'signup');
 
-    if (continueBtn) {
-      if (isFil) {
-        continueBtn.textContent = action === 'signin' ? 'Magpatuloy sa Pag-sign In' : 'Magpatuloy sa Pagrehistro';
+    const roleNamesFil = {
+      parent: 'Magulang',
+      chw: 'Health Worker (BHW)',
+      collector: 'Data Collector',
+      mho: 'Administrator'
+    };
+    const roleNamesEn = {
+      parent: 'Parent',
+      chw: 'Health Worker',
+      collector: 'Data Collector',
+      mho: 'Administrator'
+    };
+    const activeRole = this.currentAuthRole || 'parent';
+    const activeRoleName = isFil ? (roleNamesFil[activeRole] || activeRole) : (roleNamesEn[activeRole] || activeRole);
+
+    if (part1Instruction) {
+      if (action === 'signup') {
+        part1Instruction.textContent = isFil
+          ? 'Piliin kung anong Portal ang nais irehistro:'
+          : 'Choose which Portal you want to register:';
+        part1Instruction.style.background = '#ECFDF5';
+        part1Instruction.style.borderColor = '#BBF7D0';
+        part1Instruction.style.color = '#065F46';
       } else {
-        continueBtn.textContent = action === 'signin' ? 'Continue to Sign In' : 'Continue to Sign Up';
+        part1Instruction.textContent = isFil
+          ? 'Piliin ang iyong Portal / Select Portal:'
+          : 'Select your Portal / Piliin ang Portal:';
+        part1Instruction.style.background = '#F1F5F9';
+        part1Instruction.style.borderColor = '#E2E8F0';
+        part1Instruction.style.color = '#1E293B';
       }
     }
 
-    if (footerLink) {
+    if (continueBtn) {
+      if (action === 'signup') {
+        continueBtn.textContent = isFil
+          ? `Magpatuloy sa Pagrehistro bilang ${activeRoleName} →`
+          : `Continue to Register as ${activeRoleName} →`;
+        continueBtn.style.background = '#0E3D26';
+        continueBtn.style.color = '#FFFFFF';
+      } else {
+        continueBtn.textContent = isFil
+          ? `Magpatuloy sa Pag-sign In bilang ${activeRoleName} →`
+          : `Continue to Sign In as ${activeRoleName} →`;
+        continueBtn.style.background = '';
+        continueBtn.style.color = '';
+      }
+    }
+
+    const updateRegisterHtml = (container) => {
+      if (!container) return;
       if (action === 'signin') {
         const prompt = isFil ? 'Wala kang account?' : "Don't have an account?";
-        const linkText = isFil ? 'Magparehistro dito' : 'Sign up here';
-        footerLink.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">${linkText}</a>`;
+        const linkText = isFil ? 'Magparehistro dito' : 'Register here';
+        container.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signup')">${linkText}</a>`;
       } else {
         const prompt = isFil ? 'May account ka na?' : 'Already have an account?';
         const linkText = isFil ? 'Mag-sign in dito' : 'Sign in here';
-        footerLink.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signin')">${linkText}</a>`;
+        container.innerHTML = `${prompt} <a href="javascript:void(0)" onclick="NutriApp.setPortalAction('signin')">${linkText}</a>`;
       }
-    }
+    };
+
+    updateRegisterHtml(footerLink);
+    updateRegisterHtml(footerRegister);
   },
 
   // Select a role card in Part 1 (radio selection matching screenshot)
@@ -132,6 +179,9 @@ const NutriApp = {
         card.classList.remove('selected');
       }
     });
+
+    // Dynamically update the Continue button label to reflect the newly picked role
+    this.setPortalAction(this.portalAction || 'signin');
   },
 
   // User clicks "Continue" -> proceed to Sign In or Sign Up based on selected action
@@ -143,10 +193,37 @@ const NutriApp = {
     }
   },
 
-  // User clicks "Register here" -> proceed directly to dedicated Sign Up phase
+  // User clicks "Register here" -> Stay on Part 1 so they can CHOOSE their role first!
   proceedToRegister() {
+    this.setStartupPhase(1);
     this.setPortalAction('signup');
-    this.setStartupPhase('signup');
+  },
+
+  // Role Chooser Tabs inside Registration Form
+  selectSignupRole(role) {
+    this.currentAuthRole = role;
+    this.selectStartupRoleCard(role);
+    this.updateStartupFormDisplay('signup');
+    this.updateSignupRolePills(role);
+  },
+
+  updateSignupRolePills(role) {
+    ['parent', 'chw', 'collector', 'mho'].forEach(r => {
+      const btn = document.getElementById(`btn-reg-role-${r}`);
+      if (btn) {
+        if (r === role) {
+          btn.style.border = '2px solid #0E3D26';
+          btn.style.background = '#F0FDF4';
+          btn.style.color = '#0E3D26';
+          btn.style.fontWeight = '700';
+        } else {
+          btn.style.border = '1.5px solid #CBD5E1';
+          btn.style.background = '#FFFFFF';
+          btn.style.color = '#475569';
+          btn.style.fontWeight = '600';
+        }
+      }
+    });
   },
 
   // Direct choice and proceed (alias)
@@ -232,6 +309,9 @@ const NutriApp = {
     if (bhwFields) bhwFields.style.display = this.currentAuthRole === 'chw' ? 'block' : 'none';
     if (collectorFields) collectorFields.style.display = this.currentAuthRole === 'collector' ? 'block' : 'none';
     if (mhoFields) mhoFields.style.display = this.currentAuthRole === 'mho' ? 'block' : 'none';
+
+    // Synchronize role chooser pills in registration form
+    this.updateSignupRolePills(this.currentAuthRole);
   },
 
   // Submit Startup Sign In
