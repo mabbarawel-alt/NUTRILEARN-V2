@@ -6,24 +6,25 @@
 :root {
   /* Primary Dark Green Palette */
   --color-primary-900: #082819;
-  --color-primary-800: #0E3D26; /* Main Brand Green */
+  --color-primary-800: #0E3D26;
+  /* Main Brand Green */
   --color-primary-700: #145333;
   --color-primary-600: #1B6A42;
   --color-primary-500: #228553;
-  
+
   /* Mint & Leaf Accents */
   --color-accent-600: #16A34A;
   --color-accent-500: #22C55E;
   --color-accent-400: #4ADE80;
   --color-accent-200: #BBF7D0;
   --color-accent-100: #DCFCE7;
-  --color-accent-50:  #F0FDF4;
+  --color-accent-50: #F0FDF4;
 
   /* Nutrition Status Semantic Colors */
   --status-normal-bg: #ECFDF5;
   --status-normal-text: #065F46;
   --status-normal-border: #A7F3D0;
-  
+
   --status-improved-bg: #F0FDF4;
   --status-improved-text: #166534;
   --status-improved-border: #86EFAC;
@@ -37,9 +38,12 @@
   --status-severe-border: #FECACA;
 
   /* MUAC Color Bands */
-  --muac-red: #EF4444;    /* Severe Malnutrition: < 115mm */
-  --muac-yellow: #F59E0B; /* Moderate Malnutrition: 115 - 125mm */
-  --muac-green: #10B981;  /* Normal: > 125mm */
+  --muac-red: #EF4444;
+  /* Severe Malnutrition: < 115mm */
+  --muac-yellow: #F59E0B;
+  /* Moderate Malnutrition: 115 - 125mm */
+  --muac-green: #10B981;
+  /* Normal: > 125mm */
 
   /* Neutral Backgrounds & Surfaces */
   --bg-page: #F7FAF8;
@@ -47,7 +51,7 @@
   --bg-surface-subtle: #F0F5F2;
   --border-light: #E2EBE5;
   --border-medium: #CBD8D0;
-  
+
   /* Text & Typographic Hierarchy */
   --text-primary: #111E17;
   --text-secondary: #475850;
@@ -70,13 +74,15 @@
   /* Typography Font Stack */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  
+
   --max-content-width: 1280px;
   --header-height: 72px;
 }
 
 /* Base Reset */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -139,11 +145,54 @@ body {
 }
 
 .brand-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  padding: 0;
+  object-fit: contain;
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 2px 5px rgba(0, 0, 0, 0.25));
   flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand:hover .brand-icon {
+  transform: scale(1.06);
+}
+
+.dash-banner-logo-badge {
+  width: 58px;
+  height: 58px;
+  border-radius: 14px;
+  background: #FFFFFF;
+  padding: 4px;
+  object-fit: contain;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
+}
+
+.dash-banner-logo-badge:hover {
+  transform: scale(1.07);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+.admin-header-logo-badge {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: #FFFFFF;
+  padding: 3px;
+  object-fit: contain;
+  box-shadow: 0 3px 10px rgba(14, 61, 38, 0.12);
+  border: 1px solid rgba(14, 61, 38, 0.08);
+  flex-shrink: 0;
+  transition: transform 0.25s ease;
+}
+
+.admin-header-logo-badge:hover {
+  transform: scale(1.06);
 }
 
 .brand-title {
@@ -153,6 +202,25 @@ body {
   letter-spacing: -0.02em;
   color: #FFFFFF;
   line-height: 1.1;
+  display: flex;
+  align-items: center;
+}
+
+.brand-title-name-img {
+  height: 20px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
+  display: block;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2px 6px;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.brand:hover .brand-title-name-img {
+  transform: scale(1.04);
 }
 
 .brand-subtitle {
@@ -228,29 +296,103 @@ body {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
 }
 
-/* Mobile Sub-Navigation Bar */
+/* Sub-Navigation Bar & Horizontal Controls */
 .sub-nav {
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-light);
   box-shadow: var(--shadow-sm);
+  position: relative;
+  width: 100%;
+}
+
+.sub-nav-wrapper {
+  max-width: var(--max-content-width);
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  gap: 0.4rem;
+}
+
+.sub-nav-arrow {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 1.5px solid #CBD5E1;
+  color: #0E3D26;
+  font-size: 1.35rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  z-index: 5;
+  flex-shrink: 0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  line-height: 1;
+  padding: 0;
+  user-select: none;
+}
+
+.sub-nav-arrow:hover {
+  background: #0E3D26;
+  color: #FFFFFF;
+  border-color: #0E3D26;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(14, 61, 38, 0.28);
+}
+
+.sub-nav-arrow:active {
+  transform: scale(0.94);
 }
 
 .sub-nav-container {
-  max-width: var(--max-content-width);
-  margin: 0 auto;
-  padding: 0 1.25rem;
+  flex: 1;
   display: flex;
-  gap: 1.5rem;
+  gap: 1.25rem;
   overflow-x: auto;
-  scrollbar-width: none;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  padding: 0.5rem 0.5rem 0.65rem 0.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: #94A3B8 #F1F5F9;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
 }
 
+.sub-nav-container.is-dragging {
+  cursor: grabbing !important;
+  scroll-behavior: auto !important;
+  user-select: none !important;
+}
+
+/* Slim modern scrollbar for desktop Windows view */
 .sub-nav-container::-webkit-scrollbar {
-  display: none;
+  height: 6px;
+  display: block;
+}
+
+.sub-nav-container::-webkit-scrollbar-track {
+  background: #F1F5F9;
+  border-radius: 9999px;
+}
+
+.sub-nav-container::-webkit-scrollbar-thumb {
+  background: #94A3B8;
+  border-radius: 9999px;
+  transition: background 0.2s ease;
+}
+
+.sub-nav-container::-webkit-scrollbar-thumb:hover {
+  background: #0E3D26;
 }
 
 .sub-nav-link {
-  padding: 0.85rem 0.25rem;
+  padding: 0.75rem 0.35rem;
   color: var(--text-secondary);
   font-size: 0.92rem;
   font-weight: 600;
@@ -258,6 +400,7 @@ body {
   border-bottom: 3px solid transparent;
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
   transition: all 0.2s ease;
 }
 
@@ -292,8 +435,15 @@ main.main-content {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Hero Banner in Dark Green */
@@ -444,7 +594,8 @@ main.main-content {
   margin-bottom: 0.4rem;
 }
 
-.form-control, .form-select {
+.form-control,
+.form-select {
   width: 100%;
   padding: 0.65rem 0.9rem;
   font-family: inherit;
@@ -456,7 +607,8 @@ main.main-content {
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.form-control:focus, .form-select:focus {
+.form-control:focus,
+.form-select:focus {
   border-color: var(--color-primary-600);
   box-shadow: 0 0 0 3px rgba(34, 133, 83, 0.18);
   outline: none;
@@ -570,14 +722,19 @@ main.main-content {
     align-items: stretch;
     gap: 0.75rem;
   }
+
   .role-nav-wrapper {
     justify-content: center;
   }
+
   .hero-banner {
     flex-direction: column;
     align-items: flex-start;
   }
-  .grid-2, .grid-3, .grid-4 {
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
     grid-template-columns: 1fr;
   }
 }
@@ -735,8 +892,21 @@ main.main-content {
     border-bottom: 1px solid #E2E8F0 !important;
   }
 
+  .sub-nav-wrapper {
+    padding: 0.2rem 0.25rem !important;
+    gap: 0.25rem !important;
+  }
+
+  .sub-nav-arrow {
+    width: 28px !important;
+    height: 28px !important;
+    min-width: 28px !important;
+    font-size: 1.15rem !important;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12) !important;
+  }
+
   .sub-nav-container {
-    padding: 0.35rem 0.65rem !important;
+    padding: 0.35rem 0.35rem !important;
     gap: 0.45rem !important;
     display: flex !important;
     overflow-x: auto !important;
@@ -927,7 +1097,9 @@ main.main-content {
     border-radius: var(--radius-sm);
   }
 
-  .grid-2, .grid-3, .grid-4 {
+  .grid-2,
+  .grid-3,
+  .grid-4 {
     grid-template-columns: 1fr;
     gap: 0.75rem;
   }

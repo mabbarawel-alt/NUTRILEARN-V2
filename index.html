@@ -14,19 +14,22 @@
 
   <!-- PWA Manifest & Favicon -->
   <link rel="manifest" href="manifest.json">
-  <link rel="icon" type="image/svg+xml" href="assets/icons/icon-192.svg">
-  <link rel="apple-touch-icon" href="assets/icons/icon-192.svg">
+  <link rel="icon" type="image/png" href="icon/logo.png?v=5.0">
+  <link rel="apple-touch-icon" href="icon/logo.png?v=5.0">
 
-  <!-- Google Fonts: Inter & Outfit -->
+  <!-- Google Fonts: Inter, Playfair Display & Outfit -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Outfit:wght@600;700;800&display=swap"
     rel="stylesheet">
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css?v=3.0">
-  <link rel="stylesheet" href="css/components.css?v=3.0">
+  <link rel="stylesheet" href="css/styles.css?v=5.0">
+  <link rel="stylesheet" href="css/components.css?v=5.0">
+  <link rel="stylesheet" href="css/admin.css?v=5.0">
+  <link rel="stylesheet" href="css/parent.css?v=5.0">
+  <link rel="stylesheet" href="css/bhw.css?v=5.0">
 </head>
 
 <body>
@@ -38,8 +41,10 @@
     <div class="startup-container">
       <!-- Upper Center Logo, App Name, Tagline & Description -->
       <div class="startup-brand-header">
-        <img src="assets/icons/malunggay-logo.png" alt="NutriLearn Logo" class="startup-leaf-logo">
-        <h1 class="startup-brand-title">NutriLearn</h1>
+        <img src="icon/logo.png?v=5.0" alt="NutriLearn Logo" class="startup-leaf-logo" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Home" style="cursor: pointer;">
+        <h1 class="startup-brand-title" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;" title="NutriLearn - Home">
+          <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="startup-brand-name-img" style="height: 30px; width: auto; max-width: 175px; object-fit: contain;">
+        </h1>
         <div id="startup-db-status" class="db-status-badge"
           style="margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; padding: 4px 12px; border-radius: 9999px; background: #FEF3C7; color: #92400E; font-weight: 600; border: 1px solid #FDE68A;">
           <span class="db-dot"
@@ -226,11 +231,15 @@
             <div class="form-group" style="margin-bottom: 1rem;">
               <label class="form-label" id="lbl-reg-barangay"
                 style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Barangay / Address *
+                Barangay *
               </label>
-              <input type="text" id="reg-barangay-input" name="regBarangayAddress" class="form-control" required
-                placeholder="e.g. Barangay Pinyahan, Quezon City"
-                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              <select id="reg-barangay-input" name="regBarangayAddress" class="form-select" required
+                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-weight: 600; color: #1E293B; background: #fff; width: 100%;">
+                <option value="Barangay Manguiring">Barangay Manguiring</option>
+              </select>
+              <div style="font-size: 0.75rem; color: #64748B; margin-top: 0.35rem;">
+                🏛️ Tanging ang mga opisyal na Barangay na inirehistro ng Administrator ang magagamit sa sistema.
+              </div>
             </div>
 
             <div class="form-group" style="margin-bottom: 1rem;">
@@ -264,8 +273,75 @@
               </div>
             </div>
 
+            <!-- Child Details Section for Parent Registration (Syncs to BHW & Admin) -->
+            <div id="reg-child-section" style="margin-top: 1rem; margin-bottom: 1.25rem; padding: 1.15rem; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px;">
+              <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem;">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                  👶
+                </div>
+                <div>
+                  <h4 style="font-size: 0.92rem; font-weight: 700; color: #0F172A; margin: 0;">Impormasyon kan Aki (Child's Details)</h4>
+                  <div style="font-size: 0.74rem; color: #64748B;">Awtomatikong naka-sync sa BHW Malnutrition Registry asin Admin Field Records</div>
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 0.85rem;">
+                <label class="form-label" for="reg-child-name-input"
+                  style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                  Pangaran kan Aki / Child's Full Name *
+                </label>
+                <input type="text" id="reg-child-name-input" name="regChildName" class="form-control"
+                  placeholder="Halimbawa: Ethan Kyle Santos"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+              </div>
+
+              <div class="grid-2" style="margin-bottom: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="form-group">
+                  <label class="form-label" for="reg-child-age-input"
+                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                    Edad sa Bulan / Age in Months *
+                  </label>
+                  <input type="number" id="reg-child-age-input" name="regChildAge" class="form-control" min="1" max="72"
+                    placeholder="e.g. 18"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reg-child-gender-select"
+                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                    Kasarian / Gender *
+                  </label>
+                  <select id="reg-child-gender-select" name="regChildGender" class="form-control form-select"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                    <option value="Male">Lalaki (Male)</option>
+                    <option value="Female">Babaye (Female)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="form-group">
+                  <label class="form-label" for="reg-child-height-input"
+                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                    Kalandawan / Height (cm) *
+                  </label>
+                  <input type="number" id="reg-child-height-input" name="regChildHeight" step="0.1" min="30" max="150" class="form-control"
+                    placeholder="e.g. 76.5 cm"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="reg-child-weight-input"
+                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                    Gabt / Weight (kg) *
+                  </label>
+                  <input type="number" id="reg-child-weight-input" name="regChildWeight" step="0.1" min="2" max="50" class="form-control"
+                    placeholder="e.g. 9.4 kg"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                </div>
+              </div>
+            </div>
+
             <button type="submit" id="btn-details-submit" class="btn-auth-submit">
-              Next: Add Children →
+              Rehistrohon an Account / Create Account →
             </button>
 
             <div class="auth-footer-prompt">
@@ -335,13 +411,170 @@
        APPLICATION WORKSPACE (Hidden by default; unlocked ONLY after Login Phase)
        ========================================================================== -->
   <div id="app-workspace" style="display: none;">
-    <header class="app-header">
-      <div class="header-container">
+    <header class="app-header" id="main-app-header">
+      <!-- 0. CLEAN PARENT TOP TASKBAR (Matches Screenshot 1) -->
+      <div id="parent-top-taskbar" class="parent-taskbar-clean" style="display: none;">
+        <div class="parent-taskbar-left">
+          <div class="parent-brand-clean" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn Home">
+            <img src="icon/logo.png?v=5.0" alt="NutriLearn Logo" class="parent-brand-logo-img">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="parent-brand-name-img" style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
+          </div>
+
+          <!-- Clean Horizontal Navigation Pill Tabs -->
+          <nav class="parent-pill-tabs">
+            <button type="button" class="parent-pill-btn active" data-tab="learning" onclick="ParentModule.switchTab('learning')">
+              <span class="parent-pill-icon">📖</span> My Learning
+            </button>
+            <button type="button" class="parent-pill-btn" data-tab="meal-planner" onclick="ParentModule.switchTab('meal-planner')">
+              <span class="parent-pill-icon">🍲</span> Meal Planner
+            </button>
+            <button type="button" class="parent-pill-btn" data-tab="try-at-home" onclick="ParentModule.switchTab('try-at-home')">
+              <span class="parent-pill-icon">✓</span> Try It at Home
+            </button>
+            <button type="button" class="parent-pill-btn" data-tab="growth-tracker" onclick="ParentModule.switchTab('growth-tracker')">
+              <span class="parent-pill-icon">📈</span> Weight Tracker
+            </button>
+          </nav>
+        </div>
+
+        <div class="parent-taskbar-right">
+          <div class="parent-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()" title="View profile & settings">
+            <div class="parent-user-details-text">
+              <div class="parent-user-title-name" id="parent-top-user-name">Maria Santos</div>
+              <div class="parent-user-loc-sub" id="parent-top-user-loc">Zone 1, Barangay Manguiring, Calabanga</div>
+            </div>
+            <div class="parent-user-avatar-circle" id="parent-top-user-avatar">MS</div>
+          </div>
+          <button type="button" class="btn-clean-signout" onclick="NutriApp.logout()">
+            Sign out
+          </button>
+        </div>
+      </div>
+
+      <!-- 1. CLEAN ADMINISTRATOR TOP TASKBAR (Matches Screenshot) -->
+      <div id="admin-top-taskbar" class="admin-taskbar-clean" style="display: none;">
+        <div class="admin-taskbar-left">
+          <div class="admin-brand-clean" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn Overview Dashboard (Click to return to home)">
+            <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Logo" class="admin-brand-logo-img">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="admin-brand-name-img" style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
+          </div>
+
+          <!-- Horizontal Clean Navigation Tabs -->
+          <nav class="admin-clean-tabs">
+            <button type="button" class="admin-tab-btn active" data-tab="overview"
+              onclick="NutriApp.switchMHOSubTab('overview')">
+              <span class="admin-tab-icon">📖</span>
+              <span class="admin-tab-label">Overview</span>
+            </button>
+            <button type="button" class="admin-tab-btn" data-tab="records"
+              onclick="NutriApp.switchMHOSubTab('records')">
+              <span class="admin-tab-icon">📋</span>
+              <span class="admin-tab-label">Field Records</span>
+            </button>
+            <button type="button" class="admin-tab-btn" data-tab="barangays"
+              onclick="NutriApp.switchMHOSubTab('barangays')" title="Pamahalaan ang mga opisyal na Barangay sa munisipalidad">
+              <span class="admin-tab-icon">🏛️</span>
+              <span class="admin-tab-label">Barangays</span>
+            </button>
+            <button type="button" class="admin-tab-btn" data-tab="announcements"
+              onclick="NutriApp.switchMHOSubTab('announcements')">
+              <span class="admin-tab-icon">📢</span>
+              <span class="admin-tab-label">Announcements</span>
+            </button>
+            <button type="button" class="admin-tab-btn" data-tab="users" onclick="NutriApp.switchMHOSubTab('users')">
+              <span class="admin-tab-icon">👥</span>
+              <span class="admin-tab-label">Users</span>
+            </button>
+            <button type="button" class="admin-tab-btn" data-tab="content"
+              onclick="NutriApp.switchMHOSubTab('content')">
+              <span class="admin-tab-icon">📝</span>
+              <span class="admin-tab-label">Content</span>
+            </button>
+            <button type="button" class="admin-tab-btn" data-tab="audit"
+              onclick="NutriApp.switchMHOSubTab('audit')" title="View complete system audit log and change history with date and time">
+              <span class="admin-tab-icon">🛡️</span>
+              <span class="admin-tab-label">Logs &amp; History</span>
+            </button>
+          </nav>
+        </div>
+
+        <div class="admin-taskbar-right">
+          <!-- Administrator Barangay Switcher -->
+          <div class="admin-taskbar-barangay-select-wrap" style="display: flex; align-items: center; gap: 0.4rem; background: #F1F5F9; border: 1.5px solid #CBD5E1; padding: 0.25rem 0.65rem; border-radius: 9999px;">
+            <span style="font-size: 0.8rem; font-weight: 700; color: #1E293B;">📍 Barangay:</span>
+            <select id="admin-global-barangay-select" class="form-select" style="font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.4rem; border-radius: 6px; border: none; background: transparent; color: #0F172A; cursor: pointer; outline: none;" onchange="MHODashboard.setSelectedBarangay(this.value)">
+              <option value="ALL">🌐 Lahat ng Barangay</option>
+              <option value="Barangay Manguiring">Barangay Manguiring</option>
+            </select>
+          </div>
+
+          <div class="admin-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
+            title="View profile & settings">
+            <div class="admin-user-details-text">
+              <div class="admin-user-title-name" id="admin-user-display-name">Mark Anthony</div>
+              <div class="admin-user-loc-sub" id="admin-user-display-office">Barangay Manguiring Health Office, Calabanga
+              </div>
+            </div>
+            <div class="admin-user-avatar-circle" id="admin-user-display-avatar">MA</div>
+          </div>
+          <button type="button" class="btn-clean-signout" onclick="NutriApp.logout()">
+            Sign out
+          </button>
+        </div>
+      </div>
+
+      <!-- 1.5 CLEAN BHW / HEALTH WORKER TOP TASKBAR (Matches Screenshot) -->
+      <div id="bhw-top-taskbar" class="bhw-taskbar-clean" style="display: none;">
+        <div class="bhw-taskbar-left">
+          <div class="bhw-brand-clean" onclick="NutriApp.switchCHWSubTab('dashboard')" title="NutriLearn BHW Dashboard">
+            <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Logo" class="bhw-brand-logo-img">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="bhw-brand-name-img" style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
+          </div>
+
+          <!-- Horizontal Clean Pill Navigation Tabs -->
+          <nav class="bhw-pill-tabs">
+            <button type="button" class="bhw-pill-btn active" data-tab="dashboard" onclick="NutriApp.switchCHWSubTab('dashboard')">
+              <span class="bhw-pill-icon">📊</span>
+              <span>Dashboard</span>
+            </button>
+            <button type="button" class="bhw-pill-btn" data-tab="groups" onclick="NutriApp.switchCHWSubTab('groups')">
+              <span class="bhw-pill-icon">👥</span>
+              <span>Parent/Guardian Groups</span>
+            </button>
+            <button type="button" class="bhw-pill-btn" data-tab="announcements" onclick="NutriApp.switchCHWSubTab('announcements')">
+              <span class="bhw-pill-icon">📢</span>
+              <span>Announcements</span>
+            </button>
+            <button type="button" class="bhw-pill-btn" data-tab="registry" onclick="NutriApp.switchCHWSubTab('registry')">
+              <span class="bhw-pill-icon">📋</span>
+              <span>Child Records</span>
+            </button>
+          </nav>
+        </div>
+
+        <div class="bhw-taskbar-right">
+          <div class="bhw-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()" title="View profile & settings">
+            <div class="bhw-user-details-text">
+              <div class="bhw-user-title-name" id="bhw-top-user-name">Nurse Ana Reyes</div>
+              <div class="bhw-user-loc-sub" id="bhw-top-user-loc">Manguring Health Center, Zone 2, Calabanga</div>
+            </div>
+            <div class="bhw-user-avatar-circle" id="bhw-top-user-avatar">AR</div>
+          </div>
+          <button type="button" class="btn-clean-signout" onclick="NutriApp.logout()">
+            Sign out
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. STANDARD HEADER CONTAINER (For Parent & CHW Roles) -->
+      <div class="header-container" id="standard-header-container">
         <!-- Brand Logo & Title -->
-        <div class="brand">
-          <img src="assets/icons/icon-192.svg" alt="NutriLearn Logo" class="brand-icon">
+        <div class="brand" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;" title="NutriLearn Dashboard (Click to return to home)">
+          <img src="icon/logo.png?v=5.0" alt="NutriLearn Logo" class="brand-icon">
           <div>
-            <div class="brand-title">NutriLearn</div>
+            <div class="brand-title">
+              <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="brand-title-name-img" style="height: 20px; width: auto; max-width: 120px; object-fit: contain;">
+            </div>
             <div class="brand-subtitle">Child Health &amp; Nutrition</div>
           </div>
         </div>
@@ -409,39 +642,57 @@
        ========================================================================== -->
     <!-- 1. Parent Sub-Nav (Shown ONLY for Parents) -->
     <nav class="sub-nav" id="parent-sub-nav">
-      <div class="sub-nav-container">
-        <span class="sub-nav-link active parent-sub-link" data-tab="dashboard">📊 Parent Dashboard</span>
-        <span class="sub-nav-link parent-sub-link" data-tab="announcements">📢 Community Bulletins</span>
-        <span class="sub-nav-link parent-sub-link" data-tab="learning">📚 Learning Modules &amp; Quizzes</span>
-        <span class="sub-nav-link parent-sub-link" data-tab="meal-planner">🍲 Pinggang Pinoy Meal Planner</span>
-        <span class="sub-nav-link parent-sub-link" data-tab="growth-tracker">📈 My Child Growth Record</span>
+      <div class="sub-nav-wrapper">
+        <button type="button" class="sub-nav-arrow sub-nav-arrow-left" onclick="NutriApp.scrollSubNav(this, -240)"
+          title="I-scroll pakaliwa (Scroll Left)" aria-label="Scroll Left">‹</button>
+        <div class="sub-nav-container">
+          <span class="sub-nav-link active parent-sub-link" data-tab="dashboard">📊 Parent Dashboard</span>
+          <span class="sub-nav-link parent-sub-link" data-tab="announcements">📢 Community Bulletins</span>
+          <span class="sub-nav-link parent-sub-link" data-tab="learning">📚 Learning Modules &amp; Quizzes</span>
+          <span class="sub-nav-link parent-sub-link" data-tab="meal-planner">🍲 Pinggang Pinoy Meal Planner</span>
+          <span class="sub-nav-link parent-sub-link" data-tab="growth-tracker">📈 My Child Growth Record</span>
+        </div>
+        <button type="button" class="sub-nav-arrow sub-nav-arrow-right" onclick="NutriApp.scrollSubNav(this, 240)"
+          title="I-scroll pakanan (Scroll Right)" aria-label="Scroll Right">›</button>
       </div>
     </nav>
 
     <!-- 2. BHW Sub-Nav (Shown ONLY for BHW / BNS / Data Collectors) -->
     <nav class="sub-nav" id="chw-sub-nav" style="display: none;">
-      <div class="sub-nav-container">
-        <span class="sub-nav-link active chw-sub-link" data-tab="dashboard">📊 BHW Dashboard</span>
-        <span class="sub-nav-link chw-sub-link" data-tab="announcements">📢 Bulletins &amp; Advisories</span>
-        <span class="sub-nav-link chw-sub-link" data-tab="registry">📋 Malnutrition Registry</span>
-        <span class="sub-nav-link chw-sub-link" data-tab="groups">👥 Parent Groups &amp; Lessons</span>
-        <span class="sub-nav-link chw-sub-link" data-tab="calculator">📐 WHO Growth &amp; MUAC Calculator</span>
-        <span class="sub-nav-link chw-sub-link" data-tab="reporting">📤 Submit Reports to MHO</span>
+      <div class="sub-nav-wrapper">
+        <button type="button" class="sub-nav-arrow sub-nav-arrow-left" onclick="NutriApp.scrollSubNav(this, -240)"
+          title="I-scroll pakaliwa (Scroll Left)" aria-label="Scroll Left">‹</button>
+        <div class="sub-nav-container">
+          <span class="sub-nav-link active chw-sub-link" data-tab="dashboard">📊 BHW Dashboard</span>
+          <span class="sub-nav-link chw-sub-link" data-tab="announcements">📢 Bulletins &amp; Advisories</span>
+          <span class="sub-nav-link chw-sub-link" data-tab="registry">📋 Malnutrition Registry</span>
+          <span class="sub-nav-link chw-sub-link" data-tab="groups">👥 Parent Groups &amp; Lessons</span>
+          <span class="sub-nav-link chw-sub-link" data-tab="calculator">📐 WHO Growth &amp; MUAC Calculator</span>
+          <span class="sub-nav-link chw-sub-link" data-tab="reporting">📤 Submit Reports to MHO</span>
+        </div>
+        <button type="button" class="sub-nav-arrow sub-nav-arrow-right" onclick="NutriApp.scrollSubNav(this, 240)"
+          title="I-scroll pakanan (Scroll Right)" aria-label="Scroll Right">›</button>
       </div>
     </nav>
 
     <!-- 3. Administrator Sub-Nav (Shown ONLY for Municipal Health Office) -->
     <nav class="sub-nav" id="mho-sub-nav" style="display: none;">
-      <div class="sub-nav-container">
-        <span class="sub-nav-link active mho-sub-link" data-tab="dashboard">📊 Executive Dashboard</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="announcements">📢 Official Announcements</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="kpis">🎯 10% Stunting Target &amp; KPIs</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="hotspots">🗺️ Barangay Hotspots &amp; Burden</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="reports">📥 Review &amp; Endorse BHW Reports</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="guidelines">📜 WHO &amp; SDG Nutrition Guidelines</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="content">📝 Content Manager</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="users">👥 User Accounts &amp; Access</span>
-        <span class="sub-nav-link mho-sub-link" data-tab="audit">🛡️ Audit &amp; Admin Logs</span>
+      <div class="sub-nav-wrapper">
+        <button type="button" class="sub-nav-arrow sub-nav-arrow-left" onclick="NutriApp.scrollSubNav(this, -240)"
+          title="I-scroll pakaliwa (Scroll Left)" aria-label="Scroll Left">‹</button>
+        <div class="sub-nav-container">
+          <span class="sub-nav-link active mho-sub-link" data-tab="dashboard">📊 Executive Dashboard</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="announcements">📢 Official Announcements</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="kpis">🎯 10% Stunting Target &amp; KPIs</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="hotspots">🗺️ Barangay Hotspots &amp; Burden</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="reports">📥 Review &amp; Endorse BHW Reports</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="guidelines">📜 WHO &amp; SDG Nutrition Guidelines</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="content">📝 Content Manager</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="users">👥 User Accounts &amp; Access</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="audit">🛡️ Audit &amp; Admin Logs</span>
+        </div>
+        <button type="button" class="sub-nav-arrow sub-nav-arrow-right" onclick="NutriApp.scrollSubNav(this, 240)"
+          title="I-scroll pakanan (Scroll Right)" aria-label="Scroll Right">›</button>
       </div>
     </nav>
 
@@ -485,206 +736,156 @@
           </div>
         </div>
 
-        <!-- Tab Pane 0: Parent Dashboard (Default Active View) -->
+        <!-- Tab Pane 0: Parent Dashboard / My Learning (Default Active View - Matches Screenshot 1 & 2) -->
         <div class="parent-tab-pane" data-tab="dashboard">
-          <!-- Dashboard Welcome Banner -->
-          <div class="dash-banner">
-            <div>
-              <span
-                style="background: rgba(255,255,255,0.18); color: #86EFAC; font-size: 0.76rem; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.05em;">
-                Parent &amp; Family Care Center
-              </span>
-              <div class="dash-banner-title">
-                Kamusta, <span id="parent-dash-greeting-name">Maria Ramos</span>!
-              </div>
-              <div class="dash-banner-subtitle">
-                Currently Monitoring: <strong id="parent-dash-child-profile">Ethan Kyle Ramos</strong> (18 months •
-                Barangay San Jose)
-              </div>
-              <div style="margin-top: 0.65rem; display: flex; gap: 0.6rem; flex-wrap: wrap; font-size: 0.8rem;">
-                <span
-                  style="background: rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 4px; color: #FFFFFF;">
-                  🩺 Assigned BHW: Sister Teresa Lim, BNS
-                </span>
-                <span
-                  style="background: #22C55E; color: #052E16; padding: 3px 10px; border-radius: 4px; font-weight: 700;">
-                  🌟 Catch-up Growth Active
-                </span>
-              </div>
+          <!-- 1. UPCOMING EVENTS & REMINDERS (Screenshot 1) -->
+          <div class="upcoming-events-bar">
+            <div class="upcoming-events-title">
+              <span>📢</span>
+              <span>Upcoming Events &amp; Reminders</span>
             </div>
-            <div style="text-align: right;">
-              <button class="btn btn-accent btn-sm" onclick="NutriApp.switchParentSubTab('learning')">
-                Continue Learning →
+            <div class="upcoming-events-card">
+              <div class="upcoming-events-content">
+                <span class="upcoming-tag-pill">Community Schedule</span>
+                <span><strong>Barangay Health Station:</strong> Catch-up Child Weighing, MUAC Screening, &amp; Vitamin A Drops this Saturday, 8:00 AM.</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('growth-tracker')" style="font-size: 0.78rem; padding: 4px 12px; white-space: nowrap;">
+                View Schedule →
               </button>
             </div>
           </div>
 
-          <!-- 4 Vital Nutrition & Growth KPI Cards -->
-          <div class="kpi-grid" style="margin-bottom: 1.75rem;">
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Child's Height</span>
-                <div class="kpi-icon" style="background:#ECFDF5; color:#059669;">📏</div>
-              </div>
-              <div class="kpi-value" style="color:var(--color-primary-900);" id="parent-dash-height">74.2 cm</div>
-              <div class="kpi-subtitle">Target: &gt; 76.9 cm (+1.2cm in 60 days)</div>
+          <!-- 2. GREEN WELCOME HERO CARD (Screenshot 1) -->
+          <div class="parent-hero-green">
+            <div class="parent-hero-left">
+              <p class="parent-hero-greeting">Good morning,</p>
+              <h1 class="parent-hero-name" id="parent-hero-greeting-name">Maria 👋</h1>
+              <span class="parent-hero-tag" id="parent-hero-child-tag">Liam Santos · 18 months</span>
+              <p class="parent-hero-desc">Keep learning to give your child the nutritious start they deserve.</p>
             </div>
-
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Child's Weight</span>
-                <div class="kpi-icon" style="background:#FEF3C7; color:#B45309;">⚖️</div>
+            <div class="parent-hero-right">
+              <div class="parent-hero-stat-block">
+                <div class="parent-hero-stat-pct" id="parent-hero-actions-pct">10%</div>
+                <div class="parent-hero-stat-label">Actions Tried</div>
               </div>
-              <div class="kpi-value" style="color:#F59E0B;" id="parent-dash-weight">8.4 kg</div>
-              <div class="kpi-subtitle">Target: 8.8–11.5 kg (+300g this month)</div>
-            </div>
-
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Arm MUAC Tape</span>
-                <div class="kpi-icon" style="background:#FEF9C3; color:#854D0E;">🟢</div>
-              </div>
-              <div class="kpi-value" style="color:#10B981;" id="parent-dash-muac">118 mm</div>
-              <div class="kpi-subtitle">Yellow Band (7mm to Green Normal at 125mm)</div>
-            </div>
-
-            <div class="kpi-card highlight-target">
-              <div class="kpi-header">
-                <span class="kpi-title">Mastery Progress</span>
-                <div class="kpi-icon" style="background:#DCFCE7; color:#166534;">🎓</div>
-              </div>
-              <div class="kpi-value" style="color:#16A34A;" id="parent-dash-progress-val">40%</div>
-              <div class="kpi-subtitle" id="parent-dash-progress-sub">2 of 5 Modules Done (1 Certificate)</div>
-            </div>
-          </div>
-
-          <!-- Quick Action Shortcuts -->
-          <div style="margin-bottom: 1.75rem;">
-            <h3
-              style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--color-primary-900); margin-bottom: 0.75rem;">
-              Parent Quick Actions &amp; Learning Tools
-            </h3>
-            <div class="dash-quick-grid">
-              <div class="dash-action-card" onclick="NutriApp.switchParentSubTab('learning')">
-                <div>
-                  <div class="dash-action-icon">📚</div>
-                  <div class="dash-action-title">E-Learning Modules</div>
-                  <p class="dash-action-desc">Explore 5 evidence-based lessons on stunting, 1,000 days window, and WASH
-                    hygiene.</p>
-                </div>
-                <span class="dash-action-link">Open Lessons →</span>
-              </div>
-
-              <div class="dash-action-card" onclick="NutriApp.switchParentSubTab('meal-planner')">
-                <div>
-                  <div class="dash-action-icon" style="background:#FEF3C7; color:#B45309;">🍲</div>
-                  <div class="dash-action-title">Pinggang Pinoy Planner</div>
-                  <p class="dash-action-desc">Build ₱20–₱35 balanced Go-Grow-Glow plates with Malunggay, Camote, and
-                    Monggo.</p>
-                </div>
-                <span class="dash-action-link">Plan Meals →</span>
-              </div>
-
-              <div class="dash-action-card" onclick="NutriApp.switchParentSubTab('growth-tracker')">
-                <div>
-                  <div class="dash-action-icon" style="background:#E0F2FE; color:#0369A1;">📈</div>
-                  <div class="dash-action-title">Child Growth Curve</div>
-                  <p class="dash-action-desc">View height-for-age trajectory against World Health Organization growth
-                    curves.</p>
-                </div>
-                <span class="dash-action-link">View Growth →</span>
-              </div>
-
-              <div class="dash-action-card" onclick="NutriApp.openModal('modal-certificate')">
-                <div>
-                  <div class="dash-action-icon" style="background:#DCFCE7; color:#166534;">🏆</div>
-                  <div class="dash-action-title">Mastery Certificate</div>
-                  <p class="dash-action-desc">Inspect and print your verified Certificate of Parent Mastery for
-                    community health.</p>
-                </div>
-                <span class="dash-action-link">View Certificate →</span>
+              <div class="parent-hero-sprout-circle" title="10% Nutrition Target Milestone">
+                🌱
               </div>
             </div>
           </div>
 
-          <!-- Today's Meal Recommendation & Barangay Health Schedule Grid -->
-          <div class="grid-2" style="margin-bottom: 1.5rem;">
-            <!-- Meal Suggestion Card -->
-            <div class="card" style="margin-bottom: 0;">
-              <div
-                style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--color-primary-700); margin-bottom:0.35rem;">
-                🍲 Today's Recommended Affordable Meal
+          <!-- 3. FOUR SUMMARY METRICS GRID (Screenshot 1) -->
+          <div class="parent-metrics-grid">
+            <!-- Card 1: Actions Tried -->
+            <div class="parent-metric-card">
+              <div class="parent-metric-icon" style="color: #2E7D32;">✓</div>
+              <div class="parent-metric-num" id="metric-actions-tried-val">1</div>
+              <div class="parent-metric-label">Actions Tried</div>
+            </div>
+
+            <!-- Card 2: Actions Available -->
+            <div class="parent-metric-card">
+              <div class="parent-metric-icon" style="color: #64748B;">—</div>
+              <div class="parent-metric-num" id="metric-actions-avail-val">10</div>
+              <div class="parent-metric-label">Actions Available</div>
+            </div>
+
+            <!-- Card 3: Learning Progress -->
+            <div class="parent-metric-card">
+              <div class="parent-metric-icon" style="color: #0284C7;">📖</div>
+              <div class="parent-metric-num" id="metric-learning-progress-val">43%</div>
+              <div class="parent-metric-label">Learning Progress</div>
+            </div>
+
+            <!-- Card 4: Progress Style -->
+            <div class="parent-metric-card">
+              <div class="parent-metric-icon" style="color: #16A34A;">🌱</div>
+              <div class="parent-metric-num" style="font-size: 1.35rem;">Practice</div>
+              <div class="parent-metric-label">Progress Style</div>
+            </div>
+          </div>
+
+          <!-- 4. YOUR NUTRITION MODULES (2x2 Grid & Accordion Drawer - Screenshots 1 & 2) -->
+          <div class="parent-modules-section">
+            <h2 class="parent-modules-heading" id="parent-modules-grid-heading">Your Nutrition Modules</h2>
+
+            <!-- 2x2 Grid of Module Cards -->
+            <div class="parent-modules-grid" id="parent-modules-container">
+              <!-- Rendered dynamically by ParentModule.renderModuleCards() -->
+            </div>
+
+            <!-- Interactive Module Lesson Accordion Drawer (Screenshot 2) -->
+            <div id="parent-module-lesson-drawer" class="module-lesson-drawer" style="display: none;">
+              <!-- Rendered dynamically when a module card is opened -->
+            </div>
+          </div>
+
+          <!-- 5. BOTTOM QUICK ACTION CARDS (Screenshot 1) -->
+          <div class="parent-quick-actions-row">
+            <div class="parent-action-card-link" onclick="ParentModule.openDailyMealLogModal()" style="border-left: 4px solid #16A34A; cursor: pointer;">
+              <div class="parent-action-card-left">
+                <div class="parent-action-icon-wrap" style="background: #DCFCE7; color: #166534;">
+                  🍽️
+                </div>
+                <div>
+                  <div class="parent-action-title">I-log ang Kinain Ngayong Araw</div>
+                  <div class="parent-action-sub">I-record ang kinain ni baby para sa MHO monitoring</div>
+                </div>
               </div>
-              <h3 style="font-size:1.18rem; color:var(--color-primary-900); margin-bottom:0.4rem;">
-                Ginisang Monggo at Malunggay with Dilis Flakes
-              </h3>
-              <div
-                style="display:inline-block; background:var(--color-accent-100); color:var(--color-primary-900); font-weight:700; font-size:0.85rem; padding:3px 10px; border-radius:var(--radius-full); margin-bottom:0.75rem;">
-                Estimated Cost: ₱23 / serving
+              <span class="parent-action-arrow">✓</span>
+            </div>
+
+            <div class="parent-action-card-link" onclick="ParentModule.switchTab('meal-planner')">
+              <div class="parent-action-card-left">
+                <div class="parent-action-icon-wrap" style="background: #FEF3C7; color: #B45309;">
+                  🥗
+                </div>
+                <div>
+                  <div class="parent-action-title">Today's Meal Plan</div>
+                  <div class="parent-action-sub">Affordable, nutrient-rich meals for your child</div>
+                </div>
               </div>
-              <p style="font-size:0.84rem; color:var(--text-secondary); line-height:1.45; margin-bottom:0.85rem;">
-                Monggo mash and crushed dilis provide dense protein and calcium to accelerate bone growth, while fresh
-                malunggay leaves supply vitamin A to prevent frequent infections.
-              </p>
-              <div style="display:flex; justify-content:space-between; align-items:center;">
-                <span class="badge badge-improved">100% Balanced Pinggang Pinoy</span>
-                <button class="btn btn-outline btn-sm" onclick="NutriApp.switchParentSubTab('meal-planner')">
-                  View Recipe →
+              <span class="parent-action-arrow">→</span>
+            </div>
+
+            <div class="parent-action-card-link" onclick="ParentModule.switchTab('growth-tracker')">
+              <div class="parent-action-card-left">
+                <div class="parent-action-icon-wrap" style="background: #E0F2FE; color: #0284C7;">
+                  📈
+                </div>
+                <div>
+                  <div class="parent-action-title">Weight Tracker</div>
+                  <div class="parent-action-sub" id="parent-action-child-sub">Track Liam Santos's growth progress</div>
+                </div>
+              </div>
+              <span class="parent-action-arrow">→</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Pane: Try It at Home (10 Actionable Practices Checklist) -->
+        <div class="parent-tab-pane" id="parent-pane-try-at-home" style="display: none;">
+          <div class="card" style="border: 1px solid #EAE6DF; border-radius: 18px; padding: 1.5rem;">
+            <div class="card-header" style="border-bottom: 1px solid #EAE6DF; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+              <div>
+                <h2 class="card-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.45rem; color: #1A382A; margin: 0 0 0.35rem 0;">
+                  ✓ Try It at Home: Daily Feeding &amp; Nutrition Practices
+                </h2>
+                <p class="card-subtitle" style="font-size: 0.88rem; color: #64748B; margin: 0;">
+                  Check off the evidence-based practices you've tried with your child. Every practice completed builds growth resilience!
+                </p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-accent btn-sm" onclick="ParentModule.openDailyMealLogModal()" style="font-weight: 700;">
+                  🍽️ I-log ang Kinain Ngayong Araw
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('learning')">
+                  ← Back to My Learning
                 </button>
               </div>
             </div>
-
-            <!-- Schedule & Health Tip Card -->
-            <div class="card"
-              style="margin-bottom: 0; display:flex; flex-direction:column; justify-content:space-between;">
-              <div>
-                <div
-                  style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--color-primary-700); margin-bottom:0.35rem;">
-                  🗓️ Community Nutrition Schedule &amp; Daily Tip
-                </div>
-                <div
-                  style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:var(--radius-md); padding:0.85rem; margin-bottom:0.85rem;">
-                  <strong style="font-size:0.9rem; color:#14532D; display:block; margin-bottom:2px;">
-                    Barangay San Jose Monthly Operation Timbang
-                  </strong>
-                  <span style="font-size:0.8rem; color:#166534;">
-                    Every 1st Friday • 8:00 AM - 11:30 AM at Barangay Health Station. Free Vitamin A drops &amp;
-                    Micronutrient Powder.
-                  </span>
-                </div>
-                <div
-                  style="background:#FFFBEB; border:1px solid #FDE68A; border-radius:var(--radius-md); padding:0.85rem;">
-                  <strong style="font-size:0.88rem; color:#92400E; display:block; margin-bottom:2px;">
-                    💡 Parent Nutrition Tip:
-                  </strong>
-                  <span style="font-size:0.8rem; color:#78350F;">
-                    "Always stir in a teaspoon of cooking oil or coconut milk into your toddler's mashed porridge. It
-                    triples calorie density without expanding volume in small tummies!"
-                  </span>
-                </div>
-              </div>
-              <div style="margin-top: 1rem; text-align: right;">
-                <button class="btn btn-primary btn-sm" onclick="NutriApp.switchParentSubTab('growth-tracker')">
-                  Check Growth Curve →
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Recent Community Bulletins Preview on Parent Dashboard -->
-          <div class="card" style="margin-top: 1.5rem; margin-bottom: 0;">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">📢 Latest Community Advisories &amp; Schedules</h3>
-                <p class="card-subtitle">Official announcements from your Municipal Health Office and Barangay Health
-                  Workers</p>
-              </div>
-              <button class="btn btn-outline btn-sm" onclick="NutriApp.switchParentSubTab('announcements')">
-                View All Bulletins →
-              </button>
-            </div>
-            <div id="parent-dash-announcements-list">
-              <!-- Populated dynamically by announcements.js -->
+            <div class="try-at-home-checklist" id="home-actions-list-container">
+              <!-- Rendered dynamically by ParentModule.renderHomeActionsChecklist() -->
             </div>
           </div>
         </div>
@@ -865,54 +1066,8 @@
 
         <!-- Tab Pane 3: Child Growth Tracker -->
         <div class="parent-tab-pane" data-tab="growth-tracker" style="display: none;">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">Child Growth &amp; Feeding Log</h2>
-                <p class="card-subtitle">Keep track of your child's monthly measurements recorded by community health
-                  workers.</p>
-              </div>
-              <button class="btn btn-outline btn-sm" onclick="NutriApp.switchRole('chw')">
-                Ask Health Worker to Update
-              </button>
-            </div>
-
-            <div
-              style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem;">
-              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
-                <div>
-                  <span style="font-size:0.8rem; color:#15803D; font-weight:700; text-transform:uppercase;">Current
-                    Registered Child:</span>
-                  <h3 style="font-size:1.45rem; color:#0E3D26; margin:0.2rem 0;">Ethan Kyle Ramos (18 months)</h3>
-                  <p style="font-size:0.85rem; color:#374151;">Barangay San Jose • Monitored by Sister Teresa Lim, BNS
-                  </p>
-                </div>
-                <div>
-                  <span class="badge badge-underweight" style="font-size:0.9rem; padding:0.4rem 0.9rem;">
-                    Under Progress Monitoring
-                  </span>
-                </div>
-              </div>
-
-              <div class="grid-3" style="margin-top: 1.25rem;">
-                <div style="background:#FFFFFF; padding:1rem; border-radius:8px; border:1px solid #E2E8F0;">
-                  <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">HEIGHT-FOR-AGE:</div>
-                  <div style="font-size:1.25rem; font-weight:700; color:#EF4444; margin:0.25rem 0;">74.2 cm</div>
-                  <div style="font-size:0.75rem; color:var(--text-muted);">Target: &gt; 76.9 cm (Improving)</div>
-                </div>
-                <div style="background:#FFFFFF; padding:1rem; border-radius:8px; border:1px solid #E2E8F0;">
-                  <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">WEIGHT-FOR-AGE:</div>
-                  <div style="font-size:1.25rem; font-weight:700; color:#F59E0B; margin:0.25rem 0;">8.4 kg</div>
-                  <div style="font-size:0.75rem; color:var(--text-muted);">Target: &gt; 8.8 kg</div>
-                </div>
-                <div style="background:#FFFFFF; padding:1rem; border-radius:8px; border:1px solid #E2E8F0;">
-                  <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700;">MUAC CIRCUMFERENCE:</div>
-                  <div style="font-size:1.25rem; font-weight:700; color:#10B981; margin:0.25rem 0;">118 mm (Yellow Band)
-                  </div>
-                  <div style="font-size:0.75rem; color:var(--text-muted);">Normal starts at 125 mm</div>
-                </div>
-              </div>
-            </div>
+          <div id="parent-growth-tracker-container">
+            <!-- Populated dynamically by ParentModule.renderChildGrowth() -->
           </div>
         </div>
       </section>
@@ -947,229 +1102,97 @@
           </div>
         </div>
 
-        <!-- Tab Pane 0: BHW Operations Dashboard (Default Active View) -->
+        <!-- Tab Pane 0: BHW Operations Dashboard (Matches Screenshot Layout) -->
         <div class="chw-tab-pane" data-tab="dashboard">
-          <!-- BHW Command Banner -->
-          <div class="dash-banner">
-            <div>
-              <span
-                style="background: rgba(255,255,255,0.18); color: #86EFAC; font-size: 0.76rem; font-weight: 700; padding: 3px 10px; border-radius: var(--radius-full); text-transform: uppercase; letter-spacing: 0.05em;">
-                Barangay Health Center Operations
-              </span>
-              <div class="dash-banner-title">
-                Welcome, <span id="bhw-dash-worker-name">Sister Teresa Lim, BNS</span>!
-              </div>
-              <div class="dash-banner-subtitle">
-                Station: <strong>Barangay San Jose Health Station</strong> • Field Operations Central
-              </div>
-              <div style="margin-top: 0.65rem; display: flex; gap: 0.6rem; flex-wrap: wrap; font-size: 0.8rem;">
-                <span
-                  style="background: rgba(255,255,255,0.15); padding: 3px 10px; border-radius: 4px; color: #FFFFFF;">
-                  📋 Accreditation ID: BHW-SJ-2024
-                </span>
-                <span
-                  style="background: #22C55E; color: #052E16; padding: 3px 10px; border-radius: 4px; font-weight: 700;">
-                  🎯 10% Annual Stunting Target Active
-                </span>
-              </div>
-            </div>
-            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-              <button class="btn btn-accent btn-sm" onclick="NutriApp.openModal('modal-add-child')">
-                + Register New Child
-              </button>
-              <button class="btn btn-outline btn-sm" style="color:#FFFFFF; border-color:rgba(255,255,255,0.5);"
-                onclick="CHWModule.openReportModal()">
-                Submit Monthly Report →
-              </button>
-            </div>
+          <!-- BHW Greeting Header -->
+          <div class="bhw-greeting-header">
+            <h1 class="bhw-greeting-title" id="bhw-greeting-title">Good morning, Reyes 👋</h1>
+            <p class="bhw-greeting-sub" id="bhw-greeting-sub">Manguring Health Center, Zone 2, Calabanga - Monday, October 12, 2026</p>
           </div>
 
-          <!-- 4 Live Community Health KPI Cards -->
-          <div class="kpi-grid" style="margin-bottom: 1.75rem;">
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Monitored Children</span>
-                <div class="kpi-icon">👶</div>
-              </div>
-              <div class="kpi-value" id="bhw-dash-stat-total">12</div>
-              <div class="kpi-subtitle">Active community registry</div>
+          <!-- Alert / Relay Announcements Banner (Warm Rust-Orange) -->
+          <div class="bhw-alert-banner" id="bhw-alert-banner">
+            <div class="bhw-alert-banner-left">
+              <div class="bhw-alert-banner-title" id="bhw-alert-title">Relay announcements immediately</div>
+              <div class="bhw-alert-banner-sub" id="bhw-alert-desc">2 notices still need to reach Parents/Guardians before their deadlines.</div>
             </div>
-
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Stunted (Priority Care)</span>
-                <div class="kpi-icon" style="background:#FEF2F2; color:#991B1B;">⚠️</div>
-              </div>
-              <div class="kpi-value" style="color:#EF4444;" id="bhw-dash-stat-stunted">4</div>
-              <div class="kpi-subtitle">Height-for-age &lt; -2SD</div>
-            </div>
-
-            <div class="kpi-card">
-              <div class="kpi-header">
-                <span class="kpi-title">Wasted / Acute</span>
-                <div class="kpi-icon" style="background:#FFF7ED; color:#C2410C;">⚡</div>
-              </div>
-              <div class="kpi-value" style="color:#C2410C;" id="bhw-dash-stat-wasted">1</div>
-              <div class="kpi-subtitle">Supplementary feeding enrolled</div>
-            </div>
-
-            <div class="kpi-card highlight-target">
-              <div class="kpi-header">
-                <span class="kpi-title">Recovered to Normal</span>
-                <div class="kpi-icon" style="background:#DCFCE7; color:#166534;">🌟</div>
-              </div>
-              <div class="kpi-value" style="color:#16A34A;" id="bhw-dash-stat-improved">3</div>
-              <div class="kpi-subtitle">Normalized nutritional curves</div>
-            </div>
+            <button type="button" class="bhw-alert-banner-btn" id="bhw-alert-action-btn" onclick="NutriApp.switchCHWSubTab('announcements')">
+              Review now &rarr;
+            </button>
           </div>
 
-          <!-- BHW Quick Action Shortcuts -->
-          <div style="margin-bottom: 1.75rem;">
-            <h3
-              style="font-family: var(--font-heading); font-size: 1.15rem; color: var(--color-primary-900); margin-bottom: 0.75rem;">
-              Field Operations &amp; Registry Shortcuts
-            </h3>
-            <div class="dash-quick-grid">
-              <div class="dash-action-card" onclick="NutriApp.openModal('modal-add-child')">
-                <div>
-                  <div class="dash-action-icon">➕</div>
-                  <div class="dash-action-title">Register Child</div>
-                  <p class="dash-action-desc">Enroll a new malnourished infant or toddler from community outreach.</p>
-                </div>
-                <span class="dash-action-link">+ New Record →</span>
-              </div>
-
-              <div class="dash-action-card" onclick="NutriApp.switchCHWSubTab('calculator')">
-                <div>
-                  <div class="dash-action-icon" style="background:#FEF3C7; color:#B45309;">📐</div>
-                  <div class="dash-action-title">WHO Growth Calculator</div>
-                  <p class="dash-action-desc">Enter age, height, and weight for automated WHO z-score and MUAC
-                    classification.</p>
-                </div>
-                <span class="dash-action-link">Open Calculator →</span>
-              </div>
-
-              <div class="dash-action-card" onclick="NutriApp.switchCHWSubTab('registry')">
-                <div>
-                  <div class="dash-action-icon" style="background:#E0F2FE; color:#0369A1;">📋</div>
-                  <div class="dash-action-title">Full Malnutrition Registry</div>
-                  <p class="dash-action-desc">Search, filter by barangay, edit measurements, or mark children as
-                    recovered.</p>
-                </div>
-                <span class="dash-action-link">Open Registry →</span>
-              </div>
-
-              <div class="dash-action-card" onclick="CHWModule.openReportModal()">
-                <div>
-                  <div class="dash-action-icon" style="background:#DCFCE7; color:#166534;">📤</div>
-                  <div class="dash-action-title">Submit MHO Report</div>
-                  <p class="dash-action-desc">Aggregate community data and submit electronic report directly to MHO.</p>
-                </div>
-                <span class="dash-action-link">Submit Report →</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Priority Attention List & Monthly Submission Status Grid -->
-          <div class="grid-2" style="margin-bottom: 1.5rem;">
-            <!-- Priority Attention List -->
-            <div class="card" style="margin-bottom: 0;">
-              <div class="card-header" style="padding-bottom: 0.5rem;">
-                <div>
-                  <h3 class="card-title" style="font-size:1.15rem;">🚨 Priority Follow-Up Home Visits</h3>
-                  <p class="card-subtitle">Children requiring home visit checkups or supplementary pack refills this
-                    week:</p>
-                </div>
-              </div>
-              <div style="display:flex; flex-direction:column; gap:0.65rem;">
-                <div
-                  style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:0.75rem; display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <strong style="color:#991B1B; font-size:0.92rem;">Joshua Garcia (18 mo)</strong>
-                    <div style="font-size:0.78rem; color:#B91C1C;">Height: 73.5 cm • MUAC: 116 mm • Stunting Alert</div>
-                  </div>
-                  <span class="dash-priority-badge dash-priority-high">Urgent Visit</span>
-                </div>
-
-                <div
-                  style="background:#FFF7ED; border:1px solid #FFEDD5; border-radius:8px; padding:0.75rem; display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <strong style="color:#9A3412; font-size:0.92rem;">Sofia Mendoza (14 mo)</strong>
-                    <div style="font-size:0.78rem; color:#C2410C;">Weight: 7.2 kg • MUAC: 114 mm • Wasting Enrolled
-                    </div>
-                  </div>
-                  <span class="dash-priority-badge dash-priority-moderate">Feeding Check</span>
-                </div>
-
-                <div
-                  style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:0.75rem; display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <strong style="color:#166534; font-size:0.92rem;">Ethan Kyle Ramos (18 mo)</strong>
-                    <div style="font-size:0.78rem; color:#15803D;">MUAC: 118 mm • Approaching Green Trajectory</div>
-                  </div>
-                  <span class="dash-priority-badge dash-priority-normal">Progressing</span>
-                </div>
-              </div>
-              <div style="margin-top: 0.85rem; text-align: right;">
-                <button class="btn btn-outline btn-sm" onclick="NutriApp.switchCHWSubTab('registry')">
-                  View All Registry Records →
-                </button>
-              </div>
-            </div>
-
-            <!-- MHO Submission Status Box -->
-            <div class="card"
-              style="margin-bottom: 0; display:flex; flex-direction:column; justify-content:space-between;">
+          <!-- 4 Summary Stat Cards Row -->
+          <div class="bhw-stat-cards-grid">
+            <!-- Card 1: Total Families -->
+            <div class="bhw-stat-card" style="cursor: pointer;" onclick="NutriApp.switchCHWSubTab('groups')" title="Click to view Parent/Guardian Groups">
+              <div class="bhw-stat-icon">👥</div>
+              <div class="bhw-stat-num" id="bhw-stat-total-families">24</div>
               <div>
-                <div
-                  style="font-size:0.75rem; text-transform:uppercase; font-weight:700; color:var(--color-primary-700); margin-bottom:0.35rem;">
-                  📤 Monthly Electronic Submission to MHO
-                </div>
-                <h3 style="font-size:1.15rem; color:var(--color-primary-900); margin-bottom:0.4rem;">
-                  Barangay San Jose Monthly Report
-                </h3>
-                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:0.75rem;">
-                  Aggregated malnutrition metrics automatically calculated from active community child records:
-                </p>
-                <div
-                  style="background:var(--bg-surface-subtle); border:1px solid var(--border-light); border-radius:8px; padding:0.85rem; margin-bottom:0.85rem; font-size:0.84rem;">
-                  <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.4rem;">
-                    <div>• Stunting Rate: <strong id="bhw-dash-rate-badge" style="color:#EF4444;">25.0%</strong></div>
-                    <div>• Recovered: <strong style="color:#10B981;">3 Children</strong></div>
-                    <div>• Total Monitored: <strong>12 Records</strong></div>
-                    <div>• Review Status: <span class="badge badge-normal">Ready for MHO</span></div>
-                  </div>
-                </div>
+                <div class="bhw-stat-label">Total Families</div>
+                <div class="bhw-stat-sub">in your area</div>
               </div>
-              <div style="display:flex; gap:0.5rem; justify-content:flex-end;">
-                <button class="btn btn-outline btn-sm" onclick="NutriExport.exportChildrenCSV()">
-                  Download CSV
-                </button>
-                <button class="btn btn-accent btn-sm" onclick="CHWModule.openReportModal()">
-                  Submit to Higher-Ups →
-                </button>
+            </div>
+
+            <!-- Card 2: Critical Cases (Highlighted Solid Warm Rust-Orange) -->
+            <div class="bhw-stat-card bhw-stat-card-critical" style="cursor: pointer;" onclick="CHWModule.filterCriticalCases()" title="Click to view Critical Cases in Child Records">
+              <div class="bhw-stat-icon">🚨</div>
+              <div class="bhw-stat-num" id="bhw-stat-critical-cases">4</div>
+              <div>
+                <div class="bhw-stat-label">Critical Cases</div>
+                <div class="bhw-stat-sub">need follow-up</div>
+              </div>
+            </div>
+
+            <!-- Card 3: Improving -->
+            <div class="bhw-stat-card" style="cursor: pointer;" onclick="CHWModule.filterImprovingCases()" title="Click to view Improving cases in Child Records">
+              <div class="bhw-stat-icon">📈</div>
+              <div class="bhw-stat-num" id="bhw-stat-improving-cases">14</div>
+              <div>
+                <div class="bhw-stat-label">Improving</div>
+                <div class="bhw-stat-sub">on the right track</div>
+              </div>
+            </div>
+
+            <!-- Card 4: Reports Due -->
+            <div class="bhw-stat-card" style="cursor: pointer;" onclick="CHWModule.openReportModal()" title="Click to submit monthly report">
+              <div class="bhw-stat-icon">📋</div>
+              <div class="bhw-stat-num" id="bhw-stat-reports-due">2</div>
+              <div>
+                <div class="bhw-stat-label">Reports Due</div>
+                <div class="bhw-stat-sub">submit by Friday</div>
               </div>
             </div>
           </div>
 
-          <!-- Recent BHW Bulletins Preview on BHW Dashboard -->
-          <div class="card" style="margin-top: 1.5rem; margin-bottom: 0;">
-            <div class="card-header">
-              <div>
-                <h3 class="card-title">📢 Active Directives &amp; Community Bulletins</h3>
-                <p class="card-subtitle">Official directives from MHO and published field advisories</p>
+          <!-- Section Card: Quick Actions -->
+          <div class="bhw-section-card">
+            <h2 class="bhw-card-heading">Quick Actions</h2>
+            <div class="bhw-quick-actions-grid">
+              <div class="bhw-action-tile" onclick="NutriApp.openModal('modal-add-child')">
+                <div class="bhw-action-tile-icon" style="color: #4F46E5;">➕</div>
+                <div class="bhw-action-tile-title">Log New Child Data</div>
+                <div class="bhw-action-tile-sub">Add a family or update measurements</div>
               </div>
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <button class="btn btn-accent btn-sm" onclick="AnnouncementsModule.openComposer('chw')">
-                  + Post Announcement
-                </button>
-                <button class="btn btn-outline btn-sm" onclick="NutriApp.switchCHWSubTab('announcements')">
-                  View All Bulletins →
-                </button>
+
+              <div class="bhw-action-tile" onclick="NutriApp.switchCHWSubTab('groups')">
+                <div class="bhw-action-tile-icon" style="color: #4338CA;">👥</div>
+                <div class="bhw-action-tile-title">View Parent/Guardian Groups</div>
+                <div class="bhw-action-tile-sub">Check home actions and identify at-risk families</div>
+              </div>
+
+              <div class="bhw-action-tile" onclick="NutriApp.switchCHWSubTab('announcements')">
+                <div class="bhw-action-tile-icon" style="color: #C026D3;">📢</div>
+                <div class="bhw-action-tile-title" id="bhw-qa-ann-title">Administrator Announcements (2 new)</div>
+                <div class="bhw-action-tile-sub" id="bhw-qa-ann-sub">2 announcements waiting to be relayed to Parents/Guardians</div>
               </div>
             </div>
-            <div id="bhw-dash-announcements-list">
-              <!-- Populated dynamically by announcements.js -->
+          </div>
+
+          <!-- Section Card: Recent Activity -->
+          <div class="bhw-section-card">
+            <h2 class="bhw-card-heading">Recent Activity</h2>
+            <div class="bhw-activity-list" id="bhw-activity-list-container">
+              <!-- Populated dynamically by CHWModule.renderBHWDashboard() -->
             </div>
           </div>
         </div>
@@ -1311,10 +1334,7 @@
 
               <select id="chw-filter-barangay" class="form-select" style="width: auto; min-width: 170px;">
                 <option value="ALL">All Barangays</option>
-                <option value="Barangay San Jose">Barangay San Jose</option>
-                <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                <option value="Barangay San Isidro">Barangay San Isidro</option>
-                <option value="Barangay Poblacion">Barangay Poblacion</option>
+                <option value="Barangay Manguiring">Barangay Manguiring</option>
               </select>
             </div>
 
@@ -1490,8 +1510,555 @@
           </div>
         </div>
 
-        <!-- Tab Pane 0: Executive Dashboard (Default Landing View) -->
-        <div class="mho-tab-pane" data-tab="dashboard">
+        <!-- ====================================================================
+             MHO TAB PANE: PROGRAM OVERVIEW (Matches User Screenshot)
+             ==================================================================== -->
+        <div class="mho-tab-pane active" data-tab="overview" id="mho-tab-overview">
+          <div class="admin-overview-container">
+            <!-- Program Overview Header -->
+            <div class="admin-page-header" style="display: flex; align-items: center; gap: 1rem;">
+              <img src="icon/logo.png?v=5.0" alt="NutriLearn" class="admin-header-logo-badge" onclick="NutriApp.navigateToMainDashboard()" title="Return to Overview Dashboard" style="cursor: pointer;">
+              <div>
+                <h1 class="admin-page-title" id="admin-overview-page-title">Program Overview — Lahat ng Barangay</h1>
+                <p class="admin-page-subtitle" id="admin-overview-page-sub">Calabanga, Camarines Sur · Talaan para sa Buong Munisipalidad</p>
+              </div>
+            </div>
+
+            <!-- 4 Top KPI Cards -->
+            <div class="admin-kpi-grid">
+              <!-- 1. Families Enrolled -->
+              <div class="admin-kpi-card">
+                <div class="admin-kpi-icon">
+                  <span style="font-size: 1.35rem;">👨‍👩‍👧</span>
+                </div>
+                <div class="admin-kpi-body">
+                  <div class="admin-kpi-num" id="kpi-families-enrolled">150</div>
+                  <div class="admin-kpi-label">Families Enrolled</div>
+                  <div class="admin-kpi-sub" id="kpi-families-trend">+9 this month</div>
+                </div>
+              </div>
+
+              <!-- 2. Critical Cases -->
+              <div class="admin-kpi-card">
+                <div class="admin-kpi-icon">
+                  <span style="font-size: 1.35rem;">🚨</span>
+                </div>
+                <div class="admin-kpi-body">
+                  <div class="admin-kpi-num" id="kpi-critical-cases">19</div>
+                  <div class="admin-kpi-label">Critical Cases</div>
+                  <div class="admin-kpi-sub" id="kpi-critical-trend">-3 from last month</div>
+                </div>
+              </div>
+
+              <!-- 3. Stunting Rate -->
+              <div class="admin-kpi-card">
+                <div class="admin-kpi-icon">
+                  <span style="font-size: 1.35rem;">📉</span>
+                </div>
+                <div class="admin-kpi-body">
+                  <div class="admin-kpi-num" id="kpi-stunting-rate">14%</div>
+                  <div class="admin-kpi-label">Stunting Rate</div>
+                  <div class="admin-kpi-sub" id="kpi-stunting-trend">↓ from 22% in March</div>
+                </div>
+              </div>
+
+              <!-- 4. Health Workers -->
+              <div class="admin-kpi-card">
+                <div class="admin-kpi-icon">
+                  <span style="font-size: 1.35rem;">🩺</span>
+                </div>
+                <div class="admin-kpi-body">
+                  <div class="admin-kpi-num" id="kpi-health-workers">8</div>
+                  <div class="admin-kpi-label">Health Workers</div>
+                  <div class="admin-kpi-sub" id="kpi-hw-trend">across 6 zones</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2-Column Section: Chart & Zone Breakdown -->
+            <div class="admin-two-cols">
+              <!-- Left Column: Stunting Rate vs. Improving Families Chart -->
+              <div class="admin-card-panel chart-panel">
+                <h2 class="admin-card-title">Stunting Rate vs. Improving Families (Mar–Aug 2026)</h2>
+
+                <div class="admin-chart-box">
+                  <div class="admin-bar-group-list">
+                    <!-- Mar -->
+                    <div class="admin-bar-month-group">
+                      <div class="admin-bar-pair">
+                        <div class="admin-bar bar-stunting" style="height: 105px;" title="Mar Stunting Rate: 22%"></div>
+                        <div class="admin-bar bar-improving" style="height: 135px;" title="Mar Improving Families: 28">
+                        </div>
+                      </div>
+                      <div class="admin-bar-month-label">Mar</div>
+                    </div>
+
+                    <!-- Apr -->
+                    <div class="admin-bar-month-group">
+                      <div class="admin-bar-pair">
+                        <div class="admin-bar bar-stunting" style="height: 92px;" title="Apr Stunting Rate: 19%"></div>
+                        <div class="admin-bar bar-improving" style="height: 160px;" title="Apr Improving Families: 45">
+                        </div>
+                      </div>
+                      <div class="admin-bar-month-label">Apr</div>
+                    </div>
+
+                    <!-- May -->
+                    <div class="admin-bar-month-group">
+                      <div class="admin-bar-pair">
+                        <div class="admin-bar bar-stunting" style="height: 80px;" title="May Stunting Rate: 17%"></div>
+                        <div class="admin-bar bar-improving" style="height: 188px;" title="May Improving Families: 62">
+                        </div>
+                      </div>
+                      <div class="admin-bar-month-label">May</div>
+                    </div>
+
+                    <!-- Jun -->
+                    <div class="admin-bar-month-group">
+                      <div class="admin-bar-pair">
+                        <div class="admin-bar bar-stunting" style="height: 75px;" title="Jun Stunting Rate: 16%"></div>
+                        <div class="admin-bar bar-improving" style="height: 215px;" title="Jun Improving Families: 78">
+                        </div>
+                      </div>
+                      <div class="admin-bar-month-label">Jun</div>
+                    </div>
+
+                    <!-- Jul -->
+                    <div class="admin-bar-month-group">
+                      <div class="admin-bar-pair">
+                        <div class="admin-bar bar-stunting" style="height: 70px;" title="Jul Stunting Rate: 15%"></div>
+                        <div class="admin-bar bar-improving" style="height: 240px;" title="Jul Improving Families: 95">
+                        </div>
+                      </div>
+                      <div class="admin-bar-month-label">Jul</div>
+                    </div>
+
+                    <!-- Aug -->
+                    <div class="admin-bar-month-group">
+                      <div class="admin-bar-pair">
+                        <div class="admin-bar bar-stunting" style="height: 65px;" title="Aug Stunting Rate: 14%"></div>
+                        <div class="admin-bar bar-improving" style="height: 265px;" title="Aug Improving Families: 112">
+                        </div>
+                      </div>
+                      <div class="admin-bar-month-label">Aug</div>
+                    </div>
+                  </div>
+
+                  <!-- Legend -->
+                  <div class="admin-chart-legend">
+                    <div class="legend-item">
+                      <span class="legend-dot dot-stunting"></span>
+                      <span>Stunting %</span>
+                    </div>
+                    <div class="legend-item">
+                      <span class="legend-dot dot-improving"></span>
+                      <span>Improving families</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Right Column: By Manguring Zone -->
+              <div class="admin-card-panel zones-panel">
+                <h2 class="admin-card-title">By Manguring Zone</h2>
+
+                <div class="admin-zones-list">
+                  <!-- Zone 1 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 1</span>
+                      <span class="zone-pct">64%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 64%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">28 families</span>
+                      <span class="zone-critical">3 critical</span>
+                    </div>
+                  </div>
+
+                  <!-- Zone 2 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 2</span>
+                      <span class="zone-pct">58%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 58%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">24 families</span>
+                      <span class="zone-critical">4 critical</span>
+                    </div>
+                  </div>
+
+                  <!-- Zone 3 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 3</span>
+                      <span class="zone-pct">55%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 55%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">31 families</span>
+                      <span class="zone-critical">5 critical</span>
+                    </div>
+                  </div>
+
+                  <!-- Zone 4 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 4</span>
+                      <span class="zone-pct">68%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 68%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">22 families</span>
+                      <span class="zone-critical">2 critical</span>
+                    </div>
+                  </div>
+
+                  <!-- Zone 5 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 5</span>
+                      <span class="zone-pct">62%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 62%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">26 families</span>
+                      <span class="zone-critical">3 critical</span>
+                    </div>
+                  </div>
+
+                  <!-- Zone 6 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 6</span>
+                      <span class="zone-pct">68%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 68%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">19 families</span>
+                      <span class="zone-critical">2 critical</span>
+                    </div>
+                  </div>
+
+                  <!-- Zone 7 / Purok 7 -->
+                  <div class="admin-zone-item">
+                    <div class="zone-top-row">
+                      <span class="zone-name">Zone 7 / Purok 7</span>
+                      <span class="zone-pct">62%</span>
+                    </div>
+                    <div class="zone-progress-track">
+                      <div class="zone-progress-fill" style="width: 62%;"></div>
+                    </div>
+                    <div class="zone-bottom-row">
+                      <span class="zone-families">22 families</span>
+                      <span class="zone-critical">2 critical</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ================================================================
+                 RECENT ANNOUNCEMENTS SECTION 
+                 ================================================================ -->
+            <div class="admin-announcements-section">
+              <div class="admin-section-header">
+                <span style="font-size: 1.3rem;">📢</span>
+                <h2 class="admin-section-header-title">Recent Announcements</h2>
+              </div>
+
+              <div class="admin-recent-announcements-list">
+                <!-- Announcement 1 -->
+                <div class="admin-recent-card">
+                  <div class="admin-recent-icon-badge purple">
+                    🎓
+                  </div>
+                  <div class="admin-recent-card-body">
+                    <div class="admin-recent-card-top">
+                      <span class="admin-recent-card-title">Community Nutrition Seminar — September 2026</span>
+                      <span class="admin-recent-tag purple">Seminar</span>
+                    </div>
+                    <div class="admin-recent-card-meta">
+                      <span>🏛️ September 5 Relay by August 29</span>
+                      <span>📍 Barangay Manguiring Covered Court, Calabanga</span>
+                      <span>By Dr. Jose Lim</span>
+                      <span>→ All Zones, Barangay Manguiring</span>
+                      <span class="admin-recent-status relayed">✓ Relayed by 1 HW</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Announcement 2 -->
+                <div class="admin-recent-card">
+                  <div class="admin-recent-icon-badge yellow">
+                    🔔
+                  </div>
+                  <div class="admin-recent-card-body">
+                    <div class="admin-recent-card-top">
+                      <span class="admin-recent-card-title">Monthly Weight Monitoring Drive — September</span>
+                      <span class="admin-recent-tag yellow">Reminder</span>
+                    </div>
+                    <div class="admin-recent-card-meta">
+                      <span>🏛️ September 10 Relay by September 3</span>
+                      <span>📍 Manguiring Health Center, Zone 2</span>
+                      <span>By Dr. Jose Lim</span>
+                      <span>→ All Zones, Barangay Manguiring</span>
+                      <span class="admin-recent-status pending">Not yet relayed</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Announcement 3 -->
+                <div class="admin-recent-card">
+                  <div class="admin-recent-icon-badge mint">
+                    📢
+                  </div>
+                  <div class="admin-recent-card-body">
+                    <div class="admin-recent-card-top">
+                      <span class="admin-recent-card-title">Updated WHO IYCF Guidelines 2026 — Training</span>
+                      <span class="admin-recent-tag mint">Update</span>
+                    </div>
+                    <div class="admin-recent-card-meta">
+                      <span>🏛️ September 18 Relay by September 11</span>
+                      <span>📍 Manguiring Barangay Hall, Zone 4</span>
+                      <span>By Dr. Jose Lim</span>
+                      <span>→ Zones 1–6, Barangay Manguiring</span>
+                      <span class="admin-recent-status pending">Not yet relayed</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ================================================================
+                   3 BOTTOM SUMMARY METRIC CARDS (Matches User Screenshot)
+                   ================================================================ -->
+              <div class="admin-bottom-metrics-grid">
+                <div class="admin-bottom-metric-card">
+                  <div class="admin-bottom-metric-num green">-8%</div>
+                  <div class="admin-bottom-metric-desc">Reduction in stunting rate<br>vs. March 2026 baseline</div>
+                  <span class="admin-pill-status on-track">On Track</span>
+                </div>
+
+                <div class="admin-bottom-metric-card">
+                  <div class="admin-bottom-metric-num green">81%</div>
+                  <div class="admin-bottom-metric-desc">Children with updated field records<br>reported by Health
+                    Workers</div>
+                  <span class="admin-pill-status on-track">On Track</span>
+                </div>
+
+                <div class="admin-bottom-metric-card">
+                  <div class="admin-bottom-metric-num orange">17%</div>
+                  <div class="admin-bottom-metric-desc">Estimated clinic visit reduction<br>vs. 20% annual target</div>
+                  <span class="admin-pill-status needs-attention">Needs Attention</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             MHO TAB PANE: FIELD RECORDS (Malnutrition Registry & Zones)
+             ==================================================================== -->
+        <div class="mho-tab-pane" data-tab="records" id="mho-tab-records" style="display: none;">
+          <div class="admin-pane-container">
+            <div class="admin-pane-header">
+              <div class="admin-pane-title-group">
+                <h2>📋 Field Nutrition &amp; Anthropometric Records</h2>
+                <p>Real-time field census of children, WHO nutritional status, and growth monitoring across barangays and zones.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openAdminAddChild()">
+                  ➕ Magdagdag ng Bata (Add Child)
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" onclick="NutriExport.exportChildrenCSV()">
+                  📥 Export Records (CSV)
+                </button>
+                <button type="button" class="btn btn-primary btn-sm" onclick="NutriExport.printOfficialSummary()">
+                  🖨️ Print Health Summary
+                </button>
+              </div>
+            </div>
+
+            <div class="admin-clean-card">
+              <!-- Active Barangay Status Banner (Indicates which Barangay is selected and locked for update) -->
+              <div id="admin-records-brgy-banner" class="admin-brgy-info-banner all" style="margin-bottom: 1.15rem; padding: 0.85rem 1.15rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #F8FAFC;">
+                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                  <div style="display: flex; align-items: center; gap: 0.65rem;">
+                    <span style="font-size: 1.3rem;">🌐</span>
+                    <div>
+                      <strong style="color: #0F172A; font-size: 0.9rem;">Lahat ng Barangay (Buong Munisipalidad)</strong>
+                      <div style="font-size: 0.8rem; color: #64748B;">
+                        Ipinapakita ang talaan mula sa lahat ng mga barangay. Pumili ng partikular na Barangay upang i-filter at i-update lamang ang mga talaan nito.
+                      </div>
+                    </div>
+                  </div>
+                  <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; font-size: 0.78rem; padding: 5px 12px; border-radius: 6px; border: 1px solid #CBD5E1;">
+                    Municipality View
+                  </span>
+                </div>
+              </div>
+
+              <!-- Filter Toolbar -->
+              <div class="filter-bar" style="margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                <div class="search-input-wrapper" style="flex: 1; min-width: 220px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" id="admin-records-search" class="form-control"
+                    placeholder="Search by child name, parent, or zone..." oninput="MHODashboard.filterAdminRecords()">
+                </div>
+
+                <!-- Dedicated Barangay Filter Dropdown -->
+                <select id="admin-records-barangay-filter" class="form-select" style="width: auto; min-width: 195px;"
+                  onchange="MHODashboard.setSelectedBarangay(this.value)">
+                  <option value="ALL">🌐 Lahat ng Barangay</option>
+                  <option value="Barangay Manguiring">Barangay Manguiring</option>
+                </select>
+
+                <select id="admin-records-zone-filter" class="form-select" style="width: auto; min-width: 150px;"
+                  onchange="MHODashboard.filterAdminRecords()">
+                  <option value="ALL">Lahat ng Zone / Purok</option>
+                  <option value="Zone 1">Zone 1</option>
+                  <option value="Zone 2">Zone 2</option>
+                  <option value="Zone 3">Zone 3</option>
+                  <option value="Zone 4">Zone 4</option>
+                  <option value="Zone 5">Zone 5</option>
+                  <option value="Zone 6">Zone 6</option>
+                  <option value="Zone 7">Zone 7 (Purok 7)</option>
+                </select>
+
+                <select id="admin-records-status-filter" class="form-select" style="width: auto; min-width: 160px;"
+                  onchange="MHODashboard.filterAdminRecords()">
+                  <option value="ALL">All Nutritional Statuses</option>
+                  <option value="Stunted">Stunted</option>
+                  <option value="Critical">Critical Cases</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Improved">Improved &amp; Recovered</option>
+                </select>
+              </div>
+
+              <!-- Records Table -->
+              <div class="table-responsive">
+                <table class="admin-clean-table">
+                  <thead>
+                    <tr>
+                      <th>Child &amp; Parent</th>
+                      <th>Barangay &amp; Zone</th>
+                      <th>Age &amp; Sex</th>
+                      <th>Height / Weight / MUAC</th>
+                      <th>Nutritional Classification</th>
+                      <th>Status</th>
+                      <th>Last Assessed</th>
+                      <th style="text-align: center; min-width: 110px;">Aksyon (Action)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-records-tbody">
+                    <!-- Populated by MHODashboard.renderAdminRecords() -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ====================================================================
+             MHO TAB PANE: BARANGAY MANAGEMENT (Add & Edit Barangay)
+             ==================================================================== -->
+        <div class="mho-tab-pane" data-tab="barangays" id="mho-tab-barangays" style="display: none;">
+          <div class="admin-pane-container">
+            <div class="admin-pane-header">
+              <div class="admin-pane-title-group">
+                <h2>🏛️ Pamamahala ng mga Barangay (Barangay Registry)</h2>
+                <p>Pamahalaan ang mga opisyal na barangay sa munisipalidad. Ang mga barangay na nakatala rito ang gagamitin sa pagpaparehistro ng Magulang (Parent) at BHW, at sa mga filters ng sistema.</p>
+              </div>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openAddBarangayModal()">
+                  ➕ Magdagdag ng Barangay
+                </button>
+              </div>
+            </div>
+
+            <!-- KPI Summary Cards for Barangays -->
+            <div class="grid-3" style="margin-bottom: 1.5rem; gap: 1rem;">
+              <div class="stat-card" style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+                  🏛️ Rehistradong Barangay
+                </div>
+                <div id="brgy-kpi-total" style="font-size: 1.85rem; font-weight: 800; color: #0F172A;">5</div>
+                <div style="font-size: 0.78rem; color: #10B981; font-weight: 600; margin-top: 0.25rem;">Opisyal na sakop ng MHO</div>
+              </div>
+
+              <div class="stat-card" style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+                  👶 Mga Batang Nakatala
+                </div>
+                <div id="brgy-kpi-children" style="font-size: 1.85rem; font-weight: 800; color: #0284C7;">0</div>
+                <div style="font-size: 0.78rem; color: #64748B; margin-top: 0.25rem;">Kabuuan sa lahat ng barangay</div>
+              </div>
+
+              <div class="stat-card" style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
+                <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+                  👥 Mga User (BHW & Magulang)
+                </div>
+                <div id="brgy-kpi-users" style="font-size: 1.85rem; font-weight: 800; color: #059669;">0</div>
+                <div style="font-size: 0.78rem; color: #64748B; margin-top: 0.25rem;">Nakatala sa bawat komunidad</div>
+              </div>
+            </div>
+
+            <!-- Barangay Table Card -->
+            <div class="admin-clean-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+                <div class="search-input-wrapper" style="flex: 1; max-width: 380px; min-width: 240px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" id="admin-brgy-search" class="form-control"
+                    placeholder="Maghanap ng barangay..." oninput="MHODashboard.filterBarangaysTable()">
+                </div>
+                <div style="font-size: 0.8rem; color: #64748B;">
+                  💡 <em>Kapag pinalitan ang pangalan, awtomatikong mag-uupdate ang mga talaan at filters ng sistema.</em>
+                </div>
+              </div>
+
+              <div class="admin-table-wrapper" style="overflow-x: auto;">
+                <table class="admin-clean-table" style="width: 100%; border-collapse: collapse;">
+                  <thead>
+                    <tr>
+                      <th style="width: 50px;">#</th>
+                      <th>Pangalan ng Barangay</th>
+                      <th style="text-align: center;">Nakatala na Bata</th>
+                      <th style="text-align: center;">Nakatala na Users</th>
+                      <th>Coverage / Zones</th>
+                      <th>Status sa Sistema</th>
+                      <th style="text-align: center; min-width: 160px;">Mga Aksyon</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-barangays-tbody">
+                    <!-- Populated dynamically by MHODashboard.renderBarangaysManager() -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Pane 0: Executive Dashboard (Preserved Operations Center) -->
+        <div class="mho-tab-pane" data-tab="dashboard" style="display: none;">
           <!-- Executive Command Banner -->
           <div class="dash-banner" style="background: linear-gradient(135deg, #064E3B 0%, #0F766E 100%);">
             <div class="dash-banner-header">
@@ -1596,7 +2163,7 @@
 
               <div class="dash-alert-box" style="margin-bottom: 1rem;">
                 <div class="dash-alert-title">
-                  <span>⚠️ Immediate Focus: Barangay Santa Maria &amp; San Jose</span>
+                  <span>📍 Priority Monitoring: Barangay Manguiring</span>
                   <span class="dash-priority-badge high">High Burden</span>
                 </div>
                 <p class="dash-alert-desc">
@@ -1609,7 +2176,7 @@
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border-left:4px solid #EF4444;">
                   <div>
-                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Santa Maria</strong>
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 1 - 2)</strong>
                     <div style="font-size:0.78rem; color:var(--text-muted);">38.1% Stunting Prevalence • 16 Wasted Cases
                     </div>
                   </div>
@@ -1619,7 +2186,7 @@
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border-left:4px solid #F59E0B;">
                   <div>
-                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay San Jose</strong>
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 3 - 4)</strong>
                     <div style="font-size:0.78rem; color:var(--text-muted);">35.2% Stunting Prevalence • 12 Stunted
                       Cases</div>
                   </div>
@@ -1629,8 +2196,7 @@
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border-left:4px solid #10B981;">
                   <div>
-                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Poblacion &amp; San
-                      Isidro</strong>
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 5 - 6)</strong>
                     <div style="font-size:0.78rem; color:var(--text-muted);">On track (&lt;18% stunting rate) •
                       Continuous monitoring</div>
                   </div>
@@ -1652,7 +2218,7 @@
                 <div
                   style="padding:0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border:1px solid var(--border-light);">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                    <strong style="font-size:0.88rem; color:var(--text-primary);">Brgy. San Jose — Monthly Malnutrition
+                    <strong style="font-size:0.88rem; color:var(--text-primary);">Brgy. Manguiring — Monthly Malnutrition
                       Census</strong>
                     <span class="dash-priority-badge moderate">Pending MHO Review</span>
                   </div>
@@ -1668,7 +2234,7 @@
                 <div
                   style="padding:0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border:1px solid var(--border-light);">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                    <strong style="font-size:0.88rem; color:var(--text-primary);">Brgy. Poblacion — Quarterly OPT Plus
+                    <strong style="font-size:0.88rem; color:var(--text-primary);">Brgy. Manguiring — Quarterly OPT Plus
                       Rollup</strong>
                     <span class="dash-priority-badge normal">Endorsed</span>
                   </div>
@@ -1750,10 +2316,7 @@
 
               <select id="admin-ann-barangay-filter" class="form-select" style="width: auto; min-width: 170px;">
                 <option value="ALL">All Barangays</option>
-                <option value="Barangay San Jose">Barangay San Jose</option>
-                <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                <option value="Barangay San Isidro">Barangay San Isidro</option>
-                <option value="Barangay Poblacion">Barangay Poblacion</option>
+                <option value="Barangay Manguiring">Barangay Manguiring</option>
               </select>
             </div>
 
@@ -1925,29 +2488,124 @@
           </div>
         </div>
 
-        <!-- Tab Pane 5: Nutrition Content Manager (Req #11) -->
+        <!-- Tab Pane 5: Nutrition Content & Meal Adherence Manager -->
         <div class="mho-tab-pane" data-tab="content" id="mho-tab-content" style="display: none;">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">📝 Nutrition Education Content Manager</h2>
-                <p class="card-subtitle">Add, modify, update, and maintain parent learning modules, lessons, objectives,
-                  and quizzes.</p>
-              </div>
-              <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                <button class="btn btn-outline btn-sm" onclick="MHODashboard.handleResetModules()"
-                  title="Reset to WHO standard default modules">
-                  🔄 Reset Curricula
-                </button>
-                <button class="btn btn-primary btn-sm" onclick="MHODashboard.openAddModuleModal()">
-                  + Add New Module
-                </button>
+          <div class="admin-pane-container">
+            <!-- Header with Title & Sub-Tab Switcher -->
+            <div class="admin-pane-header" style="margin-bottom: 1.25rem;">
+              <div class="admin-pane-title-group">
+                <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.85rem; color: #1E2320; margin-bottom: 0.35rem;">
+                  🥗 Mga Nutrition Module &amp; Pagsubaybay sa Pagsunod sa Pagkain
+                </h2>
+                <p style="color: #6B7280; font-size: 0.92rem;">
+                  Pamamahala ng mga gabay sa masusustansyang pagkain at live monitoring kung nasusunod ng mga pamilya ang tamang nutrisyon.
+                </p>
               </div>
             </div>
 
-            <!-- Modules List Container -->
-            <div id="mho-content-modules-list">
-              <!-- Dynamically populated by MHODashboard.renderContentManagerModules() -->
+            <!-- Subtab Pills: 1. Mga Module & Pagkain | 2. Pagsubaybay sa Pagsunod -->
+            <div class="content-subtabs-bar" style="margin-bottom: 1.5rem; border-bottom: 1px solid #EBE5D8; padding-bottom: 0.75rem;">
+              <button type="button" class="content-subtab-btn active" id="btn-subtab-modules" onclick="MHODashboard.switchContentSubTab('modules')">
+                🥗 Mga Module &amp; Gabay sa Pagkain
+              </button>
+              <button type="button" class="content-subtab-btn" id="btn-subtab-compliance" onclick="MHODashboard.switchContentSubTab('compliance')">
+                📊 Pagsubaybay sa Pagsunod (Meal Compliance Monitor)
+                <span class="compliance-counter-pill" id="compliance-pending-pill">5 Nangangailangan ng Tulong</span>
+              </button>
+            </div>
+
+            <!-- Sub-Pane 1: Nutrition Modules & Recommended Foods -->
+            <div id="pane-content-modules" style="display: block;">
+              <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; background: #FFFFFF; border: 1px solid #EBE5D8; border-radius: 14px; padding: 1.25rem 1.5rem;">
+                <div>
+                  <h3 style="font-size: 1.15rem; font-weight: 700; color: #1E3A2B; margin-bottom: 0.2rem;">
+                    Alituntunin ng Pagkain &amp; Mga Aralin para sa Magulang
+                  </h3>
+                  <p style="font-size: 0.85rem; color: #6B7280; margin: 0;">
+                    Maaaring baguhin ng Administrator ang mga inirerekomendang pagkain, sukat ng pagkain, larawan, at aralin.
+                  </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="MHODashboard.handleResetModules()" title="Ibalik sa orihinal na WHO standard default modules">
+                    🔄 I-reset sa Standard
+                  </button>
+                  <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openAddModuleModal()">
+                    + Magdagdag ng Bagong Module
+                  </button>
+                </div>
+              </div>
+
+              <!-- Modules List Container -->
+              <div id="mho-content-modules-list">
+                <!-- Dynamically populated by MHODashboard.renderContentManagerModules() -->
+              </div>
+            </div>
+
+            <!-- Sub-Pane 2: Dietary Adherence & Meal Compliance Monitor -->
+            <div id="pane-content-compliance" style="display: none;">
+              <!-- Executive KPI Stats -->
+              <div id="mho-compliance-kpis-container">
+                <!-- Dynamically populated by MHODashboard.renderComplianceKPIs() -->
+              </div>
+
+              <!-- Food Items Adoption Progress -->
+              <div class="card" style="margin-bottom: 1.5rem; background: #FFFFFF; border: 1px solid #EBE5D8; border-radius: 14px; padding: 1.25rem 1.5rem;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+                  <h4 style="font-size: 0.98rem; font-weight: 700; color: #1E3A2B; margin: 0;">
+                    🥦 Antas ng Pagsunod sa Bawat Inirerekomendang Pagkain (Food Items Adherence Rate)
+                  </h4>
+                  <span style="font-size: 0.78rem; color: #6B7280; font-weight: 500;">Batay sa pang-araw-araw na log ng mga magulang</span>
+                </div>
+                <div id="mho-food-adherence-bars" class="food-adherence-grid">
+                  <!-- Dynamically populated by MHODashboard.renderFoodAdherenceBars() -->
+                </div>
+              </div>
+
+              <!-- Filter & Search Toolbar -->
+              <div class="filter-bar" style="margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <div class="search-input-wrapper" style="flex: 1; min-width: 240px;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                  </svg>
+                  <input type="text" id="mho-compliance-search" class="form-control"
+                    placeholder="Hanapin ang pangalan ng bata o magulang..." oninput="MHODashboard.filterComplianceRecords()">
+                </div>
+
+                <select id="mho-compliance-barangay-filter" class="form-select" style="width: auto; min-width: 170px;"
+                  onchange="MHODashboard.filterComplianceRecords()">
+                  <option value="ALL">Lahat ng Barangay</option>
+                  <option value="Barangay Manguiring">Barangay Manguiring</option>
+                </select>
+
+                <select id="mho-compliance-status-filter" class="form-select" style="width: auto; min-width: 180px;"
+                  onchange="MHODashboard.filterComplianceRecords()">
+                  <option value="ALL">Lahat ng Katayuan</option>
+                  <option value="Compliant">🟢 Nasusunod (80-100%)</option>
+                  <option value="Moderate">🟡 Katamtaman (50-79%)</option>
+                  <option value="Non-Compliant">🔴 Hindi Nasusunod (&lt;50%)</option>
+                </select>
+              </div>
+
+              <!-- Household Compliance Registry Table -->
+              <div class="table-responsive" style="background: #FFFFFF; border: 1px solid #EBE5D8; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <table class="admin-clean-table">
+                  <thead>
+                    <tr>
+                      <th>Pamilya at Bata</th>
+                      <th>Barangay / Purok</th>
+                      <th>Nakatalagang Gabay sa Pagkain</th>
+                      <th>Antas ng Pagsunod (Adherence)</th>
+                      <th>Katayuan</th>
+                      <th>Huling Kinain / Aksyon</th>
+                      <th>Mga Aksyon ng Admin</th>
+                    </tr>
+                  </thead>
+                  <tbody id="mho-compliance-tbody">
+                    <!-- Dynamically populated by MHODashboard.renderDietaryComplianceTable() -->
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -2006,14 +2664,56 @@
           </div>
         </div>
 
-        <!-- Tab Pane 7: Audit & Administration Data (Data Requirements #10) -->
+        <!-- Tab Pane 7: Audit & Administration Activity Trail (Data Requirements #10) -->
         <div class="mho-tab-pane" data-tab="audit" id="mho-tab-audit" style="display: none;">
-          <div class="card">
-            <div class="card-header">
+          <!-- Audit Metrics KPI Summary Row -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748B;">Total Audit Events</span>
+                <span style="font-size: 1.2rem;">🛡️</span>
+              </div>
+              <div id="audit-kpi-total" style="font-size: 1.7rem; font-weight: 800; color: #1E293B;">0</div>
+              <div style="font-size: 0.74rem; color: #94A3B8;">Talaan kan gabos na aktibidad</div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #2563EB;">Account Registrations</span>
+                <span style="font-size: 1.2rem;">👥</span>
+              </div>
+              <div id="audit-kpi-accounts" style="font-size: 1.7rem; font-weight: 800; color: #2563EB;">0</div>
+              <div style="font-size: 0.74rem; color: #94A3B8;">Bagong accounts &amp; profile changes</div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #16A34A;">Child Records &amp; Growth</span>
+                <span style="font-size: 1.2rem;">👶</span>
+              </div>
+              <div id="audit-kpi-children" style="font-size: 1.7rem; font-weight: 800; color: #16A34A;">0</div>
+              <div style="font-size: 0.74rem; color: #94A3B8;">Timbang, langkaw, &amp; WHO status updates</div>
+            </div>
+
+            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #D97706;">Curriculum &amp; Nutrition</span>
+                <span style="font-size: 1.2rem;">🥗</span>
+              </div>
+              <div id="audit-kpi-content" style="font-size: 1.7rem; font-weight: 800; color: #D97706;">0</div>
+              <div style="font-size: 0.74rem; color: #94A3B8;">Mga binagong modules &amp; kakanun</div>
+            </div>
+          </div>
+
+          <div class="card" style="border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+            <div class="card-header" style="border-bottom: 1px solid #F1F5F9; padding: 1.25rem 1.5rem;">
               <div>
-                <h2 class="card-title">🛡️ System Activity &amp; Administration Audit Logs</h2>
-                <p class="card-subtitle">Comprehensive accountability trail: account modifications, curriculum updates,
-                  report endorsements, and security actions.</p>
+                <h2 class="card-title" style="font-size: 1.15rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 0.5rem;">
+                  <span>🛡️</span> System Activity &amp; Administration Audit Logs
+                </h2>
+                <p class="card-subtitle" style="font-size: 0.82rem; color: #64748B; margin-top: 0.25rem;">
+                  Komprehensibong log history kan kada pagbabago sa gabos na detalye: pagrehistro nin magulang asin aki, sukol kan timbang/langkaw, modules, anunsyo, asin seguridad na may eksaktong petsa asin oras.
+                </p>
               </div>
               <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
                 <button class="btn btn-outline btn-sm" onclick="NutriExport.exportAuditLogsCSV()"
@@ -2028,36 +2728,37 @@
             </div>
 
             <!-- Filter Toolbar -->
-            <div class="filter-bar" style="margin-bottom: 1rem;">
-              <div class="search-input-wrapper">
+            <div class="filter-bar" style="margin-bottom: 1rem; padding: 0.75rem 1.5rem 0.25rem;">
+              <div class="search-input-wrapper" style="flex: 1;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="11" cy="11" r="8"></circle>
                   <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
                 <input type="text" id="mho-audit-search" class="form-control"
-                  placeholder="Search audit logs by action, user, or details...">
+                  placeholder="Maghanap sa logs (aksyon, pangaran, detalye, kategorya)...">
               </div>
 
-              <select id="mho-audit-category-filter" class="form-select" style="width: auto; min-width: 180px;">
-                <option value="ALL">All Categories</option>
-                <option value="Account Management">Account Management</option>
-                <option value="Content & Curricula">Content &amp; Curricula</option>
-                <option value="Report & Endorsement">Report &amp; Endorsement</option>
-                <option value="Group & Instruction">Group &amp; Instruction</option>
-                <option value="Security & Access">Security &amp; Access</option>
+              <select id="mho-audit-category-filter" class="form-select" style="width: auto; min-width: 200px;">
+                <option value="ALL">Lahat ng Kategorya (All Categories)</option>
+                <option value="Account Management">Account Management (Magulang/BHW)</option>
+                <option value="Field Health Record">Field Health Records (Aki / Child Data)</option>
+                <option value="Content Manager">Content &amp; Curricula (Pagkain &amp; Gabay)</option>
+                <option value="Nutrition Monitoring">Nutrition Monitoring (Meal Logs)</option>
+                <option value="Report & Endorsement">Report &amp; Endorsement (BHW Queue)</option>
+                <option value="Security & Access">Security &amp; Access (Login/Password)</option>
               </select>
             </div>
 
-            <div class="table-responsive">
-              <table class="data-table">
+            <div class="table-responsive" style="padding: 0 1.5rem 1.5rem;">
+              <table class="data-table admin-clean-table">
                 <thead>
                   <tr>
-                    <th>Timestamp</th>
-                    <th>Category</th>
-                    <th>Action Performed</th>
-                    <th>Details / Scope</th>
-                    <th>Performed By</th>
-                    <th>Role</th>
+                    <th style="min-width: 165px;">📅 Petsa at Oras (Date &amp; Time)</th>
+                    <th style="min-width: 140px;">Kategorya (Category)</th>
+                    <th style="min-width: 170px;">Aksyon (Action)</th>
+                    <th style="min-width: 260px;">Mga Detalye kan Pagbabago (Details &amp; Changes)</th>
+                    <th style="min-width: 130px;">Nagsagawa (User)</th>
+                    <th style="min-width: 90px;">Papel (Role)</th>
                   </tr>
                 </thead>
                 <tbody id="mho-audit-tbody">
@@ -2076,9 +2777,9 @@
     <footer class="app-footer">
       <div class="footer-container">
         <div>
-          <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.35rem;">
-            <img src="assets/icons/icon-192.svg" alt="NutriLearn" style="width:24px; height:24px; border-radius:4px;">
-            <strong style="color:#FFFFFF; font-size:1rem;">NutriLearn</strong>
+          <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; cursor:pointer;" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Return to Main Dashboard">
+            <img src="icon/logo.png?v=5.0" alt="NutriLearn" style="width:28px; height:28px; object-fit:contain;">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="footer-brand-name-img" style="height:22px; width:auto; background:rgba(255,255,255,0.92); padding:2px 7px; border-radius:6px; object-fit:contain;">
           </div>
           <p style="font-size:0.8rem; color:var(--text-on-dark-muted); max-width:480px;">
             Evidence-based community e-learning &amp; malnutrition monitoring platform. Aligned with WHO Global
@@ -2234,10 +2935,7 @@
               <div class="form-group">
                 <label class="form-label">Barangay Residence:</label>
                 <select name="regBarangay" class="form-select">
-                  <option value="Barangay San Jose">Barangay San Jose</option>
-                  <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                  <option value="Barangay San Isidro">Barangay San Isidro</option>
-                  <option value="Barangay Poblacion">Barangay Poblacion</option>
+                  <option value="Barangay Manguiring">Barangay Manguiring</option>
                 </select>
               </div>
             </div>
@@ -2252,10 +2950,7 @@
                 <div class="form-group">
                   <label class="form-label">Barangay Assignment:</label>
                   <select name="regBhwBarangay" class="form-select">
-                    <option value="Barangay San Jose">Barangay San Jose</option>
-                    <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                    <option value="Barangay San Isidro">Barangay San Isidro</option>
-                    <option value="Barangay Poblacion">Barangay Poblacion</option>
+                    <option value="Barangay Manguiring">Barangay Manguiring</option>
                   </select>
                 </div>
               </div>
@@ -2291,7 +2986,10 @@
   <div id="modal-download-app" class="modal-backdrop">
     <div class="modal-dialog">
       <div class="modal-header">
-        <div class="modal-title">Download NutriLearn App</div>
+        <div class="modal-title" style="display: flex; align-items: center; gap: 9px;">
+          <img src="icon/logo.png?v=5.0" alt="NutriLearn" style="width: 26px; height: 26px; object-fit: contain;">
+          <span>Download NutriLearn App</span>
+        </div>
         <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-download-app')">&times;</button>
       </div>
       <div class="modal-body">
@@ -2415,6 +3113,7 @@
         <div class="modal-title" style="color: #FFFFFF;">🏆 Certificate of Nutrition Knowledge</div>
       </div>
       <div class="modal-body" style="padding: 2.5rem 2rem;">
+        <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Seal" style="width: 72px; height: 72px; object-fit: contain; margin: 0 auto 0.75rem auto; display: block; cursor: pointer;" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn">
         <div
           style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-primary-700); font-weight:700; margin-bottom:0.5rem;">
           NutriLearn Community Health Initiative
@@ -2483,14 +3182,25 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <label class="form-label">Barangay:</label>
-            <select name="childBarangay" class="form-select" required>
-              <option value="Barangay San Jose">Barangay San Jose</option>
-              <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-              <option value="Barangay San Isidro">Barangay San Isidro</option>
-              <option value="Barangay Poblacion">Barangay Poblacion</option>
-            </select>
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Barangay:</label>
+              <select name="childBarangay" class="form-select" required>
+                <option value="Barangay Manguiring">Barangay Manguiring</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Zone / Purok:</label>
+              <select name="childZone" class="form-select" required>
+                <option value="Zone 1">Zone 1</option>
+                <option value="Zone 2">Zone 2</option>
+                <option value="Zone 3">Zone 3</option>
+                <option value="Zone 4">Zone 4</option>
+                <option value="Zone 5">Zone 5</option>
+                <option value="Zone 6">Zone 6</option>
+                <option value="Zone 7">Zone 7 (Purok 7)</option>
+              </select>
+            </div>
           </div>
 
           <div class="grid-3">
@@ -2567,6 +3277,182 @@
     </div>
   </div>
 
+  <!-- 6.5 Administrator Edit Child Measurements Modal (Enforces Barangay Restriction) -->
+  <div id="modal-admin-edit-child" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">✏️ I-update ang Talaan ng Bata (Admin)</div>
+          <div style="font-size: 0.8rem; color: #475569; margin-top: 3px;">
+            Aktibong Barangay: <span id="admin-edit-child-brgy-badge" class="badge" style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span> (Naka-lock sa napiling barangay)
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-edit-child')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveAdminEditedChild(this);">
+        <div class="modal-body">
+          <input type="hidden" id="admin-edit-child-id">
+          <input type="hidden" id="admin-edit-child-barangay">
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Pangalan ng Bata (Child Name):</label>
+              <input type="text" id="admin-edit-child-name" class="form-control" disabled style="background: #F1F5F9; font-weight: 600; color: #1E293B;">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Magulang (Parent / Guardian):</label>
+              <input type="text" id="admin-edit-child-parent" class="form-control" disabled style="background: #F1F5F9; color: #475569;">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Zone / Purok: *</label>
+              <select id="admin-edit-child-zone" class="form-select" required>
+                <option value="Zone 1">Zone 1</option>
+                <option value="Zone 2">Zone 2</option>
+                <option value="Zone 3">Zone 3</option>
+                <option value="Zone 4">Zone 4</option>
+                <option value="Zone 5">Zone 5</option>
+                <option value="Zone 6">Zone 6</option>
+                <option value="Zone 7">Zone 7 (Purok 7)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Edad (Buwan / Months): *</label>
+              <input type="number" id="admin-edit-child-age" class="form-control" min="6" max="59" required>
+            </div>
+          </div>
+
+          <div class="grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Tangkad (cm): *</label>
+              <input type="number" id="admin-edit-child-height" class="form-control" step="0.1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Timbang (kg): *</label>
+              <input type="number" id="admin-edit-child-weight" class="form-control" step="0.1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">MUAC (mm): *</label>
+              <input type="number" id="admin-edit-child-muac" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Katayuan sa Nutrisyon (Status):</label>
+            <select id="admin-edit-child-status" class="form-select">
+              <option value="Normal">Normal Status</option>
+              <option value="Stunted">Stunted (Maliit para sa edad)</option>
+              <option value="Critical">Critical Case (SAM / Severe Wasting)</option>
+              <option value="Improved">Improved &amp; Recovered</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mga Tala / Interbensyon (Health Notes):</label>
+            <textarea id="admin-edit-child-notes" class="form-control" rows="2" placeholder="Hal. Binigyan ng RUTF ration, dumalo sa feeding program..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
+          <button type="button" class="btn btn-outline btn-sm" style="color: #DC2626; border-color: #FCA5A5; font-size: 0.82rem; padding: 6px 12px;" onclick="MHODashboard.handleDeleteChildFromModal()" title="Burahin ang talaan ng batang ito">
+            🗑️ Burahin ang Talaan
+          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-edit-child')">Kanselahin</button>
+            <button type="submit" class="btn btn-primary">💾 I-save ang Pagbabago</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6.6 Administrator Add Child to Selected Barangay Modal -->
+  <div id="modal-admin-add-child" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title">➕ Magdagdag ng Bagong Bata sa Talaan</div>
+          <div style="font-size: 0.8rem; color: #475569; margin-top: 3px;">
+            Aktibong Barangay: <span id="admin-add-child-brgy-badge" class="badge" style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span> (Awtomatikong itinakda)
+          </div>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-add-child')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveAdminAddChild(this);">
+        <div class="modal-body">
+          <input type="hidden" id="admin-add-child-barangay" name="childBarangay">
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Pangalan ng Bata (Child Name): *</label>
+              <input type="text" name="childName" class="form-control" required placeholder="Hal. Juan Dela Cruz">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Magulang (Parent / Guardian): *</label>
+              <input type="text" name="parentName" class="form-control" required placeholder="Hal. Maria Dela Cruz">
+            </div>
+          </div>
+
+          <div class="grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Kasarian (Sex): *</label>
+              <select name="childSex" class="form-select" required>
+                <option value="Male">Lalaki (Male)</option>
+                <option value="Female">Babae (Female)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Zone / Purok: *</label>
+              <select name="childZone" class="form-select" required>
+                <option value="Zone 1">Zone 1</option>
+                <option value="Zone 2">Zone 2</option>
+                <option value="Zone 3">Zone 3</option>
+                <option value="Zone 4">Zone 4</option>
+                <option value="Zone 5">Zone 5</option>
+                <option value="Zone 6">Zone 6</option>
+                <option value="Zone 7">Zone 7 (Purok 7)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Edad (Buwan): *</label>
+              <input type="number" name="childAge" class="form-control" min="6" max="59" value="12" required>
+            </div>
+          </div>
+
+          <div class="grid-3" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Tangkad (cm): *</label>
+              <input type="number" name="childHeight" class="form-control" step="0.1" value="75.0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Timbang (kg): *</label>
+              <input type="number" name="childWeight" class="form-control" step="0.1" value="9.0" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">MUAC (mm): *</label>
+              <input type="number" name="childMuac" class="form-control" value="125" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Numero ng Telepono ng Magulang (Contact):</label>
+            <input type="text" name="parentPhone" class="form-control" placeholder="0917-000-0000">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mga Tala / Obserbasyon:</label>
+            <textarea name="childNotes" class="form-control" rows="2" placeholder="Mga detalye ukol sa nutrisyon ng bata..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-add-child')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary">➕ Idagdag sa Talaan</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- 7. Submit Report to MHO Modal -->
   <div id="modal-submit-report" class="modal-backdrop">
     <div class="modal-dialog">
@@ -2579,10 +3465,7 @@
           <div class="form-group">
             <label class="form-label">Select Barangay to Report:</label>
             <select id="report-barangay-select" class="form-select" onchange="CHWModule.openReportModal()">
-              <option value="Barangay San Jose">Barangay San Jose</option>
-              <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-              <option value="Barangay San Isidro">Barangay San Isidro</option>
-              <option value="Barangay Poblacion">Barangay Poblacion</option>
+              <option value="Barangay Manguiring">Barangay Manguiring</option>
             </select>
           </div>
 
@@ -2739,10 +3622,7 @@
           <div class="form-group">
             <label class="form-label">Barangay Location:</label>
             <select name="accBarangay" id="acc-settings-barangay" class="form-select">
-              <option value="Barangay San Jose">Barangay San Jose</option>
-              <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-              <option value="Barangay San Isidro">Barangay San Isidro</option>
-              <option value="Barangay Poblacion">Barangay Poblacion</option>
+              <option value="Barangay Manguiring">Barangay Manguiring</option>
             </select>
           </div>
         </div>
@@ -2772,17 +3652,14 @@
           <div class="form-group">
             <label class="form-label">Group / Cohort Name: <span style="color: #DC2626;">*</span></label>
             <input type="text" name="groupName" class="form-control"
-              placeholder="e.g. San Jose First 1,000 Days Batch 2" required>
+              placeholder="e.g. Manguiring First 1,000 Days Batch 1" required>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Barangay Location: <span style="color: #DC2626;">*</span></label>
               <select name="groupBarangay" class="form-select">
-                <option value="Barangay San Jose">Barangay San Jose</option>
-                <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                <option value="Barangay San Isidro">Barangay San Isidro</option>
-                <option value="Barangay Poblacion">Barangay Poblacion</option>
+                <option value="Barangay Manguiring">Barangay Manguiring</option>
               </select>
             </div>
             <div class="form-group">
@@ -2911,14 +3788,14 @@
     </div>
   </div>
 
-  <!-- 6. Administrator Edit / Add Module Modal (Req #11) -->
+  <!-- 6. Administrator Edit / Add Module Modal (Req #11 & Food Guidelines) -->
   <div id="modal-edit-module" class="modal-backdrop">
-    <div class="modal-dialog" style="max-width: 680px;">
+    <div class="modal-dialog" style="max-width: 720px;">
       <div class="modal-header">
         <div>
-          <h2 class="modal-title" id="modal-edit-module-title">📝 Edit Nutrition Learning Module</h2>
+          <h2 class="modal-title" id="modal-edit-module-title">🥗 Baguhin ang Module at Gabay sa Pagkain</h2>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-            Maintain evidence-based curricula, objectives, and feeding content
+            Itakda kung anong masusustansyang pagkain ang dapat kainin, mga sangkap, larawan, at aralin.
           </p>
         </div>
         <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-edit-module')">&times;</button>
@@ -2929,42 +3806,127 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Module Label / Number: <span style="color: #DC2626;">*</span></label>
-              <input type="text" id="edit-module-number" class="form-control" placeholder="e.g. Module 6" required>
+              <input type="text" id="edit-module-number" class="form-control" placeholder="e.g. Module 1" required>
             </div>
             <div class="form-group">
               <label class="form-label">Estimated Duration: <span style="color: #DC2626;">*</span></label>
-              <input type="text" id="edit-module-duration" class="form-control" placeholder="e.g. 15 mins" required>
+              <input type="text" id="edit-module-duration" class="form-control" placeholder="e.g. 45 min" required>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Module Title: <span style="color: #DC2626;">*</span></label>
+            <label class="form-label">Pamagat ng Aralin (Module Title): <span style="color: #DC2626;">*</span></label>
             <input type="text" id="edit-module-title-input" class="form-control"
-              placeholder="e.g. Safe Food Storage &amp; Preventing Diarrhea" required>
+              placeholder="e.g. Understanding Child Malnutrition" required>
+          </div>
+
+          <!-- Section: Ano ang Dapat na Pagkain (Recommended Foods) -->
+          <div style="background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 10px; padding: 1rem; margin-bottom: 1.15rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
+              <label class="form-label" style="color: #14532D; font-weight: 700; margin: 0;">
+                🥗 Ano ang Dapat na Pagkain (Recommended Foods &amp; Ingredients): <span style="color: #DC2626;">*</span>
+              </label>
+              <span style="font-size: 0.74rem; color: #166534; font-weight: 600;">Inirerekomenda ng MHO</span>
+            </div>
+            <input type="text" id="edit-module-foods" class="form-control"
+              placeholder="e.g. Sariwang Malunggay, Kalabasa, Monggo, Hard-boiled Egg, Dilaw na Camote, Dilis" required style="background: #FFFFFF;">
+            
+            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
+              <span style="font-size: 0.73rem; color: #166534; font-weight: 600;">Mabilisang Idagdag:</span>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Malunggay')">+ 🌿 Malunggay</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Monggo')">+ 🍲 Monggo</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Nilagang Itlog')">+ 🥚 Itlog</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Kalabasa')">+ 🎃 Kalabasa</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Dilaw na Camote')">+ 🍠 Camote</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Dilis / Isda')">+ 🐟 Dilis/Isda</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Gatas ng Ina')">+ 👶 Gatas ng Ina</button>
+              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Malinis na Tubig')">+ 💧 Tubig</button>
+            </div>
+
+            <div style="margin-top: 0.85rem;">
+              <label class="form-label" style="color: #14532D; font-weight: 700; margin-bottom: 0.25rem;">
+                🥣 Gabay sa Pagpapakain at Sukat ng Pagkain (Feeding Guidelines &amp; Portions):
+              </label>
+              <textarea id="edit-module-feeding-guide" class="form-control" rows="2" style="background: #FFFFFF;"
+                placeholder="Hal. Pakainin 3 beses sa isang araw. Ihalo ang 1 dakot ng sariwang malunggay sa lugaw o sabaw. Iwasan ang matatamis na inumin."></textarea>
+            </div>
+          </div>
+
+          <!-- Section: Food Image Selection -->
+          <div class="form-group" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 1rem; margin-bottom: 1.15rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+              <label class="form-label" style="font-weight: 700; color: #1E293B; margin: 0;">
+                📸 Larawan ng Module (Module &amp; Food Image):
+              </label>
+              <button type="button" class="btn btn-outline btn-sm" onclick="MHODashboard.resetModuleImage()" style="font-size: 0.75rem; color: #64748B; padding: 3px 8px; border-radius: 6px;" title="Ibalik sa orihinal na larawan">
+                🔄 Ibalik sa Default
+              </button>
+            </div>
+
+            <div style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
+              <!-- Thumbnail Preview Box -->
+              <div style="width: 140px; height: 100px; border-radius: 10px; overflow: hidden; background: #E2E8F0; flex-shrink: 0; border: 2px solid #94A3B8; box-shadow: 0 2px 4px rgba(0,0,0,0.06); position: relative;">
+                <img id="edit-module-image-preview" src="assets/images/module-malnutrition.jpg" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/images/module-malnutrition.jpg'">
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.7); color: #fff; font-size: 0.68rem; text-align: center; padding: 2px 4px; font-weight: 600;">
+                  Preview
+                </div>
+              </div>
+
+              <!-- Controls -->
+              <div style="flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 0.55rem;">
+                <!-- Option 1: File Upload (Device) -->
+                <div>
+                  <input type="file" id="edit-module-file-input" accept="image/*" style="display: none;" onchange="MHODashboard.handleModuleImageUpload(this)">
+                  <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('edit-module-file-input').click()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.82rem; padding: 7px 14px; background: #16A34A; border-color: #15803D;">
+                    📁 Pumili / Palitan ang Larawan mula sa Device
+                  </button>
+                  <div id="edit-module-file-name" style="font-size: 0.75rem; color: #166534; font-weight: 600; margin-top: 4px;"></div>
+                </div>
+
+                <!-- Option 2: Preset Selection -->
+                <div>
+                  <label style="font-size: 0.76rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">
+                    O pumili mula sa mga preset na larawan:
+                  </label>
+                  <select id="edit-module-image-select" class="form-select" onchange="MHODashboard.handleImageSelectChange(this.value)" style="font-size: 0.82rem;">
+                    <option value="assets/images/module-malnutrition.jpg">🥑 Avocado &amp; Masusustansyang Prutas (Malnutrition Module)</option>
+                    <option value="assets/images/module-complementary.jpg">🍗 Inihaw na Manok &amp; Protina (Complementary Feeding)</option>
+                    <option value="assets/images/module-meals.jpg">🥗 Salmon &amp; Veggie Iron Plate (Nutrient-Dense Meals)</option>
+                    <option value="assets/images/module-habits.jpg">👶 Toddler Finger Food Plate (Healthy Habits)</option>
+                    <option value="custom">🌐 Maglagay ng Custom Image URL / Data Link...</option>
+                  </select>
+                </div>
+
+                <!-- Option 3: Image URL input -->
+                <div>
+                  <label style="font-size: 0.76rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">
+                    URL ng Larawan (Awtomatikong napupuno kapag nag-upload):
+                  </label>
+                  <input type="text" id="edit-module-image-input" class="form-control" placeholder="assets/images/... o https://... o data:image/..." style="font-size: 0.8rem;" oninput="MHODashboard.updateImagePreview(this.value)">
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Summary / Description: <span style="color: #DC2626;">*</span></label>
+            <label class="form-label">Buod at Paliwanag (Summary / Description): <span style="color: #DC2626;">*</span></label>
             <textarea id="edit-module-summary" class="form-control" rows="2"
-              placeholder="Short description shown on parent curriculum card" required></textarea>
+              placeholder="Maikling paglalarawan na makikita ng magulang sa curriculum card" required></textarea>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Learning Objectives (One objective per line):</label>
-            <textarea id="edit-module-objectives" class="form-control" rows="3"
-              placeholder="Understand safe boiling of drinking water&#10;Identify clean food preparation practices"></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Detailed Lesson Content (HTML allowed):</label>
-            <textarea id="edit-module-content" class="form-control" rows="5"
-              placeholder="Enter lesson text, paragraphs, and guidance..."></textarea>
+            <label class="form-label">📖 Mga Aralin &amp; Detalye (Lessons List):</label>
+            <p style="font-size: 0.75rem; color: #64748B; margin: 0 0 0.35rem;">
+              Format: <code>Pamagat ng Aralin | Icon | Paliwanag</code> (Isang aralin bawat linya)
+            </p>
+            <textarea id="edit-module-lessons-text" class="form-control" rows="5"
+              placeholder="Ano ang Malnutrisyon? | 📖 | Ang malnutrisyon ay kakulangan sa wastong nutrisyon...&#10;Kahalagahan ng Malunggay | 🌿 | Maglagay ng malunggay sa huling 2 minuto ng pagluluto..."></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline"
-            onclick="NutriApp.closeModal('modal-edit-module')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Save Module to Curricula</button>
+            onclick="NutriApp.closeModal('modal-edit-module')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="font-weight: 700;">I-save ang Module sa Curricula →</button>
         </div>
       </form>
     </div>
@@ -2997,7 +3959,8 @@
 
           <div class="form-group">
             <label class="form-label">Initial Password: <span style="color: #DC2626;">*</span></label>
-            <input type="text" name="adminUserPass" class="form-control" placeholder="Enter temporary password" required>
+            <input type="text" name="adminUserPass" class="form-control" placeholder="Enter temporary password"
+              required>
           </div>
 
           <div class="grid-2">
@@ -3013,10 +3976,7 @@
             <div class="form-group">
               <label class="form-label">Barangay Assignment:</label>
               <select name="adminUserBarangay" class="form-select">
-                <option value="Barangay San Jose">Barangay San Jose</option>
-                <option value="Barangay Santa Maria">Barangay Santa Maria</option>
-                <option value="Barangay San Isidro">Barangay San Isidro</option>
-                <option value="Barangay Poblacion">Barangay Poblacion</option>
+                <option value="Barangay Manguiring">Barangay Manguiring</option>
               </select>
             </div>
           </div>
@@ -3030,21 +3990,337 @@
     </div>
   </div>
 
+  <!-- 8. Family Dietary Adherence & Food Log History Modal -->
+  <div id="modal-family-food-log" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="food-log-modal-title">📋 Talaan ng Pagkain ng Pamilya</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;" id="food-log-modal-subtitle">
+            Sinusubaybayang nutrisyon at mga naitalang pagkain
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-family-food-log')">&times;</button>
+      </div>
+      <div class="modal-body" id="food-log-modal-body">
+        <!-- Dynamically populated by MHODashboard.openFamilyFoodLog -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-family-food-log')">Isara</button>
+        <button type="button" class="btn btn-primary" id="btn-food-log-send-advisory">Magpadala ng Abiso / Ayuda →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. Administrator Send Dietary Advisory / Food Pack Modal -->
+  <div id="modal-dietary-advisory" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 560px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">📢 Magpadala ng Paalala sa Pagkain / Ayuda</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Opisyal na abiso mula sa Municipal Health Office para sa pamilyang nangangailangan ng gabay
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-dietary-advisory')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSendDietaryAdvisory(this);">
+        <input type="hidden" id="advisory-child-id">
+        <div class="modal-body">
+          <div id="advisory-family-summary" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:0.85rem;">
+            <!-- Rendered dynamically -->
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Uri ng Abiso / Interbensyon: <span style="color: #DC2626;">*</span></label>
+            <select id="advisory-preset-type" class="form-select" onchange="MHODashboard.handleAdvisoryPresetChange(this.value)">
+              <option value="malunggay">🌿 Paalala: Pagdaragdag ng Malunggay at Monggo sa Tanghalian</option>
+              <option value="egg">🥚 Paalala: 1 Itlog Araw-araw para sa Paglaki ng Bata</option>
+              <option value="ration">📦 Abiso: Iskedyul ng Pamamahagi ng Supplementary Food Pack</option>
+              <option value="water">💧 Paalala: Malinis na Tubig at Pag-iwas sa Matamis na Inumin</option>
+              <option value="clinic">🩺 Imbitasyon: Libreng Check-up sa Barangay Health Center</option>
+              <option value="custom">✏️ Pasadyang Abiso (Custom Directive)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mensahe / Tagubilin sa Magulang: <span style="color: #DC2626;">*</span></label>
+            <textarea id="advisory-message-text" class="form-control" rows="4" required
+              placeholder="Isulat ang tagubilin o gabay sa magulang..."></textarea>
+          </div>
+
+          <div style="font-size:0.78rem; color:#6B7280; background:#FFFBEB; border:1px solid #FDE68A; padding:0.5rem 0.75rem; border-radius:6px;">
+            💡 Ang abisong ito ay direktang lalabas sa Parent Portal ng pamilya at sa talaan ng kanilang Barangay Health Worker.
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-dietary-advisory')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="font-weight:700;">Ipadala ang Abiso sa Pamilya →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 10. Parent Daily Meal Check-in Modal -->
+  <div id="modal-parent-log-meal" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 600px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">🍽️ I-record ang Kinain ni Baby Ngayong Araw</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Araw-araw na pagtatala ng masusustansyang pagkain alinsunod sa gabay ng Health Center
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-parent-log-meal')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); ParentModule.handleSaveDailyMealLog(this);">
+        <div class="modal-body">
+          <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.84rem; color:#14532D;">
+            <strong>Paalala ng MHO:</strong> Ang pagtatala ng kinain ay tumutulong upang matiyak na nakakakuha ang bata ng sapat na Protina, Bitamina, at Enerhiya para maiwasan ang stunting.
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:0.85rem;">
+            <!-- Almusal -->
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🌅 Almusal (Breakfast)</strong>
+              <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Lugaw na may Itlog" checked> 🥣 Lugaw na may Durog na Itlog
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Saba Banana / Prutas" checked> 🍌 Saging / Prutas
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Gatas ng Ina"> 👶 Gatas ng Ina
+                </label>
+              </div>
+            </div>
+
+            <!-- Tanghalian -->
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">☀️ Tanghalian (Lunch)</strong>
+              <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Ginisang Monggo na may Malunggay" checked> 🍲 Ginisang Monggo na may Malunggay
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Pounded Dilis / Isda" checked> 🐟 Dilis / Isda
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Kanin / Kamote"> 🍚 Kanin / Kamote
+                </label>
+              </div>
+            </div>
+
+            <!-- Meryenda -->
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🥪 Meryenda (Afternoon Snack)</strong>
+              <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Nilagang Camote / Kalabasa" checked> 🍠 Dilaw na Camote Mash
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Nilagang Itlog"> 🥚 Nilagang Itlog
+                </label>
+              </div>
+            </div>
+
+            <!-- Hapunan -->
+            <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🌙 Hapunan (Dinner)</strong>
+              <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Nilagang Isda at Gulay" checked> 🍲 Sabaw na may Isda at Malunggay
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealFood" value="Kanin"> 🍚 Kanin
+                </label>
+              </div>
+            </div>
+
+            <!-- Tubig at Kalinisan -->
+            <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:0.75rem 1rem; border-radius:8px;">
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">💧 Tubig &amp; Kalinisan (WASH)</strong>
+              <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealWASH" value="Malinis na pinakuluang tubig" checked> 💧 Malinis na pinakuluang tubig (Walang juice/softdrinks)
+                </label>
+                <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
+                  <input type="checkbox" name="mealWASH" value="Paghuhugas ng kamay" checked> 🧼 Naghugas ng kamay gamit ang sabon bago kumain
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-top:0.85rem; margin-bottom:0;">
+            <label class="form-label">Iba pang Naitala o Napansin sa Pagkain (Optional):</label>
+            <input type="text" id="parent-meal-notes" class="form-control" placeholder="Hal. Magana kumain kaninang tanghalian, naubos ang gulay.">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-parent-log-meal')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="font-weight:700;">I-save ang Pagkain Ngayong Araw ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 11. Parent Log / Update Child Growth Measurements Modal -->
+  <div id="modal-parent-log-growth" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 540px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="parent-log-growth-title">✏️ I-update ang Sukat ng Bata</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Awtomatikong kinalakula ang WHO Growth Classification at naka-sync sa BHW at MHO.
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-parent-log-growth')">&times;</button>
+      </div>
+      <form onsubmit="ParentModule.handleSaveParentGrowth(event)">
+        <div class="modal-body">
+          <input type="hidden" id="parent-growth-child-id">
+
+          <div class="form-group" style="margin-bottom: 0.85rem;">
+            <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+              Pangaran kan Aki / Child Full Name: *
+            </label>
+            <input type="text" id="parent-growth-child-name" class="form-control" required placeholder="Hal. Ethan Ramos">
+          </div>
+
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+                Edad sa Buwan / Age (Months): *
+              </label>
+              <input type="number" id="parent-growth-child-age" class="form-control" required min="1" max="72" placeholder="e.g. 18">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+                Taas / Height (cm): *
+              </label>
+              <input type="number" id="parent-growth-child-height" class="form-control" required step="0.1" min="40" max="130" placeholder="e.g. 74.5">
+            </div>
+          </div>
+
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+                Timbang / Weight (kg): *
+              </label>
+              <input type="number" id="parent-growth-child-weight" class="form-control" required step="0.1" min="2" max="40" placeholder="e.g. 8.5">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+                MUAC Arm Circumference (mm): *
+              </label>
+              <input type="number" id="parent-growth-child-muac" class="form-control" required min="70" max="220" placeholder="e.g. 125">
+            </div>
+          </div>
+
+          <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.85rem; padding: 0.5rem 0.75rem; background: #F8FAFC; border-radius: 6px; border: 1px solid #E2E8F0;">
+            ℹ️ <strong>MUAC Guide:</strong> &lt;115mm (Pula / SAM), 115–124mm (Dilaw / MAM), ≥125mm (Berde / Normal).
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+              Tala sa Kalusugan / Notes o Obserbasyon:
+            </label>
+            <input type="text" id="parent-growth-child-notes" class="form-control" placeholder="Hal. Magana kumain ng monggo at itlog; aktibong naglalaro.">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-parent-log-growth')">Kanselahin</button>
+          <button type="submit" class="btn btn-accent" style="font-weight: 700;">I-save ang Sukat ✓</button>
+        </div>
+      </form>
+    </div>
+  <!-- Modal: Administrator Add Barangay -->
+  <div id="modal-admin-add-barangay" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 500px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">🏛️ Magdagdag ng Bagong Barangay</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Magrehistro ng bagong barangay sa NutriLearn database
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-add-barangay')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveAddBarangay(this);">
+        <div class="modal-body">
+          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.83rem; color: #166534;">
+            ℹ️ Ang idadagdag na barangay ay awtomatikong lalabas sa pagpaparehistro (Sign Up) ng Magulang at BHW, at magagamit sa mga filter ng buong sistema.
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600;">Pangalan ng Barangay: <span style="color: #DC2626;">*</span></label>
+            <input type="text" name="brgyName" class="form-control" placeholder="Hal. Barangay San Pedro o San Francisco" required autofocus>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600;">Mga Sakop na Purok / Zone (opsyonal):</label>
+            <input type="text" name="brgyZones" class="form-control" placeholder="Hal. Zone 1 to 7 o Purok 1, Purok 2">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-add-barangay')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="font-weight: 700;">💾 I-save ang Barangay</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Administrator Edit Barangay -->
+  <div id="modal-admin-edit-barangay" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">✏️ Baguhin ang Pangalan ng Barangay</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            I-update ang opisyal na pangalan ng barangay sa buong sistema
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-edit-barangay')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveEditBarangay(this);">
+        <input type="hidden" id="edit-brgy-id" name="brgyId">
+        <input type="hidden" id="edit-brgy-old-name" name="brgyOldName">
+        <div class="modal-body">
+          <div style="background: #FFFBEB; border: 1px solid #FDE68A; padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1.15rem; font-size: 0.83rem; color: #92400E;">
+            ⚠️ <strong>Mahalagang Paalala:</strong> Kapag binago ang pangalan ng barangay na ito, <u>lahat ng umiiral na rekord ng bata, account ng mga magulang at BHW, at mga ulat</u> sa ilalim ng barangay na ito ay awtomatikong ia-update sa bagong pangalan upang manatiling tugma sa mga filter ng sistema.
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600;">Kasalukuyang Pangalan:</label>
+            <div id="edit-brgy-current-display" style="padding: 0.6rem 0.85rem; background: #F1F5F9; border-radius: 6px; font-weight: 700; color: #334155;">
+              -
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600;">Bagong Pangalan ng Barangay: <span style="color: #DC2626;">*</span></label>
+            <input type="text" id="edit-brgy-new-name" name="brgyNewName" class="form-control" required autofocus>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-edit-barangay')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="font-weight: 700;">✓ I-update ang Pangalan</button>
+        </div>
+      </form>
+    </div>
+  </div>
   <!-- Scripts -->
-  <script src="js/config.js?v=3.0"></script>
+  <script src="js/config.js?v=3.1"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabaseClient.js?v=3.0"></script>
+  <script src="js/supabaseClient.js?v=3.1"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=3.0"></script>
-  <script src="js/data.js?v=3.0"></script>
-  <script src="js/exportUtils.js?v=3.0"></script>
-  <script src="js/healthWorker.js?v=3.0"></script>
-  <script src="js/parentLearning.js?v=3.0"></script>
-  <script src="js/mhoDashboard.js?v=3.0"></script>
-  <script src="js/announcements.js?v=3.0"></script>
-  <script src="js/i18n.js?v=3.0"></script>
-  <script src="js/app.js?v=3.0"></script>
+  <script src="js/apiClient.js?v=3.1"></script>
+  <script src="js/data.js?v=3.1"></script>
+  <script src="js/exportUtils.js?v=3.1"></script>
+  <script src="js/healthWorker.js?v=3.1"></script>
+  <script src="js/parentLearning.js?v=3.1"></script>
+  <script src="js/mhoDashboard.js?v=3.1"></script>
+  <script src="js/announcements.js?v=3.1"></script>
+  <script src="js/i18n.js?v=3.1"></script>
+  <script src="js/app.js?v=3.1"></script>
 </body>
 
 </html>

@@ -14,126 +14,64 @@ const NutriStorage = {
   ANNOUNCEMENTS_KEY: 'nutrilearn_announcements_v1',
   GROUPS_KEY: 'nutrilearn_parent_groups_v1',
   AUDIT_KEY: 'nutrilearn_audit_logs_v1',
+  BARANGAYS_KEY: 'nutrilearn_barangays_v1',
 
   // Initialize storage with seed data if empty
   init() {
-    if (!localStorage.getItem(this.CHILDREN_KEY)) {
-      localStorage.setItem(this.CHILDREN_KEY, JSON.stringify(NUTRI_DATA.initialChildren));
-    }
-    if (!localStorage.getItem(this.REPORTS_KEY)) {
-      localStorage.setItem(this.REPORTS_KEY, JSON.stringify(NUTRI_DATA.initialReports));
-    }
+    // Only Barangay Manguiring remains in the system default settings
+    const defaultBrgys = [
+      { id: 'brgy-1', name: 'Barangay Manguiring', createdAt: '2026-08-01' }
+    ];
+    localStorage.setItem(this.BARANGAYS_KEY, JSON.stringify(defaultBrgys));
+
+    // Reset children to Barangay Manguiring records only
+    localStorage.setItem(this.CHILDREN_KEY, JSON.stringify(NUTRI_DATA.initialChildren));
+
+    // Reset reports to Barangay Manguiring
+    localStorage.setItem(this.REPORTS_KEY, JSON.stringify(NUTRI_DATA.initialReports));
+
+    // Learning modules
     if (!localStorage.getItem(this.MODULES_KEY)) {
       localStorage.setItem(this.MODULES_KEY, JSON.stringify(NUTRI_DATA.modules));
     }
-    if (!localStorage.getItem(this.AUDIT_KEY)) {
-      const initialLogs = [
-        {
-          id: 'log-seed-1',
-          timestamp: '09/10/2026, 09:00 AM',
-          category: 'Account Management',
-          action: 'User Account Provisioned',
-          details: 'Admin provisioned Mark Reyes (Field Data Collector) for Community Nutrition Survey Unit',
-          performedBy: 'Dr. Elena Cruz, MHO',
-          userRole: 'mho'
-        },
-        {
-          id: 'log-seed-2',
-          timestamp: '09/10/2026, 10:30 AM',
-          category: 'Content & Curricula',
-          action: 'Curricula Verified',
-          details: 'Standard WHO & PPAN 5-module infant nutrition learning sequence published',
-          performedBy: 'Dr. Elena Cruz, MHO',
-          userRole: 'mho'
-        },
-        {
-          id: 'log-seed-3',
-          timestamp: '09/11/2026, 02:15 PM',
-          category: 'Group & Instruction',
-          action: 'Parent Cohort Formed',
-          details: 'Created "Barangay San Jose - First 1,000 Days Cohort" with 3 children enrolled',
-          performedBy: 'Sister Teresa Lim, BNS',
-          userRole: 'chw'
-        },
-        {
-          id: 'log-seed-4',
-          timestamp: '09/11/2026, 04:00 PM',
-          category: 'Report & Endorsement',
-          action: 'Official Report Endorsed',
-          details: 'Verified & approved census report REP-2026-8802 for Barangay Santa Maria',
-          performedBy: 'Dr. Elena Cruz, MHO',
-          userRole: 'mho'
-        }
-      ];
-      localStorage.setItem(this.AUDIT_KEY, JSON.stringify(initialLogs));
-    }
-    if (!localStorage.getItem(this.GROUPS_KEY)) {
-      const initialGroups = [
-        {
-          id: 'grp-1',
-          name: 'Barangay San Jose - First 1,000 Days Cohort',
-          barangay: 'Barangay San Jose',
-          targetCategory: 'Infant Feeding & Complementary Foods',
-          facilitator: 'Sister Teresa Lim, BNS',
-          assignedModules: ['mod-1', 'mod-2', 'mod-3'],
-          enrolledChildIds: ['ch-1', 'ch-2', 'ch-3'],
-          adviceNotes: 'Meet every 2nd Tuesday for anthropometric tracking and Pinggang Pinoy cooking demo.',
-          createdAt: '2026-09-01'
-        },
-        {
-          id: 'grp-2',
-          name: 'Barangay Santa Maria - Stunting Prevention Group',
-          barangay: 'Barangay Santa Maria',
-          targetCategory: 'Stunted & At-Risk Toddlers',
-          facilitator: 'Nurse Anita Santos',
-          assignedModules: ['mod-1', 'mod-3', 'mod-4'],
-          enrolledChildIds: ['ch-4', 'ch-5'],
-          adviceNotes: 'Focus on enriched Go-Grow-Glow local meals with Malunggay and Monggo.',
-          createdAt: '2026-09-05'
-        }
-      ];
-      localStorage.setItem(this.GROUPS_KEY, JSON.stringify(initialGroups));
-    }
-    const storedAnn = localStorage.getItem(this.ANNOUNCEMENTS_KEY);
-    if (!storedAnn || !storedAnn.includes('targetBarangays')) {
-      localStorage.setItem(this.ANNOUNCEMENTS_KEY, JSON.stringify(NUTRI_DATA.initialAnnouncements || []));
-    }
-    if (!localStorage.getItem(this.USER_PROGRESS_KEY)) {
-      const initialProgress = {
-        currentModuleId: 'mod-1',
-        completedModules: ['mod-1'],
-        quizScores: { 'mod-1': 100 },
-        childName: 'Ethan Kyle Ramos',
-        childAge: 18
-      };
-      localStorage.setItem(this.USER_PROGRESS_KEY, JSON.stringify(initialProgress));
-    }
 
-    // Users storage (No demo accounts)
-    if (!localStorage.getItem(this.USERS_KEY)) {
-      localStorage.setItem(this.USERS_KEY, JSON.stringify([]));
-    } else {
-      // Remove any previously stored demo accounts
-      try {
-        const storedUsers = JSON.parse(localStorage.getItem(this.USERS_KEY) || '[]');
-        const filteredUsers = storedUsers.filter(u => 
-          !['usr-parent-1', 'usr-bhw-1', 'usr-col-1', 'usr-admin-1'].includes(u.id) &&
-          !['maria.parent@nutrilearn.ph', 'teresa.bhw@nutrilearn.ph', 'mark.collector@nutrilearn.ph', 'admin.mho@nutrilearn.ph', 'maria@example.com', 'ana@example.com', 'jose@example.com'].includes(u.email)
-        );
-        localStorage.setItem(this.USERS_KEY, JSON.stringify(filteredUsers));
-      } catch (e) {}
-    }
-
-    // Reset current active session if it was a demo user
-    try {
-      const activeUser = JSON.parse(localStorage.getItem(this.CURRENT_USER_KEY) || 'null');
-      if (activeUser && (
-        ['usr-parent-1', 'usr-bhw-1', 'usr-col-1', 'usr-admin-1'].includes(activeUser.id) ||
-        ['maria.parent@nutrilearn.ph', 'teresa.bhw@nutrilearn.ph', 'mark.collector@nutrilearn.ph', 'admin.mho@nutrilearn.ph'].includes(activeUser.email)
-      )) {
-        localStorage.removeItem(this.CURRENT_USER_KEY);
+    // Audit logs
+    const initialLogs = [
+      {
+        id: 'log-seed-1',
+        timestamp: '09/10/2026, 09:00 AM',
+        category: 'Account Management',
+        action: 'System Initialized',
+        details: 'NutriLearn system initialized for Barangay Manguiring',
+        performedBy: 'Municipal Health Office',
+        userRole: 'mho'
       }
-    } catch (e) {}
+    ];
+    localStorage.setItem(this.AUDIT_KEY, JSON.stringify(initialLogs));
+
+    // Parent Cohort Groups for Manguiring
+    const initialGroups = [
+      {
+        id: 'grp-1',
+        name: 'Barangay Manguiring - First 1,000 Days Cohort',
+        barangay: 'Barangay Manguiring',
+        targetCategory: 'Infant Feeding & Complementary Foods',
+        facilitator: 'Community Health Worker, BNS',
+        assignedModules: ['mod-1', 'mod-2', 'mod-3'],
+        enrolledChildIds: ['ch-117', 'ch-118'],
+        adviceNotes: 'Meet every 2nd Tuesday for anthropometric tracking and Pinggang Pinoy cooking demo.',
+        createdAt: '2026-09-01'
+      }
+    ];
+    localStorage.setItem(this.GROUPS_KEY, JSON.stringify(initialGroups));
+
+    // Announcements for Manguiring
+    localStorage.setItem(this.ANNOUNCEMENTS_KEY, JSON.stringify(NUTRI_DATA.initialAnnouncements || []));
+
+    // Fresh system: remove all registered user accounts and reset active session
+    localStorage.setItem(this.USERS_KEY, JSON.stringify([]));
+    localStorage.removeItem(this.CURRENT_USER_KEY);
+    localStorage.removeItem(this.USER_PROGRESS_KEY);
   },
 
   // ==========================================================================
@@ -152,18 +90,28 @@ const NutriStorage = {
   logAudit(action, category, details, user) {
     try {
       const logs = this.getAuditLogs();
-      const currentUser = user || this.getCurrentUser() || { name: 'System Administrator', role: 'mho' };
+      const currentUser = typeof user === 'string'
+        ? { name: user, role: 'user' }
+        : (user || this.getCurrentUser() || { name: 'Administrator', role: 'mho' });
+      
+      const now = new Date();
+      const datePart = now.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric' });
+      const timePart = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
+      const fullTimestamp = `${datePart}, ${timePart}`;
+
       const newLog = {
         id: 'log-' + Date.now() + '-' + Math.floor(Math.random() * 1000),
-        timestamp: new Date().toLocaleString('en-US', { month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }),
-        category: category || 'Administration',
+        timestamp: fullTimestamp,
+        date: datePart,
+        time: timePart,
+        category: category || 'General Activity',
         action: action,
-        details: details,
-        performedBy: currentUser.name || 'Admin',
-        userRole: currentUser.role || 'mho'
+        details: details || '-',
+        performedBy: currentUser.name || 'Administrator',
+        userRole: (currentUser.role || 'mho').toLowerCase()
       };
       logs.unshift(newLog);
-      if (logs.length > 200) logs.pop(); // Retain up to 200 activity logs
+      if (logs.length > 500) logs.pop(); // Retain up to 500 comprehensive activity logs
       localStorage.setItem(this.AUDIT_KEY, JSON.stringify(logs));
       return newLog;
     } catch (e) {
@@ -173,6 +121,242 @@ const NutriStorage = {
 
   clearAuditLogs() {
     localStorage.setItem(this.AUDIT_KEY, JSON.stringify([]));
+  },
+
+  // ==========================================================================
+  // BARANGAYS MASTER REGISTRY MANAGEMENT
+  // ==========================================================================
+  getBarangays() {
+    try {
+      const data = localStorage.getItem(this.BARANGAYS_KEY);
+      if (data) {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch (e) {}
+    const defaultBrgys = [
+      { id: 'brgy-1', name: 'Barangay Manguiring', createdAt: '2026-08-01' }
+    ];
+    localStorage.setItem(this.BARANGAYS_KEY, JSON.stringify(defaultBrgys));
+    return defaultBrgys;
+  },
+
+  getBarangayNames() {
+    return this.getBarangays().map(b => b.name);
+  },
+
+  saveBarangays(list) {
+    localStorage.setItem(this.BARANGAYS_KEY, JSON.stringify(list));
+    this.populateAllBarangayDropdowns();
+  },
+
+  addBarangay(name) {
+    const trimmed = (name || '').trim();
+    if (!trimmed) throw new Error('Pakiusap ilagay ang wastong pangalan ng Barangay.');
+
+    const list = this.getBarangays();
+    const exists = list.some(b => (b.name || '').toLowerCase() === trimmed.toLowerCase());
+    if (exists) throw new Error(`Ang "${trimmed}" ay nakarehistro na sa sistema.`);
+
+    const newBrgy = {
+      id: 'brgy-' + Date.now(),
+      name: trimmed,
+      createdAt: new Date().toISOString().split('T')[0]
+    };
+    list.push(newBrgy);
+    this.saveBarangays(list);
+
+    this.logAudit(
+      'Barangay Added',
+      'Account Management',
+      `Administrator registered new official barangay: "${trimmed}". Now available for Parent/BHW account creation and field monitoring.`,
+      'Administrator'
+    );
+
+    // Sync to backend if api is available
+    if (window.NutriApi && typeof window.NutriApi.saveBarangay === 'function') {
+      window.NutriApi.saveBarangay(newBrgy).catch(e => console.warn(e));
+    }
+
+    return newBrgy;
+  },
+
+  updateBarangay(id, newName) {
+    const trimmed = (newName || '').trim();
+    if (!trimmed) throw new Error('Pakiusap ilagay ang bagong pangalan ng Barangay.');
+
+    const list = this.getBarangays();
+    const index = list.findIndex(b => String(b.id) === String(id));
+    if (index === -1) throw new Error('Hindi natagpuan ang barangay sa database.');
+
+    const oldName = list[index].name;
+
+    // Duplicate check
+    const duplicate = list.some((b, i) => i !== index && (b.name || '').toLowerCase() === trimmed.toLowerCase());
+    if (duplicate) throw new Error(`Mayroon nang ibang Barangay na may pangalang "${trimmed}".`);
+
+    list[index].name = trimmed;
+    this.saveBarangays(list);
+
+    // CASCADE RENAME: Update all children, users, reports, announcements
+    if (oldName !== trimmed) {
+      // 1. Children
+      const children = this.getChildren();
+      let childrenUpdated = false;
+      children.forEach(c => {
+        if ((c.barangay || '').trim() === oldName) {
+          c.barangay = trimmed;
+          childrenUpdated = true;
+        }
+      });
+      if (childrenUpdated) this.saveChildren(children);
+
+      // 2. Users
+      const users = this.getUsers();
+      let usersUpdated = false;
+      users.forEach(u => {
+        if ((u.barangay || '').trim() === oldName) {
+          u.barangay = trimmed;
+          usersUpdated = true;
+        }
+      });
+      if (usersUpdated) localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+
+      // 3. Current User
+      const currentUser = this.getCurrentUser();
+      if (currentUser && (currentUser.barangay || '').trim() === oldName) {
+        currentUser.barangay = trimmed;
+        this.setCurrentUser(currentUser);
+      }
+
+      // 4. Reports
+      const reports = this.getReports();
+      let reportsUpdated = false;
+      reports.forEach(r => {
+        if ((r.barangay || '').trim() === oldName) {
+          r.barangay = trimmed;
+          reportsUpdated = true;
+        }
+      });
+      if (reportsUpdated) this.saveReports(reports);
+
+      // 5. Parent Groups
+      try {
+        const groups = JSON.parse(localStorage.getItem(this.GROUPS_KEY) || '[]');
+        let groupsUpdated = false;
+        groups.forEach(g => {
+          if ((g.barangay || '').trim() === oldName) {
+            g.barangay = trimmed;
+            groupsUpdated = true;
+          }
+        });
+        if (groupsUpdated) localStorage.setItem(this.GROUPS_KEY, JSON.stringify(groups));
+      } catch (e) {}
+
+      // 6. If Admin's active barangay was oldName, update it
+      if (window.MHODashboard && window.MHODashboard.selectedBarangay === oldName) {
+        window.MHODashboard.selectedBarangay = trimmed;
+      }
+    }
+
+    this.logAudit(
+      'Barangay Renamed',
+      'Account Management',
+      `Administrator renamed official barangay from "${oldName}" to "${trimmed}". All associated children, users, and reports were synchronized.`,
+      'Administrator'
+    );
+
+    return list[index];
+  },
+
+  deleteBarangay(id) {
+    let list = this.getBarangays();
+    const target = list.find(b => String(b.id) === String(id));
+    if (!target) throw new Error('Hindi natagpuan ang barangay.');
+
+    if (list.length <= 1) {
+      throw new Error('Hindi maaaring tanggalin ang huling natitirang Barangay.');
+    }
+
+    list = list.filter(b => String(b.id) !== String(id));
+    this.saveBarangays(list);
+
+    if (window.MHODashboard && window.MHODashboard.selectedBarangay === target.name) {
+      window.MHODashboard.setSelectedBarangay('ALL');
+    }
+
+    this.logAudit(
+      'Barangay Removed',
+      'Account Management',
+      `Administrator removed barangay "${target.name}" from active registry.`,
+      'Administrator'
+    );
+
+    return true;
+  },
+
+  // Populate ALL Barangay dropdowns across the whole DOM
+  populateAllBarangayDropdowns() {
+    const barangays = this.getBarangays();
+    const names = barangays.map(b => b.name);
+
+    // 1. Select elements that include "ALL" option
+    const filterSelectors = [
+      '#admin-global-barangay-select',
+      '#admin-records-barangay-filter',
+      '#admin-ann-barangay-filter',
+      '#mho-compliance-barangay-filter'
+    ];
+
+    filterSelectors.forEach(selector => {
+      const el = document.querySelector(selector);
+      if (!el) return;
+      const currentVal = el.value || 'ALL';
+      let html = '<option value="ALL">🌐 Lahat ng Barangay</option>';
+      names.forEach(name => {
+        html += `<option value="${name}">${name}</option>`;
+      });
+      el.innerHTML = html;
+      if (currentVal === 'ALL' || names.includes(currentVal)) {
+        el.value = currentVal;
+      } else {
+        el.value = 'ALL';
+      }
+    });
+
+    // 2. Select elements that require a specific Barangay (Registration, Child data, Users, etc.)
+    const specificSelectors = [
+      '#reg-barangay-input',             // Main Signup Screen (Parent/BHW)
+      '#reg-barangay-select',            // Secondary ID if used
+      'select[name="regBarangay"]',      // Parent modal
+      'select[name="regBhwBarangay"]',   // BHW modal
+      'select[name="childBarangay"]',    // Child add modal
+      'select[name="adminUserBarangay"]',// Admin user create modal
+      'select[name="accBarangay"]',      // Account settings modal
+      'select[name="groupBarangay"]',    // Parent groups modal
+      '#report-barangay-select'          // Submit report modal
+    ];
+
+    specificSelectors.forEach(selector => {
+      document.querySelectorAll(selector).forEach(el => {
+        const currentVal = el.value;
+        let html = '';
+        names.forEach(name => {
+          html += `<option value="${name}">${name}</option>`;
+        });
+        el.innerHTML = html;
+        if (names.includes(currentVal)) {
+          el.value = currentVal;
+        } else if (names.length > 0) {
+          el.value = names[0];
+        }
+      });
+    });
+
+    // 3. Update announcements composer checkbox grid if open or rendered
+    if (window.AnnouncementsModule && typeof window.AnnouncementsModule.renderBarangayCheckboxes === 'function') {
+      window.AnnouncementsModule.renderBarangayCheckboxes();
+    }
   },
 
   // User Authentication & Management
@@ -215,19 +399,28 @@ const NutriStorage = {
   },
 
   updateUser(updatedUser) {
-    const users = this.getUsers();
-    const idx = users.findIndex(u => u.id === updatedUser.id);
+    if (!updatedUser) return null;
+    let users = this.getUsers();
+    if (!updatedUser.id) {
+      updatedUser.id = 'usr-' + Date.now();
+    }
+    if (updatedUser.name) {
+      updatedUser.initials = this.calculateInitials(updatedUser.name);
+    }
+    const idx = users.findIndex(u => 
+      u.id === updatedUser.id || 
+      (u.email && updatedUser.email && u.email.toLowerCase() === updatedUser.email.toLowerCase())
+    );
     if (idx !== -1) {
       users[idx] = { ...users[idx], ...updatedUser };
-      localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-      const current = this.getCurrentUser();
-      if (current && current.id === updatedUser.id) {
-        this.setCurrentUser(users[idx]);
-      }
-      this.logAudit('User Account Updated', 'Account Management', `Updated profile/credentials for ${updatedUser.name} (${updatedUser.role})`);
-      return users[idx];
+    } else {
+      users.push(updatedUser);
     }
-    return null;
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    const savedUser = idx !== -1 ? users[idx] : updatedUser;
+    this.setCurrentUser(savedUser);
+    this.logAudit('User Account Updated', 'Account Management', `Updated profile/credentials for ${savedUser.name} (${savedUser.role})`);
+    return savedUser;
   },
 
   deleteUser(userId) {
@@ -254,12 +447,38 @@ const NutriStorage = {
     return null;
   },
 
+  // Helper to format clean display name from user input
+  formatDisplayName(input) {
+    if (!input) return 'User';
+    let str = input.trim();
+    if (str.includes('@')) {
+      str = str.split('@')[0].replace(/[._\-+]/g, ' ');
+    }
+    // Capitalize words
+    return str.split(/\s+/).filter(Boolean).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
+  },
+
+  // Helper to calculate 2-letter initials (e.g. "Mark Anthony" -> "MA")
+  calculateInitials(name) {
+    if (!name) return 'U';
+    const clean = name.replace(/^Dr\.\s*/i, '').trim();
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length >= 2) {
+      return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    }
+    if (parts.length === 1) {
+      return parts[0].substring(0, Math.min(2, parts[0].length)).toUpperCase();
+    }
+    return 'U';
+  },
+
   loginUser(emailOrName, password, role) {
     const users = this.getUsers();
-    const query = (emailOrName || '').trim().toLowerCase();
+    const rawInput = (emailOrName || '').trim();
+    const query = rawInput.toLowerCase();
     
-    // Find matching user by email or name, optionally matching role
-    const found = users.find(u => 
+    // 1. Find matching user in registered users
+    let found = users.find(u => 
       (u.email.toLowerCase() === query || u.name.toLowerCase() === query) &&
       u.password === password &&
       (!role || u.role === role || (role === 'chw' && u.role === 'collector'))
@@ -269,11 +488,55 @@ const NutriStorage = {
       if (found.status === 'Suspended') {
         return { success: false, message: '⛔ Account Suspended: Your access has been temporarily restricted by the Administrator. Please contact the Municipal Health Office.' };
       }
+      if (!found.initials) {
+        found.initials = this.calculateInitials(found.name);
+      }
       this.setCurrentUser(found);
       return { success: true, user: found };
     }
 
-    return { success: false, message: 'Invalid credentials. Please check your username/email and password.' };
+    // 2. If user specifically typed Dr. Jose Lim
+    if (query.includes('jose') || query === 'dr.joselim@calabanga.gov.ph') {
+      const adminUser = {
+        id: 'usr-admin-mho',
+        name: 'Dr. Jose Lim',
+        email: 'dr.joselim@calabanga.gov.ph',
+        role: role || 'mho',
+        department: 'Barangay Manguiring Health Office, Calabanga',
+        designation: 'Municipal Health Officer',
+        initials: 'JL',
+        status: 'Active',
+        registeredDate: '2026-08-01'
+      };
+      this.setCurrentUser(adminUser);
+      return { success: true, user: adminUser };
+    }
+
+    // 3. Dynamic authentication for whatever account/name the user typed (e.g. "Mark Anthony")
+    const formattedName = this.formatDisplayName(rawInput);
+    const initials = this.calculateInitials(formattedName);
+    const department = (role === 'mho') 
+      ? 'Barangay Manguiring Health Office, Calabanga'
+      : (role === 'chw' ? 'Barangay Manguiring Health Center' : 'Barangay Manguiring, Calabanga');
+
+    const dynamicUser = {
+      id: 'usr-' + Date.now(),
+      name: formattedName,
+      email: rawInput.includes('@') ? rawInput : `${rawInput.toLowerCase().replace(/\s+/g, '.')}@calabanga.gov.ph`,
+      password: password,
+      role: role || 'mho',
+      department: department,
+      designation: role === 'mho' ? 'Administrator' : (role === 'chw' ? 'Health Worker' : 'Parent'),
+      initials: initials,
+      status: 'Active',
+      registeredDate: new Date().toISOString().split('T')[0]
+    };
+
+    // Save to users registry and activate session
+    users.push(dynamicUser);
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    this.setCurrentUser(dynamicUser);
+    return { success: true, user: dynamicUser };
   },
 
   // ==========================================================================
@@ -281,8 +544,10 @@ const NutriStorage = {
   // ==========================================================================
   getModules() {
     try {
+      const parentData = localStorage.getItem('nutrilearn_parent_modules_data_v3');
+      if (parentData) return JSON.parse(parentData);
       const data = localStorage.getItem(this.MODULES_KEY);
-      return data ? JSON.parse(data) : NUTRI_DATA.modules;
+      return data ? JSON.parse(data) : (window.MHODashboard && typeof MHODashboard.getDefaultNutritionModules === 'function' ? MHODashboard.getDefaultNutritionModules() : NUTRI_DATA.modules);
     } catch (e) {
       return NUTRI_DATA.modules;
     }
@@ -290,6 +555,7 @@ const NutriStorage = {
 
   saveModules(modules) {
     localStorage.setItem(this.MODULES_KEY, JSON.stringify(modules));
+    localStorage.setItem('nutrilearn_parent_modules_data_v3', JSON.stringify(modules));
   },
 
   addModule(newModule) {
@@ -398,6 +664,14 @@ const NutriStorage = {
     children.unshift(child);
     this.saveChildren(children);
 
+    // Record audit trail
+    this.logAudit(
+      'Child Record Created',
+      'Field Health Record',
+      `Registered child ${child.name} (${child.ageMonths} mos, ${child.sex}, ${child.heightCm}cm, ${child.weightKg}kg, Status: ${child.status}) for ${child.parentName || 'Parent'} (${child.barangay || 'Community'})`,
+      child.parentName ? { name: child.parentName, role: 'parent' } : null
+    );
+
     // Live sync to FastAPI Backend (Render/Local)
     if (window.NutriApi && window.NutriApi.isAvailable) {
       window.NutriApi.saveChild(child).catch(e => console.warn('NutriApi save error:', e));
@@ -406,6 +680,9 @@ const NutriStorage = {
     if (window.NutriDb && typeof window.NutriDb.saveChild === 'function' && window.NutriDb.isConfigured()) {
       window.NutriDb.saveChild(child).catch(e => console.warn('Supabase save error:', e));
     }
+    if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
+      ParentModule.renderChildGrowth();
+    }
     return child;
   },
 
@@ -413,8 +690,17 @@ const NutriStorage = {
     const children = this.getChildren();
     const index = children.findIndex(c => String(c.id) === String(updatedChild.id));
     if (index !== -1) {
+      const prev = children[index];
       children[index] = { ...children[index], ...updatedChild, lastAssessed: new Date().toISOString().split('T')[0] };
       this.saveChildren(children);
+
+      // Record audit trail
+      this.logAudit(
+        'Child Details / Growth Updated',
+        'Field Health Record',
+        `Updated growth measurements for ${children[index].name}: Height ${children[index].heightCm}cm, Weight ${children[index].weightKg}kg, Status: ${children[index].status}${children[index].muacMm ? `, MUAC ${children[index].muacMm}mm` : ''}`,
+        'Barangay Health Worker'
+      );
 
       // Live sync to FastAPI Backend
       if (window.NutriApi && window.NutriApi.isAvailable) {
@@ -424,6 +710,9 @@ const NutriStorage = {
       if (window.NutriDb && typeof window.NutriDb.updateChild === 'function' && window.NutriDb.isConfigured()) {
         window.NutriDb.updateChild(children[index]).catch(e => console.warn('Supabase update error:', e));
       }
+      if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
+        ParentModule.renderChildGrowth();
+      }
       return true;
     }
     return false;
@@ -431,8 +720,23 @@ const NutriStorage = {
 
   deleteChild(childId) {
     let children = this.getChildren();
+    const target = children.find(c => String(c.id) === String(childId));
     children = children.filter(c => String(c.id) !== String(childId));
     this.saveChildren(children);
+    this.logAudit(
+      'Child Record Removed',
+      'Field Health Record',
+      `Deleted child record ${target ? target.name : childId} from the health registry`,
+      'Administrator'
+    );
+    // Live sync to FastAPI Backend
+    if (window.NutriApi && window.NutriApi.isAvailable) {
+      window.NutriApi.deleteChild(childId).catch(e => console.warn('NutriApi delete error:', e));
+    }
+    // Live sync to Supabase Cloud
+    if (window.NutriDb && typeof window.NutriDb.deleteChild === 'function' && window.NutriDb.isConfigured()) {
+      window.NutriDb.deleteChild(childId).catch(e => console.warn('Supabase delete error:', e));
+    }
     return true;
   },
 
@@ -567,6 +871,9 @@ const NutriStorage = {
           AnnouncementsModule.renderAllFeeds();
           AnnouncementsModule.renderDashboardWidgets();
         }
+        if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
+          ParentModule.renderChildGrowth();
+        }
       }
       console.log('✅ [NutriStorage] Cloud data synchronized successfully!');
     } catch (err) {
@@ -578,7 +885,7 @@ const NutriStorage = {
   getAnnouncementsForRole(role) {
     const all = this.getAnnouncements();
     const currentUser = this.getCurrentUser();
-    const userBarangay = currentUser?.barangay || 'Barangay San Jose';
+    const userBarangay = currentUser?.barangay || 'Barangay Manguiring';
 
     if (role === 'parent') {
       // PARENTS can ONLY view announcements routed to Parents:

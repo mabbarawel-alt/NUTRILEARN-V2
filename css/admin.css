@@ -1,0 +1,1102 @@
+/* ==========================================================================
+   NUTRILEARN - ADMINISTRATOR PAGE & CLEAN TASKBAR DESIGN SYSTEM
+   Styled exactly to match official Manguring MHO Executive Console
+   ========================================================================== */
+
+/* Warm Ivory / Cream Background for Admin Experience */
+body.role-mho {
+  background-color: #FAF8F2 !important;
+  color: #1F2937;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body.role-mho #app-workspace {
+  background-color: #FAF8F2;
+  min-height: 100vh;
+}
+
+body.role-mho .app-header {
+  background: #FFFFFF !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+  padding: 0 !important;
+}
+
+body.role-mho #view-mho > .hero-banner {
+  display: none !important;
+}
+
+body.role-mho .main-content {
+  background-color: #FAF8F2;
+  padding: 0;
+  max-width: 100%;
+}
+
+body.role-mho .app-footer {
+  background: #FFFFFF !important;
+  border-top: 1px solid #ECE7DE !important;
+  color: #6B7280 !important;
+}
+
+body.role-mho .app-footer strong {
+  color: #1F382B !important;
+}
+
+body.role-mho .app-footer p {
+  color: #6B7280 !important;
+}
+
+body.role-mho .app-footer a {
+  color: #4B5563 !important;
+}
+
+/* ==========================================================================
+   CLEAN TOP TASKBAR (NAVBAR)
+   ========================================================================== */
+.admin-taskbar-clean {
+  background: #FFFFFF;
+  border-bottom: 1px solid #ECE7DE;
+  position: sticky;
+  top: 0;
+  z-index: 120;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 2.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: all 0.2s ease;
+}
+
+.admin-taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Brand */
+.admin-brand-clean {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  margin-right: 0.75rem;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.admin-brand-clean:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.admin-brand-logo-img {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  padding: 0;
+  object-fit: contain;
+  border: none;
+  box-shadow: none;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.admin-brand-clean:hover .admin-brand-logo-img {
+  transform: scale(1.08);
+}
+
+.admin-brand-icon-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #285A41;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  box-shadow: 0 2px 5px rgba(40, 90, 65, 0.25);
+  flex-shrink: 0;
+}
+
+.admin-brand-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1F382B;
+  letter-spacing: -0.01em;
+}
+
+.admin-brand-name-img {
+  height: 22px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.admin-brand-clean:hover .admin-brand-name-img {
+  transform: scale(1.04);
+}
+
+/* Horizontal Clean Navigation Tabs */
+.admin-clean-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-tab-btn {
+  background: transparent;
+  border: none;
+  outline: none;
+  padding: 0.45rem 0.95rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: #4B5563;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.admin-tab-btn:hover {
+  background: rgba(40, 90, 65, 0.08);
+  color: #1E3A2B;
+}
+
+.admin-tab-btn.active {
+  background: #285A41;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(40, 90, 65, 0.25);
+}
+
+.admin-tab-btn .admin-tab-icon {
+  font-size: 0.98rem;
+  line-height: 1;
+}
+
+/* Right Section of Taskbar */
+.admin-taskbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.admin-user-profile-clean {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-align: right;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.admin-user-profile-clean:hover {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.admin-user-details-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-user-title-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1.25;
+}
+
+.admin-user-loc-sub {
+  font-size: 0.74rem;
+  color: #6B7280;
+  line-height: 1.2;
+}
+
+.admin-user-avatar-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #285A41;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(40, 90, 65, 0.2);
+}
+
+.btn-clean-signout {
+  background: #FFFFFF;
+  border: 1px solid #D1D5DB;
+  color: #374151;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.42rem 1.15rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.btn-clean-signout:hover {
+  background: #F9FAFB;
+  border-color: #9CA3AF;
+  color: #111827;
+}
+
+/* ==========================================================================
+   ADMIN MAIN CONTENT CONTAINER & TYPOGRAPHY
+   ========================================================================== */
+.admin-overview-container {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 2.25rem 2rem 3.5rem;
+  box-sizing: border-box;
+}
+
+.admin-page-header {
+  margin-bottom: 1.75rem;
+}
+
+.admin-page-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.95rem;
+  font-weight: 700;
+  color: #1E2320;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.3rem;
+  line-height: 1.2;
+}
+
+.admin-page-subtitle {
+  font-size: 0.95rem;
+  color: #78716C;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ==========================================================================
+   4 TOP KPI CARDS
+   ========================================================================== */
+.admin-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-kpi-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 16px;
+  padding: 1.35rem 1.4rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 145px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+.admin-kpi-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.admin-kpi-body {
+  margin-top: 0.5rem;
+}
+
+.admin-kpi-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.15rem;
+  font-weight: 700;
+  color: #1E2320;
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+
+.admin-kpi-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.2rem;
+}
+
+.admin-kpi-sub {
+  font-size: 0.78rem;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   TWO COLUMN DASHBOARD LAYOUT
+   ========================================================================== */
+.admin-two-cols {
+  display: grid;
+  grid-template-columns: 1.32fr 1fr;
+  gap: 1.35rem;
+  align-items: stretch;
+}
+
+.admin-card-panel {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 16px;
+  padding: 1.6rem 1.75rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1E2320;
+  margin: 0 0 1.5rem;
+  line-height: 1.3;
+}
+
+/* ==========================================================================
+   DUAL BAR CHART: Stunting % vs Improving Families
+   ========================================================================== */
+.admin-chart-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  padding-top: 1rem;
+}
+
+.admin-bar-group-list {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 220px;
+  border-bottom: 1px solid #ECE7DE;
+  padding-bottom: 0;
+  gap: 0.75rem;
+}
+
+.admin-bar-month-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  justify-content: flex-end;
+}
+
+.admin-bar-pair {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100%;
+}
+
+.admin-bar {
+  width: 24px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  cursor: pointer;
+}
+
+.admin-bar:hover {
+  filter: brightness(1.1);
+  transform: scaleY(1.02);
+  transform-origin: bottom;
+}
+
+.admin-bar.bar-stunting {
+  background: #D97742; /* Terracotta orange */
+}
+
+.admin-bar.bar-improving {
+  background: #4E8565; /* Muted forest green */
+}
+
+.admin-bar-month-label {
+  font-size: 0.82rem;
+  color: #6B7280;
+  font-weight: 500;
+  margin-top: 0.65rem;
+  text-align: center;
+}
+
+.admin-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+  margin-top: 1.25rem;
+  padding-top: 0.25rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.84rem;
+  color: #4B5563;
+  font-weight: 500;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.dot-stunting {
+  background: #D97742;
+}
+
+.legend-dot.dot-improving {
+  background: #4E8565;
+}
+
+/* ==========================================================================
+   BY MANGURING ZONE PROGRESS LIST
+   ========================================================================== */
+.admin-zones-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.admin-zone-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.zone-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1F2937;
+  margin-bottom: 0.4rem;
+}
+
+.zone-name {
+  color: #1F2937;
+}
+
+.zone-pct {
+  color: #1F2937;
+  font-variant-numeric: tabular-nums;
+}
+
+.zone-progress-track {
+  width: 100%;
+  height: 6px;
+  background: #EDE7DB;
+  border-radius: 9999px;
+  overflow: hidden;
+  margin-bottom: 0.4rem;
+}
+
+.zone-progress-fill {
+  height: 100%;
+  background: #285A41;
+  border-radius: 9999px;
+  transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zone-bottom-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.78rem;
+}
+
+.zone-families {
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.zone-critical {
+  color: #E05D52;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   OTHER ADMIN PANELS (Field Records, Announcements, Users, Content)
+   Clean Cream Styling
+   ========================================================================== */
+.admin-pane-container {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 2.25rem 2rem 3.5rem;
+}
+
+.admin-pane-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-pane-title-group h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1E2320;
+  margin: 0 0 0.25rem;
+}
+
+.admin-pane-title-group p {
+  font-size: 0.9rem;
+  color: #78716C;
+  margin: 0;
+}
+
+.admin-clean-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  margin-bottom: 1.5rem;
+}
+
+/* Clean Admin Tables */
+.admin-clean-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.88rem;
+}
+
+.admin-clean-table th {
+  background: #FAF8F2;
+  color: #4B5563;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid #EBE5D8;
+  text-align: left;
+}
+
+.admin-clean-table td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #F3EFE6;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.admin-clean-table tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-clean-table tr:hover td {
+  background: #FDFCF9;
+}
+
+/* ==========================================================================
+   RECENT ANNOUNCEMENTS SECTION (Matches Screenshot)
+   ========================================================================== */
+.admin-announcements-section {
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+}
+
+.admin-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1.15rem;
+}
+
+.admin-section-header-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1E2320;
+  margin: 0;
+}
+
+.admin-recent-announcements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.admin-recent-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 14px;
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-recent-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.admin-recent-icon-badge {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.admin-recent-icon-badge.purple {
+  background: #F3E8FF;
+}
+
+.admin-recent-icon-badge.yellow {
+  background: #FEF9C3;
+}
+
+.admin-recent-icon-badge.mint {
+  background: #DCFCE7;
+}
+
+.admin-recent-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-recent-card-top {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 0.35rem;
+}
+
+.admin-recent-card-title {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.admin-recent-tag {
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  display: inline-block;
+}
+
+.admin-recent-tag.purple {
+  background: #F3E8FF;
+  color: #7E22CE;
+}
+
+.admin-recent-tag.yellow {
+  background: #FEF9C3;
+  color: #A16207;
+}
+
+.admin-recent-tag.mint {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.admin-recent-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.78rem;
+  color: #6B7280;
+  flex-wrap: wrap;
+}
+
+.admin-recent-card-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.admin-recent-status {
+  font-weight: 500;
+}
+
+.admin-recent-status.relayed {
+  color: #15803D;
+}
+
+.admin-recent-status.pending {
+  color: #9CA3AF;
+}
+
+/* ==========================================================================
+   3 BOTTOM SUMMARY METRIC CARDS (Matches Screenshot)
+   ========================================================================== */
+.admin-bottom-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+}
+
+.admin-bottom-metric-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 16px;
+  padding: 1.4rem 1.6rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 140px;
+}
+
+.admin-bottom-metric-num {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.25rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.admin-bottom-metric-num.green {
+  color: #1E3A2B;
+}
+
+.admin-bottom-metric-num.orange {
+  color: #D97706;
+}
+
+.admin-bottom-metric-desc {
+  font-size: 0.82rem;
+  color: #4B5563;
+  line-height: 1.45;
+  margin-bottom: 1rem;
+}
+
+.admin-pill-status {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.admin-pill-status.on-track {
+  background: #DCFCE7;
+  color: #15803D;
+}
+
+.admin-pill-status.needs-attention {
+  background: #FEF9C3;
+  color: #A16207;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .admin-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .admin-two-cols {
+    grid-template-columns: 1fr;
+  }
+  .admin-bottom-metrics-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-taskbar-clean {
+    padding: 0.65rem 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .admin-clean-tabs {
+    overflow-x: auto;
+    width: 100%;
+    padding-bottom: 4px;
+  }
+  .admin-taskbar-right {
+    width: 100%;
+    justify-content: space-between;
+  }
+}
+
+/* ==========================================================================
+   ADMIN CONTENT MANAGER & MEAL COMPLIANCE STYLING
+   ========================================================================== */
+.content-subtabs-bar {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.content-subtab-btn {
+  background: #FFFFFF;
+  border: 1px solid #D8D2C4;
+  padding: 0.6rem 1.25rem;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #57534E;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.content-subtab-btn:hover {
+  background: #F4F1EA;
+  color: #1F2937;
+}
+
+.content-subtab-btn.active {
+  background: #1E3A2B;
+  color: #FFFFFF;
+  border-color: #1E3A2B;
+  box-shadow: 0 2px 8px rgba(30, 58, 43, 0.18);
+}
+
+.compliance-counter-pill {
+  background: #FEE2E2;
+  color: #DC2626;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  margin-left: 0.25rem;
+}
+
+.content-subtab-btn.active .compliance-counter-pill {
+  background: #EF4444;
+  color: #FFFFFF;
+}
+
+/* Content Manager Module Cards */
+.admin-module-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 16px;
+  margin-bottom: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-module-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+}
+
+.admin-module-thumb-wrap {
+  width: 140px;
+  height: 105px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  background: #F3F4F6;
+  border: 1px solid #E5E7EB;
+}
+
+.admin-module-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.admin-food-badge-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+
+.admin-food-badge {
+  background: #F0FDF4;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Compliance KPI Grid */
+.compliance-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.compliance-kpi-card {
+  background: #FFFFFF;
+  border: 1px solid #EBE5D8;
+  border-radius: 16px;
+  padding: 1.25rem 1.35rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.compliance-kpi-val {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1E2320;
+  margin: 0.25rem 0 0.2rem;
+}
+
+/* Food Adherence Mini Progress Grid */
+.food-adherence-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.food-adherence-item {
+  background: #FBF9F5;
+  border: 1px solid #EFEAE0;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+}
+
+.food-adherence-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.food-adherence-track {
+  height: 6px;
+  background: #E5E7EB;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.food-adherence-fill {
+  height: 100%;
+  background: #10B981;
+  border-radius: 9999px;
+}
+
+/* Compliance Badges */
+.badge-compliant {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-moderate {
+  background: #FEF9C3;
+  color: #A16207;
+  border: 1px solid #FDE047;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge-low {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FCA5A5;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Quick Tag Buttons */
+.tag-btn-add {
+  background: #F3F4F6;
+  border: 1px solid #D1D5DB;
+  border-radius: 9999px;
+  padding: 3px 10px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.tag-btn-add:hover {
+  background: #E5E7EB;
+  color: #111827;
+}
+
+@media (max-width: 900px) {
+  .admin-module-card {
+    grid-template-columns: 1fr;
+  }
+  .admin-module-thumb-wrap {
+    width: 100%;
+    height: 160px;
+  }
+  .compliance-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .food-adherence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

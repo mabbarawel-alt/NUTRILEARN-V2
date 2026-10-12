@@ -84,6 +84,23 @@
       return childData;
     },
 
+    async deleteChild(childId) {
+      if (this.isAvailable && childId) {
+        try {
+          const res = await fetch(`${this.baseUrl}/children/${childId}`, {
+            method: 'DELETE'
+          });
+          if (res.ok) {
+            console.log('✅ [NutriApi] Child record deleted from backend API:', childId);
+            return await res.json();
+          }
+        } catch (e) {
+          console.warn('API deleteChild error:', e);
+        }
+      }
+      return true;
+    },
+
     // --------------------------------------------------------------------------
     // Monthly Reports API
     // --------------------------------------------------------------------------

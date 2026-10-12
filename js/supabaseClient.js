@@ -32,7 +32,7 @@
       parent_name: c.parent_name || c.parentName || 'Guardian',
       parentPhone: c.parentPhone || c.parent_phone || '',
       parent_phone: c.parent_phone || c.parentPhone || '',
-      barangay: c.barangay || 'Barangay San Jose',
+      barangay: c.barangay || 'Barangay Manguiring',
       heightCm: Number(c.heightCm ?? c.height_cm ?? 0),
       height_cm: Number(c.height_cm ?? c.heightCm ?? 0),
       weightKg: Number(c.weightKg ?? c.weight_kg ?? 0),
@@ -64,7 +64,7 @@
       id: r.id ? String(r.id) : ('REP-' + Date.now()),
       reportId: r.reportId || r.report_code || `REP-${Date.now()}`,
       report_code: r.report_code || r.reportId || `REP-${Date.now()}`,
-      barangay: r.barangay || 'Barangay San Jose',
+      barangay: r.barangay || 'Barangay Manguiring',
       chwName: r.chwName || r.chw_name || 'BHW Lead',
       chw_name: r.chw_name || r.chwName || 'BHW Lead',
       submittedDate: r.submittedDate || r.submitted_date || new Date().toISOString().split('T')[0],
@@ -307,7 +307,7 @@
           sex: childData.sex || 'Male',
           parent_name: childData.parentName || childData.parent_name || 'Guardian',
           parent_phone: childData.parentPhone || childData.parent_phone || '',
-          barangay: childData.barangay || 'Barangay San Jose',
+          barangay: childData.barangay || 'Barangay Manguiring',
           height_cm: Number(childData.heightCm || childData.height_cm || 0),
           weight_kg: Number(childData.weightKg || childData.weight_kg || 0),
           muac_mm: Number(childData.muacMm || childData.muac_mm || 0),
@@ -366,6 +366,27 @@
       } catch (err) {
         console.warn('⚠️ [Supabase] Cloud update error:', err.message);
         return childData;
+      }
+    },
+
+    async deleteChild(childId) {
+      if (!this.isConfigured() || !this.isOnline()) {
+        return true;
+      }
+      try {
+        let query = client.from('children').delete();
+        if (childId && !isNaN(childId)) {
+          query = query.eq('id', Number(childId));
+        } else {
+          query = query.eq('id', String(childId));
+        }
+        const { error } = await query;
+        if (error) throw error;
+        console.log('✅ [Supabase] Child deleted from cloud database:', childId);
+        return true;
+      } catch (err) {
+        console.warn('⚠️ [Supabase] Cloud delete error:', err.message);
+        return false;
       }
     },
 

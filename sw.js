@@ -1,11 +1,13 @@
-// NutriLearn Service Worker - v2.7.0
-const CACHE_NAME = 'nutrilearn-v2.7.0';
+// NutriLearn Service Worker - v5.0.0
+const CACHE_NAME = 'nutrilearn-v5.0.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
   './css/styles.css',
   './css/components.css',
+  './css/admin.css',
+  './css/parent.css',
   './js/i18n.js',
   './js/app.js',
   './js/data.js',
@@ -14,8 +16,18 @@ const ASSETS_TO_CACHE = [
   './js/mhoDashboard.js',
   './js/announcements.js',
   './js/exportUtils.js',
+  './icon/logo.png',
+  './icon/Name.png',
+  './assets/icons/logo.png',
+  './assets/icons/brand-name.png',
+  './assets/icons/icon-192.png',
+  './assets/icons/icon-512.png',
   './assets/icons/icon-192.svg',
-  './assets/icons/icon-512.svg'
+  './assets/icons/icon-512.svg',
+  './assets/images/module-malnutrition.jpg',
+  './assets/images/module-complementary.jpg',
+  './assets/images/module-meals.jpg',
+  './assets/images/module-habits.jpg'
 ];
 
 // Install Event - cache core static files immediately and skip waiting

@@ -1,0 +1,498 @@
+/* ==========================================================================
+   NUTRILEARN - BHW (COMMUNITY HEALTH WORKER) DESIGN SYSTEM
+   Matches exact layout, typography, stat cards, alert banner, and quick actions
+   ========================================================================== */
+
+/* BHW Role Base Background & Layout */
+body.role-chw {
+  background-color: #FAF8F5 !important;
+  color: #1F2937;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+body.role-chw #app-workspace {
+  background-color: #FAF8F5;
+  min-height: 100vh;
+}
+
+body.role-chw .app-header {
+  background: #FFFFFF !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  border-bottom: 1px solid #EAE6DF !important;
+  padding: 0 !important;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+body.role-chw .main-content {
+  background-color: #FAF8F5;
+  padding: 1.5rem 1rem 3rem 1rem;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+
+body.role-chw #view-chw > .hero-banner {
+  display: none !important;
+}
+
+/* 1. CLEAN BHW TOP TASKBAR */
+.bhw-taskbar-clean {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 2rem;
+  max-width: 1240px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.bhw-taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.bhw-brand-clean {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.bhw-brand-clean:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.bhw-brand-logo-img {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  padding: 0;
+  object-fit: contain;
+  border: none;
+  box-shadow: none;
+  flex-shrink: 0;
+}
+
+.bhw-brand-name {
+  font-family: 'Outfit', 'Playfair Display', Georgia, sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1A382A;
+  letter-spacing: -0.02em;
+}
+
+.bhw-brand-name-img {
+  height: 22px;
+  width: auto;
+  max-width: 130px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bhw-brand-clean:hover .bhw-brand-name-img {
+  transform: scale(1.04);
+}
+
+/* Horizontal Clean Pill Navigation Tabs */
+.bhw-pill-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: transparent;
+}
+
+.bhw-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: #374151;
+  font-size: 0.86rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+}
+
+.bhw-pill-btn:hover {
+  background: #F3EFEA;
+  color: #111827;
+}
+
+.bhw-pill-btn.active {
+  background: #235D3A !important;
+  color: #FFFFFF !important;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(35, 93, 58, 0.25);
+}
+
+.bhw-pill-icon {
+  font-size: 0.95rem;
+}
+
+/* BHW Header Right: Profile & Sign Out */
+.bhw-taskbar-right {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.bhw-user-profile-clean {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  cursor: pointer;
+  text-decoration: none;
+  user-select: none;
+  transition: opacity 0.2s ease;
+}
+
+.bhw-user-profile-clean:hover {
+  opacity: 0.85;
+}
+
+.bhw-user-details-text {
+  text-align: right;
+  line-height: 1.2;
+}
+
+.bhw-user-title-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.bhw-user-loc-sub {
+  font-size: 0.74rem;
+  color: #6B7280;
+  margin-top: 2px;
+}
+
+.bhw-user-avatar-circle {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #235D3A;
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid #BBF7D0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.btn-clean-signout {
+  padding: 5px 14px;
+  border-radius: 9999px;
+  border: 1.5px solid #D1D5DB;
+  background: #FFFFFF;
+  color: #4B5563;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-clean-signout:hover {
+  background: #FEF2F2;
+  border-color: #FECACA;
+  color: #B91C1C;
+}
+
+/* ==========================================================================
+   2. BHW DASHBOARD MAIN SECTIONS (Matches User Screenshot)
+   ========================================================================== */
+
+/* Top Greeting Header */
+.bhw-greeting-header {
+  margin-bottom: 1.35rem;
+}
+
+.bhw-greeting-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.15rem;
+  font-weight: 800;
+  color: #1A382A;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.01em;
+}
+
+.bhw-greeting-sub {
+  font-size: 0.88rem;
+  color: #64748B;
+  margin: 0;
+  font-weight: 500;
+}
+
+/* Alert / Relay Announcements Banner (Warm Rust-Orange) */
+.bhw-alert-banner {
+  background: #C85A17;
+  color: #FFFFFF;
+  border-radius: 14px;
+  padding: 1.15rem 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 14px rgba(200, 90, 23, 0.22);
+}
+
+.bhw-alert-banner-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bhw-alert-banner-title {
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+}
+
+.bhw-alert-banner-sub {
+  font-size: 0.86rem;
+  opacity: 0.95;
+  line-height: 1.4;
+}
+
+.bhw-alert-banner-btn {
+  background: transparent;
+  border: none;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+  white-space: nowrap;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bhw-alert-banner-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  text-decoration: underline;
+}
+
+/* 4 Summary Stat Cards Row */
+.bhw-stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.15rem;
+  margin-bottom: 1.65rem;
+}
+
+.bhw-stat-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE4DA;
+  border-radius: 16px;
+  padding: 1.35rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 155px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s ease;
+  user-select: none;
+}
+
+.bhw-stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+.bhw-stat-icon {
+  font-size: 1.55rem;
+  margin-bottom: 0.5rem;
+  line-height: 1;
+}
+
+.bhw-stat-num {
+  font-family: 'Outfit', 'Playfair Display', Georgia, serif;
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: #1A382A;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.bhw-stat-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #2D3748;
+  margin-bottom: 2px;
+}
+
+.bhw-stat-sub {
+  font-size: 0.8rem;
+  color: #718096;
+}
+
+/* Card 2: Critical Cases (Highlighted Solid Warm Rust-Orange) */
+.bhw-stat-card-critical {
+  background: #C85A17 !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  box-shadow: 0 4px 14px rgba(200, 90, 23, 0.25);
+}
+
+.bhw-stat-card-critical .bhw-stat-num {
+  color: #FFFFFF !important;
+}
+
+.bhw-stat-card-critical .bhw-stat-label {
+  color: #FFFFFF !important;
+}
+
+.bhw-stat-card-critical .bhw-stat-sub {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+/* Section Card Container (Quick Actions & Recent Activity) */
+.bhw-section-card {
+  background: #FAF7F2;
+  border: 1px solid #EAE4DA;
+  border-radius: 18px;
+  padding: 1.35rem 1.6rem;
+  margin-bottom: 1.5rem;
+}
+
+.bhw-card-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #1A382A;
+  margin: 0 0 1.15rem 0;
+  letter-spacing: -0.01em;
+}
+
+/* Quick Actions 3-Columns Grid */
+.bhw-quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.15rem;
+}
+
+.bhw-action-tile {
+  background: #EDE8DE;
+  border-radius: 14px;
+  padding: 1.35rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.bhw-action-tile:hover {
+  background: #E5DFD4;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+}
+
+.bhw-action-tile-icon {
+  font-size: 1.65rem;
+  margin-bottom: 0.65rem;
+  line-height: 1;
+}
+
+.bhw-action-tile-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #1A382A;
+  margin-bottom: 4px;
+}
+
+.bhw-action-tile-sub {
+  font-size: 0.8rem;
+  color: #64748B;
+  line-height: 1.4;
+}
+
+/* Recent Activity List */
+.bhw-activity-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.bhw-activity-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid #E6DFD5;
+  font-size: 0.88rem;
+}
+
+.bhw-activity-item:last-child {
+  border-bottom: none;
+}
+
+.bhw-activity-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: #2D3748;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.bhw-activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bhw-activity-time {
+  font-size: 0.8rem;
+  color: #718096;
+  white-space: nowrap;
+  margin-left: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .bhw-stat-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bhw-quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+  .bhw-taskbar-clean {
+    padding: 0.65rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .bhw-stat-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .bhw-greeting-title {
+    font-size: 1.65rem;
+  }
+  .bhw-alert-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

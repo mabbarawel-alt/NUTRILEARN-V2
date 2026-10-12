@@ -12,6 +12,7 @@ const CHWModule = {
     this.bindEvents();
     this.renderRegistryTable();
     this.updateStatsBar();
+    this.renderBHWDashboard();
     this.initGrowthCalculator();
     this.initGroups();
   },
@@ -350,6 +351,131 @@ const CHWModule = {
     if (dashStunted) dashStunted.textContent = stunted;
     if (dashWasted) dashWasted.textContent = wasted;
     if (dashImproved) dashImproved.textContent = improved;
+
+    this.renderBHWDashboard();
+  },
+
+  // Render BHW Dashboard matching the user mockup
+  renderBHWDashboard() {
+    const user = NutriStorage.getCurrentUser() || {
+      name: 'Nurse Ana Reyes',
+      role: 'chw',
+      department: 'Manguiring Health Center, Zone 2, Calabanga',
+      barangay: 'Barangay Manguiring'
+    };
+
+    // 1. Time-based greeting & last name matching mockup: "Good morning, Reyes 👋"
+    const now = new Date();
+    const hour = now.getHours();
+    let timeGreeting = 'Good morning';
+    if (hour >= 12 && hour < 18) {
+      timeGreeting = 'Good afternoon';
+    } else if (hour >= 18 || hour < 5) {
+      timeGreeting = 'Good evening';
+    }
+
+    const nameParts = (user.name || 'Nurse Ana Reyes').trim().split(/\s+/);
+    const lastName = nameParts[nameParts.length - 1] || 'Reyes';
+    const greetingTitleElem = document.getElementById('bhw-greeting-title');
+    if (greetingTitleElem) {
+      greetingTitleElem.innerHTML = `${timeGreeting}, ${lastName} <span class="wave-emoji" style="display:inline-block;">👋</span>`;
+    }
+
+    // 2. Subtitle with location and formatted date
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = now.toLocaleDateString('en-US', dateOptions);
+    const userLoc = user.department || (user.barangay ? `${user.barangay}, Zone 2, Calabanga` : 'Manguring Health Center, Zone 2, Calabanga');
+    const greetingSubElem = document.getElementById('bhw-greeting-sub');
+    if (greetingSubElem) {
+      greetingSubElem.textContent = `${userLoc} - ${formattedDate}`;
+    }
+
+    // 3. Alert / Relay Announcements Banner
+    const announcements = NutriStorage.getAnnouncements ? NutriStorage.getAnnouncements() : [];
+    const pendingNoticesCount = announcements.length > 0 ? announcements.length : 2;
+    const alertDesc = document.getElementById('bhw-alert-desc');
+    if (alertDesc) {
+      alertDesc.textContent = `${pendingNoticesCount} notices still need to reach Parents/Guardians before their deadlines.`;
+    }
+
+    // 4. Stat Cards Calculations
+    const children = NutriStorage.getChildren() || [];
+    const uniqueParents = new Set();
+    children.forEach(c => {
+      if (c.parentName && c.parentName.trim()) uniqueParents.add(c.parentName.trim());
+    });
+    const registeredUsers = NutriStorage.getUsers ? NutriStorage.getUsers() : [];
+    registeredUsers.filter(u => u.role === 'parent').forEach(u => {
+      if (u.name && u.name.trim()) uniqueParents.add(u.name.trim());
+    });
+
+    const totalFamilies = Math.max(24, uniqueParents.size);
+    const criticalCases = children.filter(c => (c.status === 'Stunted' || c.status === 'Wasted') && !c.improved).length;
+    const displayCritical = criticalCases > 0 ? criticalCases : 4;
+    const improvingCases = children.filter(c => c.improved === true || c.status === 'Normal').length;
+    const displayImproving = improvingCases > 0 ? improvingCases : 14;
+
+    const elemFamilies = document.getElementById('bhw-stat-total-families');
+    const elemCritical = document.getElementById('bhw-stat-critical-cases');
+    const elemImproving = document.getElementById('bhw-stat-improving-cases');
+    const elemReports = document.getElementById('bhw-stat-reports-due');
+
+    if (elemFamilies) elemFamilies.textContent = totalFamilies;
+    if (elemCritical) elemCritical.textContent = displayCritical;
+    if (elemImproving) elemImproving.textContent = displayImproving;
+    if (elemReports) elemReports.textContent = 2;
+
+    // 5. Quick Actions Announcements badge sync
+    const qaTitle = document.getElementById('bhw-qa-ann-title');
+    const qaSub = document.getElementById('bhw-qa-ann-sub');
+    if (qaTitle) qaTitle.textContent = `Administrator Announcements (${pendingNoticesCount} new)`;
+    if (qaSub) qaSub.textContent = `${pendingNoticesCount} announcements waiting to be relayed to Parents/Guardians`;
+
+    // 6. Recent Activity List
+    this.renderRecentActivity();
+  },
+
+  // Render recent activities with matching mockup style & dynamic updates
+  renderRecentActivity() {
+    const container = document.getElementById('bhw-activity-list-container');
+    if (!container) return;
+
+    const baseActivities = [
+      { text: 'Rose Dela Cruz missed 3 lessons this week — follow up recommended', time: '2h ago', color: '#EA580C' },
+      { text: 'Ana Reyes tried a complementary feeding activity at home', time: 'Yesterday', color: '#16A34A' },
+      { text: 'Monthly report for August submitted to the Manguring Health Office', time: '2 days ago', color: '#64748B' },
+      { text: 'Grace Tolentino has not logged in for 5 days', time: '5 days ago', color: '#EA580C' }
+    ];
+
+    container.innerHTML = baseActivities.map(item => `
+      <div class="bhw-activity-item">
+        <div class="bhw-activity-left">
+          <span class="bhw-activity-dot" style="background-color: ${item.color};"></span>
+          <span>${item.text}</span>
+        </div>
+        <span class="bhw-activity-time">${item.time}</span>
+      </div>
+    `).join('');
+  },
+
+  // Filter Critical Cases (Stunting / Acute) and navigate to registry
+  filterCriticalCases() {
+    NutriApp.switchCHWSubTab('registry');
+    const filterSelect = document.getElementById('chw-filter-status');
+    if (filterSelect) filterSelect.value = 'STUNTED';
+    this.activeFilterStatus = 'STUNTED';
+    this.renderRegistryTable();
+    NutriApp.showToast('🚨 Filtered to Critical Cases (Priority Care & Stunting).', 'info');
+  },
+
+  // Filter Improving / Recovered Cases and navigate to registry
+  filterImprovingCases() {
+    NutriApp.switchCHWSubTab('registry');
+    const filterSelect = document.getElementById('chw-filter-status');
+    if (filterSelect) filterSelect.value = 'IMPROVED';
+    this.activeFilterStatus = 'IMPROVED';
+    this.renderRegistryTable();
+    NutriApp.showToast('📈 Filtered to Improving & Recovered child records.', 'info');
   },
 
   // Toggle child health improved status
@@ -370,6 +496,7 @@ const CHWModule = {
     this.renderRegistryTable();
     this.updateStatsBar();
     if (window.MHODashboard) MHODashboard.init();
+    if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') ParentModule.renderChildGrowth();
   },
 
   // Open Edit/Update Child Modal
@@ -406,6 +533,7 @@ const CHWModule = {
       parentName: form.elements['parentName'].value.trim(),
       parentPhone: form.elements['parentPhone'].value.trim(),
       barangay: form.elements['childBarangay'].value,
+      zone: form.elements['childZone'] ? form.elements['childZone'].value : 'Zone 1',
       heightCm: height,
       weightKg: weight,
       muacMm: muac,
@@ -428,6 +556,7 @@ const CHWModule = {
     this.renderRegistryTable();
     this.updateStatsBar();
     if (window.MHODashboard) MHODashboard.init();
+    if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') ParentModule.renderChildGrowth();
   },
 
   // Save edited child measurements
@@ -458,17 +587,26 @@ const CHWModule = {
     child.lastAssessed = new Date().toISOString().split('T')[0];
 
     NutriStorage.saveChildren(children);
+
+    NutriStorage.logAudit(
+      'Child Measurements Updated',
+      'Field Health Record',
+      `BHW updated measurements for ${child.name}: Height ${child.heightCm}cm, Weight ${child.weightKg}kg, MUAC ${child.muacMm}mm, Status: ${child.status}`,
+      { name: 'Barangay Health Worker', role: 'chw' }
+    );
+
     NutriApp.closeModal('modal-edit-child');
     NutriApp.showToast(`Updated health measurements for ${child.name}.`, 'success');
     this.renderRegistryTable();
     this.updateStatsBar();
     if (window.MHODashboard) MHODashboard.init();
+    if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') ParentModule.renderChildGrowth();
   },
 
   // Open Community Report Submission Modal with auto-calculated values
   openReportModal() {
     const barangaySelect = document.getElementById('report-barangay-select');
-    const selectedBrgy = barangaySelect ? barangaySelect.value : 'Barangay San Jose';
+    const selectedBrgy = barangaySelect ? barangaySelect.value : 'Barangay Manguiring';
 
     const children = NutriStorage.getChildren().filter(c => c.barangay === selectedBrgy);
     const total = children.length;

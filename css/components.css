@@ -887,28 +887,46 @@
 }
 
 .startup-leaf-logo {
-  width: 64px;
-  height: 64px;
+  width: 74px;
+  height: 74px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
-  filter: drop-shadow(0 4px 10px rgba(46, 125, 50, 0.12));
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  background: transparent;
+  padding: 0;
+  border: none;
+  box-shadow: none;
+  filter: drop-shadow(0 4px 14px rgba(14, 61, 38, 0.12));
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  cursor: pointer;
 }
 
 .startup-leaf-logo:hover {
-  transform: scale(1.06) rotate(3deg);
+  transform: scale(1.06);
+  filter: drop-shadow(0 8px 20px rgba(14, 61, 38, 0.22));
 }
 
 .startup-brand-title {
-  font-family: var(--font-heading);
-  font-size: 1.75rem;
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  color: #1E293B;
   margin-top: 0.5rem;
-  margin-bottom: 0;
-  line-height: 1.15;
+  margin-bottom: 0.25rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.startup-brand-name-img {
+  height: 30px;
+  width: auto;
+  max-width: 175px;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+.startup-brand-title:hover .startup-brand-name-img,
+.startup-brand-name-img:hover {
+  transform: scale(1.05);
 }
 
 .startup-card {
@@ -1759,8 +1777,10 @@
   }
 
   .startup-leaf-logo {
-    width: 44px;
-    height: 44px;
+    width: 68px;
+    height: 68px;
+    padding: 4px;
+    border-radius: 16px;
   }
 
   .startup-brand-title {

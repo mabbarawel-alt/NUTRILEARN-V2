@@ -110,7 +110,7 @@ async def save_child(child: Dict[str, Any]):
         "sex": child.get("sex", "Male"),
         "parent_name": child.get("parentName") or child.get("parent_name") or "Guardian",
         "parent_phone": child.get("parentPhone") or child.get("parent_phone") or "",
-        "barangay": child.get("barangay", "Barangay San Jose"),
+        "barangay": child.get("barangay", "Barangay Manguiring"),
         "height_cm": float(child.get("heightCm") or child.get("height_cm") or 0.0),
         "weight_kg": float(child.get("weightKg") or child.get("weight_kg") or 0.0),
         "muac_mm": int(child.get("muacMm") or child.get("muac_mm") or 0),
@@ -179,6 +179,22 @@ async def update_child(child_id: str, child: Dict[str, Any]):
             return item
     return {"success": True, "updated": update_data}
 
+@app.delete("/api/children/{child_id}")
+async def delete_child(child_id: str):
+    if is_supabase_configured():
+        try:
+            url = f"{SUPABASE_URL}/rest/v1/children?id=eq.{child_id}"
+            async with httpx.AsyncClient(timeout=10.0) as client:
+                await client.delete(url, headers=get_supabase_headers())
+        except Exception as e:
+            print("Supabase delete child error:", e)
+
+    db = get_local_db()
+    children = db.get("children", [])
+    db["children"] = [c for c in children if str(c.get("id")) != str(child_id)]
+    save_local_db(db)
+    return {"success": True, "deleted": child_id}
+
 # ------------------------------------------------------------------------------
 # 2. MONTHLY REPORTS ENDPOINTS
 # ------------------------------------------------------------------------------
@@ -201,7 +217,7 @@ async def get_reports():
 async def submit_report(report: Dict[str, Any]):
     payload = {
         "report_code": report.get("reportId") or report.get("report_code") or f"REP-{os.urandom(3).hex().upper()}",
-        "barangay": report.get("barangay", "Barangay San Jose"),
+        "barangay": report.get("barangay", "Barangay Manguiring"),
         "chw_name": report.get("chwName") or report.get("chw_name") or "BHW Lead",
         "submitted_date": report.get("submittedDate") or report.get("submitted_date") or "2026-09-12",
         "total_children": int(report.get("totalChildren") or report.get("total_children") or 0),
@@ -370,12 +386,75 @@ async def save_group(grp: Dict[str, Any]):
     save_local_db(db)
     return grp
 
+# ------------------------------------------------------------------------------
+# 7. BARANGAYS ENDPOINTS (Admin Master Registry)
+# ------------------------------------------------------------------------------
+@app.get("/api/barangays")
+async def get_barangays():
+    db = get_local_db()
+    return db.get("barangays", [
+        {"id": "brgy-1", "name": "Barangay Manguiring"}
+    ])
+
+@app.post("/api/barangays")
+async def create_barangay(brgy: Dict[str, Any]):
+    db = get_local_db()
+    barangays = db.setdefault("barangays", [])
+    name = (brgy.get("name") or "").strip()
+    if not name:
+        raise HTTPException(status_code=400, detail="Barangay name is required")
+    # Duplicate check
+    if any(b.get("name", "").lower() == name.lower() for b in barangays):
+        raise HTTPException(status_code=400, detail="Barangay already exists")
+    new_id = f"brgy-{int(len(barangays)) + 1}"
+    new_brgy = {"id": new_id, "name": name, "created_at": brgy.get("createdAt") or "2026-09-12"}
+    barangays.append(new_brgy)
+    save_local_db(db)
+    return new_brgy
+
+@app.put("/api/barangays/{brgy_id}")
+async def update_barangay(brgy_id: str, brgy: Dict[str, Any]):
+    db = get_local_db()
+    barangays = db.get("barangays", [])
+    new_name = (brgy.get("name") or "").strip()
+    if not new_name:
+        raise HTTPException(status_code=400, detail="New barangay name is required")
+    target = next((b for b in barangays if str(b.get("id")) == str(brgy_id)), None)
+    if not target:
+        raise HTTPException(status_code=404, detail="Barangay not found")
+    old_name = target.get("name")
+    target["name"] = new_name
+    
+    # Cascade rename to children, users, reports
+    if old_name and old_name != new_name:
+        for c in db.get("children", []):
+            if c.get("barangay") == old_name:
+                c["barangay"] = new_name
+        for u in db.get("users", []):
+            if u.get("barangay") == old_name:
+                u["barangay"] = new_name
+        for r in db.get("monthly_reports", []):
+            if r.get("barangay") == old_name:
+                r["barangay"] = new_name
+
+    save_local_db(db)
+    return target
+
+@app.delete("/api/barangays/{brgy_id}")
+async def delete_barangay(brgy_id: str):
+    db = get_local_db()
+    barangays = db.get("barangays", [])
+    db["barangays"] = [b for b in barangays if str(b.get("id")) != str(brgy_id)]
+    save_local_db(db)
+    return {"success": True}
+
+
 # ==============================================================================
 # STATIC FILES & SINGLE PAGE APP ROUTING (Render Unified Deploy)
 # ==============================================================================
 
 # Mount static asset folders if they exist
-for folder in ["css", "js", "assets"]:
+for folder in ["css", "js", "assets", "icon"]:
     p = BASE_DIR / folder
     if p.exists() and p.is_dir():
         app.mount(f"/{folder}", StaticFiles(directory=str(p)), name=folder)

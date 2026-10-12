@@ -161,25 +161,13 @@ const AnnouncementsModule = {
             <!-- Interactive Barangay Checkbox Grid -->
             <div class="barangay-checkbox-grid">
               <label class="barangay-checkbox-card active">
-                <input type="checkbox" name="annTargetBarangay" value="Barangay San Jose" checked onchange="AnnouncementsModule.onBarangayCheckboxChange()">
-                <span>Barangay San Jose</span>
-              </label>
-              <label class="barangay-checkbox-card active">
-                <input type="checkbox" name="annTargetBarangay" value="Barangay Santa Maria" checked onchange="AnnouncementsModule.onBarangayCheckboxChange()">
-                <span>Barangay Santa Maria</span>
-              </label>
-              <label class="barangay-checkbox-card active">
-                <input type="checkbox" name="annTargetBarangay" value="Barangay San Isidro" checked onchange="AnnouncementsModule.onBarangayCheckboxChange()">
-                <span>Barangay San Isidro</span>
-              </label>
-              <label class="barangay-checkbox-card active">
-                <input type="checkbox" name="annTargetBarangay" value="Barangay Poblacion" checked onchange="AnnouncementsModule.onBarangayCheckboxChange()">
-                <span>Barangay Poblacion</span>
+                <input type="checkbox" name="annTargetBarangay" value="Barangay Manguiring" checked onchange="AnnouncementsModule.onBarangayCheckboxChange()">
+                <span>Barangay Manguiring</span>
               </label>
             </div>
 
             <div id="ann-barangay-selection-summary" style="font-size: 0.8rem; font-weight: 600; color: #166534; margin-top: 0.65rem;">
-              📍 Target Destination: All 4 Barangays in Municipality (Everyone will receive this announcement)
+              📍 Target Destination: Barangay Manguiring
             </div>
           </div>
         `;
@@ -189,7 +177,7 @@ const AnnouncementsModule = {
       if (modalTitle) modalTitle.textContent = '📢 Post Barangay Health Announcement';
       if (modalSubtitle) modalSubtitle.textContent = 'Barangay Health Center • Select distribution destination before publishing';
 
-      const bhwBarangay = currentUser.barangay || 'Barangay San Jose';
+      const bhwBarangay = currentUser.barangay || 'Barangay Manguiring';
 
       if (audienceContainer) {
         audienceContainer.innerHTML = `
@@ -343,14 +331,10 @@ const AnnouncementsModule = {
         return;
       }
       checkedBoxes.forEach(cb => targetBarangays.push(cb.value));
-      if (targetBarangays.length === 4) {
-        destinationLabel = 'All Barangays';
-      } else {
-        destinationLabel = targetBarangays.join(', ');
-      }
+      destinationLabel = targetBarangays.join(', ') || 'Barangay Manguiring';
     } else {
       // BHW posts from their assigned barangay
-      destinationLabel = currentUser.barangay || 'Barangay San Jose';
+      destinationLabel = currentUser.barangay || 'Barangay Manguiring';
       targetBarangays = [destinationLabel];
     }
 

@@ -19,6 +19,8 @@ const NutriApp = {
 
     this.registerServiceWorker();
     this.bindGlobalEvents();
+    this.updateUserHeaderBadge();
+    this.initSubNavScroll();
     this.checkUrlParams();
 
     // Initialize modules
@@ -128,6 +130,7 @@ const NutriApp = {
     if (badgeIcon) badgeIcon.textContent = info.icon;
     if (badgeTitle) badgeTitle.textContent = isFil ? info.fil : info.en;
     if (badgeSub) badgeSub.textContent = isFil ? 'Pumapasok bilang' : 'Signing in as';
+
     if (emailInput) emailInput.value = '';
     if (passInput) passInput.value = '';
   },
@@ -137,11 +140,20 @@ const NutriApp = {
     const role = this.currentAuthRole || 'parent';
     this.switchAuthScreen('screen-auth-details');
 
+    if (window.NutriStorage && typeof NutriStorage.populateAllBarangayDropdowns === 'function') {
+      NutriStorage.populateAllBarangayDropdowns();
+    }
+
     const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const childSection = document.getElementById('reg-child-section');
+    if (childSection) {
+      childSection.style.display = (role === 'parent') ? 'block' : 'none';
+    }
+
     const btnSubmit = document.getElementById('btn-details-submit');
     if (btnSubmit) {
       if (role === 'parent') {
-        btnSubmit.textContent = isFil ? 'Kasunod: Magdagdag ng Bata →' : 'Next: Add Children →';
+        btnSubmit.textContent = isFil ? 'Rehistrohon an Account / Create Account →' : 'Complete Parent & Child Registration →';
       } else {
         btnSubmit.textContent = isFil ? 'Kumpletuhin ang Pagrehistro →' : 'Create Account →';
       }
@@ -177,6 +189,9 @@ const NutriApp = {
       this.closeModal('modal-auth');
       this.switchRole(result.user.role);
       this.updateUserHeaderBadge();
+      if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
+        ParentModule.renderChildGrowth();
+      }
       const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
       const welcome = isFil
         ? `👋 Maligayang pagdating, ${result.user.name}! Naka-log in na.`
@@ -193,21 +208,107 @@ const NutriApp = {
     const form = document.getElementById('form-auth-details');
     if (!form) return;
 
-    const name = form.elements['regFullName'].value.trim();
-    const barangay = form.elements['regBarangayAddress'].value.trim();
-    const email = form.elements['regEmailAddress'].value.trim();
-    const password = form.elements['regPassword'].value;
-    const confirmPassword = form.elements['regConfirmPassword'].value;
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const name = (form.elements['regFullName']?.value || '').trim();
+    const barangay = (form.elements['regBarangayAddress']?.value || '').trim();
+    const email = (form.elements['regEmailAddress']?.value || '').trim();
+    const password = form.elements['regPassword']?.value || '';
+    const confirmPassword = form.elements['regConfirmPassword']?.value || '';
 
     if (!name || !barangay || !email || !password) {
-      this.showToast('Please fill in all required fields.', 'warning');
+      this.showToast(isFil ? 'Pakilagay ang lahat ng kinakailangang impormasyon ng magulang.' : 'Please fill in all required parent fields.', 'warning');
       return;
     }
 
     if (password !== confirmPassword) {
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
       this.showToast(isFil ? 'Hindi magkatugma ang mga password.' : 'Passwords do not match.', 'warning');
       return;
+    }
+
+    const isParent = (this.currentAuthRole || 'parent') === 'parent';
+    let childName = '';
+    let childAge = 18;
+    let childGender = 'Male';
+    let childHeight = 75.0;
+    let childWeight = 9.0;
+    let statusInfo = { overallStatus: 'Normal', hfaStatus: 'Normal', wfaStatus: 'Normal', wfhStatus: 'Normal', muacStatus: 'Normal' };
+
+    if (isParent) {
+      childName = (form.elements['regChildName']?.value || '').trim();
+      childAge = parseInt(form.elements['regChildAge']?.value, 10);
+      childGender = form.elements['regChildGender']?.value || 'Male';
+      childHeight = parseFloat(form.elements['regChildHeight']?.value);
+      childWeight = parseFloat(form.elements['regChildWeight']?.value);
+
+      if (!childName || isNaN(childAge) || isNaN(childHeight) || isNaN(childWeight)) {
+        this.showToast(
+          isFil 
+            ? 'Pakilagay ang kumpletong impormasyon ng bata (Pangalan, Edad sa buwan, Kasarian, Height, at Weight).' 
+            : 'Please provide all required child details (Name, Age in months, Gender, Height, and Weight).',
+          'warning'
+        );
+        return;
+      }
+
+      // Calculate WHO Anthropometric Classification
+      if (window.CHWModule && typeof CHWModule.calculateNutritionalStatus === 'function') {
+        statusInfo = CHWModule.calculateNutritionalStatus(childAge, childGender, childHeight, childWeight, 125);
+      } else {
+        if (childHeight < 74.0 && childAge >= 12) statusInfo.overallStatus = 'Stunted';
+        else if (childWeight < 8.2 && childAge >= 12) statusInfo.overallStatus = 'Underweight';
+        else statusInfo.overallStatus = 'Normal';
+      }
+
+      // Register Child Record in NutriStorage (Automatically live-synced to BHW & Admin)
+      const childData = {
+        id: 'ch-' + Date.now(),
+        name: childName,
+        ageMonths: childAge,
+        sex: childGender,
+        parentName: name,
+        parentPhone: email,
+        barangay: barangay,
+        heightCm: childHeight,
+        weightKg: childWeight,
+        muacMm: 125,
+        status: statusInfo.overallStatus,
+        hfaStatus: statusInfo.hfaStatus || 'Normal',
+        wfhStatus: statusInfo.wfhStatus || 'Normal',
+        wfaStatus: statusInfo.wfaStatus || 'Normal',
+        muacStatus: statusInfo.muacStatus || 'Normal',
+        improved: false,
+        lastAssessed: new Date().toISOString().split('T')[0],
+        assignedModules: ['mod-1', 'mod-2', 'mod-3', 'mod-4'],
+        completedModules: [],
+        quizScore: 0,
+        notes: `Bagong rehistro kan magulang na si ${name}. Initial record: ${childHeight}cm, ${childWeight}kg.`
+      };
+      NutriStorage.addChild(childData);
+      try {
+        localStorage.setItem('nutrilearn_selected_child_id', childData.id);
+      } catch (e) {}
+
+      // Enroll in Dietary Adherence records so Administrator can monitor meal compliance
+      try {
+        const adherenceKey = 'nutrilearn_diet_adherence_records_v3';
+        const existingAdherence = JSON.parse(localStorage.getItem(adherenceKey) || '[]');
+        existingAdherence.unshift({
+          id: 'meal-rec-' + Date.now(),
+          childName: childName,
+          childAgeMonths: childAge,
+          parentName: name,
+          barangay: barangay,
+          assignedFoods: ['Malunggay', 'Monggo', 'Itlog', 'Karot'],
+          complianceScore: 100,
+          status: 'Good Adherence',
+          mealsLoggedThisWeek: 1,
+          lastMealLogged: 'Bagong Rehistro (Enrolled)',
+          notes: 'Kagigibo pa sanang account kan magulang.'
+        });
+        localStorage.setItem(adherenceKey, JSON.stringify(existingAdherence));
+      } catch (err) {
+        console.warn('Dietary adherence sync warning:', err);
+      }
     }
 
     const userData = {
@@ -215,12 +316,18 @@ const NutriApp = {
       email,
       password,
       barangay,
-      role: this.currentAuthRole || 'parent'
+      role: this.currentAuthRole || 'parent',
+      status: 'Active',
+      registeredDate: new Date().toISOString().split('T')[0]
     };
 
-    if (this.currentAuthRole === 'parent') {
-      userData.childName = 'Ethan Santos';
-      userData.childAge = 18;
+    if (isParent) {
+      userData.childName = childName;
+      userData.childAge = childAge;
+      userData.childGender = childGender;
+      userData.childHeight = childHeight;
+      userData.childWeight = childWeight;
+      userData.nutritionalStatus = statusInfo.overallStatus;
     } else if (this.currentAuthRole === 'chw') {
       userData.bhwId = 'BHW-' + Math.floor(1000 + Math.random() * 9000);
     } else if (this.currentAuthRole === 'mho') {
@@ -229,13 +336,41 @@ const NutriApp = {
     }
 
     const newUser = NutriStorage.registerUser(userData);
+
+    // Audit Log History with exact Date & Time
+    const auditDetails = isParent 
+      ? `Parent account registered: ${name} (${email}, ${barangay}) kaiba an aki na si ${childName} (${childAge} mos, ${childGender}, ${childHeight}cm, ${childWeight}kg, Status: ${statusInfo.overallStatus}). Naka-sync sa BHW at Admin records.`
+      : `Account registered: ${name} (${email}, Papel: ${this.currentAuthRole.toUpperCase()}, Lugar: ${barangay}).`;
+
+    NutriStorage.logAudit(
+      isParent ? 'Parent & Child Account Registered' : 'New User Account Registered',
+      'Account Management',
+      auditDetails,
+      { name, role: this.currentAuthRole || 'parent' }
+    );
+
+    // Live update BHW and Admin views if active
+    if (window.CHWModule) {
+      if (typeof CHWModule.renderRegistryTable === 'function') CHWModule.renderRegistryTable();
+      if (typeof CHWModule.updateStatsBar === 'function') CHWModule.updateStatsBar();
+    }
+    if (window.MHODashboard) {
+      if (typeof MHODashboard.renderAdminRecords === 'function') MHODashboard.renderAdminRecords();
+      if (typeof MHODashboard.renderUsersTable === 'function') MHODashboard.renderUsersTable();
+      if (typeof MHODashboard.renderAuditLogsTable === 'function') MHODashboard.renderAuditLogsTable();
+      if (typeof MHODashboard.renderKPIs === 'function') MHODashboard.renderKPIs();
+    }
+    if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
+      ParentModule.renderChildGrowth();
+    }
+
     this.hideStartupScreen();
     this.switchRole(newUser.role);
     this.updateUserHeaderBadge();
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+
     const msg = isFil
-      ? `🎉 Matagumpay na nakarehistro si ${newUser.name}!`
-      : `🎉 Registration successful for ${newUser.name}!`;
+      ? `🎉 Matagumpay na nakarehistro si ${newUser.name}! Naka-sync na ang mga detalye ng bata sa talaan ng BHW at Admin.`
+      : `🎉 Welcome ${newUser.name}! Child health record successfully synced to BHW & Admin dashboards.`;
     this.showToast(msg, 'success');
   },
 
@@ -372,13 +507,13 @@ const NutriApp = {
     if (this.currentAuthRole === 'parent') {
       userData.childName = form.elements['regChildName']?.value.trim() || '';
       userData.childAge = parseInt(form.elements['regChildAge']?.value || '12', 10);
-      userData.barangay = form.elements['regBarangay']?.value || 'Barangay San Jose';
+      userData.barangay = form.elements['regBarangay']?.value || 'Barangay Manguiring';
     } else if (this.currentAuthRole === 'chw') {
       userData.bhwId = form.elements['regBhwId']?.value.trim() || 'BHW-' + Math.floor(1000 + Math.random() * 9000);
-      userData.barangay = form.elements['regBhwBarangay']?.value || 'Barangay San Jose';
+      userData.barangay = form.elements['regBhwBarangay']?.value || 'Barangay Manguiring';
     } else if (this.currentAuthRole === 'collector') {
       userData.agency = form.elements['regCollectorAgency']?.value.trim() || 'Community Nutrition Survey Unit';
-      userData.barangay = form.elements['regCollectorBarangay']?.value || 'Barangay San Jose';
+      userData.barangay = form.elements['regCollectorBarangay']?.value || 'Barangay Manguiring';
     } else if (this.currentAuthRole === 'mho') {
       userData.department = form.elements['regMhoDept']?.value.trim() || 'Municipal Health Office';
       userData.designation = form.elements['regMhoDesignation']?.value.trim() || 'Nutrition Officer';
@@ -392,9 +527,17 @@ const NutriApp = {
   },
 
 
-  // Sign Out / Logout - Enforces return to Startup Gate
   logout() {
     NutriStorage.setCurrentUser(null);
+    document.body.classList.remove('role-mho', 'role-parent', 'role-chw');
+    const adminTopTaskbar = document.getElementById('admin-top-taskbar');
+    const parentTopTaskbar = document.getElementById('parent-top-taskbar');
+    const bhwTopTaskbar = document.getElementById('bhw-top-taskbar');
+    const standardHeader = document.getElementById('standard-header-container');
+    if (adminTopTaskbar) adminTopTaskbar.style.display = 'none';
+    if (parentTopTaskbar) parentTopTaskbar.style.display = 'none';
+    if (bhwTopTaskbar) bhwTopTaskbar.style.display = 'none';
+    if (standardHeader) standardHeader.style.display = 'flex';
     this.updateUserHeaderBadge();
 
     // Hide all view sections
@@ -512,9 +655,47 @@ const NutriApp = {
     const chwSubNav = document.getElementById('chw-sub-nav');
     const mhoSubNav = document.getElementById('mho-sub-nav');
 
-    if (parentSubNav) parentSubNav.style.display = role === 'parent' ? 'block' : 'none';
-    if (chwSubNav) chwSubNav.style.display = (role === 'chw' || role === 'collector') ? 'block' : 'none';
-    if (mhoSubNav) mhoSubNav.style.display = role === 'mho' ? 'block' : 'none';
+    // Toggle Clean Admin Top Taskbar vs Clean Parent Top Taskbar vs Clean BHW Top Taskbar vs Standard Header
+    const adminTopTaskbar = document.getElementById('admin-top-taskbar');
+    const parentTopTaskbar = document.getElementById('parent-top-taskbar');
+    const bhwTopTaskbar = document.getElementById('bhw-top-taskbar');
+    const standardHeader = document.getElementById('standard-header-container');
+
+    document.body.classList.remove('role-mho', 'role-parent', 'role-chw');
+
+    if (role === 'mho') {
+      document.body.classList.add('role-mho');
+      if (adminTopTaskbar) adminTopTaskbar.style.display = 'flex';
+      if (parentTopTaskbar) parentTopTaskbar.style.display = 'none';
+      if (bhwTopTaskbar) bhwTopTaskbar.style.display = 'none';
+      if (standardHeader) standardHeader.style.display = 'none';
+      if (mhoSubNav) mhoSubNav.style.display = 'none'; // Clean taskbar handles tabs
+    } else if (role === 'parent') {
+      document.body.classList.add('role-parent');
+      if (parentTopTaskbar) parentTopTaskbar.style.display = 'flex';
+      if (adminTopTaskbar) adminTopTaskbar.style.display = 'none';
+      if (bhwTopTaskbar) bhwTopTaskbar.style.display = 'none';
+      if (standardHeader) standardHeader.style.display = 'none';
+      if (parentSubNav) parentSubNav.style.display = 'none'; // Clean pill tabs in parentTopTaskbar
+    } else if (role === 'chw' || role === 'collector') {
+      document.body.classList.add('role-chw');
+      if (bhwTopTaskbar) bhwTopTaskbar.style.display = 'flex';
+      if (adminTopTaskbar) adminTopTaskbar.style.display = 'none';
+      if (parentTopTaskbar) parentTopTaskbar.style.display = 'none';
+      if (standardHeader) standardHeader.style.display = 'none';
+      if (chwSubNav) chwSubNav.style.display = 'none'; // Clean pill tabs in bhwTopTaskbar
+    } else {
+      if (parentTopTaskbar) parentTopTaskbar.style.display = 'none';
+      if (adminTopTaskbar) adminTopTaskbar.style.display = 'none';
+      if (bhwTopTaskbar) bhwTopTaskbar.style.display = 'none';
+      if (standardHeader) standardHeader.style.display = 'flex';
+    }
+
+    this.updateUserHeaderBadge();
+
+    if (parentSubNav) parentSubNav.style.display = 'none';
+    if (chwSubNav) chwSubNav.style.display = 'none';
+    if (mhoSubNav) mhoSubNav.style.display = 'none';
 
     // Update Header Active Portal Pill
     const pillIcon = document.getElementById('active-portal-icon');
@@ -536,14 +717,17 @@ const NutriApp = {
     if (role === 'chw' || role === 'collector') {
       CHWModule.renderRegistryTable();
       CHWModule.updateStatsBar();
+      CHWModule.renderBHWDashboard();
       this.switchCHWSubTab(role === 'collector' ? 'registry' : 'dashboard');
     } else if (role === 'mho') {
       MHODashboard.init();
-      this.switchMHOSubTab('dashboard');
+      this.switchMHOSubTab('overview');
     } else if (role === 'parent') {
       ParentModule.renderModuleCards();
+      ParentModule.renderHomeActionsChecklist();
       ParentModule.updateProgressHeader();
-      this.switchParentSubTab('dashboard');
+      ParentModule.renderChildGrowth();
+      ParentModule.switchTab('learning');
     }
 
     if (window.AnnouncementsModule) {
@@ -554,10 +738,89 @@ const NutriApp = {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   },
 
+  // Scroll Sub-Nav Bar with Arrow buttons
+  scrollSubNav(btn, delta) {
+    if (!btn) return;
+    const wrapper = btn.closest('.sub-nav-wrapper');
+    if (!wrapper) return;
+    const container = wrapper.querySelector('.sub-nav-container');
+    if (container) {
+      container.scrollBy({ left: delta, behavior: 'smooth' });
+    }
+  },
+
+  // Initialize mouse wheel and drag-to-scroll for horizontal sub-navs on Windows desktop
+  initSubNavScroll() {
+    const containers = document.querySelectorAll('.sub-nav-container');
+    containers.forEach(container => {
+      // 1. Mouse wheel horizontal scrolling (translates deltaY to scrollLeft)
+      container.addEventListener('wheel', (e) => {
+        if (container.scrollWidth > container.clientWidth) {
+          if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            container.scrollLeft += (e.deltaY * 1.3);
+          }
+        }
+      }, { passive: false });
+
+      // 2. Mouse drag-to-scroll on Windows PC / Desktop
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+      let hasDragged = false;
+
+      container.addEventListener('mousedown', (e) => {
+        isDown = true;
+        hasDragged = false;
+        container.classList.add('is-dragging');
+        startX = e.pageX - container.offsetLeft;
+        scrollLeft = container.scrollLeft;
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isDown) {
+          isDown = false;
+          container.classList.remove('is-dragging');
+        }
+      });
+
+      container.addEventListener('mouseleave', () => {
+        if (isDown) {
+          isDown = false;
+          container.classList.remove('is-dragging');
+        }
+      });
+
+      container.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - container.offsetLeft;
+        const walk = (x - startX);
+        if (Math.abs(walk) > 5) {
+          hasDragged = true;
+        }
+        container.scrollLeft = scrollLeft - walk;
+      });
+
+      // Prevent accidental tab click when dragging
+      container.addEventListener('click', (e) => {
+        if (hasDragged) {
+          e.preventDefault();
+          e.stopPropagation();
+          hasDragged = false;
+        }
+      }, true);
+    });
+  },
+
   // Switch Sub-tabs in Parent View
   switchParentSubTab(tabName) {
     document.querySelectorAll('.parent-sub-link').forEach(link => {
-      link.classList.toggle('active', link.dataset.tab === tabName);
+      const isActive = link.dataset.tab === tabName;
+      link.classList.toggle('active', isActive);
+      if (isActive && typeof link.scrollIntoView === 'function') {
+        link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     });
 
     document.querySelectorAll('.parent-tab-pane').forEach(pane => {
@@ -567,70 +830,199 @@ const NutriApp = {
 
   // Switch Sub-tabs in CHW / Data Collector View
   switchCHWSubTab(tabName) {
+    // Update Clean BHW Top Taskbar pill tabs
+    document.querySelectorAll('.bhw-pill-btn').forEach(btn => {
+      const isActive = btn.dataset.tab === tabName;
+      btn.classList.toggle('active', isActive);
+    });
+
     document.querySelectorAll('.chw-sub-link').forEach(link => {
-      link.classList.toggle('active', link.dataset.tab === tabName);
+      const isActive = link.dataset.tab === tabName;
+      link.classList.toggle('active', isActive);
+      if (isActive && typeof link.scrollIntoView === 'function') {
+        link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     });
 
     document.querySelectorAll('.chw-tab-pane').forEach(pane => {
       pane.style.display = pane.dataset.tab === tabName ? 'block' : 'none';
     });
 
-    if (tabName === 'groups' && window.CHWModule) {
+    if (tabName === 'dashboard' && window.CHWModule) {
+      CHWModule.renderBHWDashboard();
+    } else if (tabName === 'groups' && window.CHWModule) {
       CHWModule.renderGroups();
+    } else if (tabName === 'registry' && window.CHWModule) {
+      CHWModule.renderRegistryTable();
+      CHWModule.updateStatsBar();
     }
   },
 
   // Switch Sub-tabs in MHO View
   switchMHOSubTab(tabName) {
+    const targetTab = (tabName === 'dashboard') ? 'overview' : tabName;
+
+    // Update Clean Admin Top Taskbar pills
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+      const isActive = btn.dataset.tab === targetTab || (targetTab === 'overview' && btn.dataset.tab === 'overview');
+      btn.classList.toggle('active', isActive);
+    });
+
     document.querySelectorAll('.mho-sub-link').forEach(link => {
-      link.classList.toggle('active', link.dataset.tab === tabName);
+      const isActive = link.dataset.tab === targetTab;
+      link.classList.toggle('active', isActive);
+      if (isActive && typeof link.scrollIntoView === 'function') {
+        link.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     });
 
     document.querySelectorAll('.mho-tab-pane').forEach(pane => {
-      pane.style.display = pane.dataset.tab === tabName ? 'block' : 'none';
+      pane.style.display = (pane.dataset.tab === targetTab) ? 'block' : 'none';
     });
 
-    if (tabName === 'content' && window.MHODashboard) {
-      MHODashboard.renderContentManagerModules();
-    } else if (tabName === 'users' && window.MHODashboard) {
+    if (targetTab === 'records' && window.MHODashboard) {
+      if (typeof MHODashboard.updateBarangayBanner === 'function') {
+        MHODashboard.updateBarangayBanner();
+      }
+      MHODashboard.renderAdminRecords();
+    } else if (targetTab === 'barangays' && window.MHODashboard) {
+      MHODashboard.renderBarangaysManager();
+    } else if (targetTab === 'content' && window.MHODashboard) {
+      if (typeof MHODashboard.switchContentSubTab === 'function') {
+        MHODashboard.switchContentSubTab(MHODashboard.activeContentSubTab || 'modules');
+      } else {
+        MHODashboard.renderContentManagerModules();
+      }
+    } else if (targetTab === 'users' && window.MHODashboard) {
       MHODashboard.renderUsersTable();
-    } else if (tabName === 'audit' && window.MHODashboard) {
+    } else if (targetTab === 'audit' && window.MHODashboard) {
       MHODashboard.renderAuditLogsTable();
+    } else if (targetTab === 'overview' && window.MHODashboard) {
+      if (typeof MHODashboard.updateOverviewHeader === 'function') {
+        MHODashboard.updateOverviewHeader();
+      }
+      MHODashboard.renderKPIs();
     }
   },
 
-  // Update Header User Profile Badge
+  // Navigate back to the Main Dashboard of the current role
+  navigateToMainDashboard() {
+    // If startup auth screen is active, go back to main role selection screen
+    const startupScreen = document.getElementById('startup-auth-screen');
+    if (startupScreen && startupScreen.style.display !== 'none') {
+      this.goToRoleSelectSignIn();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    // Role-specific main dashboard navigation
+    const role = this.currentRole || 'parent';
+    if (role === 'parent') {
+      ParentModule.switchTab('learning');
+    } else if (role === 'chw') {
+      this.switchCHWSubTab('dashboard');
+    } else if (role === 'collector') {
+      this.switchCHWSubTab('registry');
+    } else if (role === 'mho') {
+      this.switchMHOSubTab('overview');
+    }
+
+    // Close any opened modals
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+      modal.classList.remove('active');
+    });
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+
+  // Update Header User Profile Badge across both Standard Header and Clean Admin Taskbar
   updateUserHeaderBadge() {
     const user = NutriStorage.getCurrentUser();
+    
+    // 1. Clean Admin Top Taskbar elements
+    const adminName = document.getElementById('admin-user-display-name');
+    const adminOffice = document.getElementById('admin-user-display-office');
+    const adminAvatar = document.getElementById('admin-user-display-avatar');
+
+    // 2. Standard Header elements
     const avatar = document.getElementById('header-user-avatar');
     const nameElem = document.getElementById('header-user-name');
     const roleElem = document.getElementById('header-user-role');
 
+    const roleNames = {
+      parent: 'Parent',
+      chw: 'Health Worker',
+      collector: 'Data Collector',
+      mho: 'Administrator'
+    };
+
     if (user) {
-      if (avatar) avatar.textContent = (user.name || 'U').charAt(0).toUpperCase();
-      if (nameElem) nameElem.textContent = user.name || 'User';
-      if (roleElem) {
-        const roleNames = {
-          parent: 'Parent',
-          chw: 'Health Worker',
-          collector: 'Data Collector',
-          mho: 'Administrator'
-        };
-        roleElem.textContent = roleNames[user.role] || user.role;
-      }
+      const displayName = user.name || 'Mark Anthony';
+      const userInitials = user.initials || NutriStorage.calculateInitials(displayName);
+      const userDept = user.department || 'Barangay Manguiring Health Office, Calabanga';
+      const roleText = roleNames[user.role] || user.role;
+
+      // Update Clean Admin Top Taskbar
+      if (adminName) adminName.textContent = displayName;
+      if (adminOffice) adminOffice.textContent = userDept;
+      if (adminAvatar) adminAvatar.textContent = userInitials;
+
+      // Update Clean Parent Top Taskbar
+      const parentName = document.getElementById('parent-top-user-name');
+      const parentLoc = document.getElementById('parent-top-user-loc');
+      const parentAvatar = document.getElementById('parent-top-user-avatar');
+      if (parentName) parentName.textContent = displayName;
+      if (parentLoc) parentLoc.textContent = user.barangay ? `${user.barangay}, Calabanga` : 'Zone 1, Barangay Manguiring, Calabanga';
+      if (parentAvatar) parentAvatar.textContent = userInitials;
+
+      // Update Clean BHW Top Taskbar
+      const bhwName = document.getElementById('bhw-top-user-name');
+      const bhwLoc = document.getElementById('bhw-top-user-loc');
+      const bhwAvatar = document.getElementById('bhw-top-user-avatar');
+      if (bhwName) bhwName.textContent = displayName || 'Nurse Ana Reyes';
+      if (bhwLoc) bhwLoc.textContent = user.department || (user.barangay ? `${user.barangay}, Calabanga` : 'Manguiring Health Center, Zone 2, Calabanga');
+      if (bhwAvatar) bhwAvatar.textContent = userInitials || 'AR';
+
+      // Update Standard Header
+      if (avatar) avatar.textContent = userInitials;
+      if (nameElem) nameElem.textContent = displayName;
+      if (roleElem) roleElem.textContent = roleText;
     } else {
-      if (avatar) avatar.textContent = 'G';
-      if (nameElem) nameElem.textContent = 'Guest';
-      if (roleElem) roleElem.textContent = 'Not signed in';
+      // Default state when viewing Admin, BHW or unauthenticated
+      if (adminName) adminName.textContent = 'Mark Anthony';
+      if (adminOffice) adminOffice.textContent = 'Barangay Manguiring Health Office, Calabanga';
+      if (adminAvatar) adminAvatar.textContent = 'MA';
+
+      const bhwName = document.getElementById('bhw-top-user-name');
+      const bhwLoc = document.getElementById('bhw-top-user-loc');
+      const bhwAvatar = document.getElementById('bhw-top-user-avatar');
+      if (bhwName) bhwName.textContent = 'Nurse Ana Reyes';
+      if (bhwLoc) bhwLoc.textContent = 'Manguiring Health Center, Zone 2, Calabanga';
+      if (bhwAvatar) bhwAvatar.textContent = 'AR';
+
+      if (avatar) avatar.textContent = 'MA';
+      if (nameElem) nameElem.textContent = 'Sign In';
+      if (roleElem) roleElem.textContent = 'Select Role';
     }
   },
 
   // Account Settings / Profile Self-Management (Req #1)
   openAccountSettingsModal() {
-    const user = NutriStorage.getCurrentUser();
+    let user = NutriStorage.getCurrentUser();
     if (!user) {
-      this.showToast('Please sign in to manage account settings.', 'warning');
-      return;
+      user = {
+        id: 'usr-admin-mho',
+        name: 'Mark Anthony',
+        email: 'markanthony@calabanga.gov.ph',
+        password: '',
+        role: this.currentRole || 'mho',
+        department: 'Barangay Manguiring Health Office, Calabanga',
+        designation: 'Administrator',
+        initials: 'MA',
+        barangay: 'Barangay Manguiring, Calabanga',
+        status: 'Active'
+      };
+      NutriStorage.setCurrentUser(user);
     }
     const nameInput = document.getElementById('acc-settings-name');
     const emailInput = document.getElementById('acc-settings-email');
@@ -642,19 +1034,27 @@ const NutriApp = {
     if (emailInput) emailInput.value = user.email || '';
     if (passInput) passInput.value = user.password || '';
     if (roleBadge) roleBadge.textContent = (user.role || 'User').toUpperCase();
-    if (barangayInput) barangayInput.value = user.barangay || 'Barangay San Jose';
+    if (barangayInput) barangayInput.value = user.barangay || 'Barangay Manguiring, Calabanga';
 
     this.openModal('modal-account-settings');
   },
 
   handleSaveAccountSettings(form) {
-    const user = NutriStorage.getCurrentUser();
-    if (!user) return;
+    let user = NutriStorage.getCurrentUser();
+    if (!user) {
+      user = {
+        id: 'usr-admin-mho',
+        role: this.currentRole || 'mho',
+        department: 'Barangay Manguiring Health Office, Calabanga',
+        designation: 'Administrator',
+        status: 'Active'
+      };
+    }
 
     const name = form.elements['accName'].value.trim();
     const email = form.elements['accEmail'].value.trim();
     const pass = form.elements['accPass'].value;
-    const barangay = form.elements['accBarangay'] ? form.elements['accBarangay'].value : user.barangay;
+    const barangay = form.elements['accBarangay'] ? form.elements['accBarangay'].value : (user.barangay || 'Barangay Manguiring, Calabanga');
 
     // Validation (Req #14)
     if (!name || !email || !pass) {
@@ -666,11 +1066,12 @@ const NutriApp = {
     user.email = email;
     user.password = pass;
     user.barangay = barangay;
+    user.initials = NutriStorage.calculateInitials(name);
 
-    NutriStorage.updateUser(user);
+    const saved = NutriStorage.updateUser(user);
     this.updateUserHeaderBadge();
     this.closeModal('modal-account-settings');
-    this.showToast('✅ Account profile updated successfully!', 'success');
+    this.showToast(`✅ Profile updated! Logged in as ${saved ? saved.name : name}`, 'success');
   },
 
   // Authentication: Open Modal (Phase 1: role-choice, or Phase 2: form)
@@ -773,10 +1174,10 @@ const NutriApp = {
     if (this.currentAuthRole === 'parent') {
       userData.childName = form.elements['regChildName']?.value.trim() || '';
       userData.childAge = parseInt(form.elements['regChildAge']?.value || '12', 10);
-      userData.barangay = form.elements['regBarangay']?.value || 'Barangay San Jose';
+      userData.barangay = form.elements['regBarangay']?.value || 'Barangay Manguiring';
     } else if (this.currentAuthRole === 'chw') {
       userData.bhwId = form.elements['regBhwId']?.value.trim() || 'BHW-' + Math.floor(1000 + Math.random() * 9000);
-      userData.barangay = form.elements['regBhwBarangay']?.value || 'Barangay San Jose';
+      userData.barangay = form.elements['regBhwBarangay']?.value || 'Barangay Manguiring';
     } else if (this.currentAuthRole === 'mho') {
       userData.department = form.elements['regMhoDept']?.value.trim() || 'Municipal Health Office';
       userData.designation = form.elements['regMhoDesignation']?.value.trim() || 'Health Officer';
@@ -789,34 +1190,7 @@ const NutriApp = {
     this.showToast(`🎉 Registration successful! Welcome to NutriLearn, ${newUser.name}.`, 'success');
   },
 
-  // Update Header User Profile details
-  updateUserHeaderBadge() {
-    const user = NutriStorage.getCurrentUser();
-    const nameElem = document.getElementById('header-user-name');
-    const roleElem = document.getElementById('header-user-role');
-    const avatarElem = document.getElementById('header-user-avatar');
 
-    if (!user) {
-      if (nameElem) nameElem.textContent = 'Sign In';
-      if (roleElem) roleElem.textContent = 'Select Role';
-      if (avatarElem) avatarElem.textContent = '?';
-      return;
-    }
-
-    const initials = user.name
-      ? user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()
-      : 'U';
-
-    const roleLabels = {
-      parent: 'Parent',
-      chw: 'BHW / BNS',
-      mho: 'Administrator'
-    };
-
-    if (nameElem) nameElem.textContent = user.name;
-    if (roleElem) roleElem.textContent = roleLabels[user.role] || user.role;
-    if (avatarElem) avatarElem.textContent = initials;
-  },
 
   // Switch Sub-tabs in Parent View
   switchParentSubTab(tabName) {

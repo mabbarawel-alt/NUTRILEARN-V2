@@ -20,20 +20,31 @@ for /f "tokens=5" %%a in ('netstat -aon ^| findstr ":%PORT% "') do (
 )
 
 :: Check if python is available to run local HTTP server for full PWA and .env capabilities
-where python >nul 2>&1
-if %ERRORLEVEL% equ 0 (
-    python -c "import uvicorn" >nul 2>&1
+set "PYTHON_CMD="
+if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
+    set "PYTHON_CMD=%LOCALAPPDATA%\Python\bin\python.exe"
+) else (
+    where python >nul 2>&1
+    if %ERRORLEVEL% equ 0 (
+        python -c "import sys" >nul 2>&1
+        if %ERRORLEVEL% equ 0 set "PYTHON_CMD=python"
+    )
+)
+
+if defined PYTHON_CMD (
+    "%PYTHON_CMD%" -c "import uvicorn" >nul 2>&1
     if %ERRORLEVEL% equ 0 (
         echo [OK] FastAPI Backend runtime ready. Launching full backend on port %PORT%...
-        start /B python -m uvicorn main:app --port %PORT% >nul 2>&1
+        start /B "" "%PYTHON_CMD%" -m uvicorn main:app --port %PORT% >nul 2>&1
+        set TARGET_URL=http://localhost:%PORT%/index.html
     ) else (
-        echo [OK] Python runtime detected. Starting local server on port %PORT%...
-        start /B python -m http.server %PORT% >nul 2>&1
+        echo [OK] Python runtime detected. Starting local server on port 8089...
+        start /B "" "%PYTHON_CMD%" server.py >nul 2>&1
+        set TARGET_URL=http://localhost:8089/
     )
     timeout /t 1 /nobreak >nul
-    set TARGET_URL=http://localhost:%PORT%/index.html
 ) else (
-    echo [INFO] Python not in PATH. Launching web app directly...
+    echo [INFO] Python runtime not detected. Launching web app directly...
     set TARGET_URL=index.html
 )
 
