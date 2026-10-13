@@ -867,14 +867,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  padding: 2.5rem 1.25rem 5rem 1.25rem;
+  padding: clamp(0.75rem, 2vh, 1.5rem) 1rem;
 }
 
 .startup-container {
-  max-width: 460px;
+  max-width: 410px;
   width: 100%;
-  margin: 0 auto;
-  padding-bottom: 2.5rem;
+  margin: auto;
+  padding-bottom: 0.5rem;
 }
 
 .startup-brand-header {
@@ -883,12 +883,12 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .startup-leaf-logo {
-  width: 74px;
-  height: 74px;
+  width: 52px;
+  height: 52px;
   object-fit: contain;
   display: block;
   margin: 0 auto;
@@ -896,28 +896,28 @@
   padding: 0;
   border: none;
   box-shadow: none;
-  filter: drop-shadow(0 4px 14px rgba(14, 61, 38, 0.12));
+  filter: drop-shadow(0 3px 10px rgba(14, 61, 38, 0.12));
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
   cursor: pointer;
 }
 
 .startup-leaf-logo:hover {
   transform: scale(1.06);
-  filter: drop-shadow(0 8px 20px rgba(14, 61, 38, 0.22));
+  filter: drop-shadow(0 6px 16px rgba(14, 61, 38, 0.2));
 }
 
 .startup-brand-title {
-  margin-top: 0.5rem;
-  margin-bottom: 0.25rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.15rem;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .startup-brand-name-img {
-  height: 30px;
+  height: 22px;
   width: auto;
-  max-width: 175px;
+  max-width: 140px;
   object-fit: contain;
   display: block;
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -938,21 +938,21 @@
 .portal-action-toggle {
   display: flex;
   background: #EFEBE4;
-  padding: 4px;
-  border-radius: 12px;
-  margin-bottom: 1.15rem;
+  padding: 3px;
+  border-radius: 10px;
+  margin-bottom: 0.85rem;
   border: 1px solid #DDD7CD;
 }
 
 .portal-action-tab {
   flex: 1;
-  padding: 0.6rem 1rem;
+  padding: 0.45rem 0.8rem;
   border: none;
   background: transparent;
-  font-size: 0.92rem;
+  font-size: 0.84rem;
   font-weight: 600;
   color: #64748B;
-  border-radius: 9px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   font-family: var(--font-heading);
@@ -969,19 +969,19 @@
 .portal-choices-list {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  margin-bottom: 1.25rem;
+  gap: 0.55rem;
+  margin-bottom: 0.85rem;
 }
 
 /* Choice card */
 .portal-choice-card {
   background: #FFFFFF;
   border: 1.5px solid #DDD7CD;
-  border-radius: 14px;
-  padding: 1.1rem 1.25rem;
+  border-radius: 12px;
+  padding: 0.65rem 0.95rem;
   display: flex;
   align-items: center;
-  gap: 1.1rem;
+  gap: 0.85rem;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
@@ -989,24 +989,34 @@
 }
 
 .portal-choice-card:hover {
-  border-color: #A8BBA3;
+  border-color: #0E3D26;
+  background: #F8FAF9;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 3px 10px rgba(14, 61, 38, 0.08);
 }
 
 .portal-choice-card.selected {
-  border-color: #8FA89B;
-  background: #FFFFFF;
-  box-shadow: 0 2px 8px rgba(143, 168, 155, 0.18);
+  border: 2px solid #0E3D26;
+  background: #F0FDF4;
+  box-shadow: 0 3px 12px rgba(14, 61, 38, 0.15);
+}
+
+.portal-choice-card.selected .portal-card-title {
+  color: #0E3D26;
 }
 
 .portal-card-icon {
-  width: 34px;
-  height: 34px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-size: 1.25rem;
+}
+
+.portal-card-icon span {
+  font-size: 1.25rem !important;
 }
 
 .portal-card-text {
@@ -1015,24 +1025,24 @@
 
 .portal-card-title {
   font-family: var(--font-heading);
-  font-size: 1.02rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: #1E293B;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.15rem;
   line-height: 1.2;
 }
 
 .portal-card-desc {
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   color: #64748B;
-  line-height: 1.35;
+  line-height: 1.3;
   margin: 0;
 }
 
 /* Radio circle */
 .portal-radio {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
   border: 2px solid #CBD5E1;
   display: flex;
@@ -1044,14 +1054,15 @@
 }
 
 .portal-choice-card.selected .portal-radio {
-  border-color: #8FA89B;
+  border-color: #0E3D26;
+  border-width: 2px;
 }
 
 .portal-radio-dot {
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #8FA89B;
+  background: #0E3D26;
   display: none;
 }
 
@@ -1061,38 +1072,42 @@
 
 /* Continue button */
 .btn-portal-continue {
-  background: #9DB5A4;
+  background: #0E3D26;
   color: #FFFFFF;
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 700;
   font-family: var(--font-heading);
-  padding: 0.85rem 1.5rem;
-  border-radius: 12px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
   border: none;
   width: 100%;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-shadow: 0 2px 8px rgba(157, 181, 164, 0.35);
+  box-shadow: 0 3px 10px rgba(14, 61, 38, 0.28);
   display: block;
   text-align: center;
+  margin-top: 0.5rem;
+  letter-spacing: 0.01em;
 }
 
 .btn-portal-continue:hover {
-  background: #8FA89B;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(157, 181, 164, 0.45);
+  background: #072517;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(14, 61, 38, 0.4);
 }
 
 .btn-portal-continue:active {
+  background: #04160E;
   transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(14, 61, 38, 0.3);
 }
 
 /* Footer register link */
 .portal-footer-register {
   text-align: center;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
   color: #64748B;
-  margin-top: 1.25rem;
+  margin-top: 0.65rem;
 }
 
 .portal-footer-register a {
@@ -1107,13 +1122,20 @@
   text-decoration: underline;
 }
 
+.auth-footer-prompt {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #64748B;
+  margin-top: 0.65rem;
+}
+
 /* Part 2 Card container */
 .startup-form-card {
   background: #FFFFFF;
   border: 1.5px solid #DDD7CD;
-  border-radius: 14px;
-  padding: 1.75rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  padding: 1.15rem 1.35rem;
+  box-shadow: 0 3px 16px rgba(0, 0, 0, 0.04);
 }
 
 /* ==========================================================================
@@ -1122,40 +1144,40 @@
 
 .auth-display-title {
   font-family: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  font-size: 1.95rem;
+  font-size: 1.45rem;
   font-weight: 700;
   color: #111827;
-  margin: 0 0 0.35rem 0;
+  margin: 0 0 0.2rem 0;
   line-height: 1.2;
   letter-spacing: -0.01em;
 }
 
 .auth-display-subtitle {
-  font-size: 0.92rem;
+  font-size: 0.82rem;
   color: #64748B;
-  margin: 0 0 1.35rem 0;
-  line-height: 1.4;
+  margin: 0 0 0.85rem 0;
+  line-height: 1.35;
 }
 
 .auth-role-select-title {
-  font-size: 0.9rem;
+  font-size: 0.82rem;
   font-weight: 500;
   color: #64748B;
-  margin-bottom: 1.15rem;
+  margin-bottom: 0.75rem;
 }
 
 .auth-back-btn {
   background: transparent;
   border: none;
   color: #475569;
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 600;
   cursor: pointer;
   padding: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.65rem;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   transition: color 0.15s ease;
 }
 
@@ -1166,40 +1188,41 @@
 /* Signing in as badge (Screenshot 4) */
 .signing-in-as-card {
   background: #EFECE4;
-  border-radius: 12px;
-  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  margin-bottom: 1.35rem;
+  gap: 0.65rem;
+  margin-bottom: 0.85rem;
 }
 
 .signing-in-as-icon {
-  font-size: 1.6rem;
+  font-size: 1.35rem;
   line-height: 1;
 }
 
 .signing-in-as-title {
-  font-size: 0.96rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: #1E293B;
   line-height: 1.2;
 }
 
 .signing-in-as-sub {
-  font-size: 0.78rem;
+  font-size: 0.74rem;
   color: #64748B;
   font-weight: 500;
 }
 
 /* Button variants matching screenshots */
 .btn-auth-continue {
-  background: #8FA89B;
+  background: #0E3D26;
   color: #FFFFFF;
-  font-size: 0.96rem;
-  font-weight: 600;
-  padding: 0.85rem 1.25rem;
-  border-radius: 12px;
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
   border: none;
   width: 100%;
   cursor: pointer;
@@ -1207,32 +1230,50 @@
   display: block;
   text-align: center;
   margin-top: 0.5rem;
+  box-shadow: 0 3px 10px rgba(14, 61, 38, 0.28);
+  letter-spacing: 0.01em;
 }
 
 .btn-auth-continue:hover {
-  background: #7B9587;
-  transform: translateY(-1px);
+  background: #072517;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(14, 61, 38, 0.4);
+}
+
+.btn-auth-continue:active {
+  background: #04160E;
+  transform: translateY(0);
+  box-shadow: 0 2px 5px rgba(14, 61, 38, 0.3);
 }
 
 .btn-auth-submit {
-  background: #2D6A4F;
+  background: #0E3D26;
   color: #FFFFFF;
-  font-size: 0.96rem;
+  font-size: 0.92rem;
   font-weight: 700;
-  padding: 0.85rem 1.25rem;
-  border-radius: 12px;
+  padding: 0.65rem 1.2rem;
+  border-radius: 10px;
   border: none;
   width: 100%;
   cursor: pointer;
   transition: all 0.2s ease;
   display: block;
   text-align: center;
-  margin-top: 0.75rem;
+  margin-top: 0.6rem;
+  box-shadow: 0 3px 10px rgba(14, 61, 38, 0.28);
+  letter-spacing: 0.01em;
 }
 
 .btn-auth-submit:hover {
-  background: #1B4332;
-  transform: translateY(-1px);
+  background: #072517;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 14px rgba(14, 61, 38, 0.4);
+}
+
+.btn-auth-submit:active {
+  background: #04160E;
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(14, 61, 38, 0.3);
 }
 
 .auth-footer-prompt {
@@ -1252,6 +1293,41 @@
 .auth-footer-prompt a:hover {
   color: #0F514D;
   text-decoration: underline;
+}
+
+/* ==========================================================================
+   FORGOT PASSWORD FLOW
+   ========================================================================== */
+
+.forgot-steps-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.35rem;
+}
+
+.forgot-step-pill {
+  flex: 1;
+  padding: 0.55rem 0.6rem;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+  background: #E2E8F0;
+  color: #64748B;
+  transition: all 0.25s ease;
+  border: 1px solid transparent;
+}
+
+.forgot-step-pill.active {
+  background: #2D6A4F !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 2px 6px rgba(45, 106, 79, 0.25);
+}
+
+.forgot-step-pill.completed {
+  background: #DCFCE7 !important;
+  color: #166534 !important;
+  border-color: #86EFAC !important;
 }
 
 .btn-signout {
@@ -1763,24 +1839,24 @@
 @media (max-width: 768px) {
   /* 1. STARTUP GATEWAY & AUTHENTICATION SCREENS (Screens 1, 2, 3, 4) */
   .startup-gate-screen {
-    padding: 1.15rem 0.85rem 3rem 0.85rem;
+    padding: 1rem 0.85rem 2rem 0.85rem;
   }
 
   .startup-container {
     max-width: 100%;
     width: 100%;
-    padding-bottom: 1.5rem;
+    padding-bottom: 1rem;
   }
 
   .startup-brand-header {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .startup-leaf-logo {
-    width: 68px;
-    height: 68px;
-    padding: 4px;
-    border-radius: 16px;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 12px;
   }
 
   .startup-brand-title {

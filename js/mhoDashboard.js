@@ -19,6 +19,7 @@ const MHODashboard = {
     this.initDietaryCompliance();
     this.initUserManager();
     this.initAuditManager();
+    this.renderBarangaysManager();
   },
 
   // Set the Active Barangay for Administrator phase
@@ -397,197 +398,111 @@ const MHODashboard = {
     }
   },
 
-  // 4 Default Evidence-Based Food Nutrition Modules
+  // Active filter for Content Management
+  currentContentFilter: 'all',
+
+  // 5 Seed Evidence-Based Nutrition Modules (Exact match to Administrator Content Management design)
   getDefaultNutritionModules() {
     return [
       {
-        id: 'mod-1',
+        id: 'mod-malnutrition',
         number: 'Module 1',
         title: 'Understanding Child Malnutrition',
-        summary: 'Learn the signs, causes, and effects of stunting and wasting in children under 5.',
-        image: 'assets/images/module-malnutrition.jpg',
-        duration: '45 min',
-        recommendedFoods: 'Malunggay leaves, Kalabasa puree, Mashed banana, Breastmilk on demand, Boiled clean water',
-        feedingGuide: 'Pakainin ng maliliit ngunit madalas na beses. Ihalo ang sariwang dahon ng malunggay sa bawat lugaw o sabaw. Magpasuso nang eksklusibo hanggang 6 buwan.',
+        version: 'v2.1',
         lessonsCount: 5,
+        lastUpdated: 'Aug 15, 2026',
+        status: 'published',
+        duration: '15 mins',
+        summary: 'Comprehensive guide to stunting, wasting, underweight, and micronutrient deficiencies according to WHO 2026 child growth benchmarks.',
+        recommendedFoods: 'Malunggay, Nilagang Itlog, Monggo, Kalabasa, Dilaw na Camote',
+        feedingGuide: 'Pakainin nang madalas gamit ang siksik-sustansyang pagkain. Isama ang berde at dilaw na gulay sa bawat pinggan.',
         lessons: [
-          {
-            title: 'What is Malnutrition?',
-            icon: '📖',
-            completed: true,
-            content: 'Malnutrition occurs when a child does not get the right amount of nutrients their body needs to grow and develop. It includes both undernutrition and overnutrition. In the Philippines, undernutrition — especially stunting and wasting — remains a major concern for children under 5.'
-          },
-          {
-            title: 'Stunting: Low Height for Age',
-            icon: '✏️',
-            completed: true,
-            content: 'Stunting happens when chronic undernutrition prevents a child from growing to their expected height. It is not just about being short — stunting affects brain development, school readiness, and long-term health.'
-          },
-          {
-            title: 'Wasting: Low Weight for Height',
-            icon: '⚖️',
-            completed: true,
-            content: 'Wasting occurs when a child suffers from acute, rapid weight loss or failure to gain weight. A wasted child is dangerously thin and has a weakened immune system requiring immediate therapeutic supplementary feeding.'
-          },
-          {
-            title: 'Recognizing the Signs',
-            icon: '🔍',
-            completed: true,
-            content: 'Watch out for signs of growth faltering: constant fatigue, lack of energy to play, frequent infections, poor appetite, thin or brittle hair. Regular monthly monitoring catches these signs early.'
-          },
-          {
-            title: 'Prevention Starts Early',
-            icon: '🌱',
-            completed: true,
-            content: 'The First 1,000 Days is the critical window. Prevent stunting through maternal nutrition, exclusive breastfeeding for 6 months, and diverse nutrient-rich complementary foods (Malunggay, Monggo, Camote, Eggs).'
-          }
+          { title: 'Stunting vs Wasting: Understanding Growth Failure', icon: '📏', content: 'Stunting reflects chronic malnutrition affecting height-for-age, while wasting reflects acute recent weight loss.', completed: false },
+          { title: 'The First 1,000 Days Window', icon: '⏳', content: 'Nutrition from conception to a child’s second birthday permanently shapes brain architecture and physical stature.', completed: false },
+          { title: 'Critical Micronutrient Deficiencies', icon: '🔬', content: 'Recognizing vitamin A, iron deficiency anemia, and zinc deficiency signs in community health checks.', completed: false },
+          { title: 'Growth Chart Interpretation', icon: '📈', content: 'How to plot and read WHO Z-score growth curves correctly to prevent faltering early.', completed: false },
+          { title: 'Catch-up Growth Intervention Protocols', icon: '🌱', content: 'Immediate actionable steps when a child begins crossing downward percentile thresholds.', completed: false }
         ]
       },
       {
-        id: 'mod-2',
+        id: 'mod-feeding',
         number: 'Module 2',
         title: 'Complementary Feeding for Infants',
-        summary: 'When and how to introduce solid foods alongside breastfeeding from 6 months.',
-        image: 'assets/images/module-complementary.jpg',
-        duration: '55 min',
-        recommendedFoods: 'Thick Lugaw, Chicken liver puree, Mashed camote, Hard-boiled egg yolk, Boiled clean water',
-        feedingGuide: 'Magsimula sa malapot na lugaw sa ika-6 na buwan. Magpakain ng 2-3 beses bawat araw (2-3 kutsara paakyat sa kalahating tasa). Huwag magbigay ng malabnaw na am o sabaw lamang.',
+        version: 'v1.8',
         lessonsCount: 6,
+        lastUpdated: 'Jul 30, 2026',
+        status: 'published',
+        duration: '20 mins',
+        summary: 'Step-by-step guidance on introducing solid foods at 6 months while continuing breastfeeding, focusing on consistency and meal frequency.',
+        recommendedFoods: 'Lugaw na may Manok at Malunggay, Minasang Papaya, Nilagang Dilaw ng Itlog, Mashed Avocado',
+        feedingGuide: 'Magsimula sa malambot at madulas na lugaw sa edad na 6 buwan. Dagdagan ang lapot at dalas habang lumalaki ang sanggol.',
         lessons: [
-          {
-            title: 'The 6-Month Feeding Milestone',
-            icon: '👶',
-            completed: true,
-            content: 'At 6 months, breast milk alone can no longer meet all of an infant\'s energy and micronutrient requirements, particularly iron and zinc. Introduce clean, soft complementary foods while continuing breastfeeding.'
-          },
-          {
-            title: 'First Foods & Gradual Introduction',
-            icon: '🥣',
-            completed: true,
-            content: 'Start with thick Lugaw enriched with mashed kalabasa, sweet potato (camote), or pureed chicken liver. Introduce one new food at a time every 3 to 4 days.'
-          },
-          {
-            title: 'Texture Progression by Age',
-            icon: '🥑',
-            completed: true,
-            content: 'Progress textures carefully: 6-8 months: Thick, smooth purée; 9-11 months: Finely chopped or soft finger foods; 12-23 months: Family foods cut into bite-sized pieces.'
-          },
-          {
-            title: 'Daily Feeding Frequency & Portions',
-            icon: '🍽️',
-            completed: false,
-            content: '6-8 months: 2 to 3 meals per day; 9-11 months: 3 to 4 meals plus 1 nutritious snack; 12-23 months: 3 to 4 meals plus 1-2 healthy snacks.'
-          },
-          {
-            title: 'Nutrient Boosters: Fortifying Porridge',
-            icon: '🌿',
-            completed: false,
-            content: 'Always boost plain rice lugaw by stirring in: 1) Finely chopped malunggay or camote leaves, 2) Mashed hard-boiled egg yolk, 3) Cooked monggo, and 4) Half a teaspoon of coconut oil.'
-          },
-          {
-            title: 'Safe Food Preparation & Storage',
-            icon: '🧼',
-            completed: false,
-            content: 'Wash caregiver and infant hands with soap before preparing or eating. Use clean utensils, serve immediately, and never keep leftovers at room temperature for over 2 hours.'
-          }
+          { title: 'When to Start: The 6-Month Mark', icon: '🍼', content: 'Why introducing foods before 6 months increases infection risk and delays proper gut maturation.', completed: false },
+          { title: 'Texture Progression from Puree to Solids', icon: '🥣', content: 'Moving safely from smooth purees to practical mashed family foods without choking hazards.', completed: false },
+          { title: 'Meal Frequency & Portions by Age Band', icon: '⏰', content: '2-3 meals daily at 6-8 months, transitioning to 3-4 meals plus nutritious snacks at 9-23 months.', completed: false },
+          { title: 'Energy Density: Fortifying Lugaw', icon: '⚡', content: 'Transforming plain water lugaw into nutrient-dense porridge with egg yolk, crushed seeds, and greens.', completed: false },
+          { title: 'Safe Water & Meal Preparation Hygiene', icon: '🧼', content: 'Handwashing and sanitary food storage techniques to prevent diarrheal disease.', completed: false },
+          { title: 'Responsive Cue Recognition', icon: '👶', content: 'Reading baby’s natural cues for hunger and fullness without coercive feeding.', completed: false }
         ]
       },
       {
-        id: 'mod-3',
+        id: 'mod-meals',
         number: 'Module 3',
         title: 'Affordable Nutrient-Dense Meals',
-        summary: 'Cook iron-rich, protein-packed meals using locally available, budget-friendly ingredients.',
-        image: 'assets/images/module-meals.jpg',
-        duration: '1 hr 10 min',
-        recommendedFoods: 'Ginisang Monggo, Pounded Dilis (anchovies), Whole Hard-boiled Eggs, Camote, Malunggay, Gata',
-        feedingGuide: 'Sundin ang Pinggang Pinoy: 1/2 pinggan Glow (gulay at prutas), 1/4 pinggan Grow (itlog/monggo/isda), 1/4 pinggan Go (kanin/kamote). Ang monggo at dilis ay abot-kayang pampatangkad.',
+        version: 'v2.0',
         lessonsCount: 8,
+        lastUpdated: 'Aug 10, 2026',
+        status: 'published',
+        duration: '25 mins',
+        summary: 'Cook balanced, budget-friendly Filipino meals using accessible barangay ingredients aligned with FNRI Pinggang Pinoy guidelines.',
+        recommendedFoods: 'Ginisang Monggo na may Malunggay, Tortang Talong na may Giniling, Sinabawang Isda, Kamote Cue na Walang Asukal',
+        feedingGuide: 'Sundin ang Pinggang Pinoy: kalahating plato ng gulay at prutas, sang-kapat na protina, at sang-kapat na kanin o pampalakas.',
         lessons: [
-          {
-            title: 'Pinggang Pinoy: The Filipino Nutrition Plate',
-            icon: '🍛',
-            completed: true,
-            content: 'Pinggang Pinoy is a visual guide by FNRI-DOST: 1/2 plate Glow foods, 1/4 plate Grow foods, and 1/4 plate Go foods. Every family meal should balance all three groups.'
-          },
-          {
-            title: 'Malunggay: The Backyard Miracle Superfood',
-            icon: '🌿',
-            completed: true,
-            content: 'Malunggay is one of the cheapest and most nutrient-dense greens. Add fresh leaves to soups, rice, scrambled eggs, and fish stews during the last 2 minutes of cooking.'
-          },
-          {
-            title: 'Monggo: High-Yield Plant Protein at ₱15-₱25',
-            icon: '🍲',
-            completed: false,
-            content: 'Ginisang Monggo paired with rice creates a complete protein profile containing all essential amino acids necessary for muscle and height growth.'
-          },
-          {
-            title: 'Camote & Local Root Crops for Sustained Energy',
-            icon: '🍠',
-            completed: false,
-            content: 'Sweet potatoes (camote) provide complex carbohydrates that prevent sudden blood sugar spikes, alongside beta-carotene (vitamin A).'
-          },
-          {
-            title: 'Eggs & Small Fish: Essential Brain Boosters',
-            icon: '🥚',
-            completed: false,
-            content: 'One egg a day provides high-quality protein and choline. Small fish like dilis eaten whole supply concentrated calcium for strong bones.'
-          },
-          {
-            title: 'Healthy Fats & Oils for Brain Development',
-            icon: '🫒',
-            completed: false,
-            content: '60% of a child\'s brain is fat. Adding vegetable oil, coconut milk (gata), or avocado to meals helps absorb fat-soluble vitamins (A, D, E, K).'
-          },
-          {
-            title: 'Reducing Salt, Sugar & Ultra-Processed Snacks',
-            icon: '🚫',
-            completed: false,
-            content: 'Avoid junk foods, sugary biscuits, and instant noodles. High sodium damages kidneys, while excess sugar ruins appetite for real family meals.'
-          },
-          {
-            title: 'Budget Meal Planning under ₱40 per Day',
-            icon: '💰',
-            completed: false,
-            content: 'Plan weekly meals around backyard vegetables, local market produce in season, and bulk dried staples (monggo, dilis, eggs).'
-          }
+          { title: 'Pinggang Pinoy Food Group Proportions', icon: '🍽️', content: 'Mastering Go, Grow, and Glow balance tailored for growing toddlers and nursing mothers.', completed: false },
+          { title: 'Malunggay: The Miracle Local Superfood', icon: '🌿', content: 'High calcium, iron, and vitamin A content in fresh backyard moringa leaves.', completed: false },
+          { title: 'Monggo & Legumes as Complete Proteins', icon: '🍲', content: 'Combining legumes with rice to deliver high-quality amino acids at minimal household expense.', completed: false },
+          { title: 'One Egg a Day: Proven Stunting Prevention', icon: '🥚', content: 'Clinical evidence on how 1 egg daily provides choline, DHA, and bioavailable protein for linear growth.', completed: false },
+          { title: 'Nutrient-Dense Local Root Crops', icon: '🍠', content: 'Yellow camote and gabi as vitamin-rich carbohydrate sources superior to refined white flour.', completed: false },
+          { title: 'Budget Smart Marketing & Ingredient Sourcing', icon: '🛒', content: 'How to stretch PHP 150-200 to feed a family of four nutrient-dense whole foods.', completed: false },
+          { title: 'Cooking Methods that Preserve Vitamins', icon: '🍳', content: 'Steaming and quick simmering techniques that prevent heat-sensitive micronutrient breakdown.', completed: false },
+          { title: 'Batch Meal Prep for Busy Caregivers', icon: '🍱', content: 'Time-saving storage and reheating strategies for community health workers and working parents.', completed: false }
         ]
       },
       {
-        id: 'mod-4',
+        id: 'mod-habits',
         number: 'Module 4',
-        title: 'Feeding Behaviors That Build Healthy Habits',
-        summary: 'Responsive feeding techniques that encourage children to eat well and develop confidence.',
-        image: 'assets/images/module-habits.jpg',
-        duration: '30 min',
-        recommendedFoods: 'Steamed carrot sticks, Soft banana slices, Scrambled egg strips, Avocado bites, Sliced papaya',
-        feedingGuide: 'Maging mapagpasensya at huwag pilitin ang bata. Magpakain nang walang cellphone o TV. Hikayatin ang bata na humawak ng sariling finger foods.',
+        title: 'Responsive Feeding Behaviors',
+        version: 'v1.2',
         lessonsCount: 4,
+        lastUpdated: 'Aug 20, 2026',
+        status: 'draft',
+        duration: '15 mins',
+        summary: 'Develop positive mealtime routines, handle picky eating with patience, and avoid screen distractions to nurture lifelong healthy relationships with food.',
+        recommendedFoods: 'Finger Foods: Steamed Carrot Sticks, Soft Banana Slices, Boiled Egg Wedges, Avocado Cubes',
+        feedingGuide: 'Huwag pilitin ang bata kung busog na. Kumain nang sabay-sabay bilang pamilya nang walang TV o cellphone sa hapag-kainan.',
         lessons: [
-          {
-            title: 'Responsive Feeding: Talking & Encouragement',
-            icon: '🗣️',
-            completed: false,
-            content: 'Feed slowly and patiently with encouragement, never force-feeding. Maintain eye contact, smile, and talk to your child about food colors and flavors.'
-          },
-          {
-            title: 'Handling Picky Eating with Patience',
-            icon: '🥦',
-            completed: false,
-            content: 'A child may need to see, touch, and smell a new vegetable 10 to 15 times before accepting it. Stay patient and serve tiny portions alongside favorite foods.'
-          },
-          {
-            title: 'Creating a Screen-Free Mealtime Routine',
-            icon: '📱',
-            completed: false,
-            content: 'Eating in front of smartphones or televisions disconnects children from natural fullness cues. Make mealtimes a family social occasion.'
-          },
-          {
-            title: 'Self-Feeding & Fine Motor Skill Development',
-            icon: '👶',
-            completed: false,
-            content: 'Offer safe finger foods (steamed carrots, soft banana slices). Messy eating builds hand-eye coordination, independence, and positive food associations.'
-          }
+          { title: 'Responsive Feeding: Talking & Encouragement', icon: '🗣️', content: 'Feed slowly and patiently with encouragement, never force-feeding. Maintain eye contact and smile.', completed: false },
+          { title: 'Handling Picky Eating with Patience', icon: '🥦', content: 'A child may need to see, touch, and smell a new vegetable 10 to 15 times before accepting it.', completed: false },
+          { title: 'Creating a Screen-Free Mealtime Routine', icon: '📱', content: 'Eating in front of screens disconnects children from internal fullness cues and slows chewing.', completed: false },
+          { title: 'Self-Feeding & Fine Motor Skill Development', icon: '👶', content: 'Offer safe finger foods to build hand-eye coordination and healthy eating confidence.', completed: false }
+        ]
+      },
+      {
+        id: 'mod-stunting-2026',
+        number: 'Module 5',
+        title: 'WHO Updated Stunting Guidelines 2026',
+        version: 'v1.0',
+        lessonsCount: 3,
+        lastUpdated: 'Aug 24, 2026',
+        status: 'review',
+        duration: '20 mins',
+        summary: 'Comprehensive overview of the latest 2026 World Health Organization standards on community-level child stunting surveillance and intervention.',
+        recommendedFoods: 'Lipid-based Nutrient Supplements (LNS), Micronutrient Powder (MNP), Iron-fortified complementary foods',
+        feedingGuide: 'I-monitor ang length-for-age buwan-buwan. Agad na i-refer sa Rural Health Unit ang mga batang may severe linear faltering.',
+        lessons: [
+          { title: '2026 Revised Anthropometric Screening Criteria', icon: '📋', content: 'Precision cutoff points for length-for-age Z-scores and community height-board calibration requirements.', completed: false },
+          { title: 'Small-Quantity Lipid-Based Supplements (SQ-LNS)', icon: '💊', content: 'Evidence-backed supplementation protocols for infants aged 6-23 months at high stunting risk.', completed: false },
+          { title: 'BHW Community Action & Rapid Referral Pathways', icon: '🏥', content: 'Standardized triage workflows connecting barangay health stations to Municipal Health Offices.', completed: false }
         ]
       }
     ];
@@ -595,263 +510,158 @@ const MHODashboard = {
 
   getNutritionModules() {
     try {
-      const data = localStorage.getItem('nutrilearn_parent_modules_data_v3');
+      const data = localStorage.getItem('nutrilearn_content_modules_v5');
       if (data) {
-        return JSON.parse(data);
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed) && parsed.length >= 5) {
+          return parsed;
+        }
       }
     } catch (e) {
-      console.warn('Error reading modules data:', e);
+      console.warn('Error reading content modules data:', e);
     }
-    if (window.ParentModule && ParentModule.nutritionModules && ParentModule.nutritionModules.length > 0) {
-      return ParentModule.nutritionModules;
-    }
-    return this.getDefaultNutritionModules();
+    const defaults = this.getDefaultNutritionModules();
+    this.saveNutritionModules(defaults);
+    return defaults;
   },
 
   saveNutritionModules(modules) {
+    localStorage.setItem('nutrilearn_content_modules_v5', JSON.stringify(modules));
     localStorage.setItem('nutrilearn_parent_modules_data_v3', JSON.stringify(modules));
     if (window.ParentModule) {
       ParentModule.nutritionModules = modules;
-      ParentModule.renderModuleCards();
+      if (typeof ParentModule.renderModuleCards === 'function') {
+        ParentModule.renderModuleCards();
+      }
     }
-    NutriStorage.saveModules(modules);
+    if (window.NutriStorage && typeof NutriStorage.saveModules === 'function') {
+      NutriStorage.saveModules(modules);
+    }
   },
 
-  // Render Module Management Cards (with Food Badges & Edit Capabilities)
+  filterContentModules(filter) {
+    this.currentContentFilter = filter;
+    document.querySelectorAll('.admin-content-pill-btn').forEach(btn => {
+      const f = btn.getAttribute('data-filter');
+      btn.classList.toggle('active', f === filter);
+    });
+    this.renderContentManagerModules();
+  },
+
+  // Render Module Management Cards matching the screenshot
   renderContentManagerModules() {
-    const container = document.getElementById('mho-content-modules-list');
+    const container = document.getElementById('admin-content-modules-list') || document.getElementById('mho-content-modules-list');
     if (!container) return;
 
-    const modules = this.getNutritionModules();
+    let modules = this.getNutritionModules();
+    const filter = (this.currentContentFilter || 'all').toLowerCase();
+
+    if (filter !== 'all') {
+      modules = modules.filter(m => (m.status || 'draft').toLowerCase() === filter);
+    }
+
+    if (modules.length === 0) {
+      container.innerHTML = `
+        <div style="background:#FFFFFF; border:1px dashed #D5CFC3; border-radius:12px; padding:2.5rem; text-align:center; color:#6B7280;">
+          <p style="font-size:1.05rem; font-weight:600; color:#374151; margin-bottom:0.4rem;">No modules found under "${this.currentContentFilter}" status.</p>
+          <p style="font-size:0.86rem; margin:0 0 1.25rem;">You can add a new module or switch to "All" to review existing content.</p>
+          <button type="button" class="btn-admin-new-module" onclick="MHODashboard.openAddModuleModal()">+ New Module</button>
+        </div>
+      `;
+      return;
+    }
 
     container.innerHTML = modules.map(m => {
-      const foods = (m.recommendedFoods || 'Malunggay, Monggo, Itlog, Camote')
-        .split(',')
-        .map(f => f.trim())
-        .filter(Boolean);
-
-      const foodBadges = foods.map(f => `<span class="admin-food-badge">🌱 ${f}</span>`).join('');
-      const lessonsCount = m.lessons ? m.lessons.length : (m.lessonsCount || 0);
+      const lessonsCount = m.lessons ? m.lessons.length : (m.lessonsCount || 4);
+      const status = (m.status || 'draft').toLowerCase();
+      const statusTitle = status.charAt(0).toUpperCase() + status.slice(1);
+      const showPublishBtn = (status === 'draft' || status === 'review');
 
       return `
-        <div class="admin-module-card">
-          <div class="admin-module-thumb-wrap">
-            <img src="${m.image || 'assets/images/module-malnutrition.jpg'}" alt="${m.title}" class="admin-module-thumb" onerror="this.src='assets/images/module-malnutrition.jpg'">
+        <div class="admin-module-card-item" id="module-card-${m.id}">
+          <div class="admin-module-left">
+            <div class="admin-module-title-row">
+              <h3 class="admin-module-title">${m.title}</h3>
+              <span class="admin-module-version">${m.version || 'v1.0'}</span>
+            </div>
+            <div class="admin-module-meta">
+              ${lessonsCount} lessons · Last updated: ${m.lastUpdated || 'Aug 24, 2026'}
+            </div>
           </div>
 
-          <div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
-              <span class="badge badge-normal" style="font-size: 0.75rem; font-weight: 700;">${m.number || 'Module'}</span>
-              <strong style="font-size: 1.12rem; color: #1E2320;">${m.title}</strong>
-              <span style="font-size: 0.8rem; color: #6B7280;">• ⏱️ ${m.duration || '30 min'} • 📖 ${lessonsCount} aralin</span>
-            </div>
-
-            <p style="font-size: 0.86rem; color: #4B5563; line-height: 1.45; margin: 0 0 0.5rem;">
-              ${m.summary}
-            </p>
-
-            <div style="margin-top: 0.4rem;">
-              <div style="font-size: 0.78rem; font-weight: 700; color: #166534; margin-bottom: 0.25rem;">
-                🥗 Ano ang Dapat na Pagkain (Recommended Foods):
-              </div>
-              <div class="admin-food-badge-list">
-                ${foodBadges}
-              </div>
-            </div>
-
-            ${m.feedingGuide ? `
-              <div style="font-size: 0.79rem; color: #4B5563; background: #F8FAF8; border-left: 3px solid #16A34A; padding: 4px 10px; margin-top: 0.5rem; border-radius: 0 6px 6px 0;">
-                <strong>Gabay sa Pagpapakain:</strong> ${m.feedingGuide}
-              </div>
+          <div class="admin-module-actions">
+            <span class="admin-module-status-badge">${statusTitle}</span>
+            <button type="button" class="btn-module-preview" onclick="MHODashboard.openPreviewModuleModal('${m.id}')" title="Preview module curriculum and syllabus">
+              Preview
+            </button>
+            <button type="button" class="btn-module-edit" onclick="MHODashboard.openEditModuleModal('${m.id}')" title="Edit module details">
+              Edit
+            </button>
+            ${showPublishBtn ? `
+              <button type="button" class="btn-module-publish" onclick="MHODashboard.publishModule('${m.id}')" title="Publish this module for all users">
+                Publish
+              </button>
             ` : ''}
-          </div>
-
-          <div style="display: flex; flex-direction: column; gap: 0.45rem; align-items: stretch; min-width: 150px;">
-            <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openEditModuleModal('${m.id}')"
-              style="font-weight: 700; font-size: 0.82rem; padding: 6px 12px;" title="Baguhin ang pagkain, larawan, at aralin">
-              ✏️ Baguhin ang Pagkain
-            </button>
-            <button type="button" class="btn btn-outline btn-sm" onclick="MHODashboard.previewModuleInParentView('${m.id}')"
-              style="font-size: 0.8rem; padding: 5px 10px;" title="Tingnan kung paano lalabas sa mga magulang">
-              👁️ Tingnan sa Parent View
-            </button>
-            <button type="button" class="btn btn-outline btn-sm" style="color: #DC2626; border-color: #FCA5A5; font-size: 0.78rem; padding: 4px 8px;"
-              onclick="MHODashboard.handleDeleteModule('${m.id}')" title="Burahin ang module">
-              🗑️ Burahin
-            </button>
           </div>
         </div>
       `;
     }).join('');
   },
 
-  previewModuleInParentView(moduleId) {
-    NutriApp.switchRole('parent');
-    setTimeout(() => {
-      if (window.ParentModule) {
-        ParentModule.openModuleDrawer(moduleId);
-      }
-    }, 150);
-  },
-
-  addFoodTag(foodName) {
-    const input = document.getElementById('edit-module-foods');
-    if (!input) return;
-    const current = input.value.trim();
-    if (!current) {
-      input.value = foodName;
-    } else if (!current.toLowerCase().includes(foodName.toLowerCase())) {
-      input.value = current + ', ' + foodName;
-    }
-    input.focus();
-  },
-
-  handleImageSelectChange(val) {
-    const input = document.getElementById('edit-module-image-input');
-    const preview = document.getElementById('edit-module-image-preview');
-    const fileNameEl = document.getElementById('edit-module-file-name');
-    if (fileNameEl) fileNameEl.textContent = '';
-    if (val !== 'custom') {
-      if (input) input.value = val;
-      if (preview) preview.src = val;
-    } else {
-      if (input) {
-        input.value = '';
-        input.focus();
-      }
-    }
-  },
-
-  updateImagePreview(url) {
-    const preview = document.getElementById('edit-module-image-preview');
-    if (preview && url) {
-      preview.src = url;
-    }
-  },
-
-  handleModuleImageUpload(input) {
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      if (file.size > 8 * 1024 * 1024) {
-        NutriApp.showToast('Masyadong malaki ang imahe. Pumili ng larawan na mas maliit sa 8MB.', 'warning');
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const dataUrl = e.target.result;
-        const preview = document.getElementById('edit-module-image-preview');
-        const inputEl = document.getElementById('edit-module-image-input');
-        const select = document.getElementById('edit-module-image-select');
-        const fileNameEl = document.getElementById('edit-module-file-name');
-
-        if (preview) preview.src = dataUrl;
-        if (inputEl) inputEl.value = dataUrl;
-        if (select) select.value = 'custom';
-        if (fileNameEl) {
-          fileNameEl.textContent = `✅ Napiling Larawan: ${file.name} (${Math.round(file.size / 1024)} KB)`;
-        }
-        NutriApp.showToast('✅ Matagumpay na na-upload at napalitan ang imahe ng module!', 'success');
-      };
-      reader.readAsDataURL(file);
-    }
-  },
-
-  resetModuleImage() {
-    const defaultImg = 'assets/images/module-malnutrition.jpg';
-    const preview = document.getElementById('edit-module-image-preview');
-    const inputEl = document.getElementById('edit-module-image-input');
-    const select = document.getElementById('edit-module-image-select');
-    const fileInput = document.getElementById('edit-module-file-input');
-    const fileNameEl = document.getElementById('edit-module-file-name');
-
-    if (preview) preview.src = defaultImg;
-    if (inputEl) inputEl.value = defaultImg;
-    if (select) select.value = defaultImg;
-    if (fileInput) fileInput.value = '';
-    if (fileNameEl) fileNameEl.textContent = '';
-    NutriApp.showToast('Naibalik ang larawan sa default.', 'info');
-  },
-
+  // Open Add Module Modal
   openAddModuleModal() {
-    const modules = this.getNutritionModules();
-    document.getElementById('modal-edit-module-title').textContent = '➕ Magdagdag ng Bagong Module at Gabay sa Pagkain';
-    document.getElementById('edit-module-id').value = '';
-    document.getElementById('edit-module-number').value = `Module ${modules.length + 1}`;
-    document.getElementById('edit-module-title-input').value = '';
-    document.getElementById('edit-module-duration').value = '30 min';
-    document.getElementById('edit-module-foods').value = 'Malunggay, Monggo, Nilagang Itlog, Dilaw na Camote, Malinis na Tubig';
-    document.getElementById('edit-module-feeding-guide').value = 'Pakainin 3 beses sa isang araw kasama ang 2 masustansyang meryenda. Ihalo ang sariwang gulay sa sabaw.';
-    document.getElementById('edit-module-image-select').value = 'assets/images/module-meals.jpg';
-    document.getElementById('edit-module-image-input').value = 'assets/images/module-meals.jpg';
-    document.getElementById('edit-module-image-preview').src = 'assets/images/module-meals.jpg';
+    const titleInput = document.getElementById('admin-add-mod-title');
+    const versionInput = document.getElementById('admin-add-mod-version');
+    const statusSelect = document.getElementById('admin-add-mod-status');
+    const durationInput = document.getElementById('admin-add-mod-duration');
+    const summaryInput = document.getElementById('admin-add-mod-summary');
+    const foodsInput = document.getElementById('admin-add-mod-foods');
+    const guideInput = document.getElementById('admin-add-mod-feeding-guide');
+    const lessonsInput = document.getElementById('admin-add-mod-lessons');
 
-    const fileInput = document.getElementById('edit-module-file-input');
-    const fileNameEl = document.getElementById('edit-module-file-name');
-    if (fileInput) fileInput.value = '';
-    if (fileNameEl) fileNameEl.textContent = '';
-
-    document.getElementById('edit-module-summary').value = '';
-    document.getElementById('edit-module-lessons-text').value = 'Kahalagahan ng Masusustansyang Pagkain | 🌿 | Ang pagkain ng sariwang gulay tulad ng malunggay ay nagbibigay ng bitamina at resistensya sa bata.\nSapat na Protina sa Araw-araw | 🥚 | Magbigay ng 1 itlog o monggo araw-araw para tumangkad at lumakas ang kalamnan.';
-
-    NutriApp.openModal('modal-edit-module');
-  },
-
-  openEditModuleModal(moduleId) {
-    const mod = this.getNutritionModules().find(m => m.id === moduleId);
-    if (!mod) return;
-
-    document.getElementById('modal-edit-module-title').textContent = `🥗 Baguhin ang ${mod.number}: ${mod.title}`;
-    document.getElementById('edit-module-id').value = mod.id;
-    document.getElementById('edit-module-number').value = mod.number || '';
-    document.getElementById('edit-module-title-input').value = mod.title || '';
-    document.getElementById('edit-module-duration').value = mod.duration || '30 min';
-    document.getElementById('edit-module-foods').value = mod.recommendedFoods || 'Malunggay, Monggo, Itlog, Camote';
-    document.getElementById('edit-module-feeding-guide').value = mod.feedingGuide || '';
-
-    const img = mod.image || 'assets/images/module-malnutrition.jpg';
-    const select = document.getElementById('edit-module-image-select');
-    const input = document.getElementById('edit-module-image-input');
-    const preview = document.getElementById('edit-module-image-preview');
-
-    if (input) input.value = img;
-    if (preview) preview.src = img;
-    if (select) {
-      const match = Array.from(select.options).some(o => o.value === img);
-      select.value = match ? img : 'custom';
+    if (titleInput) titleInput.value = '';
+    if (versionInput) versionInput.value = 'v1.0';
+    if (statusSelect) statusSelect.value = 'draft';
+    if (durationInput) durationInput.value = '15 mins';
+    if (summaryInput) summaryInput.value = '';
+    if (foodsInput) foodsInput.value = 'Malunggay, Nilagang Itlog, Monggo, Kalabasa';
+    if (guideInput) guideInput.value = 'Pakainin 3 beses sa isang araw kasama ang 2 masustansyang meryenda. Ihalo ang sariwang gulay sa sabaw.';
+    if (lessonsInput) {
+      lessonsInput.value = 'Foundational Concepts | 📖 | Introduction to evidence-based dietary recommendations.\nPractical Meal Preparation | 🍲 | Cooking nutritious, locally available affordable ingredients.\nGrowth Monitoring & Health Habits | 📏 | Regular measurement and positive feeding interaction.';
     }
 
-    const fileInput = document.getElementById('edit-module-file-input');
-    const fileNameEl = document.getElementById('edit-module-file-name');
-    if (fileInput) fileInput.value = '';
-    if (fileNameEl) fileNameEl.textContent = '';
-
-    document.getElementById('edit-module-summary').value = mod.summary || '';
-
-    // Lessons to formatted text: Title | Icon | Content
-    const lessons = mod.lessons || [];
-    const lessonsText = lessons.map(l => `${l.title} | ${l.icon || '📖'} | ${l.content}`).join('\n');
-    document.getElementById('edit-module-lessons-text').value = lessonsText;
-
-    NutriApp.openModal('modal-edit-module');
+    NutriApp.openModal('modal-admin-add-module');
   },
 
-  handleSaveModule(form) {
-    const id = document.getElementById('edit-module-id').value;
-    const number = document.getElementById('edit-module-number').value.trim();
-    const title = document.getElementById('edit-module-title-input').value.trim();
-    const duration = document.getElementById('edit-module-duration').value.trim();
-    const foods = document.getElementById('edit-module-foods').value.trim();
-    const feedingGuide = document.getElementById('edit-module-feeding-guide').value.trim();
-    const image = (document.getElementById('edit-module-image-input').value.trim()) || 'assets/images/module-malnutrition.jpg';
-    const summary = document.getElementById('edit-module-summary').value.trim();
-    const lessonsText = document.getElementById('edit-module-lessons-text').value.trim();
+  submitNewModuleWithStatus(forcedStatus) {
+    const statusSelect = document.getElementById('admin-add-mod-status');
+    if (statusSelect) statusSelect.value = forcedStatus;
+    const form = document.querySelector('#modal-admin-add-module form');
+    if (form) {
+      if (form.checkValidity()) {
+        this.handleSaveNewModule(form);
+      } else {
+        form.reportValidity();
+      }
+    }
+  },
 
-    if (!title || !number || !summary || !foods) {
-      NutriApp.showToast('Punan ang module number, title, inirerekomendang pagkain, at buod bago i-save.', 'warning');
+  handleSaveNewModule(form) {
+    const title = (document.getElementById('admin-add-mod-title')?.value || '').trim();
+    const version = (document.getElementById('admin-add-mod-version')?.value || 'v1.0').trim();
+    const status = (document.getElementById('admin-add-mod-status')?.value || 'draft').toLowerCase();
+    const duration = (document.getElementById('admin-add-mod-duration')?.value || '15 mins').trim();
+    const summary = (document.getElementById('admin-add-mod-summary')?.value || '').trim();
+    const foods = (document.getElementById('admin-add-mod-foods')?.value || '').trim();
+    const feedingGuide = (document.getElementById('admin-add-mod-feeding-guide')?.value || '').trim();
+    const lessonsText = (document.getElementById('admin-add-mod-lessons')?.value || '').trim();
+
+    if (!title || !summary) {
+      NutriApp.showToast('Punan ang module title at summary bago i-save.', 'warning');
       return;
     }
 
-    // Parse lessons from text
+    // Parse lessons
     const lessons = lessonsText.split('\n').filter(Boolean).map(line => {
       const parts = line.split('|');
       return {
@@ -862,73 +672,274 @@ const MHODashboard = {
       };
     });
 
-    const modules = this.getNutritionModules();
+    const now = new Date();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formattedDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
 
-    if (id) {
-      const idx = modules.findIndex(m => m.id === id);
-      if (idx !== -1) {
-        modules[idx] = {
-          ...modules[idx],
-          number,
-          title,
-          duration,
-          recommendedFoods: foods,
-          feedingGuide,
-          image,
-          summary,
-          lessons: lessons.length > 0 ? lessons : modules[idx].lessons,
-          lessonsCount: lessons.length > 0 ? lessons.length : (modules[idx].lessons ? modules[idx].lessons.length : 4)
-        };
-        this.saveNutritionModules(modules);
-        NutriStorage.logAudit('Module & Food Guidelines Updated', 'Content Manager', `Administrator updated "${number}: ${title}" with recommended foods: ${foods}`);
-        NutriApp.showToast(`✅ Matagumpay na na-update ang ${number}!`, 'success');
-      }
-    } else {
-      const newMod = {
-        id: 'mod-' + Date.now(),
-        number,
-        title,
-        duration,
-        recommendedFoods: foods,
-        feedingGuide,
-        image,
-        summary,
-        lessonsCount: lessons.length || 4,
-        lessons: lessons.length > 0 ? lessons : [
-          { title: 'Gabay sa Nutrisyon', icon: '📖', content: summary, completed: false }
-        ]
-      };
-      modules.push(newMod);
-      this.saveNutritionModules(modules);
-      NutriStorage.logAudit('New Module Created', 'Content Manager', `Administrator added new curriculum "${number}: ${title}"`);
-      NutriApp.showToast(`🎉 Bagong module "${title}" idinagdag sa curricula!`, 'success');
+    const modules = this.getNutritionModules();
+    const newModule = {
+      id: 'mod-' + Date.now(),
+      number: `Module ${modules.length + 1}`,
+      title,
+      version: version.startsWith('v') ? version : 'v' + version,
+      lessonsCount: lessons.length || 4,
+      lastUpdated: formattedDate,
+      status,
+      duration,
+      summary,
+      recommendedFoods: foods || 'Malunggay, Nilagang Itlog, Monggo',
+      feedingGuide,
+      lessons: lessons.length > 0 ? lessons : [
+        { title: 'Core Nutrition Concepts', icon: '📖', content: summary, completed: false }
+      ]
+    };
+
+    modules.push(newModule);
+    this.saveNutritionModules(modules);
+
+    if (window.NutriStorage && typeof NutriStorage.logAudit === 'function') {
+      NutriStorage.logAudit('New Module Created', 'Content Management', `Administrator created "${title}" (${version}) with status: ${status}`);
     }
 
-    NutriApp.closeModal('modal-edit-module');
+    NutriApp.closeModal('modal-admin-add-module');
     this.renderContentManagerModules();
+    NutriApp.showToast(`🎉 Module "${title}" has been saved as ${status.toUpperCase()}!`, 'success');
   },
 
-  handleDeleteModule(moduleId) {
+  openEditModuleModal(moduleId) {
+    const modules = this.getNutritionModules();
+    const mod = modules.find(m => m.id === moduleId);
+    if (!mod) {
+      NutriApp.showToast('Module not found.', 'error');
+      return;
+    }
+
+    document.getElementById('admin-edit-mod-id').value = mod.id;
+    document.getElementById('admin-edit-mod-header-title').textContent = `✏️ Edit: ${mod.title}`;
+    document.getElementById('admin-edit-mod-title').value = mod.title || '';
+    document.getElementById('admin-edit-mod-version').value = mod.version || 'v1.0';
+    document.getElementById('admin-edit-mod-status').value = (mod.status || 'draft').toLowerCase();
+    document.getElementById('admin-edit-mod-duration').value = mod.duration || '15 mins';
+    document.getElementById('admin-edit-mod-summary').value = mod.summary || '';
+    document.getElementById('admin-edit-mod-foods').value = mod.recommendedFoods || '';
+    document.getElementById('admin-edit-mod-feeding-guide').value = mod.feedingGuide || '';
+
+    const lessons = mod.lessons || [];
+    const lessonsText = lessons.map(l => `${l.title} | ${l.icon || '📖'} | ${l.content}`).join('\n');
+    document.getElementById('admin-edit-mod-lessons').value = lessonsText;
+
+    const publishShortcut = document.getElementById('btn-edit-mod-publish-shortcut');
+    if (publishShortcut) {
+      publishShortcut.style.display = (mod.status !== 'published') ? 'inline-block' : 'none';
+    }
+
+    NutriApp.openModal('modal-admin-edit-module');
+  },
+
+  handleSaveEditModule(form) {
+    const id = document.getElementById('admin-edit-mod-id')?.value;
+    const title = (document.getElementById('admin-edit-mod-title')?.value || '').trim();
+    const version = (document.getElementById('admin-edit-mod-version')?.value || 'v1.0').trim();
+    const status = (document.getElementById('admin-edit-mod-status')?.value || 'draft').toLowerCase();
+    const duration = (document.getElementById('admin-edit-mod-duration')?.value || '15 mins').trim();
+    const summary = (document.getElementById('admin-edit-mod-summary')?.value || '').trim();
+    const foods = (document.getElementById('admin-edit-mod-foods')?.value || '').trim();
+    const feedingGuide = (document.getElementById('admin-edit-mod-feeding-guide')?.value || '').trim();
+    const lessonsText = (document.getElementById('admin-edit-mod-lessons')?.value || '').trim();
+
+    if (!title || !summary) {
+      NutriApp.showToast('Punan ang module title at summary bago i-save.', 'warning');
+      return;
+    }
+
+    const lessons = lessonsText.split('\n').filter(Boolean).map(line => {
+      const parts = line.split('|');
+      return {
+        title: (parts[0] || 'Lesson Topic').trim(),
+        icon: (parts[1] || '📖').trim(),
+        content: (parts[2] || parts[0] || '').trim(),
+        completed: false
+      };
+    });
+
+    const now = new Date();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formattedDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+    const modules = this.getNutritionModules();
+    const idx = modules.findIndex(m => m.id === id);
+    if (idx !== -1) {
+      modules[idx] = {
+        ...modules[idx],
+        title,
+        version: version.startsWith('v') ? version : 'v' + version,
+        status,
+        duration,
+        summary,
+        recommendedFoods: foods,
+        feedingGuide,
+        lastUpdated: formattedDate,
+        lessons: lessons.length > 0 ? lessons : modules[idx].lessons,
+        lessonsCount: lessons.length > 0 ? lessons.length : modules[idx].lessonsCount
+      };
+
+      this.saveNutritionModules(modules);
+      if (window.NutriStorage && typeof NutriStorage.logAudit === 'function') {
+        NutriStorage.logAudit('Module Updated', 'Content Management', `Administrator updated "${title}" (${version}) - Status: ${status}`);
+      }
+
+      NutriApp.closeModal('modal-admin-edit-module');
+      this.renderContentManagerModules();
+      NutriApp.showToast(`✅ Module "${title}" has been updated successfully!`, 'success');
+    }
+  },
+
+  publishFromEditModal() {
+    const statusSelect = document.getElementById('admin-edit-mod-status');
+    if (statusSelect) statusSelect.value = 'published';
+    const form = document.querySelector('#modal-admin-edit-module form');
+    if (form) this.handleSaveEditModule(form);
+  },
+
+  // 1-Click Publish from card or preview modal
+  publishModule(moduleId) {
+    const modules = this.getNutritionModules();
+    const mod = modules.find(m => m.id === moduleId);
+    if (!mod) return;
+
+    const now = new Date();
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formattedDate = `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+
+    mod.status = 'published';
+    mod.lastUpdated = formattedDate;
+
+    this.saveNutritionModules(modules);
+    if (window.NutriStorage && typeof NutriStorage.logAudit === 'function') {
+      NutriStorage.logAudit('Module Published', 'Content Management', `Administrator published "${mod.title}" (${mod.version}) to all health workers and parents`);
+    }
+
+    this.renderContentManagerModules();
+    NutriApp.showToast(`🎉 "${mod.title}" is now published and live!`, 'success');
+  },
+
+  // Open Preview Module Modal
+  openPreviewModuleModal(moduleId) {
+    const modules = this.getNutritionModules();
+    const mod = modules.find(m => m.id === moduleId);
+    if (!mod) {
+      NutriApp.showToast('Module not found.', 'error');
+      return;
+    }
+
+    const titleEl = document.getElementById('admin-prev-mod-title');
+    const versionEl = document.getElementById('admin-prev-mod-version');
+    const statusTag = document.getElementById('admin-prev-mod-status-tag');
+    const metaEl = document.getElementById('admin-prev-mod-meta');
+    const summaryEl = document.getElementById('admin-prev-mod-summary');
+    const foodsEl = document.getElementById('admin-prev-mod-foods-section');
+    const lessonsCountEl = document.getElementById('admin-prev-mod-lessons-count');
+    const lessonsContainer = document.getElementById('admin-prev-mod-lessons-container');
+    const actionsEl = document.getElementById('admin-prev-mod-actions');
+
+    if (titleEl) titleEl.textContent = mod.title;
+    if (versionEl) versionEl.textContent = mod.version || 'v1.0';
+
+    const status = (mod.status || 'draft').toLowerCase();
+    if (statusTag) {
+      statusTag.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+      if (status === 'published') {
+        statusTag.style.background = '#DCFCE7';
+        statusTag.style.color = '#166534';
+      } else if (status === 'review') {
+        statusTag.style.background = '#DBEAFE';
+        statusTag.style.color = '#1E40AF';
+      } else {
+        statusTag.style.background = '#FEF3C7';
+        statusTag.style.color = '#92400E';
+      }
+    }
+
+    const lessons = mod.lessons || [];
+    const count = lessons.length || mod.lessonsCount || 4;
+    if (metaEl) metaEl.textContent = `${count} lessons · Last updated: ${mod.lastUpdated || 'Aug 24, 2026'}`;
+    if (summaryEl) summaryEl.textContent = mod.summary || 'Essential evidence-based nutritional guidelines for child stunting reduction.';
+    if (lessonsCountEl) lessonsCountEl.textContent = count;
+
+    if (foodsEl) {
+      const foodsList = (mod.recommendedFoods || 'Malunggay, Nilagang Itlog, Monggo')
+        .split(',')
+        .map(f => `<span style="display:inline-block; background:#EFE9DF; color:#2D3748; padding:3px 9px; border-radius:9999px; font-weight:600; font-size:0.78rem; margin:2px 4px 2px 0;">🌱 ${f.trim()}</span>`)
+        .join('');
+
+      foodsEl.innerHTML = `
+        <div style="margin-top:0.5rem;">
+          <strong style="color:#166534;">Recommended Foods:</strong><br>
+          <div style="margin-top:4px;">${foodsList}</div>
+        </div>
+        ${mod.feedingGuide ? `
+          <div style="margin-top:0.6rem; font-style:italic; color:#4B5563;">
+            🥣 <strong>Feeding Guidelines:</strong> ${mod.feedingGuide}
+          </div>
+        ` : ''}
+      `;
+    }
+
+    if (lessonsContainer) {
+      lessonsContainer.innerHTML = lessons.map((l, idx) => `
+        <div class="preview-lesson-item">
+          <div class="preview-lesson-title">
+            <span>${l.icon || '📖'}</span>
+            <span>Lesson ${idx + 1}: ${l.title}</span>
+          </div>
+          <div class="preview-lesson-desc">${l.content || 'Comprehensive curriculum topic detail.'}</div>
+        </div>
+      `).join('');
+    }
+
+    if (actionsEl) {
+      actionsEl.innerHTML = `
+        <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-preview-module'); MHODashboard.openEditModuleModal('${mod.id}');">
+          ✏️ Edit Details
+        </button>
+        ${(status !== 'published') ? `
+          <button type="button" class="btn btn-primary" style="background:#2D6A4F; border:none; font-weight:600;" onclick="MHODashboard.publishModule('${mod.id}'); NutriApp.closeModal('modal-admin-preview-module');">
+            🚀 Publish This Module
+          </button>
+        ` : ''}
+      `;
+    }
+
+    NutriApp.openModal('modal-admin-preview-module');
+  },
+
+  handleDeleteCurrentModule() {
+    const id = document.getElementById('admin-edit-mod-id')?.value;
+    if (!id) return;
     if (confirm('Sigurado ka bang nais mong burahin ang nutrition module na ito?')) {
       let modules = this.getNutritionModules();
-      modules = modules.filter(m => m.id !== moduleId);
+      modules = modules.filter(m => m.id !== id);
       this.saveNutritionModules(modules);
+      NutriApp.closeModal('modal-admin-edit-module');
       this.renderContentManagerModules();
-      NutriStorage.logAudit('Module Deleted', 'Content Manager', `Deleted nutrition module ID ${moduleId}`);
-      NutriApp.showToast('Matagumpay na nabura ang module.', 'info');
+      if (window.NutriStorage && typeof NutriStorage.logAudit === 'function') {
+        NutriStorage.logAudit('Module Deleted', 'Content Management', `Deleted module ID: ${id}`);
+      }
+      NutriApp.showToast('Module deleted successfully.', 'info');
     }
   },
 
   handleResetModules() {
-    if (confirm('I-reset ang lahat ng nutrition module sa opisyal na WHO & PPAN default food guidelines?')) {
+    if (confirm('I-reset ang lahat ng nutrition module sa opisyal na WHO & PPAN default guidelines?')) {
       const defaults = this.getDefaultNutritionModules();
       this.saveNutritionModules(defaults);
       this.renderContentManagerModules();
-      NutriStorage.logAudit('Curricula Reset', 'Content Manager', 'Restored default 4 evidence-based food nutrition modules');
+      if (window.NutriStorage && typeof NutriStorage.logAudit === 'function') {
+        NutriStorage.logAudit('Curricula Reset', 'Content Management', 'Restored 5 official WHO & FNRI nutrition modules');
+      }
       NutriApp.showToast('Curricula restored to standard defaults.', 'success');
     }
   },
-
   // ==========================================================================
   // DIETARY ADHERENCE & MEAL COMPLIANCE MONITORING ("saka na momonitor kang admin kung nasusunod ang pagkakan")
   // ==========================================================================
@@ -1468,35 +1479,60 @@ const MHODashboard = {
   userFilterRole: 'ALL',
   userSearchQuery: '',
 
+  // ==========================================================================
+  // USER MANAGEMENT SYSTEM (With Live Online Presence & Working Edit Modal)
+  // ==========================================================================
+  userFilterRole: 'ALL',
+  userSearchQuery: '',
+
   initUserManager() {
     this.renderUsersTable();
+  },
 
-    // Bind search & filter
-    const searchInput = document.getElementById('mho-user-search');
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        this.userSearchQuery = e.target.value.toLowerCase();
-        this.renderUsersTable();
-      });
-    }
+  handleUserSearch(query) {
+    this.userSearchQuery = (query || '').toLowerCase().trim();
+    this.renderUsersTable();
+  },
 
-    const roleFilter = document.getElementById('mho-user-role-filter');
-    if (roleFilter) {
-      roleFilter.addEventListener('change', (e) => {
-        this.userFilterRole = e.target.value;
-        this.renderUsersTable();
-      });
-    }
+  filterUsersByRole(filterRole) {
+    this.userFilterRole = filterRole || 'ALL';
+
+    // Update active pill styling
+    document.querySelectorAll('.admin-user-pill-btn').forEach(btn => {
+      const match = btn.getAttribute('data-filter') === this.userFilterRole;
+      btn.classList.toggle('active', match);
+    });
+
+    this.renderUsersTable();
   },
 
   renderUsersTable() {
-    const tbody = document.getElementById('mho-users-tbody');
+    const tbody = document.getElementById('admin-users-tbody') || document.getElementById('mho-users-tbody');
     if (!tbody) return;
 
     let users = NutriStorage.getUsers();
 
-    // Filter by role
-    if (this.userFilterRole !== 'ALL') {
+    // Exclude root admin from the general user listing
+    users = users.filter(u => u.role !== 'mho');
+
+    // Update online counter in header chip
+    let onlineCount = 0;
+    users.forEach(u => {
+      if (NutriStorage.isUserOnline(u.id)) onlineCount++;
+    });
+    const chipCount = document.getElementById('admin-online-count-display');
+    if (chipCount) {
+      chipCount.textContent = `${onlineCount} User${onlineCount === 1 ? '' : 's'} Online Now`;
+    }
+    const onlinePill = document.getElementById('pill-filter-online');
+    if (onlinePill) {
+      onlinePill.textContent = `🟢 Online Now (${onlineCount})`;
+    }
+
+    // Filter by role or ONLINE pill
+    if (this.userFilterRole === 'ONLINE') {
+      users = users.filter(u => NutriStorage.isUserOnline(u.id));
+    } else if (this.userFilterRole !== 'ALL') {
       users = users.filter(u => u.role === this.userFilterRole);
     }
 
@@ -1504,16 +1540,17 @@ const MHODashboard = {
     if (this.userSearchQuery) {
       users = users.filter(u =>
         (u.name || '').toLowerCase().includes(this.userSearchQuery) ||
-        (u.email || '').toLowerCase().includes(this.userSearchQuery) ||
-        (u.barangay || '').toLowerCase().includes(this.userSearchQuery)
+        (u.role || '').toLowerCase().includes(this.userSearchQuery) ||
+        (u.location || u.barangay || '').toLowerCase().includes(this.userSearchQuery) ||
+        (u.email || '').toLowerCase().includes(this.userSearchQuery)
       );
     }
 
     if (users.length === 0) {
       tbody.innerHTML = `
         <tr>
-          <td colspan="6" style="text-align:center; padding:2rem; color:var(--text-muted);">
-            No user accounts found matching your query.
+          <td colspan="6" style="text-align:center; padding:2.5rem; color:#6B7280;">
+            No users found matching your search criteria.
           </td>
         </tr>
       `;
@@ -1521,42 +1558,59 @@ const MHODashboard = {
     }
 
     tbody.innerHTML = users.map(u => {
-      const isSuspended = u.status === 'Suspended';
-      const statusBadge = isSuspended
-        ? '<span class="badge badge-stunted" style="background:#FEE2E2; color:#991B1B;">⛔ Suspended</span>'
-        : '<span class="badge badge-normal" style="background:#DCFCE7; color:#166534;">✓ Active</span>';
+      const isHealthWorker = u.role === 'chw' || u.role === 'collector';
+      const roleBadgeClass = isHealthWorker ? 'role-badge-chw' : 'role-badge-parent';
+      const roleText = isHealthWorker ? 'Health Worker' : 'Parent/Guardian';
+
+      const isOnline = NutriStorage.isUserOnline(u.id);
+      const presenceBadge = isOnline
+        ? `<span class="user-presence-tag presence-online" title="Online ngayon (Kasalukuyang aktibo sa system)"><span class="user-online-beacon"></span>Online</span>`
+        : `<span class="user-presence-tag presence-offline" title="Offline">Offline</span>`;
+
+      const isActive = u.status === 'Active';
+      const statusClass = isActive ? 'status-active' : 'status-inactive';
+      const bulletClass = isActive ? 'bullet-active' : 'bullet-inactive';
+      const statusText = isActive ? 'Active' : 'Inactive';
+
+      const lastLoginDisplay = isOnline
+        ? `<span style="color:#059669; font-weight:600;"><span class="user-online-beacon" style="width:6px; height:6px; margin-right:4px;"></span>Active now</span>`
+        : (u.lastLogin || 'Today');
+
+      const location = u.location || u.barangay || 'Zone 1, Barangay Manguring';
+
+      const toggleBtnClass = isActive ? 'btn-user-deactivate' : 'btn-user-reactivate';
+      const toggleBtnText = isActive ? 'Deactivate' : 'Reactivate';
 
       return `
-        <tr>
+        <tr id="user-row-${u.id}">
           <td>
-            <div style="font-weight:700; color:var(--color-primary-900);">${u.name}</div>
-            <div style="font-size:0.76rem; color:var(--text-muted);">${u.email}</div>
+            <div class="user-name-wrapper">
+              <span class="user-cell-name">${u.name}</span>
+              ${presenceBadge}
+            </div>
           </td>
           <td>
-            <select onchange="MHODashboard.handleRoleChange('${u.id}', this.value)" style="padding:4px 8px; border:1px solid var(--border-light); border-radius:4px; font-size:0.8rem; background:#FFFFFF;">
-              <option value="parent" ${u.role === 'parent' ? 'selected' : ''}>Parent / Guardian</option>
-              <option value="chw" ${u.role === 'chw' ? 'selected' : ''}>Health Worker (BHW/BNS)</option>
-              <option value="collector" ${u.role === 'collector' ? 'selected' : ''}>Field Data Collector</option>
-              <option value="mho" ${u.role === 'mho' ? 'selected' : ''}>Administrator (MHO)</option>
-            </select>
+            <span class="user-role-badge ${roleBadgeClass}">${roleText}</span>
           </td>
           <td>
-            <span style="font-size:0.82rem; color:var(--text-secondary);">${u.barangay || u.department || 'All Municipal'}</span>
-          </td>
-          <td>${statusBadge}</td>
-          <td>
-            <span style="font-size:0.78rem; color:var(--text-muted);">${u.registeredDate || 'Pre-configured'}</span>
+            <span class="user-cell-location">${location}</span>
           </td>
           <td>
-            <div class="table-actions">
-              <button class="btn btn-sm ${isSuspended ? 'btn-accent' : 'btn-outline'}" onclick="MHODashboard.handleToggleUserStatus('${u.id}')" title="Toggle access permission">
-                ${isSuspended ? 'Reactivate' : 'Suspend'}
+            <span class="user-status-cell ${statusClass}">
+              <span class="status-bullet ${bulletClass}">●</span>
+              ${statusText}
+            </span>
+          </td>
+          <td>
+            <span class="user-cell-last-login">${lastLoginDisplay}</span>
+          </td>
+          <td>
+            <div class="user-cell-actions">
+              <button type="button" class="btn-user-action btn-user-edit" onclick="MHODashboard.openEditUserModal('${u.id}')">
+                Edit
               </button>
-              <button class="btn btn-outline btn-sm" onclick="MHODashboard.handleResetUserPassword('${u.id}')" title="Reset password">
-                🔑 Reset Pass
-              </button>
-              <button class="btn btn-outline btn-sm" style="color:#DC2626; border-color:#FCA5A5;" onclick="MHODashboard.handleDeleteUser('${u.id}')" title="Delete account">
-                🗑️
+              <button type="button" class="btn-user-action ${toggleBtnClass}" onclick="MHODashboard.toggleUserActiveStatus('${u.id}')">
+                ${toggleBtnText}
               </button>
             </div>
           </td>
@@ -1565,45 +1619,78 @@ const MHODashboard = {
     }).join('');
   },
 
-  handleRoleChange(userId, newRole) {
-    const users = NutriStorage.getUsers();
-    const user = users.find(u => u.id === userId);
-    if (!user) return;
-
-    user.role = newRole;
-    NutriStorage.updateUser(user);
-    NutriApp.showToast(`Updated role for ${user.name} to ${newRole.toUpperCase()}.`, 'success');
-  },
-
-  handleToggleUserStatus(userId) {
+  toggleUserActiveStatus(userId) {
     const newStatus = NutriStorage.toggleUserStatus(userId);
     this.renderUsersTable();
-    NutriApp.showToast(`User status updated to: ${newStatus}`, newStatus === 'Active' ? 'success' : 'warning');
-  },
-
-  handleResetUserPassword(userId) {
-    const newPass = prompt('Enter a new password for this user:', 'password123');
-    if (!newPass) return;
-
-    const users = NutriStorage.getUsers();
-    const user = users.find(u => u.id === userId);
-    if (user) {
-      user.password = newPass;
-      NutriStorage.updateUser(user);
-      NutriApp.showToast(`Password successfully updated for ${user.name}.`, 'success');
-    }
-  },
-
-  handleDeleteUser(userId) {
-    if (confirm('Permanently delete this user account and revoke system access?')) {
-      NutriStorage.deleteUser(userId);
-      this.renderUsersTable();
-      NutriApp.showToast('User account deleted.', 'info');
-    }
+    NutriApp.showToast(`User status changed to ${newStatus}`, newStatus === 'Active' ? 'success' : 'warning');
   },
 
   openAddUserModal() {
+    const form = document.querySelector('#modal-admin-add-user form');
+    if (form) form.reset();
     NutriApp.openModal('modal-admin-add-user');
+  },
+
+  openEditUserModal(userId) {
+    const users = NutriStorage.getUsers();
+    const user = users.find(u => String(u.id) === String(userId));
+    if (!user) {
+      NutriApp.showToast('User not found.', 'warning');
+      return;
+    }
+
+    const idInput = document.getElementById('admin-edit-user-id');
+    const nameInput = document.getElementById('admin-edit-user-name');
+    const emailInput = document.getElementById('admin-edit-user-email');
+    const roleInput = document.getElementById('admin-edit-user-role');
+    const locInput = document.getElementById('admin-edit-user-location');
+    const statusInput = document.getElementById('admin-edit-user-status');
+    const presenceInput = document.getElementById('admin-edit-user-presence');
+
+    if (idInput) idInput.value = user.id;
+    if (nameInput) nameInput.value = user.name || '';
+    if (emailInput) emailInput.value = user.email || '';
+    if (roleInput) roleInput.value = user.role === 'chw' ? 'chw' : 'parent';
+    if (locInput) locInput.value = user.location || user.barangay || 'Zone 1, Barangay Manguring';
+    if (statusInput) statusInput.value = user.status || 'Active';
+    if (presenceInput) presenceInput.value = NutriStorage.isUserOnline(user.id) ? 'online' : 'offline';
+
+    NutriApp.openModal('modal-admin-edit-user');
+  },
+
+  handleSaveEditUser(form) {
+    const userId = form.elements['editUserId'].value;
+    const name = form.elements['editUserName'].value.trim();
+    const email = form.elements['editUserEmail'].value.trim();
+    const role = form.elements['editUserRole'].value;
+    const location = form.elements['editUserLocation'].value.trim();
+    const status = form.elements['editUserStatus'] ? form.elements['editUserStatus'].value : 'Active';
+    const presence = form.elements['editUserPresence'] ? form.elements['editUserPresence'].value : 'online';
+
+    if (!name || !email) {
+      NutriApp.showToast('Please fill in user name and email.', 'warning');
+      return;
+    }
+
+    const users = NutriStorage.getUsers();
+    const user = users.find(u => String(u.id) === String(userId));
+    if (user) {
+      user.name = name;
+      user.email = email;
+      user.role = role;
+      user.displayRole = role === 'chw' ? 'Health Worker' : 'Parent/Guardian';
+      user.location = location;
+      user.barangay = location.includes('Manguring') || location.includes('Manguiring') ? 'Barangay Manguring' : 'Barangay Manguiring';
+      user.status = status;
+      NutriStorage.updateUser(user);
+
+      // Update presence
+      NutriStorage.setUserOnlinePresence(userId, presence === 'online');
+
+      NutriApp.closeModal('modal-admin-edit-user');
+      this.renderUsersTable();
+      NutriApp.showToast(`User ${name} updated successfully!`, 'success');
+    }
   },
 
   handleCreateUserAdmin(form) {
@@ -1611,25 +1698,30 @@ const MHODashboard = {
     const email = form.elements['adminUserEmail'].value.trim();
     const password = form.elements['adminUserPass'].value;
     const role = form.elements['adminUserRole'].value;
-    const barangay = form.elements['adminUserBarangay'].value;
+    const barangay = form.elements['adminUserBarangay'] ? form.elements['adminUserBarangay'].value : 'Barangay Manguring';
 
-    // Validation (Req #14)
     if (!name || !email || !password) {
-      NutriApp.showToast('Please fill in all required user fields before saving.', 'warning');
+      NutriApp.showToast('Please fill in all required fields.', 'warning');
       return;
     }
 
-    const userData = {
+    const newId = 'usr-' + Date.now();
+    const newUser = {
+      id: newId,
       name,
       email,
       password,
       role,
+      displayRole: role === 'chw' ? 'Health Worker' : 'Parent/Guardian',
+      location: `Zone 1, ${barangay}`,
       barangay,
       status: 'Active',
+      lastLogin: 'Today',
       registeredDate: new Date().toISOString().split('T')[0]
     };
 
-    NutriStorage.registerUser(userData);
+    NutriStorage.registerUser(newUser);
+    NutriStorage.setUserOnlinePresence(newId, true);
     form.reset();
     NutriApp.closeModal('modal-admin-add-user');
     this.renderUsersTable();
@@ -1786,6 +1878,55 @@ const MHODashboard = {
   // ==========================================================================
   // FIELD RECORDS (Malnutrition Registry & Barangay Tracking)
   // ==========================================================================
+  currentFieldStatusFilter: 'ALL',
+
+  formatAgeDisplay(months) {
+    const m = parseInt(months, 10) || 0;
+    if (m === 12) return '1 yr';
+    if (m === 24) return '2 yrs';
+    if (m > 0 && m % 12 === 0) return `${Math.floor(m / 12)} yrs`;
+    return `${m} mo`;
+  },
+
+  formatDateDisplay(dateStr) {
+    if (!dateStr) return 'Aug 22, 2026';
+    if (/^[A-Za-z]{3}\s+\d{1,2},\s+\d{4}$/.test(dateStr)) return dateStr;
+    try {
+      const d = new Date(dateStr);
+      if (!isNaN(d.getTime())) {
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        return `${months[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+      }
+    } catch (e) {}
+    return dateStr;
+  },
+
+  setFieldStatusFilter(status, btnElement) {
+    this.currentFieldStatusFilter = status || 'ALL';
+    const pills = document.querySelectorAll('.btn-field-pill');
+    pills.forEach(p => {
+      if (p.getAttribute('data-status') === this.currentFieldStatusFilter) {
+        p.classList.add('active');
+      } else {
+        p.classList.remove('active');
+      }
+    });
+    this.renderAdminRecords();
+  },
+
+  toggleFieldRecordAccordion(recordId, btn) {
+    const accRow = document.getElementById(`field-accordion-${recordId}`);
+    if (!accRow) return;
+    const isHidden = (accRow.style.display === 'none' || !accRow.style.display);
+    if (isHidden) {
+      accRow.style.display = 'table-row';
+      if (btn) btn.classList.add('open');
+    } else {
+      accRow.style.display = 'none';
+      if (btn) btn.classList.remove('open');
+    }
+  },
+
   getAdminChildrenRecords() {
     const liveChildren = (typeof NutriStorage !== 'undefined') ? NutriStorage.getChildren() : [];
 
@@ -1793,15 +1934,19 @@ const MHODashboard = {
       const fullName = (c.name || '').trim() || [c.first_name, c.last_name].filter(Boolean).join(' ') || 'Unnamed Child';
       const parentName = (c.parentName || c.parent_name || 'Parent / Guardian').trim();
       const brgy = (c.barangay || 'Barangay Manguiring').trim();
-      const zn = c.zone || 'Zone 1';
+      let zn = (c.zone || 'Zone 1').trim();
+      if (!zn.toLowerCase().includes('manguiring') && !zn.toLowerCase().includes('barangay')) {
+        zn = `${zn}, ${brgy}`;
+      }
       const ageVal = parseInt(c.ageMonths || c.age_months || 12, 10);
       const hVal = parseFloat(c.heightCm || c.height_cm || 75.0);
       const wVal = parseFloat(c.weightKg || c.weight_kg || 9.0);
       const muacVal = parseInt(c.muacMm || c.muac_mm || 125, 10);
-      const st = c.improved ? 'Improved' : (c.status === 'Critical' || muacVal < 115 ? 'Critical' : (c.status || 'Normal'));
+      const st = c.status || (c.improved ? 'Normal' : (muacVal < 115 ? 'At Risk' : 'Normal'));
       const hfa = c.hfaStatus || c.hfa_status || (st === 'Stunted' ? 'Stunted' : 'Normal');
       const wfa = c.wfaStatus || c.wfa_status || 'Normal';
-      const dt = c.lastAssessed || c.last_assessed || new Date().toISOString().split('T')[0];
+      const dt = c.date || c.lastAssessed || c.last_assessed || 'Aug 22, 2026';
+      const submittedBy = c.submittedBy || c.submitted_by || 'Nurse Ana Reyes';
 
       return {
         id: c.id,
@@ -1818,6 +1963,7 @@ const MHODashboard = {
         hfa: hfa,
         wfa: wfa,
         date: dt,
+        submittedBy: submittedBy,
         improved: !!c.improved,
         notes: c.notes || ''
       };
@@ -1825,83 +1971,108 @@ const MHODashboard = {
   },
 
   renderAdminRecords() {
-    const tbody = document.getElementById('admin-records-tbody');
+    const tbody = document.getElementById('admin-field-records-tbody') || document.getElementById('admin-records-tbody');
     if (!tbody) return;
 
     const records = this.getAdminChildrenRecords();
-    const search = (document.getElementById('admin-records-search')?.value || '').toLowerCase().trim();
-    const zoneFilter = document.getElementById('admin-records-zone-filter')?.value || 'ALL';
-    const statusFilter = document.getElementById('admin-records-status-filter')?.value || 'ALL';
-    const brgyFilter = this.selectedBarangay || 'ALL';
+
+    // 1. Update 4 Metric Summary Cards
+    const totalCount = records.length;
+    const stuntedCount = records.filter(r => r.status === 'Stunted' || r.hfa === 'Stunted').length;
+    const atRiskCount = records.filter(r => (r.status === 'At Risk' || r.status === 'Underweight' || r.status === 'Wasted' || r.status === 'Critical' || r.status === 'Moderate') && r.status !== 'Stunted' && r.hfa !== 'Stunted').length;
+    const normalCount = records.filter(r => r.status === 'Normal' || r.status === 'Improved').length;
+
+    const totalEl = document.getElementById('admin-field-total-count');
+    if (totalEl) totalEl.textContent = totalCount;
+    const stuntedEl = document.getElementById('admin-field-stunted-count');
+    if (stuntedEl) stuntedEl.textContent = stuntedCount;
+    const atRiskEl = document.getElementById('admin-field-atrisk-count');
+    if (atRiskEl) atRiskEl.textContent = atRiskCount;
+    const normalEl = document.getElementById('admin-field-normal-count');
+    if (normalEl) normalEl.textContent = normalCount;
+
+    // 2. Search & Pill Status Filters
+    const searchInput = document.getElementById('admin-field-search') || document.getElementById('admin-records-search');
+    const search = (searchInput?.value || '').toLowerCase().trim();
+    const statusFilter = this.currentFieldStatusFilter || 'ALL';
 
     const filtered = records.filter(r => {
-      // 1. Barangay filter:
-      const matchBarangay = (brgyFilter === 'ALL') || (r.barangay === brgyFilter);
-      // 2. Search filter:
+      // Search
       const matchSearch = !search ||
         r.name.toLowerCase().includes(search) ||
         r.parent.toLowerCase().includes(search) ||
         r.zone.toLowerCase().includes(search) ||
+        r.submittedBy.toLowerCase().includes(search) ||
         r.barangay.toLowerCase().includes(search);
-      // 3. Zone filter:
-      const matchZone = zoneFilter === 'ALL' ||
-        r.zone === zoneFilter ||
-        (zoneFilter.includes('7') && (r.zone.includes('7') || r.zone.toLowerCase().includes('purok 7'))) ||
-        (r.zone.toLowerCase().replace(/\s+/g, '') === zoneFilter.toLowerCase().replace(/\s+/g, ''));
-      // 4. Status filter:
-      const matchStatus = statusFilter === 'ALL' || r.status === statusFilter || (statusFilter === 'Stunted' && r.hfa === 'Stunted');
 
-      return matchBarangay && matchSearch && matchZone && matchStatus;
+      // Status
+      let matchStatus = true;
+      if (statusFilter === 'Normal') {
+        matchStatus = (r.status === 'Normal' || r.status === 'Improved');
+      } else if (statusFilter === 'At Risk') {
+        matchStatus = (r.status === 'At Risk' || r.status === 'Underweight' || r.status === 'Wasted' || r.status === 'Critical' || r.status === 'Moderate') && r.status !== 'Stunted' && r.hfa !== 'Stunted';
+      } else if (statusFilter === 'Stunted') {
+        matchStatus = (r.status === 'Stunted' || r.hfa === 'Stunted');
+      }
+
+      return matchSearch && matchStatus;
     });
 
     if (filtered.length === 0) {
-      const msg = brgyFilter !== 'ALL'
-        ? `Walang talaan ng bata para sa <strong>${brgyFilter}</strong> gamit ang kasalukuyang filter.`
-        : 'Walang talaan ng bata na tugma sa iyong filter criteria.';
-      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2.5rem; color:#64748B;">${msg}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:3rem; color:#78716C; font-size:0.92rem;">Walang talaan ng bata na tugma sa iyong paghahanap o filter.</td></tr>`;
       return;
     }
 
     tbody.innerHTML = filtered.map(r => {
-      const isCritical = r.status === 'Critical' || r.muac < 115;
-      const statusBadge = isCritical
-        ? '<span style="background:#FEE2E2; color:#DC2626; padding:3px 10px; border-radius:9999px; font-weight:700; font-size:0.75rem;">Critical Case</span>'
-        : r.status === 'Improved'
-          ? '<span style="background:#DCFCE7; color:#166534; padding:3px 10px; border-radius:9999px; font-weight:700; font-size:0.75rem;">Improved / Recovered</span>'
-          : '<span style="background:#E0F2FE; color:#0369A1; padding:3px 10px; border-radius:9999px; font-weight:600; font-size:0.75rem;">Normal Status</span>';
+      const ageStr = this.formatAgeDisplay(r.age);
+      const dateStr = this.formatDateDisplay(r.date);
+      const weightStr = `${parseFloat(r.w).toFixed(1)} kg`;
+
+      let statusBadge = '<span class="field-badge-normal">Normal</span>';
+      if (r.status === 'Stunted' || r.hfa === 'Stunted') {
+        statusBadge = '<span class="field-badge-stunted">Stunted</span>';
+      } else if (r.status === 'At Risk' || r.status === 'Underweight' || r.status === 'Wasted' || r.status === 'Critical' || r.status === 'Moderate') {
+        statusBadge = '<span class="field-badge-atrisk">At Risk</span>';
+      }
 
       return `
-        <tr>
-          <td>
-            <strong style="color: #1F2937; font-size: 0.92rem;">${r.name}</strong>
-            <div style="font-size: 0.78rem; color: #6B7280;">Magulang: ${r.parent}</div>
-          </td>
-          <td>
-            <div style="display:flex; flex-direction:column; gap:2px;">
-              <span style="font-weight:700; color:#065F46; background:#ECFDF5; border:1px solid #A7F3D0; padding:2px 8px; border-radius:6px; font-size:0.78rem; width:fit-content;">
-                📍 ${r.barangay}
-              </span>
-              <span style="font-size:0.75rem; color:#6B7280; margin-left:4px;">${r.zone}</span>
-            </div>
-          </td>
-          <td>${r.age} mos • ${r.sex}</td>
-          <td>
-            <div style="font-size: 0.84rem;"><strong>${r.h} cm</strong> • <strong>${r.w} kg</strong></div>
-            <div style="font-size: 0.75rem; color: ${r.muac < 115 ? '#DC2626' : '#166534'};">MUAC: ${r.muac} mm</div>
-          </td>
-          <td>
-            <span style="font-size: 0.82rem; font-weight: 600; color: #374151;">HFA: ${r.hfa} • WFA: ${r.wfa}</span>
-          </td>
+        <tr id="field-row-${r.id}">
+          <td><span class="field-child-name">${r.name}</span></td>
+          <td>${r.parent}</td>
+          <td>${r.zone}</td>
+          <td>${ageStr}</td>
+          <td><span class="field-weight-text">${weightStr}</span></td>
           <td>${statusBadge}</td>
-          <td style="color: #6B7280; font-size: 0.8rem;">${r.date}</td>
-          <td style="text-align: center; white-space: nowrap;">
-            <div style="display: inline-flex; gap: 6px; align-items: center; justify-content: center;">
-              <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.78rem; font-weight: 600; padding: 4px 10px; border-radius: 6px; border-color: #0284C7; color: #0284C7;" onclick="MHODashboard.openAdminEditChild('${r.id}')" title="I-update ang mga sukat ng bata sa napiling barangay">
-                ✏️ I-update
-              </button>
-              <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.78rem; font-weight: 600; padding: 4px 8px; border-radius: 6px; border-color: #FCA5A5; color: #DC2626;" onclick="MHODashboard.handleDeleteChildRecord('${r.id}')" title="Alisin o burahin ang talaan ng bata mula sa registry">
-                🗑️ Burahin
-              </button>
+          <td>${r.submittedBy}</td>
+          <td>${dateStr}</td>
+          <td style="text-align: center;">
+            <button type="button" class="btn-field-expand" id="field-expand-btn-${r.id}" onclick="MHODashboard.toggleFieldRecordAccordion('${r.id}', this)" title="Tingnan ang detalye at aksyon">
+              ▼
+            </button>
+          </td>
+        </tr>
+        <tr id="field-accordion-${r.id}" style="display: none;">
+          <td colspan="9" style="padding: 0;">
+            <div class="field-row-accordion">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; font-size: 0.86rem; color: #334155;">
+                  <div><strong>Taas (Height):</strong> ${r.h} cm</div>
+                  <div><strong>Timbang (Weight):</strong> ${r.w} kg</div>
+                  <div><strong>MUAC:</strong> <span style="font-weight: 700; color: ${r.muac < 115 ? '#DC2626' : '#166534'};">${r.muac} mm</span></div>
+                  <div><strong>Kasarian (Sex):</strong> ${r.sex}</div>
+                  <div><strong>HFA Status:</strong> ${r.hfa}</div>
+                  <div><strong>WFA Status:</strong> ${r.wfa}</div>
+                  ${r.notes ? `<div><strong>Notes:</strong> <em>${r.notes}</em></div>` : ''}
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                  <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.8rem; font-weight: 600; padding: 5px 12px; border-radius: 6px; border-color: #0284C7; color: #0284C7;" onclick="MHODashboard.openAdminEditChild('${r.id}')" title="I-update ang mga sukat ng bata">
+                    ✏️ I-update ang Sukat
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm" style="font-size: 0.8rem; font-weight: 600; padding: 5px 10px; border-radius: 6px; border-color: #FCA5A5; color: #DC2626;" onclick="MHODashboard.handleDeleteChildRecord('${r.id}')" title="Burahin ang talaan ng bata mula sa registry">
+                    🗑️ Burahin
+                  </button>
+                </div>
+              </div>
             </div>
           </td>
         </tr>
@@ -2277,7 +2448,13 @@ const MHODashboard = {
   },
 
   openAddBarangayModal() {
+    const form = document.querySelector('#modal-admin-add-barangay form');
+    if (form) form.reset();
     NutriApp.openModal('modal-admin-add-barangay');
+    setTimeout(() => {
+      const input = document.querySelector('#modal-admin-add-barangay input[name="brgyName"]');
+      if (input) input.focus();
+    }, 120);
   },
 
   async handleSaveAddBarangay(form) {
@@ -2287,32 +2464,29 @@ const MHODashboard = {
     const zones = zonesInput ? zonesInput.value.trim() : '';
 
     if (!name) {
-      alert('Pakiusap ilagay ang pangalan ng barangay.');
+      NutriApp.showToast('Pakiusap ilagay ang pangalan ng barangay.', 'warning');
       return;
     }
 
-    const added = await NutriStorage.addBarangay(name, zones);
-    if (!added) {
-      NutriApp.showToast(`Ang barangay na "${name}" ay nakatala na sa sistema.`, 'warning');
-      return;
+    try {
+      const added = NutriStorage.addBarangay(name, zones);
+      if (!added) {
+        NutriApp.showToast(`Ang barangay na "${name}" ay nakatala na sa sistema.`, 'warning');
+        return;
+      }
+
+      NutriApp.closeModal('modal-admin-add-barangay');
+      form.reset();
+
+      // Re-render views & dropdowns
+      this.renderBarangaysManager();
+      this.renderAdminRecords();
+      this.renderKPIs();
+
+      NutriApp.showToast(`Matagumpay na naidagdag ang ${name}! Maaari na itong piliin sa registration at filters.`, 'success');
+    } catch (err) {
+      NutriApp.showToast(err.message || 'Error sa pagdagdag ng barangay.', 'warning');
     }
-
-    NutriStorage.logAudit(
-      'Barangay Added',
-      'Account Management',
-      `Administrator added new barangay: ${name}${zones ? ` (${zones})` : ''}`,
-      'Administrator'
-    );
-
-    NutriApp.closeModal('modal-admin-add-barangay');
-    form.reset();
-
-    // Re-render views & dropdowns
-    this.renderBarangaysManager();
-    this.renderAdminRecords();
-    this.renderKPIs();
-
-    NutriApp.showToast(`Matagumpay na naidagdag ang ${name}! Maaari na itong piliin sa registration at filters.`, 'success');
   },
 
   openEditBarangayModal(id) {

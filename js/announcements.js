@@ -91,8 +91,12 @@ const AnnouncementsModule = {
     }
   },
 
-  // Open Composer Modal with Role-Specific Audience and Barangay Selectors
-  openComposer(role = null) {
+  // Open Composer Modal with Role-Specific Audience and Barangay Selectors or for Editing
+  openComposer(role = null, editId = null) {
+    if ((role === 'mho' || (!role && NutriApp.currentRole === 'mho')) && !editId) {
+      this.showCreateView();
+      return;
+    }
     const activeRole = role || NutriApp.currentRole || 'mho';
     this.currentComposerRole = activeRole;
 
@@ -100,9 +104,11 @@ const AnnouncementsModule = {
     const modalSubtitle = document.getElementById('ann-composer-modal-subtitle');
     const audienceContainer = document.getElementById('ann-composer-audience-options');
     const authorBadge = document.getElementById('ann-composer-author-badge');
+    const form = document.getElementById('announcement-composer-form');
+    const submitBtn = document.getElementById('btn-submit-ann-composer');
 
     const currentUser = NutriStorage.getCurrentUser() || {};
-    const authorName = currentUser.name || (activeRole === 'mho' ? 'Dr. Elena Cruz, MHO' : 'Sister Teresa Lim, BNS');
+    const authorName = currentUser.name || (activeRole === 'mho' ? 'Dr. Jose Lim' : 'Sister Teresa Lim, BNS');
 
     if (authorBadge) {
       authorBadge.textContent = `Posting as: ${authorName} (${activeRole === 'mho' ? 'Administrator' : 'Barangay Health Worker'})`;
@@ -110,8 +116,8 @@ const AnnouncementsModule = {
 
     if (activeRole === 'mho') {
       // Administrator Audience & Barangay Destination Routing
-      if (modalTitle) modalTitle.textContent = '📢 Post Official Municipal Announcement';
-      if (modalSubtitle) modalSubtitle.textContent = 'Municipal Health Office • Select recipient group and destination barangay(s)';
+      if (modalTitle) modalTitle.textContent = editId ? '✏️ Edit Official Announcement' : '📢 Post Official Announcement';
+      if (modalSubtitle) modalSubtitle.textContent = 'Municipal Health Office • Configure destination and event details';
 
       if (audienceContainer) {
         audienceContainer.innerHTML = `
@@ -136,48 +142,11 @@ const AnnouncementsModule = {
               </div>
             </label>
           </div>
-
-          <!-- 2. Destination Barangay Selector with All Barangays Button -->
-          <div style="margin-top: 1.25rem; padding: 1rem 1.15rem; background: var(--bg-surface-subtle); border-radius: var(--radius-md); border: 1.5px solid var(--border-light);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.65rem; flex-wrap: wrap; gap: 0.5rem;">
-              <div>
-                <label class="form-label" style="font-weight: 700; color: var(--color-primary-900); margin-bottom: 0.15rem; display: block;">
-                  2. Select Destination Barangay(s): <span style="color: #DC2626;">*</span>
-                </label>
-                <div style="font-size: 0.78rem; color: var(--text-secondary);">
-                  Choose which barangays will receive this announcement, or click 'All Barangays' for municipality-wide broadcast.
-                </div>
-              </div>
-              <div style="display: flex; gap: 0.4rem; align-items: center;">
-                <button type="button" class="btn btn-accent btn-sm" id="btn-toggle-all-barangays" onclick="AnnouncementsModule.selectAllBarangays()" title="Select all 4 barangays in municipality">
-                  🌐 All Barangays
-                </button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="AnnouncementsModule.clearAllBarangays()" title="Clear selection">
-                  Clear
-                </button>
-              </div>
-            </div>
-
-            <!-- Interactive Barangay Checkbox Grid -->
-            <div class="barangay-checkbox-grid">
-              <label class="barangay-checkbox-card active">
-                <input type="checkbox" name="annTargetBarangay" value="Barangay Manguiring" checked onchange="AnnouncementsModule.onBarangayCheckboxChange()">
-                <span>Barangay Manguiring</span>
-              </label>
-            </div>
-
-            <div id="ann-barangay-selection-summary" style="font-size: 0.8rem; font-weight: 600; color: #166534; margin-top: 0.65rem;">
-              📍 Target Destination: Barangay Manguiring
-            </div>
-          </div>
         `;
       }
     } else if (activeRole === 'chw') {
-      // BHW Audience Routing Options:
       if (modalTitle) modalTitle.textContent = '📢 Post Barangay Health Announcement';
       if (modalSubtitle) modalSubtitle.textContent = 'Barangay Health Center • Select distribution destination before publishing';
-
-      const bhwBarangay = currentUser.barangay || 'Barangay Manguiring';
 
       if (audienceContainer) {
         audienceContainer.innerHTML = `
@@ -201,15 +170,245 @@ const AnnouncementsModule = {
               </div>
             </label>
           </div>
-
-          <div style="margin-top: 1rem; padding: 0.75rem 1rem; background: var(--bg-surface-subtle); border-radius: var(--radius-md); border: 1px solid var(--border-light); font-size: 0.82rem; color: var(--text-secondary);">
-            📍 <strong>Originating Barangay:</strong> ${bhwBarangay} (Assigned Catchment Station)
-          </div>
         `;
       }
     }
 
+    // Populate for Editing or Reset for New
+    if (form) {
+      if (editId) {
+        const posts = NutriStorage.getAnnouncements();
+        const post = posts.find(p => String(p.id) === String(editId));
+        if (post) {
+          if (form.elements['annId']) form.elements['annId'].value = post.id;
+          if (form.elements['annTitle']) form.elements['annTitle'].value = post.title || '';
+          if (form.elements['annCategory']) form.elements['annCategory'].value = post.category || 'Seminar';
+          if (form.elements['annTargetZones']) form.elements['annTargetZones'].value = post.targetZones || 'All Zones, Barangay Manguring';
+          if (form.elements['annEventDate']) form.elements['annEventDate'].value = post.eventDate || '';
+          if (form.elements['annRelayByDate']) form.elements['annRelayByDate'].value = post.relayByDate || '';
+          if (form.elements['annEventTime']) form.elements['annEventTime'].value = post.eventTime || '';
+          if (form.elements['annLocation']) form.elements['annLocation'].value = post.location || '';
+          if (form.elements['annStatus']) form.elements['annStatus'].value = post.status || 'relayed';
+          if (form.elements['annRelayedBy']) form.elements['annRelayedBy'].value = post.relayedBy || 'Nurse Ana Reyes';
+          if (form.elements['annContent']) form.elements['annContent'].value = post.content || '';
+          if (submitBtn) submitBtn.textContent = 'Save Changes →';
+        }
+      } else {
+        form.reset();
+        if (form.elements['annId']) form.elements['annId'].value = '';
+        if (form.elements['annCategory']) form.elements['annCategory'].value = 'Seminar';
+        if (form.elements['annTargetZones']) form.elements['annTargetZones'].value = 'All Zones, Barangay Manguring';
+        if (form.elements['annRelayedBy']) form.elements['annRelayedBy'].value = 'Nurse Ana Reyes';
+        if (form.elements['annStatus']) form.elements['annStatus'].value = 'relayed';
+        if (submitBtn) submitBtn.textContent = 'Publish Announcement →';
+      }
+    }
+
     NutriApp.openModal('modal-announcement-composer');
+  },
+
+  openEditModal(id) {
+    const posts = NutriStorage.getAnnouncements();
+    const post = posts.find(p => String(p.id) === String(id));
+    if (!post) return;
+
+    this.showCreateView();
+
+    const idField = document.getElementById('admin-page-form-id');
+    const typeField = document.getElementById('admin-page-form-type');
+    const zoneField = document.getElementById('admin-page-form-target-zone');
+    const titleField = document.getElementById('admin-page-form-title');
+    const detailsField = document.getElementById('admin-page-form-details');
+    const dateField = document.getElementById('admin-page-form-date');
+    const relayDateField = document.getElementById('admin-page-form-relay-date');
+    const timeField = document.getElementById('admin-page-form-time');
+    const venueField = document.getElementById('admin-page-form-venue');
+    const submitBtn = document.getElementById('btn-admin-page-form-submit');
+
+    if (idField) idField.value = post.id;
+    if (typeField) typeField.value = post.category || 'Meeting';
+    if (zoneField) zoneField.value = post.targetZones || 'All Zones, Barangay Manguring';
+    if (titleField) titleField.value = post.title || '';
+    if (detailsField) detailsField.value = post.content || '';
+    if (dateField && post.rawDate) dateField.value = post.rawDate;
+    if (relayDateField && post.rawRelayDate) relayDateField.value = post.rawRelayDate;
+    if (timeField) timeField.value = post.eventTime || '';
+    if (venueField) venueField.value = post.location || '';
+    if (submitBtn) submitBtn.textContent = 'Update Announcement →';
+  },
+
+  // ==========================================================================
+  // IN-PAGE ANNOUNCEMENT CREATION / EDITING VIEW (Screenshot Match)
+  // ==========================================================================
+  showCreateView() {
+    const listView = document.getElementById('admin-ann-list-view');
+    const createView = document.getElementById('admin-ann-create-view');
+    const newBtn = document.getElementById('btn-admin-new-ann');
+    const backBtn = document.getElementById('btn-admin-back-ann');
+    const form = document.getElementById('admin-ann-create-form');
+    const submitBtn = document.getElementById('btn-admin-page-form-submit');
+
+    if (listView) listView.style.display = 'none';
+    if (createView) createView.style.display = 'block';
+    if (newBtn) newBtn.style.display = 'none';
+    if (backBtn) backBtn.style.display = 'inline-flex';
+
+    if (form) {
+      form.reset();
+      const idField = document.getElementById('admin-page-form-id');
+      if (idField) idField.value = '';
+      const typeField = document.getElementById('admin-page-form-type');
+      if (typeField) typeField.value = 'Meeting';
+      const zoneField = document.getElementById('admin-page-form-target-zone');
+      if (zoneField) zoneField.value = 'All Zones, Barangay Manguring';
+    }
+
+    if (submitBtn) {
+      submitBtn.textContent = 'Post to Health Workers →';
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+
+  showListView() {
+    const listView = document.getElementById('admin-ann-list-view');
+    const createView = document.getElementById('admin-ann-create-view');
+    const newBtn = document.getElementById('btn-admin-new-ann');
+    const backBtn = document.getElementById('btn-admin-back-ann');
+
+    if (createView) createView.style.display = 'none';
+    if (listView) listView.style.display = 'block';
+    if (backBtn) backBtn.style.display = 'none';
+    if (newBtn) newBtn.style.display = 'inline-flex';
+
+    this.renderAdminFeed();
+  },
+
+  formatDisplayDate(dateStr) {
+    if (!dateStr) return '';
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        return d.toLocaleDateString('en-US', { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
+      }
+    } catch (e) {}
+    return dateStr;
+  },
+
+  formatRelayDeadline(dateStr) {
+    if (!dateStr) return '';
+    try {
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const d = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+      }
+    } catch (e) {}
+    return dateStr;
+  },
+
+  handlePageFormSubmit(form) {
+    const editId = form.elements['annId'] ? form.elements['annId'].value.trim() : '';
+    const category = form.elements['annCategory'] ? form.elements['annCategory'].value : 'Meeting';
+    const targetZones = form.elements['annTargetZones'] ? form.elements['annTargetZones'].value : 'All Zones, Barangay Manguring';
+    const title = form.elements['annTitle'] ? form.elements['annTitle'].value.trim() : '';
+    const content = form.elements['annContent'] ? form.elements['annContent'].value.trim() : '';
+    const dateInput = form.elements['annDateInput'] ? form.elements['annDateInput'].value : '';
+    const relayDateInput = form.elements['annRelayDateInput'] ? form.elements['annRelayDateInput'].value : '';
+    const eventTime = form.elements['annEventTime'] ? form.elements['annEventTime'].value.trim() : '';
+    const location = form.elements['annLocation'] ? form.elements['annLocation'].value.trim() : '';
+
+    if (!title || !content) {
+      NutriApp.showToast('Please provide both an announcement title and details.', 'warning');
+      return;
+    }
+
+    const eventDate = this.formatDisplayDate(dateInput) || dateInput;
+    const relayByDate = this.formatRelayDeadline(relayDateInput) || relayDateInput;
+
+    const currentUser = NutriStorage.getCurrentUser() || {};
+    const authorName = currentUser.name || 'Dr. Jose Lim';
+    const authorDesignation = currentUser.designation || 'Municipal Health Officer';
+
+    if (editId) {
+      const existing = NutriStorage.getAnnouncements().find(p => String(p.id) === String(editId));
+      const updatedPost = {
+        ...(existing || {}),
+        id: editId,
+        title,
+        content,
+        category,
+        targetZones,
+        rawDate: dateInput,
+        rawRelayDate: relayDateInput,
+        eventDate: eventDate || existing?.eventDate,
+        relayByDate: relayByDate || existing?.relayByDate,
+        eventTime,
+        location,
+        barangay: targetZones.includes('Manguring') || targetZones.includes('Manguiring') ? 'Barangay Manguring' : 'All Barangays'
+      };
+
+      NutriStorage.updateAnnouncement(updatedPost);
+      NutriApp.showToast('Announcement updated successfully!', 'success');
+      this.showListView();
+      this.renderDashboardWidgets();
+      return;
+    }
+
+    // New Announcement
+    const newPost = {
+      id: 'ann-' + Date.now(),
+      title,
+      content,
+      category,
+      targetZones,
+      targetBarangays: ['Barangay Manguring'],
+      barangay: 'Barangay Manguring',
+      rawDate: dateInput,
+      rawRelayDate: relayDateInput,
+      eventDate,
+      relayByDate,
+      eventTime,
+      location,
+      status: 'relayed',
+      relayedBy: 'Nurse Ana Reyes',
+      statusText: '✓ Relayed to Parents/Guardians by Nurse Ana Reyes',
+      authorName,
+      authorRole: 'mho',
+      authorDesignation,
+      targetAudience: 'both',
+      priority: 'normal',
+      createdAt: new Date().toISOString(),
+      pinned: false
+    };
+
+    NutriStorage.addAnnouncement(newPost);
+    NutriApp.showToast('📢 Official Announcement posted to Health Workers successfully!', 'success');
+    this.showListView();
+    this.renderDashboardWidgets();
+  },
+
+
+  toggleRelayStatus(id) {
+    const posts = NutriStorage.getAnnouncements();
+    const post = posts.find(p => String(p.id) === String(id));
+    if (!post) return;
+
+    if (post.status === 'relayed') {
+      post.status = 'overdue';
+      post.statusText = 'Relay overdue';
+      NutriApp.showToast('Announcement marked as: Relay overdue', 'warning');
+    } else {
+      post.status = 'relayed';
+      const staff = post.relayedBy || 'Nurse Ana Reyes';
+      post.relayedBy = staff;
+      post.statusText = `✓ Relayed to Parents/Guardians by ${staff}`;
+      NutriApp.showToast(`Announcement marked as: Relayed by ${staff}`, 'success');
+    }
+
+    NutriStorage.updateAnnouncement(post);
+    this.renderAllFeeds();
   },
 
   selectRadioCard(cardElem) {
@@ -303,70 +502,94 @@ const AnnouncementsModule = {
 
   // Form submission
   handlePostSubmit(form) {
+    const editId = form.elements['annId'] ? form.elements['annId'].value.trim() : '';
     const title = form.elements['annTitle'] ? form.elements['annTitle'].value.trim() : '';
     const content = form.elements['annContent'] ? form.elements['annContent'].value.trim() : '';
-    const category = form.elements['annCategory'] ? form.elements['annCategory'].value : 'General Notice';
-    const priority = form.elements['annPriority'] ? form.elements['annPriority'].value : 'normal';
-    
+    const category = form.elements['annCategory'] ? form.elements['annCategory'].value : 'Seminar';
+    const targetZones = form.elements['annTargetZones'] ? form.elements['annTargetZones'].value.trim() : 'All Zones, Barangay Manguring';
+    const eventDate = form.elements['annEventDate'] ? form.elements['annEventDate'].value.trim() : '';
+    const relayByDate = form.elements['annRelayByDate'] ? form.elements['annRelayByDate'].value.trim() : '';
+    const eventTime = form.elements['annEventTime'] ? form.elements['annEventTime'].value.trim() : '';
+    const location = form.elements['annLocation'] ? form.elements['annLocation'].value.trim() : '';
+    const status = form.elements['annStatus'] ? form.elements['annStatus'].value : 'relayed';
+    const relayedBy = form.elements['annRelayedBy'] ? form.elements['annRelayedBy'].value.trim() : 'Nurse Ana Reyes';
+
     const audienceInput = form.querySelector('input[name="annTargetAudience"]:checked');
-    const targetAudience = audienceInput ? audienceInput.value : (this.currentComposerRole === 'mho' ? 'both' : 'admin_parent');
+    const targetAudience = audienceInput ? audienceInput.value : 'both';
 
     if (!title || !content) {
       NutriApp.showToast('Please provide both an announcement title and content.', 'warning');
       return;
     }
 
-    const currentUser = NutriStorage.getCurrentUser() || {};
-    const authorName = currentUser.name || (this.currentComposerRole === 'mho' ? 'Dr. Elena Cruz, MHO' : 'Sister Teresa Lim, BNS');
-    const authorDesignation = currentUser.designation || (this.currentComposerRole === 'mho' ? 'Municipal Health Officer' : 'Barangay Nutrition Scholar');
-
-    // Extract Target Barangays
-    let targetBarangays = [];
-    let destinationLabel = 'All Barangays';
-
-    if (this.currentComposerRole === 'mho') {
-      const checkedBoxes = form.querySelectorAll('input[name="annTargetBarangay"]:checked');
-      if (checkedBoxes.length === 0) {
-        NutriApp.showToast('Please select at least one destination Barangay for this announcement.', 'warning');
-        return;
-      }
-      checkedBoxes.forEach(cb => targetBarangays.push(cb.value));
-      destinationLabel = targetBarangays.join(', ') || 'Barangay Manguiring';
+    let statusText = '';
+    if (status === 'relayed') {
+      statusText = `✓ Relayed to Parents/Guardians by ${relayedBy || 'Nurse Ana Reyes'}`;
+    } else if (status === 'overdue') {
+      statusText = 'Relay overdue';
     } else {
-      // BHW posts from their assigned barangay
-      destinationLabel = currentUser.barangay || 'Barangay Manguiring';
-      targetBarangays = [destinationLabel];
+      statusText = '⏳ Relay pending';
     }
 
+    const currentUser = NutriStorage.getCurrentUser() || {};
+    const authorName = currentUser.name || (this.currentComposerRole === 'mho' ? 'Dr. Jose Lim' : 'Sister Teresa Lim, BNS');
+    const authorDesignation = currentUser.designation || (this.currentComposerRole === 'mho' ? 'Municipal Health Officer' : 'Barangay Nutrition Scholar');
+
+    if (editId) {
+      const existing = NutriStorage.getAnnouncements().find(p => String(p.id) === String(editId));
+      const updatedPost = {
+        ...(existing || {}),
+        id: editId,
+        title,
+        content,
+        category,
+        targetZones,
+        eventDate,
+        relayByDate,
+        eventTime,
+        location,
+        status,
+        relayedBy,
+        statusText,
+        barangay: targetZones.includes('Manguring') || targetZones.includes('Manguiring') ? 'Barangay Manguring' : 'All Barangays'
+      };
+
+      NutriStorage.updateAnnouncement(updatedPost);
+      NutriApp.closeModal('modal-announcement-composer');
+      NutriApp.showToast('Announcement updated successfully!', 'success');
+      this.renderAllFeeds();
+      this.renderDashboardWidgets();
+      return;
+    }
+
+    // New Announcement
     const newPost = {
+      id: 'ann-' + Date.now(),
       title,
       content,
       category,
-      priority,
+      targetZones,
+      targetBarangays: ['Barangay Manguring'],
+      barangay: 'Barangay Manguring',
+      eventDate,
+      relayByDate,
+      eventTime,
+      location,
+      status,
+      relayedBy,
+      statusText,
       authorName,
       authorRole: this.currentComposerRole,
       authorDesignation,
       targetAudience,
-      targetBarangays,
-      barangay: destinationLabel,
-      targetBarangaysDisplay: destinationLabel,
-      pinned: priority === 'urgent'
+      priority: status === 'overdue' ? 'high' : 'normal',
+      createdAt: new Date().toISOString(),
+      pinned: false
     };
 
     NutriStorage.addAnnouncement(newPost);
     NutriApp.closeModal('modal-announcement-composer');
-    form.reset();
-
-    // Reset radio active class
-    const firstCard = form.querySelector('.audience-radio-card');
-    if (firstCard) this.selectRadioCard(firstCard);
-
-    let audienceText = 'Both PARENT & BHW';
-    if (targetAudience === 'bhw') audienceText = 'BHW Only';
-    if (targetAudience === 'admin_parent') audienceText = 'Both ADMIN & PARENT';
-    if (targetAudience === 'parent') audienceText = 'PARENT Only';
-
-    NutriApp.showToast(`📢 Announcement published! Sent to: ${audienceText} • [${destinationLabel}]`, 'success');
+    NutriApp.showToast('📢 Official Announcement published successfully!', 'success');
     this.renderAllFeeds();
     this.renderDashboardWidgets();
   },
@@ -460,50 +683,106 @@ const AnnouncementsModule = {
     container.innerHTML = posts.map(post => this.buildCardHtml(post, 'chw')).join('');
   },
 
-  // 3. Admin Feed (ALL MUNICIPAL & ESCALATED POSTS + COMPOSER TRIGGER)
+  // 3. Admin Feed (Pixel-Perfect match to screenshot)
   renderAdminFeed() {
     const container = document.getElementById('admin-announcements-container');
     if (!container) return;
 
     let posts = NutriStorage.getAnnouncementsForRole('mho');
-
-    // Category filter
-    if (this.activeAdminCategoryFilter !== 'ALL') {
-      posts = posts.filter(p => p.category === this.activeAdminCategoryFilter);
-    }
-
-    // Barangay filter
-    if (this.activeAdminBarangayFilter !== 'ALL') {
-      posts = posts.filter(p => 
-        p.barangay === 'All Barangays' || 
-        (p.targetBarangays && (p.targetBarangays.length >= 4 || p.targetBarangays.includes(this.activeAdminBarangayFilter))) ||
-        (p.barangay && p.barangay.includes(this.activeAdminBarangayFilter))
-      );
-    }
-
-    // Search filter
-    if (this.searchQueryAdmin) {
-      posts = posts.filter(p => 
-        p.title.toLowerCase().includes(this.searchQueryAdmin) || 
-        p.content.toLowerCase().includes(this.searchQueryAdmin) ||
-        p.category.toLowerCase().includes(this.searchQueryAdmin) ||
-        p.authorName.toLowerCase().includes(this.searchQueryAdmin) ||
-        (p.barangay && p.barangay.toLowerCase().includes(this.searchQueryAdmin))
-      );
+    if (!posts || posts.length === 0) {
+      posts = NutriStorage.getAnnouncements();
     }
 
     if (posts.length === 0) {
       container.innerHTML = `
-        <div class="announcement-empty-state">
+        <div class="announcement-empty-state" style="padding: 3rem 1rem; text-align: center; background: #FFFFFF; border-radius: 16px; border: 1px solid #EBE5DD;">
           <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">📭</div>
-          <h4 style="font-size: 1.1rem; color: var(--color-primary-900); margin-bottom: 0.25rem;">No Municipal Broadcasts Found</h4>
-          <p style="color: var(--text-muted); font-size: 0.88rem;">Click "+ Post Announcement" to publish official directives and distribution schedules.</p>
+          <h4 style="font-size: 1.15rem; color: #1F2937; margin-bottom: 0.35rem; font-weight: 700;">No Announcements Yet</h4>
+          <p style="color: #6B7280; font-size: 0.9rem;">Click "+ New Announcement" above to post an official municipal notice.</p>
         </div>
       `;
       return;
     }
 
-    container.innerHTML = posts.map(post => this.buildCardHtml(post, 'mho')).join('');
+    container.innerHTML = posts.map(post => this.buildAdminCardHtml(post)).join('');
+  },
+
+  buildAdminCardHtml(post) {
+    const catLower = (post.category || '').toLowerCase();
+    let iconClass = 'icon-default';
+    let typeClass = 'type-default';
+    let icon = '📢';
+
+    if (catLower.includes('seminar')) {
+      iconClass = 'icon-seminar';
+      typeClass = 'type-seminar';
+      icon = '🎓';
+    } else if (catLower.includes('reminder') || catLower.includes('weigh')) {
+      iconClass = 'icon-reminder';
+      typeClass = 'type-reminder';
+      icon = '🔔';
+    } else if (catLower.includes('update') || catLower.includes('guideline') || catLower.includes('training')) {
+      iconClass = 'icon-update';
+      typeClass = 'type-update';
+      icon = '📣';
+    }
+
+    const targetZones = post.targetZones || (post.targetBarangays && post.targetBarangays.length ? post.targetBarangays.join(', ') : 'All Zones, Barangay Manguring');
+
+    // Status Badge Logic
+    let statusBadgeHtml = '';
+    const status = post.status || 'relayed';
+    if (status === 'relayed') {
+      const text = post.statusText || `✓ Relayed to Parents/Guardians by ${post.relayedBy || 'Nurse Ana Reyes'}`;
+      statusBadgeHtml = `
+        <button type="button" class="admin-ann-status-badge status-relayed" onclick="AnnouncementsModule.toggleRelayStatus('${post.id}')" title="Click to toggle status">
+          ${text}
+        </button>
+      `;
+    } else if (status === 'overdue') {
+      const text = post.statusText || 'Relay overdue';
+      statusBadgeHtml = `
+        <button type="button" class="admin-ann-status-badge status-overdue" onclick="AnnouncementsModule.toggleRelayStatus('${post.id}')" title="Click to toggle status">
+          ${text}
+        </button>
+      `;
+    } else {
+      statusBadgeHtml = `
+        <button type="button" class="admin-ann-status-badge status-pending" onclick="AnnouncementsModule.toggleRelayStatus('${post.id}')" title="Click to toggle status">
+          ⏳ Relay Pending
+        </button>
+      `;
+    }
+
+    return `
+      <div class="admin-ann-card" id="ann-card-${post.id}">
+        <div class="admin-ann-icon-box ${iconClass}">${icon}</div>
+        <div class="admin-ann-body">
+          <div class="admin-ann-top-row">
+            <div class="admin-ann-title-wrap">
+              <h3 class="admin-ann-card-title">${post.title}</h3>
+              <span class="admin-ann-type-badge ${typeClass}">${post.category || 'General'}</span>
+              <span class="admin-ann-zone-badge">${targetZones}</span>
+            </div>
+            <div class="admin-ann-actions">
+              <button type="button" class="btn-ann-action" onclick="AnnouncementsModule.openEditModal('${post.id}')" title="Edit Announcement">✏️ Edit</button>
+              <button type="button" class="btn-ann-action btn-ann-delete" onclick="AnnouncementsModule.deletePost('${post.id}')" title="Delete Announcement">🗑️</button>
+            </div>
+          </div>
+          <p class="admin-ann-description">${post.content}</p>
+          <div class="admin-ann-meta-row">
+            ${post.eventDate ? `<span class="admin-ann-meta-item">🗓️ ${post.eventDate}</span>` : ''}
+            ${post.relayByDate ? `<span class="admin-ann-meta-item admin-ann-relay-deadline">Relay by ${post.relayByDate}</span>` : ''}
+            ${post.eventTime ? `<span class="admin-ann-meta-item">⏰ ${post.eventTime}</span>` : ''}
+            ${post.location ? `<span class="admin-ann-meta-item">📍 ${post.location}</span>` : ''}
+          </div>
+          <hr class="admin-ann-divider">
+          <div class="admin-ann-status-row">
+            ${statusBadgeHtml}
+          </div>
+        </div>
+      </div>
+    `;
   },
 
   // Build Announcement Card HTML

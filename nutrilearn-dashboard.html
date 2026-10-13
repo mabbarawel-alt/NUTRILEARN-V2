@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NutriLearn — Field Records Dashboard</title>
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#F0F7F4',
+              100: '#D8EDE2',
+              500: '#2D6A4F',
+              600: '#1E4E3A',
+              700: '#194130',
+              800: '#143828',
+              900: '#0F291E',
+              dark: '#1E382A'
+            },
+            warm: {
+              cream: '#FBF9F5',
+              surface: '#FFFFFF',
+              card: '#FAF7F2',
+              pill: '#F1ECE3',
+              pillHover: '#E5DFD4',
+              border: '#EAE4D8',
+              borderInput: '#DDD7CD',
+              textMuted: '#78716C'
+            },
+            rust: {
+              500: '#D96528',
+              600: '#C2561D'
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            display: ['"Playfair Display"', 'Georgia', 'serif']
+          },
+          boxShadow: {
+            subtle: '0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02)',
+            card: '0 4px 14px rgba(0, 0, 0, 0.03)',
+            stunted: '0 4px 16px rgba(217, 101, 40, 0.25)',
+            glow: '0 0 0 3px rgba(45, 106, 79, 0.15)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom scrollbar & aesthetic refinements */
+    body {
+      background-color: #FBF9F5;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: #1E293B;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F4EFEA;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D5CEBE;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #B8B09F;
+    }
+
+    /* Soft transition utilities */
+    .transition-all-200 {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="bg-warm-cream min-h-screen flex flex-col text-slate-800">
+
+  <!-- =========================================================================
+       1. TOP NAVIGATION BAR (Exact Match to NutriLearn MHO Taskbar)
+       ========================================================================= -->
+  <header class="bg-white border-b border-warm-border sticky top-0 z-40 transition-all">
+    <div class="max-w-[1260px] mx-auto px-4 sm:px-6 lg:px-8 h-[74px] flex items-center justify-between gap-4">
+      
+      <!-- Left: NutriLearn Brand Logo -->
+      <div class="flex items-center gap-8 shrink-0">
+        <a href="#" class="flex items-center gap-2.5 group focus:outline-none" aria-label="NutriLearn Home">
+          <!-- Leaf Brand Icon -->
+          <div class="w-9 h-9 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-500 shadow-sm transition-transform duration-200 group-hover:scale-105">
+            <svg class="w-5 h-5 fill-current text-brand-500" viewBox="0 0 24 24">
+              <path d="M17.657 16.657c-2.42 2.42-6.07 2.82-8.91 1.2a1 1 0 0 1-.29-.26l-3.3-4.13a1 1 0 0 1 .15-1.39l4.58-3.93c1.78-1.53 4.28-1.89 6.42-.92a9.96 9.96 0 0 1 2.35 1.57c2.42 2.42 1.42 6.44-1 8.86zM6.5 12.5l2.4 3 2.1-1.8-2.4-3-2.1 1.8z" opacity="0.3"/>
+              <path d="M21 3C14 3 9 7 9 13c0 2.21.89 4.21 2.34 5.66A9.957 9.957 0 0 1 5 21a1 1 0 1 1 0-2c3.55 0 6.63-1.84 8.35-4.65C17.72 13.62 21 8.87 21 3z"/>
+            </svg>
+          </div>
+          <!-- Brand Wordmark -->
+          <div class="flex flex-col">
+            <div class="flex items-center">
+              <span class="font-extrabold text-xl tracking-tight text-slate-900">Nutri</span>
+              <span class="font-extrabold text-xl tracking-tight text-brand-500">Learn</span>
+            </div>
+            <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-400 -mt-1 hidden sm:block">Child Health &amp; Nutrition</span>
+          </div>
+        </a>
+
+        <!-- Center: Primary Navigation Links (Desktop) -->
+        <nav class="hidden md:flex items-center gap-1.5 bg-warm-card p-1.5 rounded-full border border-warm-border/80">
+          <a href="#overview" onclick="handleNavClick('Overview', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+            Overview
+          </a>
+          <a href="#field-records" onclick="handleNavClick('Field Records', event)" class="nav-tab-active px-4 py-1.5 rounded-full text-xs font-bold bg-brand-500 text-white shadow-sm transition-all-200 flex items-center gap-1.5">
+            <span>📋</span>
+            <span>Field Records</span>
+          </a>
+          <a href="#announcements" onclick="handleNavClick('Announcements', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+            Announcements
+          </a>
+          <a href="#users" onclick="handleNavClick('Users', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+            Users
+          </a>
+          <a href="#content" onclick="handleNavClick('Content', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+            Content
+          </a>
+        </nav>
+      </div>
+
+      <!-- Right: User Profile & Actions -->
+      <div class="flex items-center gap-3.5">
+        <!-- User Badge -->
+        <div class="flex items-center gap-3 pl-2 sm:pl-3 pr-2 py-1.5 rounded-full hover:bg-warm-card border border-transparent hover:border-warm-border transition-all-200 cursor-pointer" onclick="showToast('Viewing Dr. Jose Lim profile (MHO)')" title="View Account Profile">
+          <div class="text-right hidden sm:block">
+            <div class="text-sm font-bold text-slate-900 leading-tight">Dr. Jose Lim</div>
+            <div class="text-[11px] font-medium text-slate-500 leading-tight">Barangay Manguring Health Office, Calabanga</div>
+          </div>
+          <!-- Avatar Initials -->
+          <div class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold text-xs flex items-center justify-center shadow-sm border border-brand-600">
+            JL
+          </div>
+        </div>
+
+        <!-- Vertical Divider -->
+        <div class="h-6 w-[1px] bg-warm-border hidden sm:block"></div>
+
+        <!-- Sign Out Button -->
+        <button type="button" onclick="handleSignOut()" class="px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-red-700 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 rounded-full transition-all-200 shadow-2xs">
+          Sign out
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button type="button" onclick="toggleMobileNav()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-warm-card focus:outline-none" aria-label="Toggle Navigation">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-nav-panel" class="hidden md:hidden px-4 pb-4 pt-2 border-t border-warm-border bg-white space-y-1">
+      <a href="#overview" onclick="handleNavClick('Overview', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Overview</a>
+      <a href="#field-records" onclick="handleNavClick('Field Records', event)" class="block px-3 py-2 rounded-lg text-sm font-bold bg-brand-500 text-white">📋 Field Records</a>
+      <a href="#announcements" onclick="handleNavClick('Announcements', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Announcements</a>
+      <a href="#users" onclick="handleNavClick('Users', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Users</a>
+      <a href="#content" onclick="handleNavClick('Content', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Content</a>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN DASHBOARD CONTENT AREA
+       ========================================================================= -->
+  <main class="flex-1 max-w-[1260px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-7">
+
+    <!-- 2. HEADER SECTION ("Field Records") -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-7">
+      <div>
+        <h1 class="font-display text-3xl sm:text-[34px] font-bold text-brand-dark tracking-tight leading-tight">
+          Field Records
+        </h1>
+        <p class="text-slate-500 text-sm sm:text-[15px] mt-1 font-medium">
+          Live child nutrition data submitted by health workers
+        </p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <!-- Add Child (Extra utility to test reactivity) -->
+        <button type="button" onclick="openAddRecordModal()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-brand-600 bg-white border border-brand-600/30 hover:border-brand-600 hover:bg-brand-50 shadow-xs transition-all-200">
+          <span>➕</span>
+          <span>Add Record</span>
+        </button>
+
+        <!-- Export CSV Button (Matching Screenshot) -->
+        <button type="button" id="btn-export-csv" onclick="exportRecordsToCSV()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-[0.98] shadow-sm transition-all-200">
+          <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+          </svg>
+          <span>Export CSV</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 3. METRIC SUMMARY CARDS (Row of 4) -->
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-7" aria-label="Nutrition KPI Metrics">
+      
+      <!-- Card 1: Total Records -->
+      <div onclick="filterByStatus('ALL')" class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-slate-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden" title="Click to view all records">
+        <div class="flex items-start justify-between">
+          <div class="w-10 h-10 rounded-xl bg-warm-card border border-warm-border flex items-center justify-center text-lg text-slate-700 group-hover:scale-110 transition-transform">
+            📋
+          </div>
+          <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Metric</span>
+        </div>
+        <div class="mt-4">
+          <div id="stat-total" class="text-3xl sm:text-[34px] font-extrabold text-slate-900 leading-none">3</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-500 mt-2">Total Records</div>
+        </div>
+      </div>
+
+      <!-- Card 2: Stunted (Highlighted prominently in solid rust-orange) -->
+      <div onclick="filterByStatus('Stunted')" class="metric-card group bg-rust-500 border border-rust-500 text-white rounded-2xl p-5 shadow-stunted hover:bg-rust-600 transition-all-200 cursor-pointer relative overflow-hidden" title="Click to filter Stunted records">
+        <div class="flex items-start justify-between">
+          <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-lg text-white group-hover:scale-110 transition-transform">
+            ✏️
+          </div>
+          <span class="text-[11px] font-bold text-white/80 uppercase tracking-wider">Priority</span>
+        </div>
+        <div class="mt-4">
+          <div id="stat-stunted" class="text-3xl sm:text-[34px] font-extrabold text-white leading-none">0</div>
+          <div class="text-xs sm:text-sm font-semibold text-white/90 mt-2">Stunted</div>
+        </div>
+      </div>
+
+      <!-- Card 3: At Risk (Warning Icon) -->
+      <div onclick="filterByStatus('At Risk')" class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-amber-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden" title="Click to filter At Risk records">
+        <div class="flex items-start justify-between">
+          <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-lg text-amber-600 group-hover:scale-110 transition-transform">
+            ⚠️
+          </div>
+          <span class="text-[11px] font-bold text-amber-500 uppercase tracking-wider">Monitoring</span>
+        </div>
+        <div class="mt-4">
+          <div id="stat-atrisk" class="text-3xl sm:text-[34px] font-extrabold text-slate-900 leading-none">2</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-500 mt-2">At Risk</div>
+        </div>
+      </div>
+
+      <!-- Card 4: Normal (Checkmark Icon) -->
+      <div onclick="filterByStatus('Normal')" class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-emerald-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden" title="Click to filter Normal records">
+        <div class="flex items-start justify-between">
+          <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-lg text-emerald-600 group-hover:scale-110 transition-transform">
+            ✅
+          </div>
+          <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Optimal</span>
+        </div>
+        <div class="mt-4">
+          <div id="stat-normal" class="text-3xl sm:text-[34px] font-extrabold text-slate-900 leading-none">1</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-500 mt-2">Normal</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 4. INTERACTIVE CONTROLS BAR -->
+    <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 mb-5">
+      
+      <!-- Full-Width Responsive Search Bar -->
+      <div class="relative flex-1">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          id="search-input" 
+          oninput="handleSearchInput(this.value)"
+          placeholder="Search by child, Parent/Guardian, zone, or Health Worker..." 
+          class="w-full pl-11 pr-10 py-3 bg-white border border-warm-borderInput rounded-full text-xs sm:text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all-200 shadow-2xs"
+        />
+        <!-- Clear search icon -->
+        <button 
+          id="clear-search-btn" 
+          onclick="clearSearch()" 
+          class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600"
+          title="Clear search"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Filter Pill Buttons -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 shrink-0">
+        <button 
+          type="button" 
+          id="filter-pill-all"
+          onclick="filterByStatus('ALL')" 
+          class="filter-pill active px-4 py-2.5 rounded-full text-xs font-bold transition-all-200 shrink-0 bg-brand-500 text-white shadow-2xs"
+        >
+          All
+        </button>
+        <button 
+          type="button" 
+          id="filter-pill-normal"
+          onclick="filterByStatus('Normal')" 
+          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0"
+        >
+          Normal
+        </button>
+        <button 
+          type="button" 
+          id="filter-pill-atrisk"
+          onclick="filterByStatus('At Risk')" 
+          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0"
+        >
+          At Risk
+        </button>
+        <button 
+          type="button" 
+          id="filter-pill-stunted"
+          onclick="filterByStatus('Stunted')" 
+          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0"
+        >
+          Stunted
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. DATA TABLE CARD -->
+    <div class="bg-white border border-warm-border rounded-2xl shadow-card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse min-w-[840px]">
+          <thead>
+            <tr class="bg-warm-card/90 border-b border-warm-border/80">
+              <th scope="col" class="py-3.5 px-5 text-xs font-semibold text-slate-500 tracking-normal">Child</th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Parent/Guardian</th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Manguring Zone</th>
+              <th scope="col" class="py-3.5 px-3 text-xs font-semibold text-slate-500 tracking-normal">Age</th>
+              <th scope="col" class="py-3.5 px-3 text-xs font-semibold text-slate-500 tracking-normal">Weight</th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Status</th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Submitted By</th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Date</th>
+              <th scope="col" class="py-3.5 pr-4 pl-2 text-xs font-semibold text-slate-500 text-center w-10"></th>
+            </tr>
+          </thead>
+          <tbody id="records-table-body" class="divide-y divide-warm-border/50 text-sm text-slate-600">
+            <!-- Dynamic Table Rows Injected by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Empty State (Shown when filters match 0 items) -->
+      <div id="table-empty-state" class="hidden py-14 px-4 text-center">
+        <div class="w-14 h-14 mx-auto rounded-full bg-warm-card border border-warm-border flex items-center justify-center text-2xl text-slate-400 mb-3">
+          🔍
+        </div>
+        <h3 class="text-base font-bold text-slate-800">No matching records found</h3>
+        <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          We couldn't find any child records matching your search query or selected status filter.
+        </p>
+        <button type="button" onclick="resetAllFilters()" class="mt-4 px-4 py-2 rounded-full text-xs font-bold text-brand-600 bg-brand-50 hover:bg-brand-100 transition-colors">
+          Reset Filters
+        </button>
+      </div>
+    </div>
+
+    <!-- 6. TABLE FOOTER NOTE (Matching Screenshot) -->
+    <p class="text-center text-xs sm:text-sm text-warm-textMuted mt-5 mb-8 font-medium">
+      Records are submitted in real-time by health workers and require no manual processing.
+    </p>
+
+  </main>
+
+  <!-- =========================================================================
+       MODALS & TOAST NOTIFICATIONS
+       ========================================================================= -->
+
+  <!-- Child Detailed Drawer / Accordion Modal -->
+  <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-2xs transition-opacity">
+    <div class="bg-white rounded-3xl border border-warm-border shadow-2xl max-w-md w-full p-6 relative transform transition-all">
+      <button onclick="closeDetailModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="flex items-center gap-3 mb-4">
+        <div class="w-12 h-12 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-xl text-brand-500">
+          👶
+        </div>
+        <div>
+          <h3 id="modal-child-name" class="text-lg font-bold text-slate-900">Child Details</h3>
+          <p id="modal-child-sub" class="text-xs text-slate-500">Official Health Registry</p>
+        </div>
+      </div>
+
+      <div class="space-y-3.5 text-xs text-slate-700 bg-warm-card p-4 rounded-2xl border border-warm-border mb-5">
+        <div class="flex justify-between border-b border-warm-border/60 pb-2">
+          <span class="text-slate-500">Parent / Guardian:</span>
+          <span id="modal-parent" class="font-bold text-slate-900">--</span>
+        </div>
+        <div class="flex justify-between border-b border-warm-border/60 pb-2">
+          <span class="text-slate-500">Community Zone:</span>
+          <span id="modal-zone" class="font-medium text-slate-900">--</span>
+        </div>
+        <div class="flex justify-between border-b border-warm-border/60 pb-2">
+          <span class="text-slate-500">Age:</span>
+          <span id="modal-age" class="font-medium text-slate-900">--</span>
+        </div>
+        <div class="flex justify-between border-b border-warm-border/60 pb-2">
+          <span class="text-slate-500">Recorded Weight:</span>
+          <span id="modal-weight" class="font-bold text-emerald-800">--</span>
+        </div>
+        <div class="flex justify-between border-b border-warm-border/60 pb-2">
+          <span class="text-slate-500">Nutrition Status:</span>
+          <span id="modal-status-badge">--</span>
+        </div>
+        <div class="flex justify-between border-b border-warm-border/60 pb-2">
+          <span class="text-slate-500">Submitted By:</span>
+          <span id="modal-submitter" class="font-medium text-slate-900">--</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-slate-500">Assessment Date:</span>
+          <span id="modal-date" class="font-medium text-slate-900">--</span>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2">
+        <button type="button" onclick="closeDetailModal()" class="px-5 py-2 rounded-full text-xs font-semibold text-slate-600 bg-warm-pill hover:bg-warm-pillHover transition-colors">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Child Record Modal -->
+  <div id="add-record-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-2xs transition-opacity">
+    <div class="bg-white rounded-3xl border border-warm-border shadow-2xl max-w-lg w-full p-6 relative">
+      <button onclick="closeAddRecordModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+
+      <div class="flex items-center gap-3 mb-5">
+        <div class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-lg text-brand-500">
+          ➕
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-slate-900">Add Field Child Record</h3>
+          <p class="text-xs text-slate-500">Direct entry into Barangay Manguring database</p>
+        </div>
+      </div>
+
+      <form id="add-child-form" onsubmit="handleCreateRecord(event)" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Child Name *</label>
+            <input type="text" id="new-child-name" required placeholder="e.g. Mateo Cruz" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Parent / Guardian *</label>
+            <input type="text" id="new-parent-name" required placeholder="e.g. Elena Cruz" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Manguring Zone *</label>
+            <select id="new-zone" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white">
+              <option value="Zone 1, Barangay Manguring">Zone 1, Barangay Manguring</option>
+              <option value="Zone 2, Barangay Manguring">Zone 2, Barangay Manguring</option>
+              <option value="Zone 3, Barangay Manguring">Zone 3, Barangay Manguring</option>
+              <option value="Zone 4, Barangay Manguring">Zone 4, Barangay Manguring</option>
+              <option value="Zone 5, Barangay Manguring" selected>Zone 5, Barangay Manguring</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Age *</label>
+            <input type="text" id="new-age" required placeholder="e.g. 14 mo or 2 yrs" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Weight (kg) *</label>
+            <input type="number" step="0.1" id="new-weight" required placeholder="e.g. 9.5" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nutrition Status *</label>
+            <select id="new-status" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white">
+              <option value="Normal">Normal</option>
+              <option value="At Risk">At Risk</option>
+              <option value="Stunted">Stunted</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Submitted By</label>
+          <input type="text" id="new-submitter" value="Nurse Ana Reyes" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+        </div>
+
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" onclick="closeAddRecordModal()" class="px-4 py-2 rounded-full text-xs font-semibold text-slate-600 bg-warm-pill hover:bg-warm-pillHover transition-colors">
+            Cancel
+          </button>
+          <button type="submit" class="px-5 py-2 rounded-full text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-xs">
+            Save Record
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900 text-white shadow-xl text-xs font-semibold">
+    <span id="toast-icon">✨</span>
+    <span id="toast-message">Notification message</span>
+  </div>
+
+  <!-- =========================================================================
+       JAVASCRIPT: REACTIVE ENGINE & LOGIC
+       ========================================================================= -->
+  <script>
+    /**
+     * MOCK DATA MATCHING SCREENSHOT EXACTLY
+     */
+    const initialRecords = [
+      {
+        id: 'rec-001',
+        child: 'Miguel Reyes',
+        parent: 'Ana Reyes',
+        zone: 'Zone 5, Barangay Manguring',
+        age: '1 yr',
+        weight: '9.8 kg',
+        weightNum: 9.8,
+        status: 'Normal',
+        submittedBy: 'Nurse Ana Reyes',
+        date: 'Aug 22, 2026'
+      },
+      {
+        id: 'rec-002',
+        child: 'Liam Santos',
+        parent: 'Maria Santos',
+        zone: 'Zone 1, Barangay Manguring',
+        age: '18 mo',
+        weight: '9.2 kg',
+        weightNum: 9.2,
+        status: 'At Risk',
+        submittedBy: 'Nurse Ana Reyes',
+        date: 'Aug 20, 2026'
+      },
+      {
+        id: 'rec-003',
+        child: 'Sofia Dela Cruz',
+        parent: 'Rose Dela Cruz',
+        zone: 'Zone 3, Barangay Manguring',
+        age: '2 yrs',
+        weight: '8.8 kg',
+        weightNum: 8.8,
+        status: 'At Risk',
+        submittedBy: 'Nurse Ana Reyes',
+        date: 'Aug 18, 2026'
+      }
+    ];
+
+    // Reactive State
+    let records = [...initialRecords];
+    let currentStatusFilter = 'ALL';
+    let currentSearchTerm = '';
+
+    /**
+     * Initialize Dashboard
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      renderDashboard();
+    });
+
+    /**
+     * Main Render Routine
+     */
+    function renderDashboard() {
+      updateMetricCards();
+      renderTableRows();
+      updateFilterPillStyles();
+    }
+
+    /**
+     * Compute and render the 4 metric cards
+     */
+    function updateMetricCards() {
+      const total = records.length;
+      const stunted = records.filter(r => r.status === 'Stunted').length;
+      const atRisk = records.filter(r => r.status === 'At Risk').length;
+      const normal = records.filter(r => r.status === 'Normal').length;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-stunted').textContent = stunted;
+      document.getElementById('stat-atrisk').textContent = atRisk;
+      document.getElementById('stat-normal').textContent = normal;
+    }
+
+    /**
+     * Filter and render table rows
+     */
+    function renderTableRows() {
+      const tbody = document.getElementById('records-table-body');
+      const emptyState = document.getElementById('table-empty-state');
+      const term = currentSearchTerm.toLowerCase().trim();
+
+      const filtered = records.filter(record => {
+        // Status matching
+        const matchesStatus = (currentStatusFilter === 'ALL') || (record.status === currentStatusFilter);
+
+        // Search matching (Child, Parent/Guardian, zone, or Health Worker)
+        const matchesSearch = !term || (
+          record.child.toLowerCase().includes(term) ||
+          record.parent.toLowerCase().includes(term) ||
+          record.zone.toLowerCase().includes(term) ||
+          record.submittedBy.toLowerCase().includes(term)
+        );
+
+        return matchesStatus && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      tbody.innerHTML = filtered.map(item => {
+        // Badge styling matching design specifications
+        let badgeHtml = '';
+        if (item.status === 'Normal') {
+          badgeHtml = `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#D1FAE5] text-[#065F46]">Normal</span>`;
+        } else if (item.status === 'At Risk') {
+          badgeHtml = `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#92400E]">At Risk</span>`;
+        } else if (item.status === 'Stunted') {
+          badgeHtml = `<span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[#FFEDD5] text-[#C2410C]">Stunted</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-[#FCFBF9] transition-colors group cursor-pointer" onclick="viewRecordDetail('${item.id}')">
+            <!-- Child Name -->
+            <td class="py-4 px-5">
+              <span class="font-bold text-slate-900 text-[13.5px]">${escapeHtml(item.child)}</span>
+            </td>
+            <!-- Parent / Guardian -->
+            <td class="py-4 px-4 text-slate-600 text-[13.5px]">
+              ${escapeHtml(item.parent)}
+            </td>
+            <!-- Manguring Zone -->
+            <td class="py-4 px-4 text-slate-600 text-[13.5px]">
+              ${escapeHtml(item.zone)}
+            </td>
+            <!-- Age -->
+            <td class="py-4 px-3 text-slate-600 text-[13.5px]">
+              ${escapeHtml(item.age)}
+            </td>
+            <!-- Weight (Highlighted Green Text) -->
+            <td class="py-4 px-3">
+              <span class="font-bold text-[#166534] text-[13.5px]">${escapeHtml(item.weight)}</span>
+            </td>
+            <!-- Status Badge -->
+            <td class="py-4 px-4">
+              ${badgeHtml}
+            </td>
+            <!-- Submitted By -->
+            <td class="py-4 px-4 text-slate-600 text-[13.5px]">
+              ${escapeHtml(item.submittedBy)}
+            </td>
+            <!-- Assessment Date -->
+            <td class="py-4 px-4 text-slate-600 text-[13.5px]">
+              ${escapeHtml(item.date)}
+            </td>
+            <!-- Detail Action Chevron -->
+            <td class="py-4 pr-5 pl-2 text-right">
+              <button 
+                type="button" 
+                onclick="event.stopPropagation(); viewRecordDetail('${item.id}')" 
+                class="w-7 h-7 rounded-full inline-flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-warm-pill transition-colors"
+                title="View full record"
+              >
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    /**
+     * Filter Pill Styling Updates
+     */
+    function updateFilterPillStyles() {
+      const pills = [
+        { id: 'filter-pill-all', status: 'ALL' },
+        { id: 'filter-pill-normal', status: 'Normal' },
+        { id: 'filter-pill-atrisk', status: 'At Risk' },
+        { id: 'filter-pill-stunted', status: 'Stunted' }
+      ];
+
+      pills.forEach(p => {
+        const btn = document.getElementById(p.id);
+        if (!btn) return;
+
+        if (p.status === currentStatusFilter) {
+          btn.className = "filter-pill active px-4 py-2.5 rounded-full text-xs font-bold transition-all-200 shrink-0 bg-brand-500 text-white shadow-2xs";
+        } else {
+          btn.className = "filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0";
+        }
+      });
+    }
+
+    /**
+     * Interactivity: Search Input Handling
+     */
+    function handleSearchInput(value) {
+      currentSearchTerm = value;
+      const clearBtn = document.getElementById('clear-search-btn');
+      if (value.trim()) {
+        clearBtn.classList.remove('hidden');
+      } else {
+        clearBtn.classList.add('hidden');
+      }
+      renderTableRows();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById('search-input');
+      input.value = '';
+      currentSearchTerm = '';
+      document.getElementById('clear-search-btn').classList.add('hidden');
+      renderTableRows();
+    }
+
+    /**
+     * Interactivity: Status Tab Click
+     */
+    function filterByStatus(status) {
+      currentStatusFilter = status;
+      renderTableRows();
+      updateFilterPillStyles();
+      showToast(`Showing ${status === 'ALL' ? 'all' : status} records`);
+    }
+
+    function resetAllFilters() {
+      currentStatusFilter = 'ALL';
+      clearSearch();
+      renderDashboard();
+      showToast('Filters reset to default');
+    }
+
+    /**
+     * Interactivity: Export CSV Functionality
+     */
+    function exportRecordsToCSV() {
+      const activeRows = records.filter(record => {
+        const matchesStatus = (currentStatusFilter === 'ALL') || (record.status === currentStatusFilter);
+        const term = currentSearchTerm.toLowerCase().trim();
+        const matchesSearch = !term || (
+          record.child.toLowerCase().includes(term) ||
+          record.parent.toLowerCase().includes(term) ||
+          record.zone.toLowerCase().includes(term) ||
+          record.submittedBy.toLowerCase().includes(term)
+        );
+        return matchesStatus && matchesSearch;
+      });
+
+      if (activeRows.length === 0) {
+        showToast('⚠️ No records to export based on current filters');
+        return;
+      }
+
+      // Build CSV Data
+      const headers = ['Child', 'Parent/Guardian', 'Manguring Zone', 'Age', 'Weight', 'Status', 'Submitted By', 'Date'];
+      const csvRows = [
+        headers.join(','),
+        ...activeRows.map(r => [
+          `"${r.child.replace(/"/g, '""')}"`,
+          `"${r.parent.replace(/"/g, '""')}"`,
+          `"${r.zone.replace(/"/g, '""')}"`,
+          `"${r.age}"`,
+          `"${r.weight}"`,
+          `"${r.status}"`,
+          `"${r.submittedBy.replace(/"/g, '""')}"`,
+          `"${r.date}"`
+        ].join(','))
+      ];
+
+      const csvContent = "data:text/csv;charset=utf-8," + encodeURIComponent(csvRows.join('\n'));
+      const link = document.createElement('a');
+      link.setAttribute('href', csvContent);
+      link.setAttribute('download', `NutriLearn_Field_Records_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      showToast('📥 Exported ' + activeRows.length + ' records to CSV successfully');
+    }
+
+    /**
+     * Modal Record Inspection
+     */
+    function viewRecordDetail(id) {
+      const record = records.find(r => r.id === id);
+      if (!record) return;
+
+      document.getElementById('modal-child-name').textContent = record.child;
+      document.getElementById('modal-child-sub').textContent = `${record.age} • ${record.weight}`;
+      document.getElementById('modal-parent').textContent = record.parent;
+      document.getElementById('modal-zone').textContent = record.zone;
+      document.getElementById('modal-age').textContent = record.age;
+      document.getElementById('modal-weight').textContent = record.weight;
+      document.getElementById('modal-submitter').textContent = record.submittedBy;
+      document.getElementById('modal-date').textContent = record.date;
+
+      const badgeContainer = document.getElementById('modal-status-badge');
+      if (record.status === 'Normal') {
+        badgeContainer.innerHTML = `<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#D1FAE5] text-[#065F46]">Normal</span>`;
+      } else if (record.status === 'At Risk') {
+        badgeContainer.innerHTML = `<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FEF3C7] text-[#92400E]">At Risk</span>`;
+      } else {
+        badgeContainer.innerHTML = `<span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#FFEDD5] text-[#C2410C]">Stunted</span>`;
+      }
+
+      document.getElementById('detail-modal').classList.remove('hidden');
+    }
+
+    function closeDetailModal() {
+      document.getElementById('detail-modal').classList.add('hidden');
+    }
+
+    /**
+     * Modal Add Record Form
+     */
+    function openAddRecordModal() {
+      document.getElementById('add-record-modal').classList.remove('hidden');
+    }
+
+    function closeAddRecordModal() {
+      document.getElementById('add-record-modal').classList.add('hidden');
+    }
+
+    function handleCreateRecord(e) {
+      e.preventDefault();
+      const child = document.getElementById('new-child-name').value.trim();
+      const parent = document.getElementById('new-parent-name').value.trim();
+      const zone = document.getElementById('new-zone').value;
+      const age = document.getElementById('new-age').value.trim();
+      const weightNum = parseFloat(document.getElementById('new-weight').value);
+      const status = document.getElementById('new-status').value;
+      const submittedBy = document.getElementById('new-submitter').value.trim() || 'Nurse Ana Reyes';
+
+      const newRecord = {
+        id: 'rec-' + Date.now(),
+        child,
+        parent,
+        zone,
+        age,
+        weight: `${weightNum.toFixed(1)} kg`,
+        weightNum,
+        status,
+        submittedBy,
+        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      };
+
+      records.unshift(newRecord);
+      closeAddRecordModal();
+      document.getElementById('add-child-form').reset();
+      renderDashboard();
+      showToast(`✅ Added ${child} to Field Records`);
+    }
+
+    /**
+     * UI Helpers & Navigation
+     */
+    function handleNavClick(title, e) {
+      if (title !== 'Field Records') {
+        e.preventDefault();
+        showToast(`Navigated to ${title} section`);
+      }
+    }
+
+    function toggleMobileNav() {
+      const panel = document.getElementById('mobile-nav-panel');
+      panel.classList.toggle('hidden');
+    }
+
+    function handleSignOut() {
+      if (confirm('Are you sure you want to sign out from Dr. Jose Lim session?')) {
+        showToast('👋 Signed out successfully');
+      }
+    }
+
+    function showToast(message, icon = '✨') {
+      const toast = document.getElementById('toast');
+      document.getElementById('toast-message').textContent = message;
+      document.getElementById('toast-icon').textContent = icon;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>

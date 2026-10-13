@@ -25,11 +25,11 @@
     rel="stylesheet">
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css?v=5.0">
-  <link rel="stylesheet" href="css/components.css?v=5.0">
-  <link rel="stylesheet" href="css/admin.css?v=5.0">
-  <link rel="stylesheet" href="css/parent.css?v=5.0">
-  <link rel="stylesheet" href="css/bhw.css?v=5.0">
+  <link rel="stylesheet" href="css/styles.css?v=6.3">
+  <link rel="stylesheet" href="css/components.css?v=6.3">
+  <link rel="stylesheet" href="css/admin.css?v=6.3">
+  <link rel="stylesheet" href="css/parent.css?v=6.3">
+  <link rel="stylesheet" href="css/bhw.css?v=6.3">
 </head>
 
 <body>
@@ -41,29 +41,33 @@
     <div class="startup-container">
       <!-- Upper Center Logo, App Name, Tagline & Description -->
       <div class="startup-brand-header">
-        <img src="icon/logo.png?v=5.0" alt="NutriLearn Logo" class="startup-leaf-logo" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Home" style="cursor: pointer;">
-        <h1 class="startup-brand-title" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;" title="NutriLearn - Home">
-          <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="startup-brand-name-img" style="height: 30px; width: auto; max-width: 175px; object-fit: contain;">
+        <img src="icon/logo.png?v=6.0" alt="NutriLearn Logo" class="startup-leaf-logo"
+          onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Home" style="cursor: pointer;">
+        <h1 class="startup-brand-title" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;"
+          title="NutriLearn - Home">
+          <img src="icon/Name.png?v=6.0" alt="NutriLearn" class="startup-brand-name-img"
+            style="height: 22px; width: auto; max-width: 140px; object-fit: contain;">
         </h1>
         <div id="startup-db-status" class="db-status-badge"
-          style="margin-top: 0.5rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; padding: 4px 12px; border-radius: 9999px; background: #FEF3C7; color: #92400E; font-weight: 600; border: 1px solid #FDE68A;">
+          style="margin-top: 0.35rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; padding: 2px 10px; border-radius: 9999px; background: #FEF3C7; color: #92400E; font-weight: 600; border: 1px solid #FDE68A;">
           <span class="db-dot"
-            style="width: 8px; height: 8px; border-radius: 50%; background: #F59E0B; display: inline-block;"></span>
+            style="width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; display: inline-block;"></span>
           <span id="startup-db-status-text">Database: Connecting...</span>
         </div>
 
         <!-- Top Language Selector Pill (Instantly visible without scrolling) -->
         <div class="startup-top-lang-pill"
-          style="margin-top: 0.75rem; display: inline-flex; align-items: center; justify-content: center; gap: 6px; background: #FFFFFF; padding: 4px 8px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-          <span style="font-size: 0.76rem; font-weight: 700; color: #475569; margin-left: 4px; margin-right: 2px;">🌐
-            Wika / Lang:</span>
+          style="margin-top: 0.45rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #FFFFFF; padding: 2px 6px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+          <span id="lbl-top-lang-title"
+            style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-left: 2px; margin-right: 2px;">🌐
+            Wika:</span>
           <button type="button" class="btn-lang-choice active" id="btn-lang-top-fil"
             onclick="NutriI18n.setLanguage('fil')"
-            style="padding: 4px 12px; border-radius: 9999px; border: none; font-size: 0.78rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">
+            style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">
             🇵🇭 Filipino
           </button>
           <button type="button" class="btn-lang-choice" id="btn-lang-top-en" onclick="NutriI18n.setLanguage('en')"
-            style="padding: 4px 12px; border-radius: 9999px; border: none; font-size: 0.78rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
+            style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
             🇺🇸 English
           </button>
         </div>
@@ -74,19 +78,21 @@
              SCREEN 1: SELECT YOUR ROLE TO CONTINUE (SIGN IN FLOW)
              ==================================================================== -->
         <div id="screen-role-signin">
-          <div class="auth-role-select-title" id="lbl-signin-role-select-title">Select your role to continue</div>
+          <h2 class="auth-display-title" id="lbl-signin-main-title">Mag-sign In</h2>
+          <div class="auth-display-subtitle" id="lbl-signin-role-select-title">Piliin ang iyong role para magpatuloy
+          </div>
 
           <div class="portal-choices-list">
             <!-- Option 1: Parent / Guardian -->
             <div class="portal-choice-card selected" data-role="parent"
               onclick="NutriApp.selectRole('parent', 'signin')">
               <div class="portal-card-icon">
-                <span style="font-size: 1.5rem;">👩‍👧</span>
+                <span style="font-size: 1.25rem;">👩‍👧</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signin-parent-title">Parent / Guardian</div>
-                <div class="portal-card-desc" id="card-signin-parent-desc">Access nutrition lessons, meal plans, and
-                  track your child's growth.</div>
+                <div class="portal-card-title" id="card-signin-parent-title">Magulang / Tagapag-alaga</div>
+                <div class="portal-card-desc" id="card-signin-parent-desc">Makakuha ng mga aralin sa nutrisyon, mga
+                  plano sa pagkain, at subaybayan ang paglaki ng iyong anak.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -96,12 +102,12 @@
             <!-- Option 2: Health Worker -->
             <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signin')">
               <div class="portal-card-icon">
-                <span style="font-size: 1.5rem;">🩺</span>
+                <span style="font-size: 1.25rem;">🩺</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signin-chw-title">Health Worker</div>
-                <div class="portal-card-desc" id="card-signin-chw-desc">Manage parent groups, post announcements, and
-                  submit child records.</div>
+                <div class="portal-card-title" id="card-signin-chw-title">Manggagawa sa Kalusugan (BHW)</div>
+                <div class="portal-card-desc" id="card-signin-chw-desc">Pamahalaan ang mga parent group, mag-post ng mga
+                  anunsyo, at magsumite ng child records.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -111,12 +117,12 @@
             <!-- Option 3: Administrator -->
             <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signin')">
               <div class="portal-card-icon">
-                <span style="font-size: 1.5rem;">📊</span>
+                <span style="font-size: 1.25rem;">📊</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signin-mho-title">Administrator</div>
-                <div class="portal-card-desc" id="card-signin-mho-desc">View field records, analytics, and manage
-                  program content.</div>
+                <div class="portal-card-title" id="card-signin-mho-title">Administrator (MHO)</div>
+                <div class="portal-card-desc" id="card-signin-mho-desc">Tingnan ang mga tala ng field, analytics, at
+                  pamahalaan ang nilalaman ng programa.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -127,13 +133,14 @@
           <!-- Continue Button -->
           <button type="button" id="btn-signin-role-continue" class="btn-auth-continue"
             onclick="NutriApp.proceedToSignInCredentials()">
-            Continue
+            Magpatuloy
           </button>
 
           <!-- Footer Link to Register -->
           <div class="auth-footer-prompt" id="footer-prompt-signin">
-            Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignUp()"
-              id="link-goto-register">Register here</a>
+            Wala kang account? <button type="button" onclick="NutriApp.goToRoleSelectSignUp()" id="link-goto-register"
+              style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
+              dito</button>
           </div>
         </div>
 
@@ -141,20 +148,20 @@
              SCREEN 2: CREATE ACCOUNT - WHO ARE YOU REGISTERING AS? (SIGN UP FLOW)
              ==================================================================== -->
         <div id="screen-role-signup" style="display: none;">
-          <h2 class="auth-display-title" id="lbl-signup-title">Create account</h2>
-          <div class="auth-display-subtitle" id="lbl-signup-subtitle">Who are you registering as?</div>
+          <h2 class="auth-display-title" id="lbl-signup-title">Gumawa ng Account</h2>
+          <div class="auth-display-subtitle" id="lbl-signup-subtitle">Sino ang nais mong irehistro?</div>
 
           <div class="portal-choices-list">
             <!-- Option 1: Parent / Guardian -->
             <div class="portal-choice-card selected" data-role="parent"
               onclick="NutriApp.selectRole('parent', 'signup')">
               <div class="portal-card-icon">
-                <span style="font-size: 1.5rem;">👩‍👧</span>
+                <span style="font-size: 1.25rem;">👩‍👧</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signup-parent-title">Parent / Guardian</div>
-                <div class="portal-card-desc" id="card-signup-parent-desc">Track your child's nutrition and access
-                  learning modules.</div>
+                <div class="portal-card-title" id="card-signup-parent-title">Magulang / Tagapag-alaga</div>
+                <div class="portal-card-desc" id="card-signup-parent-desc">Subaybayan ang nutrisyon ng bata at i-access
+                  ang learning modules.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -164,12 +171,12 @@
             <!-- Option 2: Health Worker -->
             <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signup')">
               <div class="portal-card-icon">
-                <span style="font-size: 1.5rem;">🩺</span>
+                <span style="font-size: 1.25rem;">🩺</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signup-chw-title">Health Worker</div>
-                <div class="portal-card-desc" id="card-signup-chw-desc">Monitor families, record child data, and relay
-                  announcements.</div>
+                <div class="portal-card-title" id="card-signup-chw-title">Manggagawa sa Kalusugan (BHW)</div>
+                <div class="portal-card-desc" id="card-signup-chw-desc">Subaybayan ang mga pamilya, itala ang datos ng
+                  bata, at ipamahagi ang anunsyo.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -179,12 +186,12 @@
             <!-- Option 3: Administrator -->
             <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signup')">
               <div class="portal-card-icon">
-                <span style="font-size: 1.5rem;">📊</span>
+                <span style="font-size: 1.25rem;">📊</span>
               </div>
               <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signup-mho-title">Administrator</div>
-                <div class="portal-card-desc" id="card-signup-mho-desc">Oversee program data, users, and post health
-                  announcements.</div>
+                <div class="portal-card-title" id="card-signup-mho-title">Administrator (MHO)</div>
+                <div class="portal-card-desc" id="card-signup-mho-desc">Pamahalaan ang datos ng programa, mga gumagamit,
+                  at anunsyo sa kalusugan.</div>
               </div>
               <div class="portal-radio">
                 <div class="portal-radio-dot"></div>
@@ -195,13 +202,14 @@
           <!-- Continue Button -->
           <button type="button" id="btn-signup-role-continue" class="btn-auth-continue"
             onclick="NutriApp.proceedToSignUpDetails()">
-            Continue
+            Magpatuloy
           </button>
 
           <!-- Footer Link to Sign In -->
           <div class="auth-footer-prompt" id="footer-prompt-signup">
-            Already have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignIn()"
-              id="link-goto-signin">Sign in</a>
+            May account ka na? <button type="button" onclick="NutriApp.goToRoleSelectSignIn()" id="link-goto-signin"
+              style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
+              in dito</button>
           </div>
         </div>
 
@@ -237,7 +245,7 @@
                 style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-weight: 600; color: #1E293B; background: #fff; width: 100%;">
                 <option value="Barangay Manguiring">Barangay Manguiring</option>
               </select>
-              <div style="font-size: 0.75rem; color: #64748B; margin-top: 0.35rem;">
+              <div id="tip-reg-barangay" style="font-size: 0.75rem; color: #64748B; margin-top: 0.35rem;">
                 🏛️ Tanging ang mga opisyal na Barangay na inirehistro ng Administrator ang magagamit sa sistema.
               </div>
             </div>
@@ -245,10 +253,10 @@
             <div class="form-group" style="margin-bottom: 1rem;">
               <label class="form-label" id="lbl-reg-email"
                 style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Email Address *
+                Email Address o Username *
               </label>
-              <input type="email" id="reg-email-input" name="regEmailAddress" class="form-control" required
-                placeholder="you@example.com"
+              <input type="text" id="reg-email-input" name="regEmailAddress" class="form-control" required
+                placeholder="Hal. maria@example.com o mariasantos"
                 style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
             </div>
 
@@ -259,94 +267,100 @@
                   Password *
                 </label>
                 <input type="password" id="reg-password-input" name="regPassword" class="form-control" required
-                  placeholder="Min. 6 characters" minlength="6"
+                  placeholder="Hindi bababa sa 6 na karakter" minlength="6"
                   style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
               </div>
               <div class="form-group">
                 <label class="form-label" id="lbl-reg-confirm-password"
                   style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Confirm Password *
+                  Kumpirmahin ang Password *
                 </label>
                 <input type="password" id="reg-confirm-password-input" name="regConfirmPassword" class="form-control"
-                  required placeholder="Repeat password" minlength="6"
+                  required placeholder="Ulitin ang password" minlength="6"
                   style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
               </div>
             </div>
 
             <!-- Child Details Section for Parent Registration (Syncs to BHW & Admin) -->
-            <div id="reg-child-section" style="margin-top: 1rem; margin-bottom: 1.25rem; padding: 1.15rem; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px;">
+            <div id="reg-child-section"
+              style="margin-top: 1rem; margin-bottom: 1.25rem; padding: 1.15rem; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px;">
               <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem;">
-                <div style="width: 32px; height: 32px; border-radius: 8px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                <div
+                  style="width: 32px; height: 32px; border-radius: 8px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
                   👶
                 </div>
                 <div>
-                  <h4 style="font-size: 0.92rem; font-weight: 700; color: #0F172A; margin: 0;">Impormasyon kan Aki (Child's Details)</h4>
-                  <div style="font-size: 0.74rem; color: #64748B;">Awtomatikong naka-sync sa BHW Malnutrition Registry asin Admin Field Records</div>
+                  <h4 style="font-size: 0.92rem; font-weight: 700; color: #0F172A; margin: 0;" id="lbl-reg-child-title">
+                    Impormasyon ng Bata (Opsyonal)</h4>
+                  <div style="font-size: 0.74rem; color: #64748B;" id="lbl-reg-child-desc">Maaaring punan ngayon o
+                    idagdag sa dashboard. Naka-sync sa BHW &amp; Admin.</div>
                 </div>
               </div>
 
               <div class="form-group" style="margin-bottom: 0.85rem;">
-                <label class="form-label" for="reg-child-name-input"
+                <label class="form-label" for="reg-child-name-input" id="lbl-reg-child-name"
                   style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                  Pangaran kan Aki / Child's Full Name *
+                  Buong Pangalan ng Bata (Opsyonal)
                 </label>
                 <input type="text" id="reg-child-name-input" name="regChildName" class="form-control"
                   placeholder="Halimbawa: Ethan Kyle Santos"
                   style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
               </div>
 
-              <div class="grid-2" style="margin-bottom: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="grid-2"
+                style="margin-bottom: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                 <div class="form-group">
-                  <label class="form-label" for="reg-child-age-input"
+                  <label class="form-label" for="reg-child-age-input" id="lbl-reg-child-age"
                     style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Edad sa Bulan / Age in Months *
+                    Edad sa Buwan
                   </label>
                   <input type="number" id="reg-child-age-input" name="regChildAge" class="form-control" min="1" max="72"
-                    placeholder="e.g. 18"
+                    placeholder="Hal. 18"
                     style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="reg-child-gender-select"
+                  <label class="form-label" for="reg-child-gender-select" id="lbl-reg-child-gender"
                     style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Kasarian / Gender *
+                    Kasarian
                   </label>
                   <select id="reg-child-gender-select" name="regChildGender" class="form-control form-select"
                     style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
-                    <option value="Male">Lalaki (Male)</option>
-                    <option value="Female">Babaye (Female)</option>
+                    <option value="Male" id="opt-gender-male">Lalaki</option>
+                    <option value="Female" id="opt-gender-female">Babae</option>
                   </select>
                 </div>
               </div>
 
               <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
                 <div class="form-group">
-                  <label class="form-label" for="reg-child-height-input"
+                  <label class="form-label" for="reg-child-height-input" id="lbl-reg-child-height"
                     style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Kalandawan / Height (cm) *
+                    Tangkad / Taas (cm)
                   </label>
-                  <input type="number" id="reg-child-height-input" name="regChildHeight" step="0.1" min="30" max="150" class="form-control"
-                    placeholder="e.g. 76.5 cm"
+                  <input type="number" id="reg-child-height-input" name="regChildHeight" step="0.1" min="30" max="150"
+                    class="form-control" placeholder="Hal. 76.5 cm"
                     style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
                 </div>
                 <div class="form-group">
-                  <label class="form-label" for="reg-child-weight-input"
+                  <label class="form-label" for="reg-child-weight-input" id="lbl-reg-child-weight"
                     style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Gabt / Weight (kg) *
+                    Timbang (kg)
                   </label>
-                  <input type="number" id="reg-child-weight-input" name="regChildWeight" step="0.1" min="2" max="50" class="form-control"
-                    placeholder="e.g. 9.4 kg"
+                  <input type="number" id="reg-child-weight-input" name="regChildWeight" step="0.1" min="2" max="50"
+                    class="form-control" placeholder="Hal. 9.4 kg"
                     style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
                 </div>
               </div>
             </div>
 
             <button type="submit" id="btn-details-submit" class="btn-auth-submit">
-              Rehistrohon an Account / Create Account →
+              Kumpletuhin ang Pagrehistro →
             </button>
 
-            <div class="auth-footer-prompt">
-              Already have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignIn()">Sign
-                in</a>
+            <div class="auth-footer-prompt" id="footer-prompt-details">
+              May account ka na? <button type="button" onclick="NutriApp.goToRoleSelectSignIn()"
+                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
+                in dito</button>
             </div>
           </form>
         </div>
@@ -364,45 +378,209 @@
           <div class="signing-in-as-card">
             <div class="signing-in-as-icon" id="signin-badge-icon">👩‍👧</div>
             <div>
-              <div class="signing-in-as-title" id="signin-badge-title">Parent / Guardian</div>
-              <div class="signing-in-as-sub" id="signin-badge-sub">Signing in as</div>
+              <div class="signing-in-as-title" id="signin-badge-title">Magulang / Tagapag-alaga</div>
+              <div class="signing-in-as-sub" id="signin-badge-sub">Pumapasok bilang</div>
             </div>
           </div>
 
-          <h2 class="auth-display-title" id="lbl-signin-title">Sign in</h2>
-          <div class="auth-display-subtitle" id="lbl-signin-subtitle">Enter your credentials to access NutriLearn</div>
+          <h2 class="auth-display-title" id="lbl-signin-title">Mag-sign In</h2>
+          <div class="auth-display-subtitle" id="lbl-signin-subtitle">Ilagay ang iyong credentials para ma-access ang
+            NutriLearn</div>
 
           <form id="form-auth-signin" onsubmit="NutriApp.submitSignIn(event)">
             <div class="form-group" style="margin-bottom: 1rem;">
               <label class="form-label" id="lbl-signin-email"
                 style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Email address
+                Email address o Username
               </label>
               <input type="text" id="input-signin-email" name="signinEmail" class="form-control" required
-                placeholder="you@example.com"
+                placeholder="Hal. maria@example.com o mariasantos"
                 style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
             </div>
 
             <div class="form-group" style="margin-bottom: 1.25rem;">
-              <label class="form-label" id="lbl-signin-password"
-                style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Password
-              </label>
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <label class="form-label" id="lbl-signin-password"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin: 0;">
+                  Password
+                </label>
+                <button type="button" onclick="NutriApp.goToForgotPassword(event)" id="link-forgot-password"
+                  style="background: transparent; border: none; padding: 0; font-size: 0.82rem; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                  Nakalimutan ang password?
+                </button>
+              </div>
               <input type="password" id="input-signin-password" name="signinPassword" class="form-control" required
                 placeholder="••••••••"
                 style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
             </div>
 
             <button type="submit" id="btn-signin-submit" class="btn-auth-submit">
-              Sign in
+              Mag-sign In
             </button>
 
-            <div class="auth-footer-prompt">
-              Don't have an account? <a href="javascript:void(0)" onclick="NutriApp.goToRoleSelectSignUp()">Register
-                here</a>
+            <div class="auth-footer-prompt" id="footer-prompt-signin-creds">
+              Wala kang account? <button type="button" onclick="NutriApp.proceedToSignUpDetails()"
+                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
+                dito</button>
             </div>
           </form>
         </div>
+
+        <!-- ====================================================================
+             SCREEN 5: FORGOT & RESET PASSWORD SCREEN
+             ==================================================================== -->
+        <div id="screen-auth-forgot" style="display: none;">
+          <button type="button" class="auth-back-btn" onclick="NutriApp.proceedToSignInCredentials()"
+            id="btn-back-to-signin">
+            ← Bumalik sa Sign In
+          </button>
+
+          <div class="signing-in-as-card" style="background: #E8F5E9; border-left: 4px solid #2D6A4F;">
+            <div class="signing-in-as-icon" style="color: #2D6A4F;">🔐</div>
+            <div>
+              <div class="signing-in-as-title" id="lbl-forgot-badge-title">Seguridad ng Account</div>
+              <div class="signing-in-as-sub" id="lbl-forgot-badge-sub">Pagbawi at Pag-reset ng Password</div>
+            </div>
+          </div>
+
+          <h2 class="auth-display-title" id="lbl-forgot-title">Nakalimutan ang Password</h2>
+          <div class="auth-display-subtitle" id="lbl-forgot-subtitle">
+            Sundin ang simpleng hakbang upang ligtas na mai-reset ang iyong password.
+          </div>
+
+          <!-- Step Indicator -->
+          <div class="forgot-steps-bar">
+            <div class="forgot-step-pill active" id="forgot-step-pill-1">
+              1. Hanapin ang Account
+            </div>
+            <div class="forgot-step-pill" id="forgot-step-pill-2">
+              2. Kumpirmahin ang Code
+            </div>
+            <div class="forgot-step-pill" id="forgot-step-pill-3">
+              3. Bagong Password
+            </div>
+          </div>
+
+          <!-- STEP 1 CONTAINER: Enter Email / Username -->
+          <div id="forgot-stage-1">
+            <form onsubmit="NutriApp.handleForgotStep1(event)">
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label" id="lbl-forgot-email"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Email Address o Username ng Account *
+                </label>
+                <input type="text" id="input-forgot-email" class="form-control" required
+                  placeholder="Halimbawa: maria@example.com o Maria Santos"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+                <div id="tip-forgot-email" style="font-size: 0.78rem; color: #64748B; margin-top: 0.4rem;">
+                  💡 Ilagay ang email o buong pangalan na ginamit noong nagparehistro ng account.
+                </div>
+              </div>
+
+              <button type="submit" class="btn-auth-submit" id="btn-forgot-search">
+                Hanapin ang Account →
+              </button>
+            </form>
+          </div>
+
+          <!-- STEP 2 CONTAINER: Verification Code / Confirmation -->
+          <div id="forgot-stage-2" style="display: none;">
+            <div id="forgot-account-found-badge"
+              style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div
+                  style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700;">
+                  👤
+                </div>
+                <div>
+                  <div style="font-weight: 700; color: #0F172A; font-size: 0.95rem;" id="forgot-found-name">Maria Santos
+                  </div>
+                  <div style="font-size: 0.78rem; color: #64748B;" id="forgot-found-meta">Barangay Manguiring • Magulang
+                    / Tagapag-alaga</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OTP Simulation Notice -->
+            <div class="forgot-otp-box">
+              <div id="lbl-forgot-otp-title"
+                style="font-size: 0.82rem; font-weight: 700; color: #065F46; margin-bottom: 0.35rem;">
+                🔑 6-Digit Verification Code sa Seguridad:
+              </div>
+              <div id="forgot-generated-code-display" class="forgot-otp-code">
+                ------
+              </div>
+              <div id="tip-forgot-otp" style="font-size: 0.76rem; color: #047857; margin-bottom: 0.5rem;">
+                Ipinadala sa iyong account / nabuo para sa pagpapatunay.
+              </div>
+              <button type="button" id="btn-forgot-autofill" onclick="NutriApp.autoFillResetCode()"
+                style="background: #10B981; color: white; border: none; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease;">
+                📋 Gamitin ang Code na Ito
+              </button>
+            </div>
+
+            <form onsubmit="NutriApp.handleForgotStep2(event)">
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label" id="lbl-forgot-code"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Ilagay ang 6-Digit Code *
+                </label>
+                <input type="text" id="input-forgot-code" class="form-control" required maxlength="6"
+                  placeholder="Halimbawa: 482910"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-size: 1.15rem; letter-spacing: 0.25em; text-align: center; font-weight: 700; color: #0F172A;">
+              </div>
+
+              <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                <button type="button" class="btn btn-outline" id="btn-forgot-back-step1"
+                  onclick="NutriApp.resetForgotFlowStage(1)"
+                  style="flex: 1; border-radius: 12px; padding: 0.8rem; border: 1.5px solid #CBD5E1; color: #475569; font-weight: 600; cursor: pointer;">
+                  ← Bumalik
+                </button>
+                <button type="submit" class="btn-auth-submit" id="btn-forgot-verify-code"
+                  style="flex: 2; margin-top: 0;">
+                  Kumpirmahin ang Code →
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- STEP 3 CONTAINER: Set New Password -->
+          <div id="forgot-stage-3" style="display: none;">
+            <form onsubmit="NutriApp.handleForgotStep3(event)">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" id="lbl-forgot-new-pass"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Bagong Password *
+                </label>
+                <input type="password" id="input-forgot-new-pass" class="form-control" required minlength="6"
+                  placeholder="Hindi bababa sa 6 na karakter"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <label class="form-label" id="lbl-forgot-confirm-pass"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Kumpirmahin ang Bagong Password *
+                </label>
+                <input type="password" id="input-forgot-confirm-pass" class="form-control" required minlength="6"
+                  placeholder="Ulitin ang bagong password"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              </div>
+
+              <button type="submit" class="btn-auth-submit" id="btn-forgot-save-pass">
+                ✓ I-save ang Bagong Password &amp; Mag-sign In
+              </button>
+            </form>
+          </div>
+
+          <div class="auth-footer-prompt" id="footer-prompt-forgot" style="margin-top: 1.5rem;">
+            Naaalala mo na ba ang iyong password? <button type="button"
+              onclick="NutriApp.proceedToSignInCredentials(event)"
+              style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
+              in dito</button>
+          </div>
+        </div>
+
       </div>
     </div>
   </div><!-- End #startup-auth-screen -->
@@ -417,28 +595,44 @@
         <div class="parent-taskbar-left">
           <div class="parent-brand-clean" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn Home">
             <img src="icon/logo.png?v=5.0" alt="NutriLearn Logo" class="parent-brand-logo-img">
-            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="parent-brand-name-img" style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="parent-brand-name-img"
+              style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
           </div>
 
           <!-- Clean Horizontal Navigation Pill Tabs -->
           <nav class="parent-pill-tabs">
-            <button type="button" class="parent-pill-btn active" data-tab="learning" onclick="ParentModule.switchTab('learning')">
+            <button type="button" class="parent-pill-btn active" data-tab="learning"
+              onclick="ParentModule.switchTab('learning')">
               <span class="parent-pill-icon">📖</span> My Learning
             </button>
-            <button type="button" class="parent-pill-btn" data-tab="meal-planner" onclick="ParentModule.switchTab('meal-planner')">
+            <button type="button" class="parent-pill-btn" data-tab="meal-planner"
+              onclick="ParentModule.switchTab('meal-planner')">
               <span class="parent-pill-icon">🍲</span> Meal Planner
             </button>
-            <button type="button" class="parent-pill-btn" data-tab="try-at-home" onclick="ParentModule.switchTab('try-at-home')">
+            <button type="button" class="parent-pill-btn" data-tab="try-at-home"
+              onclick="ParentModule.switchTab('try-at-home')">
               <span class="parent-pill-icon">✓</span> Try It at Home
             </button>
-            <button type="button" class="parent-pill-btn" data-tab="growth-tracker" onclick="ParentModule.switchTab('growth-tracker')">
+            <button type="button" class="parent-pill-btn" data-tab="growth-tracker"
+              onclick="ParentModule.switchTab('growth-tracker')">
               <span class="parent-pill-icon">📈</span> Weight Tracker
             </button>
           </nav>
         </div>
 
         <div class="parent-taskbar-right">
-          <div class="parent-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()" title="View profile & settings">
+          <!-- Language Selector Pill in Parent Taskbar -->
+          <div class="taskbar-lang-pill"
+            style="display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; padding: 2px 5px; border-radius: 9999px; border: 1px solid #CBD5E1;">
+            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇵🇭
+              Fil</button>
+            <button type="button" class="btn-lang-pill-en" onclick="NutriI18n.setLanguage('en')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇺🇸
+              Eng</button>
+          </div>
+          <div class="parent-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
+            title="View profile & settings">
             <div class="parent-user-details-text">
               <div class="parent-user-title-name" id="parent-top-user-name">Maria Santos</div>
               <div class="parent-user-loc-sub" id="parent-top-user-loc">Zone 1, Barangay Manguiring, Calabanga</div>
@@ -454,9 +648,11 @@
       <!-- 1. CLEAN ADMINISTRATOR TOP TASKBAR (Matches Screenshot) -->
       <div id="admin-top-taskbar" class="admin-taskbar-clean" style="display: none;">
         <div class="admin-taskbar-left">
-          <div class="admin-brand-clean" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn Overview Dashboard (Click to return to home)">
-            <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Logo" class="admin-brand-logo-img">
-            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="admin-brand-name-img" style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
+          <div class="admin-brand-clean" onclick="NutriApp.navigateToMainDashboard()"
+            title="NutriLearn Overview Dashboard (Click to return to home)">
+            <img src="icon/logo.png?v=6.0" alt="NutriLearn Official Logo" class="admin-brand-logo-img">
+            <img src="icon/Name.png?v=6.0" alt="NutriLearn" class="admin-brand-name-img"
+              style="height: 20px; width: auto; max-width: 120px; object-fit: contain;">
           </div>
 
           <!-- Horizontal Clean Navigation Tabs -->
@@ -472,7 +668,8 @@
               <span class="admin-tab-label">Field Records</span>
             </button>
             <button type="button" class="admin-tab-btn" data-tab="barangays"
-              onclick="NutriApp.switchMHOSubTab('barangays')" title="Pamahalaan ang mga opisyal na Barangay sa munisipalidad">
+              onclick="NutriApp.switchMHOSubTab('barangays')"
+              title="Pamahalaan ang mga opisyal na Barangay sa munisipalidad">
               <span class="admin-tab-icon">🏛️</span>
               <span class="admin-tab-label">Barangays</span>
             </button>
@@ -490,8 +687,8 @@
               <span class="admin-tab-icon">📝</span>
               <span class="admin-tab-label">Content</span>
             </button>
-            <button type="button" class="admin-tab-btn" data-tab="audit"
-              onclick="NutriApp.switchMHOSubTab('audit')" title="View complete system audit log and change history with date and time">
+            <button type="button" class="admin-tab-btn" data-tab="audit" onclick="NutriApp.switchMHOSubTab('audit')"
+              title="View complete system audit log and change history with date and time">
               <span class="admin-tab-icon">🛡️</span>
               <span class="admin-tab-label">Logs &amp; History</span>
             </button>
@@ -500,22 +697,34 @@
 
         <div class="admin-taskbar-right">
           <!-- Administrator Barangay Switcher -->
-          <div class="admin-taskbar-barangay-select-wrap" style="display: flex; align-items: center; gap: 0.4rem; background: #F1F5F9; border: 1.5px solid #CBD5E1; padding: 0.25rem 0.65rem; border-radius: 9999px;">
-            <span style="font-size: 0.8rem; font-weight: 700; color: #1E293B;">📍 Barangay:</span>
-            <select id="admin-global-barangay-select" class="form-select" style="font-size: 0.8rem; font-weight: 600; padding: 0.2rem 0.4rem; border-radius: 6px; border: none; background: transparent; color: #0F172A; cursor: pointer; outline: none;" onchange="MHODashboard.setSelectedBarangay(this.value)">
+          <div class="admin-taskbar-barangay-select-wrap">
+            <span class="admin-taskbar-barangay-label">📍&nbsp;Barangay:</span>
+            <select id="admin-global-barangay-select" class="admin-taskbar-barangay-select"
+              onchange="MHODashboard.setSelectedBarangay(this.value)">
               <option value="ALL">🌐 Lahat ng Barangay</option>
               <option value="Barangay Manguiring">Barangay Manguiring</option>
             </select>
           </div>
 
+          <!-- Language Selector Pill in Admin Taskbar -->
+          <div class="taskbar-lang-pill"
+            style="display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; padding: 2px 5px; border-radius: 9999px; border: 1px solid #CBD5E1;">
+            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇵🇭
+              Fil</button>
+            <button type="button" class="btn-lang-pill-en" onclick="NutriI18n.setLanguage('en')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇺🇸
+              Eng</button>
+          </div>
+
           <div class="admin-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
             title="View profile & settings">
             <div class="admin-user-details-text">
-              <div class="admin-user-title-name" id="admin-user-display-name">Mark Anthony</div>
-              <div class="admin-user-loc-sub" id="admin-user-display-office">Barangay Manguiring Health Office, Calabanga
+              <div class="admin-user-title-name" id="admin-user-display-name">Dr. Jose Lim</div>
+              <div class="admin-user-loc-sub" id="admin-user-display-office">Barangay Manguring Health Office, Calabanga
               </div>
             </div>
-            <div class="admin-user-avatar-circle" id="admin-user-display-avatar">MA</div>
+            <div class="admin-user-avatar-circle" id="admin-user-display-avatar">JL</div>
           </div>
           <button type="button" class="btn-clean-signout" onclick="NutriApp.logout()">
             Sign out
@@ -528,12 +737,14 @@
         <div class="bhw-taskbar-left">
           <div class="bhw-brand-clean" onclick="NutriApp.switchCHWSubTab('dashboard')" title="NutriLearn BHW Dashboard">
             <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Logo" class="bhw-brand-logo-img">
-            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="bhw-brand-name-img" style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="bhw-brand-name-img"
+              style="height: 22px; width: auto; max-width: 130px; object-fit: contain;">
           </div>
 
           <!-- Horizontal Clean Pill Navigation Tabs -->
           <nav class="bhw-pill-tabs">
-            <button type="button" class="bhw-pill-btn active" data-tab="dashboard" onclick="NutriApp.switchCHWSubTab('dashboard')">
+            <button type="button" class="bhw-pill-btn active" data-tab="dashboard"
+              onclick="NutriApp.switchCHWSubTab('dashboard')">
               <span class="bhw-pill-icon">📊</span>
               <span>Dashboard</span>
             </button>
@@ -541,11 +752,13 @@
               <span class="bhw-pill-icon">👥</span>
               <span>Parent/Guardian Groups</span>
             </button>
-            <button type="button" class="bhw-pill-btn" data-tab="announcements" onclick="NutriApp.switchCHWSubTab('announcements')">
+            <button type="button" class="bhw-pill-btn" data-tab="announcements"
+              onclick="NutriApp.switchCHWSubTab('announcements')">
               <span class="bhw-pill-icon">📢</span>
               <span>Announcements</span>
             </button>
-            <button type="button" class="bhw-pill-btn" data-tab="registry" onclick="NutriApp.switchCHWSubTab('registry')">
+            <button type="button" class="bhw-pill-btn" data-tab="registry"
+              onclick="NutriApp.switchCHWSubTab('registry')">
               <span class="bhw-pill-icon">📋</span>
               <span>Child Records</span>
             </button>
@@ -553,7 +766,18 @@
         </div>
 
         <div class="bhw-taskbar-right">
-          <div class="bhw-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()" title="View profile & settings">
+          <!-- Language Selector Pill in BHW Taskbar -->
+          <div class="taskbar-lang-pill"
+            style="display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; padding: 2px 5px; border-radius: 9999px; border: 1px solid #CBD5E1;">
+            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇵🇭
+              Fil</button>
+            <button type="button" class="btn-lang-pill-en" onclick="NutriI18n.setLanguage('en')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇺🇸
+              Eng</button>
+          </div>
+          <div class="bhw-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
+            title="View profile & settings">
             <div class="bhw-user-details-text">
               <div class="bhw-user-title-name" id="bhw-top-user-name">Nurse Ana Reyes</div>
               <div class="bhw-user-loc-sub" id="bhw-top-user-loc">Manguring Health Center, Zone 2, Calabanga</div>
@@ -569,11 +793,13 @@
       <!-- 2. STANDARD HEADER CONTAINER (For Parent & CHW Roles) -->
       <div class="header-container" id="standard-header-container">
         <!-- Brand Logo & Title -->
-        <div class="brand" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;" title="NutriLearn Dashboard (Click to return to home)">
+        <div class="brand" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;"
+          title="NutriLearn Dashboard (Click to return to home)">
           <img src="icon/logo.png?v=5.0" alt="NutriLearn Logo" class="brand-icon">
           <div>
             <div class="brand-title">
-              <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="brand-title-name-img" style="height: 20px; width: auto; max-width: 120px; object-fit: contain;">
+              <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="brand-title-name-img"
+                style="height: 20px; width: auto; max-width: 120px; object-fit: contain;">
             </div>
             <div class="brand-subtitle">Child Health &amp; Nutrition</div>
           </div>
@@ -747,9 +973,11 @@
             <div class="upcoming-events-card">
               <div class="upcoming-events-content">
                 <span class="upcoming-tag-pill">Community Schedule</span>
-                <span><strong>Barangay Health Station:</strong> Catch-up Child Weighing, MUAC Screening, &amp; Vitamin A Drops this Saturday, 8:00 AM.</span>
+                <span><strong>Barangay Health Station:</strong> Catch-up Child Weighing, MUAC Screening, &amp; Vitamin A
+                  Drops this Saturday, 8:00 AM.</span>
               </div>
-              <button class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('growth-tracker')" style="font-size: 0.78rem; padding: 4px 12px; white-space: nowrap;">
+              <button class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('growth-tracker')"
+                style="font-size: 0.78rem; padding: 4px 12px; white-space: nowrap;">
                 View Schedule →
               </button>
             </div>
@@ -822,7 +1050,8 @@
 
           <!-- 5. BOTTOM QUICK ACTION CARDS (Screenshot 1) -->
           <div class="parent-quick-actions-row">
-            <div class="parent-action-card-link" onclick="ParentModule.openDailyMealLogModal()" style="border-left: 4px solid #16A34A; cursor: pointer;">
+            <div class="parent-action-card-link" onclick="ParentModule.openDailyMealLogModal()"
+              style="border-left: 4px solid #16A34A; cursor: pointer;">
               <div class="parent-action-card-left">
                 <div class="parent-action-icon-wrap" style="background: #DCFCE7; color: #166534;">
                   🍽️
@@ -866,17 +1095,21 @@
         <!-- Tab Pane: Try It at Home (10 Actionable Practices Checklist) -->
         <div class="parent-tab-pane" id="parent-pane-try-at-home" style="display: none;">
           <div class="card" style="border: 1px solid #EAE6DF; border-radius: 18px; padding: 1.5rem;">
-            <div class="card-header" style="border-bottom: 1px solid #EAE6DF; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div class="card-header"
+              style="border-bottom: 1px solid #EAE6DF; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
               <div>
-                <h2 class="card-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.45rem; color: #1A382A; margin: 0 0 0.35rem 0;">
+                <h2 class="card-title"
+                  style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.45rem; color: #1A382A; margin: 0 0 0.35rem 0;">
                   ✓ Try It at Home: Daily Feeding &amp; Nutrition Practices
                 </h2>
                 <p class="card-subtitle" style="font-size: 0.88rem; color: #64748B; margin: 0;">
-                  Check off the evidence-based practices you've tried with your child. Every practice completed builds growth resilience!
+                  Check off the evidence-based practices you've tried with your child. Every practice completed builds
+                  growth resilience!
                 </p>
               </div>
               <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button type="button" class="btn btn-accent btn-sm" onclick="ParentModule.openDailyMealLogModal()" style="font-weight: 700;">
+                <button type="button" class="btn btn-accent btn-sm" onclick="ParentModule.openDailyMealLogModal()"
+                  style="font-weight: 700;">
                   🍽️ I-log ang Kinain Ngayong Araw
                 </button>
                 <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('learning')">
@@ -1107,16 +1340,19 @@
           <!-- BHW Greeting Header -->
           <div class="bhw-greeting-header">
             <h1 class="bhw-greeting-title" id="bhw-greeting-title">Good morning, Reyes 👋</h1>
-            <p class="bhw-greeting-sub" id="bhw-greeting-sub">Manguring Health Center, Zone 2, Calabanga - Monday, October 12, 2026</p>
+            <p class="bhw-greeting-sub" id="bhw-greeting-sub">Manguring Health Center, Zone 2, Calabanga - Monday,
+              October 12, 2026</p>
           </div>
 
           <!-- Alert / Relay Announcements Banner (Warm Rust-Orange) -->
           <div class="bhw-alert-banner" id="bhw-alert-banner">
             <div class="bhw-alert-banner-left">
               <div class="bhw-alert-banner-title" id="bhw-alert-title">Relay announcements immediately</div>
-              <div class="bhw-alert-banner-sub" id="bhw-alert-desc">2 notices still need to reach Parents/Guardians before their deadlines.</div>
+              <div class="bhw-alert-banner-sub" id="bhw-alert-desc">2 notices still need to reach Parents/Guardians
+                before their deadlines.</div>
             </div>
-            <button type="button" class="bhw-alert-banner-btn" id="bhw-alert-action-btn" onclick="NutriApp.switchCHWSubTab('announcements')">
+            <button type="button" class="bhw-alert-banner-btn" id="bhw-alert-action-btn"
+              onclick="NutriApp.switchCHWSubTab('announcements')">
               Review now &rarr;
             </button>
           </div>
@@ -1124,7 +1360,8 @@
           <!-- 4 Summary Stat Cards Row -->
           <div class="bhw-stat-cards-grid">
             <!-- Card 1: Total Families -->
-            <div class="bhw-stat-card" style="cursor: pointer;" onclick="NutriApp.switchCHWSubTab('groups')" title="Click to view Parent/Guardian Groups">
+            <div class="bhw-stat-card" style="cursor: pointer;" onclick="NutriApp.switchCHWSubTab('groups')"
+              title="Click to view Parent/Guardian Groups">
               <div class="bhw-stat-icon">👥</div>
               <div class="bhw-stat-num" id="bhw-stat-total-families">24</div>
               <div>
@@ -1134,7 +1371,8 @@
             </div>
 
             <!-- Card 2: Critical Cases (Highlighted Solid Warm Rust-Orange) -->
-            <div class="bhw-stat-card bhw-stat-card-critical" style="cursor: pointer;" onclick="CHWModule.filterCriticalCases()" title="Click to view Critical Cases in Child Records">
+            <div class="bhw-stat-card bhw-stat-card-critical" style="cursor: pointer;"
+              onclick="CHWModule.filterCriticalCases()" title="Click to view Critical Cases in Child Records">
               <div class="bhw-stat-icon">🚨</div>
               <div class="bhw-stat-num" id="bhw-stat-critical-cases">4</div>
               <div>
@@ -1144,7 +1382,8 @@
             </div>
 
             <!-- Card 3: Improving -->
-            <div class="bhw-stat-card" style="cursor: pointer;" onclick="CHWModule.filterImprovingCases()" title="Click to view Improving cases in Child Records">
+            <div class="bhw-stat-card" style="cursor: pointer;" onclick="CHWModule.filterImprovingCases()"
+              title="Click to view Improving cases in Child Records">
               <div class="bhw-stat-icon">📈</div>
               <div class="bhw-stat-num" id="bhw-stat-improving-cases">14</div>
               <div>
@@ -1154,7 +1393,8 @@
             </div>
 
             <!-- Card 4: Reports Due -->
-            <div class="bhw-stat-card" style="cursor: pointer;" onclick="CHWModule.openReportModal()" title="Click to submit monthly report">
+            <div class="bhw-stat-card" style="cursor: pointer;" onclick="CHWModule.openReportModal()"
+              title="Click to submit monthly report">
               <div class="bhw-stat-icon">📋</div>
               <div class="bhw-stat-num" id="bhw-stat-reports-due">2</div>
               <div>
@@ -1183,7 +1423,8 @@
               <div class="bhw-action-tile" onclick="NutriApp.switchCHWSubTab('announcements')">
                 <div class="bhw-action-tile-icon" style="color: #C026D3;">📢</div>
                 <div class="bhw-action-tile-title" id="bhw-qa-ann-title">Administrator Announcements (2 new)</div>
-                <div class="bhw-action-tile-sub" id="bhw-qa-ann-sub">2 announcements waiting to be relayed to Parents/Guardians</div>
+                <div class="bhw-action-tile-sub" id="bhw-qa-ann-sub">2 announcements waiting to be relayed to
+                  Parents/Guardians</div>
               </div>
             </div>
           </div>
@@ -1517,10 +1758,13 @@
           <div class="admin-overview-container">
             <!-- Program Overview Header -->
             <div class="admin-page-header" style="display: flex; align-items: center; gap: 1rem;">
-              <img src="icon/logo.png?v=5.0" alt="NutriLearn" class="admin-header-logo-badge" onclick="NutriApp.navigateToMainDashboard()" title="Return to Overview Dashboard" style="cursor: pointer;">
+              <img src="icon/logo.png?v=5.0" alt="NutriLearn" class="admin-header-logo-badge"
+                onclick="NutriApp.navigateToMainDashboard()" title="Return to Overview Dashboard"
+                style="cursor: pointer;">
               <div>
                 <h1 class="admin-page-title" id="admin-overview-page-title">Program Overview — Lahat ng Barangay</h1>
-                <p class="admin-page-subtitle" id="admin-overview-page-sub">Calabanga, Camarines Sur · Talaan para sa Buong Munisipalidad</p>
+                <p class="admin-page-subtitle" id="admin-overview-page-sub">Calabanga, Camarines Sur · Talaan para sa
+                  Buong Munisipalidad</p>
               </div>
             </div>
 
@@ -1873,104 +2117,96 @@
              MHO TAB PANE: FIELD RECORDS (Malnutrition Registry & Zones)
              ==================================================================== -->
         <div class="mho-tab-pane" data-tab="records" id="mho-tab-records" style="display: none;">
-          <div class="admin-pane-container">
-            <div class="admin-pane-header">
-              <div class="admin-pane-title-group">
-                <h2>📋 Field Nutrition &amp; Anthropometric Records</h2>
-                <p>Real-time field census of children, WHO nutritional status, and growth monitoring across barangays and zones.</p>
+          <div class="field-records-page">
+            <!-- Header -->
+            <div class="field-records-header">
+              <div>
+                <h1 class="field-records-title">Field Records</h1>
+                <p class="field-records-subtitle">Live child nutrition data submitted by health workers</p>
               </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openAdminAddChild()">
-                  ➕ Magdagdag ng Bata (Add Child)
+              <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                <button type="button" class="btn btn-outline btn-sm"
+                  style="border-radius: 9999px; padding: 0.6rem 1.25rem; font-weight: 600;"
+                  onclick="MHODashboard.openAdminAddChild()">
+                  ➕ Add Child
                 </button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="NutriExport.exportChildrenCSV()">
-                  📥 Export Records (CSV)
-                </button>
-                <button type="button" class="btn btn-primary btn-sm" onclick="NutriExport.printOfficialSummary()">
-                  🖨️ Print Health Summary
+                <button type="button" class="btn-field-export" onclick="NutriExport.exportChildrenCSV()">
+                  Export CSV
                 </button>
               </div>
             </div>
 
-            <div class="admin-clean-card">
-              <!-- Active Barangay Status Banner (Indicates which Barangay is selected and locked for update) -->
-              <div id="admin-records-brgy-banner" class="admin-brgy-info-banner all" style="margin-bottom: 1.15rem; padding: 0.85rem 1.15rem; border-radius: 10px; border: 1.5px solid #E2E8F0; background: #F8FAFC;">
-                <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
-                  <div style="display: flex; align-items: center; gap: 0.65rem;">
-                    <span style="font-size: 1.3rem;">🌐</span>
-                    <div>
-                      <strong style="color: #0F172A; font-size: 0.9rem;">Lahat ng Barangay (Buong Munisipalidad)</strong>
-                      <div style="font-size: 0.8rem; color: #64748B;">
-                        Ipinapakita ang talaan mula sa lahat ng mga barangay. Pumili ng partikular na Barangay upang i-filter at i-update lamang ang mga talaan nito.
-                      </div>
-                    </div>
-                  </div>
-                  <span class="badge" style="background: #F1F5F9; color: #475569; font-weight: 600; font-size: 0.78rem; padding: 5px 12px; border-radius: 6px; border: 1px solid #CBD5E1;">
-                    Municipality View
-                  </span>
-                </div>
+            <!-- 4 Metric Cards Grid -->
+            <div class="field-metrics-grid">
+              <div class="field-metric-card" onclick="MHODashboard.setFieldStatusFilter('ALL', null)">
+                <div class="field-metric-icon">📋</div>
+                <div class="field-metric-val" id="admin-field-total-count">3</div>
+                <div class="field-metric-label">Total Records</div>
               </div>
-
-              <!-- Filter Toolbar -->
-              <div class="filter-bar" style="margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
-                <div class="search-input-wrapper" style="flex: 1; min-width: 220px;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                  </svg>
-                  <input type="text" id="admin-records-search" class="form-control"
-                    placeholder="Search by child name, parent, or zone..." oninput="MHODashboard.filterAdminRecords()">
-                </div>
-
-                <!-- Dedicated Barangay Filter Dropdown -->
-                <select id="admin-records-barangay-filter" class="form-select" style="width: auto; min-width: 195px;"
-                  onchange="MHODashboard.setSelectedBarangay(this.value)">
-                  <option value="ALL">🌐 Lahat ng Barangay</option>
-                  <option value="Barangay Manguiring">Barangay Manguiring</option>
-                </select>
-
-                <select id="admin-records-zone-filter" class="form-select" style="width: auto; min-width: 150px;"
-                  onchange="MHODashboard.filterAdminRecords()">
-                  <option value="ALL">Lahat ng Zone / Purok</option>
-                  <option value="Zone 1">Zone 1</option>
-                  <option value="Zone 2">Zone 2</option>
-                  <option value="Zone 3">Zone 3</option>
-                  <option value="Zone 4">Zone 4</option>
-                  <option value="Zone 5">Zone 5</option>
-                  <option value="Zone 6">Zone 6</option>
-                  <option value="Zone 7">Zone 7 (Purok 7)</option>
-                </select>
-
-                <select id="admin-records-status-filter" class="form-select" style="width: auto; min-width: 160px;"
-                  onchange="MHODashboard.filterAdminRecords()">
-                  <option value="ALL">All Nutritional Statuses</option>
-                  <option value="Stunted">Stunted</option>
-                  <option value="Critical">Critical Cases</option>
-                  <option value="Normal">Normal</option>
-                  <option value="Improved">Improved &amp; Recovered</option>
-                </select>
+              <div class="field-metric-card highlight-stunted"
+                onclick="MHODashboard.setFieldStatusFilter('Stunted', null)">
+                <div class="field-metric-icon">✏️</div>
+                <div class="field-metric-val" id="admin-field-stunted-count">0</div>
+                <div class="field-metric-label">Stunted</div>
               </div>
+              <div class="field-metric-card" onclick="MHODashboard.setFieldStatusFilter('At Risk', null)">
+                <div class="field-metric-icon">⚠️</div>
+                <div class="field-metric-val" id="admin-field-atrisk-count">2</div>
+                <div class="field-metric-label">At Risk</div>
+              </div>
+              <div class="field-metric-card" onclick="MHODashboard.setFieldStatusFilter('Normal', null)">
+                <div class="field-metric-icon">✅</div>
+                <div class="field-metric-val" id="admin-field-normal-count">1</div>
+                <div class="field-metric-label">Normal</div>
+              </div>
+            </div>
 
-              <!-- Records Table -->
-              <div class="table-responsive">
-                <table class="admin-clean-table">
+            <!-- Controls: Search & Status Pills -->
+            <div class="field-controls-bar">
+              <div class="field-search-input-wrap">
+                <input type="text" id="admin-field-search" class="field-search-input"
+                  placeholder="Search by child, Parent/Guardian, zone, or Health Worker..."
+                  oninput="MHODashboard.filterAdminRecords()">
+              </div>
+              <div class="field-status-pills">
+                <button type="button" class="btn-field-pill active" data-status="ALL"
+                  onclick="MHODashboard.setFieldStatusFilter('ALL', this)">All</button>
+                <button type="button" class="btn-field-pill" data-status="Normal"
+                  onclick="MHODashboard.setFieldStatusFilter('Normal', this)">Normal</button>
+                <button type="button" class="btn-field-pill" data-status="At Risk"
+                  onclick="MHODashboard.setFieldStatusFilter('At Risk', this)">At Risk</button>
+                <button type="button" class="btn-field-pill" data-status="Stunted"
+                  onclick="MHODashboard.setFieldStatusFilter('Stunted', this)">Stunted</button>
+              </div>
+            </div>
+
+            <!-- Table Card -->
+            <div class="field-table-card">
+              <div class="table-responsive" style="margin: 0; overflow-x: auto;">
+                <table class="table-field-records">
                   <thead>
                     <tr>
-                      <th>Child &amp; Parent</th>
-                      <th>Barangay &amp; Zone</th>
-                      <th>Age &amp; Sex</th>
-                      <th>Height / Weight / MUAC</th>
-                      <th>Nutritional Classification</th>
+                      <th>Child</th>
+                      <th>Parent/Guardian</th>
+                      <th>Manguiring Zone</th>
+                      <th>Age</th>
+                      <th>Weight</th>
                       <th>Status</th>
-                      <th>Last Assessed</th>
-                      <th style="text-align: center; min-width: 110px;">Aksyon (Action)</th>
+                      <th>Submitted By</th>
+                      <th>Date</th>
+                      <th style="width: 44px; text-align: center;"></th>
                     </tr>
                   </thead>
-                  <tbody id="admin-records-tbody">
-                    <!-- Populated by MHODashboard.renderAdminRecords() -->
+                  <tbody id="admin-field-records-tbody">
+                    <!-- Populated dynamically by MHODashboard.renderAdminRecords() -->
                   </tbody>
                 </table>
               </div>
+            </div>
+
+            <!-- Centered Footer Note -->
+            <div class="field-table-footer-note">
+              Records are submitted in real-time by health workers and require no manual processing.
             </div>
           </div>
         </div>
@@ -1983,7 +2219,8 @@
             <div class="admin-pane-header">
               <div class="admin-pane-title-group">
                 <h2>🏛️ Pamamahala ng mga Barangay (Barangay Registry)</h2>
-                <p>Pamahalaan ang mga opisyal na barangay sa munisipalidad. Ang mga barangay na nakatala rito ang gagamitin sa pagpaparehistro ng Magulang (Parent) at BHW, at sa mga filters ng sistema.</p>
+                <p>Pamahalaan ang mga opisyal na barangay sa munisipalidad. Ang mga barangay na nakatala rito ang
+                  gagamitin sa pagpaparehistro ng Magulang (Parent) at BHW, at sa mga filters ng sistema.</p>
               </div>
               <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                 <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openAddBarangayModal()">
@@ -1994,24 +2231,31 @@
 
             <!-- KPI Summary Cards for Barangays -->
             <div class="grid-3" style="margin-bottom: 1.5rem; gap: 1rem;">
-              <div class="stat-card" style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+              <div class="stat-card"
+                style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
+                <div
+                  style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
                   🏛️ Rehistradong Barangay
                 </div>
-                <div id="brgy-kpi-total" style="font-size: 1.85rem; font-weight: 800; color: #0F172A;">5</div>
-                <div style="font-size: 0.78rem; color: #10B981; font-weight: 600; margin-top: 0.25rem;">Opisyal na sakop ng MHO</div>
+                <div id="brgy-kpi-total" style="font-size: 1.85rem; font-weight: 800; color: #0F172A;">1</div>
+                <div style="font-size: 0.78rem; color: #10B981; font-weight: 600; margin-top: 0.25rem;">Opisyal na sakop
+                  ng MHO</div>
               </div>
 
-              <div class="stat-card" style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+              <div class="stat-card"
+                style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
+                <div
+                  style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
                   👶 Mga Batang Nakatala
                 </div>
                 <div id="brgy-kpi-children" style="font-size: 1.85rem; font-weight: 800; color: #0284C7;">0</div>
                 <div style="font-size: 0.78rem; color: #64748B; margin-top: 0.25rem;">Kabuuan sa lahat ng barangay</div>
               </div>
 
-              <div class="stat-card" style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
-                <div style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
+              <div class="stat-card"
+                style="background: white; border: 1.5px solid #E2E8F0; border-radius: 12px; padding: 1.25rem;">
+                <div
+                  style="font-size: 0.8rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.35rem;">
                   👥 Mga User (BHW & Magulang)
                 </div>
                 <div id="brgy-kpi-users" style="font-size: 1.85rem; font-weight: 800; color: #059669;">0</div>
@@ -2021,17 +2265,19 @@
 
             <!-- Barangay Table Card -->
             <div class="admin-clean-card">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem;">
                 <div class="search-input-wrapper" style="flex: 1; max-width: 380px; min-width: 240px;">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                   </svg>
-                  <input type="text" id="admin-brgy-search" class="form-control"
-                    placeholder="Maghanap ng barangay..." oninput="MHODashboard.filterBarangaysTable()">
+                  <input type="text" id="admin-brgy-search" class="form-control" placeholder="Maghanap ng barangay..."
+                    oninput="MHODashboard.filterBarangaysTable()">
                 </div>
                 <div style="font-size: 0.8rem; color: #64748B;">
-                  💡 <em>Kapag pinalitan ang pangalan, awtomatikong mag-uupdate ang mga talaan at filters ng sistema.</em>
+                  💡 <em>Kapag pinalitan ang pangalan, awtomatikong mag-uupdate ang mga talaan at filters ng
+                    sistema.</em>
                 </div>
               </div>
 
@@ -2176,7 +2422,8 @@
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border-left:4px solid #EF4444;">
                   <div>
-                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 1 - 2)</strong>
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 1 -
+                      2)</strong>
                     <div style="font-size:0.78rem; color:var(--text-muted);">38.1% Stunting Prevalence • 16 Wasted Cases
                     </div>
                   </div>
@@ -2186,7 +2433,8 @@
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border-left:4px solid #F59E0B;">
                   <div>
-                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 3 - 4)</strong>
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 3 -
+                      4)</strong>
                     <div style="font-size:0.78rem; color:var(--text-muted);">35.2% Stunting Prevalence • 12 Stunted
                       Cases</div>
                   </div>
@@ -2196,7 +2444,8 @@
                 <div
                   style="display:flex; justify-content:space-between; align-items:center; padding:0.6rem 0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border-left:4px solid #10B981;">
                   <div>
-                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 5 - 6)</strong>
+                    <strong style="color:var(--text-primary); font-size:0.9rem;">Barangay Manguiring (Zone 5 -
+                      6)</strong>
                     <div style="font-size:0.78rem; color:var(--text-muted);">On track (&lt;18% stunting rate) •
                       Continuous monitoring</div>
                   </div>
@@ -2218,7 +2467,8 @@
                 <div
                   style="padding:0.75rem; background:var(--bg-surface-subtle); border-radius:var(--radius-md); border:1px solid var(--border-light);">
                   <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.35rem;">
-                    <strong style="font-size:0.88rem; color:var(--text-primary);">Brgy. Manguiring — Monthly Malnutrition
+                    <strong style="font-size:0.88rem; color:var(--text-primary);">Brgy. Manguiring — Monthly
+                      Malnutrition
                       Census</strong>
                     <span class="dash-priority-badge moderate">Pending MHO Review</span>
                   </div>
@@ -2277,52 +2527,137 @@
 
         <!-- Tab Pane: Municipal Official Announcements & Directives -->
         <div class="mho-tab-pane" data-tab="announcements" style="display: none;">
-          <div class="card">
-            <div class="card-header">
+          <div class="admin-ann-wrapper">
+            <!-- Header Row matching Screenshot -->
+            <div class="admin-ann-header-row">
               <div>
-                <h2 class="card-title">📢 Municipal Nutrition Broadcasts &amp; Policy Directives</h2>
-                <p class="card-subtitle">Broadcast feeding schedules and health advisories to Parents &amp; BHWs, or
-                  publish internal operational memos to BHW staff.</p>
+                <h1 class="admin-ann-title">Announcements</h1>
+                <p class="admin-ann-subtitle">Post official notices for Health Workers to relay to Parents/Guardians in
+                  every Manguring zone.</p>
               </div>
-              <button class="btn btn-accent" onclick="AnnouncementsModule.openComposer('mho')">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <line x1="12" y1="5" x2="12" y2="19"></line>
-                  <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                + Post Official Announcement
-              </button>
+              <div id="admin-ann-header-actions">
+                <button type="button" class="btn-admin-new-ann" id="btn-admin-new-ann"
+                  onclick="AnnouncementsModule.showCreateView()">
+                  + New Announcement
+                </button>
+                <button type="button" class="btn-admin-back-ann" id="btn-admin-back-ann" style="display: none;"
+                  onclick="AnnouncementsModule.showListView()">
+                  ← Back
+                </button>
+              </div>
             </div>
 
-            <!-- Filter & Search Bar -->
-            <div class="filter-bar" style="margin-bottom: 1.25rem;">
-              <div class="search-input-wrapper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" id="admin-ann-search-input" class="form-control"
-                  placeholder="Search broadcasts by title, content, or directive...">
+            <!-- Workflow Pipeline Banner -->
+            <div class="admin-ann-workflow-banner">
+              <div class="workflow-step">
+                <span class="workflow-icon-circle wf-icon-admin">📄</span>
+                <span class="workflow-role">Administrator</span>
+                <span class="workflow-action">posts announcement</span>
               </div>
-
-              <select id="admin-ann-category-filter" class="form-select" style="width: auto; min-width: 170px;">
-                <option value="ALL">All Categories</option>
-                <option value="Ration Distribution">Ration Distribution</option>
-                <option value="Growth Weigh-in">Growth Weigh-in</option>
-                <option value="Health Worker Directive">Health Worker Directive</option>
-                <option value="Parent Incentive">Parent Incentive</option>
-                <option value="Health Alerts">Health Alerts</option>
-                <option value="General Notice">General Notice</option>
-              </select>
-
-              <select id="admin-ann-barangay-filter" class="form-select" style="width: auto; min-width: 170px;">
-                <option value="ALL">All Barangays</option>
-                <option value="Barangay Manguiring">Barangay Manguiring</option>
-              </select>
+              <span class="workflow-arrow">→</span>
+              <div class="workflow-step">
+                <span class="workflow-icon-circle wf-icon-bhw">🩺</span>
+                <span class="workflow-role">Health Workers</span>
+                <span class="workflow-action">review and relay</span>
+              </div>
+              <span class="workflow-arrow">→</span>
+              <div class="workflow-step">
+                <span class="workflow-icon-circle wf-icon-parents">👩‍👧</span>
+                <span class="workflow-role">Parents/Guardians</span>
+              </div>
             </div>
 
-            <!-- Feed Container -->
-            <div id="admin-announcements-container">
-              <!-- Populated dynamically by announcements.js -->
+            <!-- VIEW 1: Announcement Feed / List View -->
+            <div id="admin-ann-list-view">
+              <div id="admin-announcements-container">
+                <!-- Populated dynamically by announcements.js -->
+              </div>
+            </div>
+
+            <!-- VIEW 2: Create / Edit Announcement View (Matches Screenshot 100%) -->
+            <div id="admin-ann-create-view" style="display: none;">
+              <div class="admin-ann-form-card">
+                <form id="admin-ann-create-form"
+                  onsubmit="event.preventDefault(); AnnouncementsModule.handlePageFormSubmit(this);">
+                  <input type="hidden" name="annId" id="admin-page-form-id" value="">
+
+                  <div class="admin-form-grid-2">
+                    <div class="form-group" style="margin-bottom: 1.15rem;">
+                      <label class="admin-form-label">Type <span class="required-star">*</span></label>
+                      <select name="annCategory" id="admin-page-form-type" class="admin-form-control admin-form-select"
+                        required>
+                        <option value="Meeting" selected>Meeting</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Reminder">Reminder</option>
+                        <option value="Update">Update</option>
+                        <option value="Directive">Directive</option>
+                        <option value="Ration Distribution">Ration Distribution</option>
+                        <option value="Growth Weigh-in">Growth Weigh-in</option>
+                        <option value="Health Alerts">Health Alerts</option>
+                        <option value="General Notice">General Notice</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.15rem;">
+                      <label class="admin-form-label">Target Zone</label>
+                      <select name="annTargetZones" id="admin-page-form-target-zone"
+                        class="admin-form-control admin-form-select">
+                        <option value="All Zones, Barangay Manguring" selected>All Zones, Barangay Manguring</option>
+                        <option value="Zones 1–6, Barangay Manguring">Zones 1–6, Barangay Manguring</option>
+                        <option value="Zone 1, Barangay Manguring">Zone 1, Barangay Manguring</option>
+                        <option value="Zone 2, Barangay Manguring">Zone 2, Barangay Manguring</option>
+                        <option value="Zone 3, Barangay Manguring">Zone 3, Barangay Manguring</option>
+                        <option value="Zone 4, Barangay Manguring">Zone 4, Barangay Manguring</option>
+                        <option value="Zone 5, Barangay Manguring">Zone 5, Barangay Manguring</option>
+                        <option value="Zone 6, Barangay Manguring">Zone 6, Barangay Manguring</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.15rem;">
+                    <label class="admin-form-label">Title <span class="required-star">*</span></label>
+                    <input type="text" name="annTitle" id="admin-page-form-title" class="admin-form-control"
+                      placeholder="e.g. Community Nutrition Seminar — October 2026" required>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.15rem;">
+                    <label class="admin-form-label">Details <span class="required-star">*</span></label>
+                    <textarea name="annContent" id="admin-page-form-details" class="admin-form-control" rows="4"
+                      placeholder="Official notice details for health workers and community..." required></textarea>
+                  </div>
+
+                  <div class="admin-form-grid-2">
+                    <div class="form-group" style="margin-bottom: 1.15rem;">
+                      <label class="admin-form-label">Date <span class="required-star">*</span></label>
+                      <input type="date" name="annDateInput" id="admin-page-form-date" class="admin-form-control"
+                        required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.15rem;">
+                      <label class="admin-form-label">Relay Deadline <span class="required-star">*</span></label>
+                      <input type="date" name="annRelayDateInput" id="admin-page-form-relay-date"
+                        class="admin-form-control" required>
+                      <div class="admin-form-hint">Set this several days before the event.</div>
+                    </div>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.15rem; max-width: 48%;">
+                    <label class="admin-form-label">Time</label>
+                    <input type="text" name="annEventTime" id="admin-page-form-time" class="admin-form-control"
+                      placeholder="e.g. 9:00 AM – 12:00 PM">
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 1.35rem;">
+                    <label class="admin-form-label">Venue</label>
+                    <input type="text" name="annLocation" id="admin-page-form-venue" class="admin-form-control"
+                      placeholder="e.g. Manguring Covered Court, Zone 4">
+                  </div>
+
+                  <button type="submit" class="btn-admin-submit-ann" id="btn-admin-page-form-submit">
+                    Post to Health Workers →
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -2488,121 +2823,100 @@
           </div>
         </div>
 
-        <!-- Tab Pane 5: Nutrition Content & Meal Adherence Manager -->
+        <!-- Tab Pane 5: Content Management (Matches Screenshot & Fully Functional) -->
         <div class="mho-tab-pane" data-tab="content" id="mho-tab-content" style="display: none;">
-          <div class="admin-pane-container">
-            <!-- Header with Title & Sub-Tab Switcher -->
-            <div class="admin-pane-header" style="margin-bottom: 1.25rem;">
-              <div class="admin-pane-title-group">
-                <h2 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.85rem; color: #1E2320; margin-bottom: 0.35rem;">
-                  🥗 Mga Nutrition Module &amp; Pagsubaybay sa Pagsunod sa Pagkain
-                </h2>
-                <p style="color: #6B7280; font-size: 0.92rem;">
-                  Pamamahala ng mga gabay sa masusustansyang pagkain at live monitoring kung nasusunod ng mga pamilya ang tamang nutrisyon.
+          <div class="admin-content-management-wrapper">
+            <!-- Header Row matching Screenshot -->
+            <div class="admin-content-header-row">
+              <div>
+                <h1 class="admin-content-title">Content Management</h1>
+                <p class="admin-content-subtitle">Manage nutrition learning modules aligned with WHO and FNRI guidelines
                 </p>
               </div>
-            </div>
-
-            <!-- Subtab Pills: 1. Mga Module & Pagkain | 2. Pagsubaybay sa Pagsunod -->
-            <div class="content-subtabs-bar" style="margin-bottom: 1.5rem; border-bottom: 1px solid #EBE5D8; padding-bottom: 0.75rem;">
-              <button type="button" class="content-subtab-btn active" id="btn-subtab-modules" onclick="MHODashboard.switchContentSubTab('modules')">
-                🥗 Mga Module &amp; Gabay sa Pagkain
-              </button>
-              <button type="button" class="content-subtab-btn" id="btn-subtab-compliance" onclick="MHODashboard.switchContentSubTab('compliance')">
-                📊 Pagsubaybay sa Pagsunod (Meal Compliance Monitor)
-                <span class="compliance-counter-pill" id="compliance-pending-pill">5 Nangangailangan ng Tulong</span>
+              <button type="button" class="btn-admin-new-module" id="btn-admin-new-module"
+                onclick="MHODashboard.openAddModuleModal()">
+                + New Module
               </button>
             </div>
 
-            <!-- Sub-Pane 1: Nutrition Modules & Recommended Foods -->
-            <div id="pane-content-modules" style="display: block;">
-              <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem; flex-wrap: wrap; gap: 0.75rem; background: #FFFFFF; border: 1px solid #EBE5D8; border-radius: 14px; padding: 1.25rem 1.5rem;">
-                <div>
-                  <h3 style="font-size: 1.15rem; font-weight: 700; color: #1E3A2B; margin-bottom: 0.2rem;">
-                    Alituntunin ng Pagkain &amp; Mga Aralin para sa Magulang
-                  </h3>
-                  <p style="font-size: 0.85rem; color: #6B7280; margin: 0;">
-                    Maaaring baguhin ng Administrator ang mga inirerekomendang pagkain, sukat ng pagkain, larawan, at aralin.
-                  </p>
-                </div>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <button type="button" class="btn btn-outline btn-sm" onclick="MHODashboard.handleResetModules()" title="Ibalik sa orihinal na WHO standard default modules">
-                    🔄 I-reset sa Standard
-                  </button>
-                  <button type="button" class="btn btn-primary btn-sm" onclick="MHODashboard.openAddModuleModal()">
-                    + Magdagdag ng Bagong Module
-                  </button>
-                </div>
-              </div>
+            <!-- Filter Pills matching Screenshot -->
+            <div class="admin-content-pills-bar">
+              <button type="button" class="admin-content-pill-btn active" data-filter="all" id="pill-content-all"
+                onclick="MHODashboard.filterContentModules('all')">All</button>
+              <button type="button" class="admin-content-pill-btn" data-filter="published" id="pill-content-published"
+                onclick="MHODashboard.filterContentModules('published')">Published</button>
+              <button type="button" class="admin-content-pill-btn" data-filter="review" id="pill-content-review"
+                onclick="MHODashboard.filterContentModules('review')">Review</button>
+              <button type="button" class="admin-content-pill-btn" data-filter="draft" id="pill-content-draft"
+                onclick="MHODashboard.filterContentModules('draft')">Draft</button>
+            </div>
 
-              <!-- Modules List Container -->
-              <div id="mho-content-modules-list">
-                <!-- Dynamically populated by MHODashboard.renderContentManagerModules() -->
+            <!-- Modules List Container matching Screenshot -->
+            <div id="admin-content-modules-list" class="admin-content-modules-list">
+              <!-- Dynamically populated by MHODashboard.renderContentManagerModules() -->
+            </div>
+
+            <!-- Callout Notice Banner matching Screenshot with pin -->
+            <div class="admin-content-policy-banner">
+              <span class="policy-banner-icon">📌</span>
+              <p class="policy-banner-text">
+                All published modules are reviewed against the latest WHO IYCF guidelines and Philippine FNRI
+                recommendations before release. Content updates are pushed automatically to all enrolled users upon
+                publishing.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Pane 6: User Accounts & System Access (Matches Screenshot) -->
+        <div class="mho-tab-pane" data-tab="users" id="mho-tab-users" style="display: none;">
+          <div class="admin-users-wrapper">
+            <!-- Header Row matching Screenshot -->
+            <div class="admin-users-header-row">
+              <div>
+                <h1 class="admin-users-title">User Management</h1>
+                <p class="admin-users-subtitle">Manage accounts and role assignments across NutriLearn <span
+                    id="admin-online-summary-chip" class="admin-live-online-chip"><span
+                      class="user-online-beacon"></span> <span id="admin-online-count-display">2 Users Online
+                      Now</span></span></p>
+              </div>
+              <button type="button" class="btn-admin-add-user" onclick="MHODashboard.openAddUserModal()">
+                + Add User
+              </button>
+            </div>
+
+            <!-- Filter & Search Toolbar matching Screenshot -->
+            <div class="admin-users-toolbar">
+              <input type="text" id="admin-user-search-input" class="admin-users-search-input"
+                placeholder="Search users..." oninput="MHODashboard.handleUserSearch(this.value)">
+              <div class="admin-users-filter-pills">
+                <button type="button" class="admin-user-pill-btn active" data-filter="ALL"
+                  onclick="MHODashboard.filterUsersByRole('ALL')">All</button>
+                <button type="button" class="admin-user-pill-btn" data-filter="parent"
+                  onclick="MHODashboard.filterUsersByRole('parent')">Parent/Guardian</button>
+                <button type="button" class="admin-user-pill-btn" data-filter="chw"
+                  onclick="MHODashboard.filterUsersByRole('chw')">Health Worker</button>
+                <button type="button" class="admin-user-pill-btn" data-filter="ONLINE" id="pill-filter-online"
+                  onclick="MHODashboard.filterUsersByRole('ONLINE')">🟢 Online Now</button>
               </div>
             </div>
 
-            <!-- Sub-Pane 2: Dietary Adherence & Meal Compliance Monitor -->
-            <div id="pane-content-compliance" style="display: none;">
-              <!-- Executive KPI Stats -->
-              <div id="mho-compliance-kpis-container">
-                <!-- Dynamically populated by MHODashboard.renderComplianceKPIs() -->
-              </div>
-
-              <!-- Food Items Adoption Progress -->
-              <div class="card" style="margin-bottom: 1.5rem; background: #FFFFFF; border: 1px solid #EBE5D8; border-radius: 14px; padding: 1.25rem 1.5rem;">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
-                  <h4 style="font-size: 0.98rem; font-weight: 700; color: #1E3A2B; margin: 0;">
-                    🥦 Antas ng Pagsunod sa Bawat Inirerekomendang Pagkain (Food Items Adherence Rate)
-                  </h4>
-                  <span style="font-size: 0.78rem; color: #6B7280; font-weight: 500;">Batay sa pang-araw-araw na log ng mga magulang</span>
-                </div>
-                <div id="mho-food-adherence-bars" class="food-adherence-grid">
-                  <!-- Dynamically populated by MHODashboard.renderFoodAdherenceBars() -->
-                </div>
-              </div>
-
-              <!-- Filter & Search Toolbar -->
-              <div class="filter-bar" style="margin-bottom: 1.25rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <div class="search-input-wrapper" style="flex: 1; min-width: 240px;">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                  </svg>
-                  <input type="text" id="mho-compliance-search" class="form-control"
-                    placeholder="Hanapin ang pangalan ng bata o magulang..." oninput="MHODashboard.filterComplianceRecords()">
-                </div>
-
-                <select id="mho-compliance-barangay-filter" class="form-select" style="width: auto; min-width: 170px;"
-                  onchange="MHODashboard.filterComplianceRecords()">
-                  <option value="ALL">Lahat ng Barangay</option>
-                  <option value="Barangay Manguiring">Barangay Manguiring</option>
-                </select>
-
-                <select id="mho-compliance-status-filter" class="form-select" style="width: auto; min-width: 180px;"
-                  onchange="MHODashboard.filterComplianceRecords()">
-                  <option value="ALL">Lahat ng Katayuan</option>
-                  <option value="Compliant">🟢 Nasusunod (80-100%)</option>
-                  <option value="Moderate">🟡 Katamtaman (50-79%)</option>
-                  <option value="Non-Compliant">🔴 Hindi Nasusunod (&lt;50%)</option>
-                </select>
-              </div>
-
-              <!-- Household Compliance Registry Table -->
-              <div class="table-responsive" style="background: #FFFFFF; border: 1px solid #EBE5D8; border-radius: 14px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <table class="admin-clean-table">
+            <!-- User Management Table matching Screenshot -->
+            <div class="admin-users-table-card">
+              <div class="table-responsive">
+                <table class="admin-users-table">
                   <thead>
                     <tr>
-                      <th>Pamilya at Bata</th>
-                      <th>Barangay / Purok</th>
-                      <th>Nakatalagang Gabay sa Pagkain</th>
-                      <th>Antas ng Pagsunod (Adherence)</th>
-                      <th>Katayuan</th>
-                      <th>Huling Kinain / Aksyon</th>
-                      <th>Mga Aksyon ng Admin</th>
+                      <th>Name</th>
+                      <th>Role</th>
+                      <th>Location</th>
+                      <th>Status</th>
+                      <th>Last Login</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
-                  <tbody id="mho-compliance-tbody">
-                    <!-- Dynamically populated by MHODashboard.renderDietaryComplianceTable() -->
+                  <tbody id="admin-users-tbody">
+                    <!-- Dynamically populated by MHODashboard.renderUsersTable() -->
                   </tbody>
                 </table>
               </div>
@@ -2610,94 +2924,50 @@
           </div>
         </div>
 
-        <!-- Tab Pane 6: User Accounts & System Access (Req #12) -->
-        <div class="mho-tab-pane" data-tab="users" id="mho-tab-users" style="display: none;">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">👥 User Accounts &amp; Access Control</h2>
-                <p class="card-subtitle">Control system users, assign roles (Parents, Health Workers, Data Collectors,
-                  Admins), and manage access status.</p>
-              </div>
-              <button class="btn btn-primary btn-sm" onclick="MHODashboard.openAddUserModal()">
-                + Create User Account
-              </button>
-            </div>
-
-            <!-- Filter & Search Toolbar -->
-            <div class="filter-bar" style="margin-bottom: 1rem;">
-              <div class="search-input-wrapper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" id="mho-user-search" class="form-control"
-                  placeholder="Search by user name, email, or barangay...">
-              </div>
-
-              <select id="mho-user-role-filter" class="form-select" style="width: auto; min-width: 170px;">
-                <option value="ALL">All Roles</option>
-                <option value="parent">Parents / Caregivers</option>
-                <option value="chw">Health Workers (BHW/BNS)</option>
-                <option value="collector">Field Data Collectors</option>
-                <option value="mho">Administrators (MHO)</option>
-              </select>
-            </div>
-
-            <div class="table-responsive">
-              <table class="data-table">
-                <thead>
-                  <tr>
-                    <th>User &amp; Email</th>
-                    <th>Assigned Role</th>
-                    <th>Location / Department</th>
-                    <th>Status</th>
-                    <th>Joined</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody id="mho-users-tbody">
-                  <!-- Dynamically populated by MHODashboard.renderUsersTable() -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-
         <!-- Tab Pane 7: Audit & Administration Activity Trail (Data Requirements #10) -->
         <div class="mho-tab-pane" data-tab="audit" id="mho-tab-audit" style="display: none;">
           <!-- Audit Metrics KPI Summary Row -->
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
-            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+          <div
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; margin-bottom: 1.25rem;">
+            <div
+              style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
-                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748B;">Total Audit Events</span>
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #64748B;">Total
+                  Audit Events</span>
                 <span style="font-size: 1.2rem;">🛡️</span>
               </div>
               <div id="audit-kpi-total" style="font-size: 1.7rem; font-weight: 800; color: #1E293B;">0</div>
               <div style="font-size: 0.74rem; color: #94A3B8;">Talaan kan gabos na aktibidad</div>
             </div>
 
-            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <div
+              style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
-                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #2563EB;">Account Registrations</span>
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #2563EB;">Account
+                  Registrations</span>
                 <span style="font-size: 1.2rem;">👥</span>
               </div>
               <div id="audit-kpi-accounts" style="font-size: 1.7rem; font-weight: 800; color: #2563EB;">0</div>
               <div style="font-size: 0.74rem; color: #94A3B8;">Bagong accounts &amp; profile changes</div>
             </div>
 
-            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <div
+              style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
-                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #16A34A;">Child Records &amp; Growth</span>
+                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #16A34A;">Child
+                  Records &amp; Growth</span>
                 <span style="font-size: 1.2rem;">👶</span>
               </div>
               <div id="audit-kpi-children" style="font-size: 1.7rem; font-weight: 800; color: #16A34A;">0</div>
               <div style="font-size: 0.74rem; color: #94A3B8;">Timbang, langkaw, &amp; WHO status updates</div>
             </div>
 
-            <div style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+            <div
+              style="background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 12px; padding: 1.1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
               <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.4rem;">
-                <span style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #D97706;">Curriculum &amp; Nutrition</span>
+                <span
+                  style="font-size: 0.78rem; font-weight: 700; text-transform: uppercase; color: #D97706;">Curriculum
+                  &amp; Nutrition</span>
                 <span style="font-size: 1.2rem;">🥗</span>
               </div>
               <div id="audit-kpi-content" style="font-size: 1.7rem; font-weight: 800; color: #D97706;">0</div>
@@ -2705,14 +2975,17 @@
             </div>
           </div>
 
-          <div class="card" style="border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
+          <div class="card"
+            style="border: 1px solid #E2E8F0; border-radius: 14px; box-shadow: 0 2px 6px rgba(0,0,0,0.04);">
             <div class="card-header" style="border-bottom: 1px solid #F1F5F9; padding: 1.25rem 1.5rem;">
               <div>
-                <h2 class="card-title" style="font-size: 1.15rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 0.5rem;">
+                <h2 class="card-title"
+                  style="font-size: 1.15rem; font-weight: 700; color: #0F172A; display: flex; align-items: center; gap: 0.5rem;">
                   <span>🛡️</span> System Activity &amp; Administration Audit Logs
                 </h2>
                 <p class="card-subtitle" style="font-size: 0.82rem; color: #64748B; margin-top: 0.25rem;">
-                  Komprehensibong log history kan kada pagbabago sa gabos na detalye: pagrehistro nin magulang asin aki, sukol kan timbang/langkaw, modules, anunsyo, asin seguridad na may eksaktong petsa asin oras.
+                  Komprehensibong log history kan kada pagbabago sa gabos na detalye: pagrehistro nin magulang asin aki,
+                  sukol kan timbang/langkaw, modules, anunsyo, asin seguridad na may eksaktong petsa asin oras.
                 </p>
               </div>
               <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
@@ -2777,9 +3050,11 @@
     <footer class="app-footer">
       <div class="footer-container">
         <div>
-          <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; cursor:pointer;" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Return to Main Dashboard">
+          <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.35rem; cursor:pointer;"
+            onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Return to Main Dashboard">
             <img src="icon/logo.png?v=5.0" alt="NutriLearn" style="width:28px; height:28px; object-fit:contain;">
-            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="footer-brand-name-img" style="height:22px; width:auto; background:rgba(255,255,255,0.92); padding:2px 7px; border-radius:6px; object-fit:contain;">
+            <img src="icon/Name.png?v=5.0" alt="NutriLearn" class="footer-brand-name-img"
+              style="height:22px; width:auto; background:rgba(255,255,255,0.92); padding:2px 7px; border-radius:6px; object-fit:contain;">
           </div>
           <p style="font-size:0.8rem; color:var(--text-on-dark-muted); max-width:480px;">
             Evidence-based community e-learning &amp; malnutrition monitoring platform. Aligned with WHO Global
@@ -2892,8 +3167,16 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label">Password</label>
-              <input type="password" name="loginPassword" class="form-control" required placeholder="••••••••">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                <label class="form-label" style="margin: 0;">Password</label>
+                <button type="button"
+                  onclick="NutriApp.closeModal('modal-auth'); NutriApp.showStartupScreen(); NutriApp.goToForgotPassword(event);"
+                  style="font-size: 0.8rem; color: #0D766E; font-weight: 600; text-decoration: none;">
+                  Forgot password?
+                </button>
+              </div>
+              <input type="password" id="modal-login-password" name="loginPassword" class="form-control" required
+                placeholder="••••••••">
             </div>
 
             <button type="submit" class="btn btn-primary"
@@ -2916,7 +3199,8 @@
               </div>
               <div class="form-group">
                 <label class="form-label">Password:</label>
-                <input type="password" name="regPassword" class="form-control" required placeholder="Create password">
+                <input type="password" id="modal-reg-password" name="regPassword" class="form-control" required
+                  placeholder="Create password">
               </div>
             </div>
 
@@ -3113,7 +3397,9 @@
         <div class="modal-title" style="color: #FFFFFF;">🏆 Certificate of Nutrition Knowledge</div>
       </div>
       <div class="modal-body" style="padding: 2.5rem 2rem;">
-        <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Seal" style="width: 72px; height: 72px; object-fit: contain; margin: 0 auto 0.75rem auto; display: block; cursor: pointer;" onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn">
+        <img src="icon/logo.png?v=5.0" alt="NutriLearn Official Seal"
+          style="width: 72px; height: 72px; object-fit: contain; margin: 0 auto 0.75rem auto; display: block; cursor: pointer;"
+          onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn">
         <div
           style="font-size:0.85rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--color-primary-700); font-weight:700; margin-bottom:0.5rem;">
           NutriLearn Community Health Initiative
@@ -3284,7 +3570,9 @@
         <div>
           <div class="modal-title">✏️ I-update ang Talaan ng Bata (Admin)</div>
           <div style="font-size: 0.8rem; color: #475569; margin-top: 3px;">
-            Aktibong Barangay: <span id="admin-edit-child-brgy-badge" class="badge" style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span> (Naka-lock sa napiling barangay)
+            Aktibong Barangay: <span id="admin-edit-child-brgy-badge" class="badge"
+              style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span>
+            (Naka-lock sa napiling barangay)
           </div>
         </div>
         <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-edit-child')">&times;</button>
@@ -3297,11 +3585,13 @@
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Pangalan ng Bata (Child Name):</label>
-              <input type="text" id="admin-edit-child-name" class="form-control" disabled style="background: #F1F5F9; font-weight: 600; color: #1E293B;">
+              <input type="text" id="admin-edit-child-name" class="form-control" disabled
+                style="background: #F1F5F9; font-weight: 600; color: #1E293B;">
             </div>
             <div class="form-group">
               <label class="form-label">Magulang (Parent / Guardian):</label>
-              <input type="text" id="admin-edit-child-parent" class="form-control" disabled style="background: #F1F5F9; color: #475569;">
+              <input type="text" id="admin-edit-child-parent" class="form-control" disabled
+                style="background: #F1F5F9; color: #475569;">
             </div>
           </div>
 
@@ -3351,15 +3641,19 @@
 
           <div class="form-group">
             <label class="form-label">Mga Tala / Interbensyon (Health Notes):</label>
-            <textarea id="admin-edit-child-notes" class="form-control" rows="2" placeholder="Hal. Binigyan ng RUTF ration, dumalo sa feeding program..."></textarea>
+            <textarea id="admin-edit-child-notes" class="form-control" rows="2"
+              placeholder="Hal. Binigyan ng RUTF ration, dumalo sa feeding program..."></textarea>
           </div>
         </div>
         <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center;">
-          <button type="button" class="btn btn-outline btn-sm" style="color: #DC2626; border-color: #FCA5A5; font-size: 0.82rem; padding: 6px 12px;" onclick="MHODashboard.handleDeleteChildFromModal()" title="Burahin ang talaan ng batang ito">
+          <button type="button" class="btn btn-outline btn-sm"
+            style="color: #DC2626; border-color: #FCA5A5; font-size: 0.82rem; padding: 6px 12px;"
+            onclick="MHODashboard.handleDeleteChildFromModal()" title="Burahin ang talaan ng batang ito">
             🗑️ Burahin ang Talaan
           </button>
           <div style="display: flex; gap: 0.5rem;">
-            <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-edit-child')">Kanselahin</button>
+            <button type="button" class="btn btn-outline"
+              onclick="NutriApp.closeModal('modal-admin-edit-child')">Kanselahin</button>
             <button type="submit" class="btn btn-primary">💾 I-save ang Pagbabago</button>
           </div>
         </div>
@@ -3374,7 +3668,9 @@
         <div>
           <div class="modal-title">➕ Magdagdag ng Bagong Bata sa Talaan</div>
           <div style="font-size: 0.8rem; color: #475569; margin-top: 3px;">
-            Aktibong Barangay: <span id="admin-add-child-brgy-badge" class="badge" style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span> (Awtomatikong itinakda)
+            Aktibong Barangay: <span id="admin-add-child-brgy-badge" class="badge"
+              style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span>
+            (Awtomatikong itinakda)
           </div>
         </div>
         <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-add-child')">&times;</button>
@@ -3442,11 +3738,13 @@
 
           <div class="form-group">
             <label class="form-label">Mga Tala / Obserbasyon:</label>
-            <textarea name="childNotes" class="form-control" rows="2" placeholder="Mga detalye ukol sa nutrisyon ng bata..."></textarea>
+            <textarea name="childNotes" class="form-control" rows="2"
+              placeholder="Mga detalye ukol sa nutrisyon ng bata..."></textarea>
           </div>
         </div>
         <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem;">
-          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-add-child')">Kanselahin</button>
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-admin-add-child')">Kanselahin</button>
           <button type="submit" class="btn btn-primary">➕ Idagdag sa Talaan</button>
         </div>
       </form>
@@ -3519,6 +3817,7 @@
       </div>
 
       <form id="announcement-composer-form">
+        <input type="hidden" name="annId" id="ann-edit-id" value="">
         <div class="modal-body">
           <div
             style="margin-bottom: 1rem; padding: 0.5rem 0.85rem; background: var(--bg-surface-subtle); border-radius: 6px; font-size: 0.82rem; color: var(--color-primary-900); font-weight: 600;"
@@ -3534,29 +3833,70 @@
           <div class="form-group">
             <label class="form-label">Announcement Title: <span style="color: #DC2626;">*</span></label>
             <input type="text" name="annTitle" class="form-control"
-              placeholder="e.g. Schedule for Micronutrient Powder Distribution" required>
+              placeholder="e.g. Community Nutrition Seminar — September 2026" required>
           </div>
 
           <div class="grid-2">
             <div class="form-group">
               <label class="form-label">Category: <span style="color: #DC2626;">*</span></label>
               <select name="annCategory" class="form-select">
-                <option value="Ration Distribution">Ration Distribution</option>
-                <option value="Growth Weigh-in">Growth Weigh-in</option>
-                <option value="Health Worker Directive">Health Worker Directive</option>
-                <option value="Parent Incentive">Parent Incentive</option>
-                <option value="Health Alerts">Health Alerts</option>
-                <option value="General Notice">General Notice</option>
+                <option value="Seminar">🎓 Seminar</option>
+                <option value="Reminder">🔔 Reminder</option>
+                <option value="Update">📣 Update</option>
+                <option value="Directive">📋 Directive</option>
+                <option value="Ration Distribution">📦 Ration Distribution</option>
+                <option value="Growth Weigh-in">⚖️ Growth Weigh-in</option>
+                <option value="Health Alerts">🚨 Health Alerts</option>
+                <option value="General Notice">ℹ️ General Notice</option>
               </select>
             </div>
 
             <div class="form-group">
-              <label class="form-label">Priority / Urgency:</label>
-              <select name="annPriority" class="form-select">
-                <option value="normal">ℹ️ Normal Advisory</option>
-                <option value="high">⚠️ Important Notice</option>
-                <option value="urgent">🚨 Urgent Action Required</option>
+              <label class="form-label">Target Zone / Coverage:</label>
+              <input type="text" name="annTargetZones" class="form-control"
+                placeholder="e.g. All Zones, Barangay Manguring" value="All Zones, Barangay Manguring">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Event Date:</label>
+              <input type="text" name="annEventDate" class="form-control" placeholder="e.g. Sat, September 5, 2026">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Relay Deadline Date:</label>
+              <input type="text" name="annRelayByDate" class="form-control" placeholder="e.g. August 29">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Event Time:</label>
+              <input type="text" name="annEventTime" class="form-control" placeholder="e.g. 9:00 AM – 12:00 PM">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Location / Venue:</label>
+              <input type="text" name="annLocation" class="form-control"
+                placeholder="e.g. Barangay Manguring Covered Court, Calabanga">
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Relay Status:</label>
+              <select name="annStatus" class="form-select">
+                <option value="relayed">✓ Relayed to Parents/Guardians</option>
+                <option value="overdue">⚠️ Relay overdue</option>
+                <option value="pending">⏳ Relay pending</option>
               </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Relayed By (Staff Name):</label>
+              <input type="text" name="annRelayedBy" class="form-control" placeholder="e.g. Nurse Ana Reyes"
+                value="Nurse Ana Reyes">
             </div>
           </div>
 
@@ -3572,7 +3912,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-outline"
             onclick="NutriApp.closeModal('modal-announcement-composer')">Cancel</button>
-          <button type="submit" class="btn btn-accent" style="font-weight: 700;">
+          <button type="submit" class="btn btn-accent" id="btn-submit-ann-composer" style="font-weight: 700;">
             Publish Announcement →
           </button>
         </div>
@@ -3616,7 +3956,7 @@
 
           <div class="form-group">
             <label class="form-label">Password: <span style="color: #DC2626;">*</span></label>
-            <input type="text" name="accPass" id="acc-settings-pass" class="form-control" required>
+            <input type="password" name="accPass" id="acc-settings-pass" class="form-control" required>
           </div>
 
           <div class="form-group">
@@ -3788,147 +4128,217 @@
     </div>
   </div>
 
-  <!-- 6. Administrator Edit / Add Module Modal (Req #11 & Food Guidelines) -->
-  <div id="modal-edit-module" class="modal-backdrop">
-    <div class="modal-dialog" style="max-width: 720px;">
+  <!-- 6. Administrator Content Management Modals: Add, Edit, Preview (Working & Responsive) -->
+  <!-- A. Add New Module Modal -->
+  <div id="modal-admin-add-module" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 650px;">
       <div class="modal-header">
         <div>
-          <h2 class="modal-title" id="modal-edit-module-title">🥗 Baguhin ang Module at Gabay sa Pagkain</h2>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-            Itakda kung anong masusustansyang pagkain ang dapat kainin, mga sangkap, larawan, at aralin.
+          <h2 class="modal-title">+ New Learning Module</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Create and curate nutrition learning modules aligned with WHO &amp; FNRI standards
           </p>
         </div>
-        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-edit-module')">&times;</button>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-add-module')">&times;</button>
       </div>
-      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveModule(this);">
-        <input type="hidden" id="edit-module-id">
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveNewModule(this);">
         <div class="modal-body">
-          <div class="grid-2">
+          <div class="grid-2" style="margin-bottom: 1rem;">
             <div class="form-group">
-              <label class="form-label">Module Label / Number: <span style="color: #DC2626;">*</span></label>
-              <input type="text" id="edit-module-number" class="form-control" placeholder="e.g. Module 1" required>
+              <label class="form-label">Module Title: <span style="color:#DC2626;">*</span></label>
+              <input type="text" id="admin-add-mod-title" class="form-control"
+                placeholder="e.g. Infant Feeding in Emergencies" required>
             </div>
             <div class="form-group">
-              <label class="form-label">Estimated Duration: <span style="color: #DC2626;">*</span></label>
-              <input type="text" id="edit-module-duration" class="form-control" placeholder="e.g. 45 min" required>
+              <label class="form-label">Version: <span style="color:#DC2626;">*</span></label>
+              <input type="text" id="admin-add-mod-version" class="form-control" value="v1.0" placeholder="e.g. v1.0"
+                required>
             </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Initial Status: <span style="color:#DC2626;">*</span></label>
+              <select id="admin-add-mod-status" class="form-select">
+                <option value="draft" selected>Draft (Work in progress)</option>
+                <option value="review">Review (Pending medical verification)</option>
+                <option value="published">Published (Live for all enrolled users)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated Duration:</label>
+              <input type="text" id="admin-add-mod-duration" class="form-control" value="15 mins"
+                placeholder="e.g. 15 mins">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Summary &amp; Learning Objectives: <span style="color:#DC2626;">*</span></label>
+            <textarea id="admin-add-mod-summary" class="form-control" rows="2"
+              placeholder="Provide a clear description of the curriculum goals and target age band" required></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Recommended Local Foods (Pinggang Pinoy):</label>
+            <input type="text" id="admin-add-mod-foods" class="form-control"
+              value="Malunggay, Nilagang Itlog, Monggo, Kalabasa"
+              placeholder="e.g. Malunggay, Monggo, Itlog, Kalabasa, Papaya">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Feeding Guidelines &amp; Practical Tips:</label>
+            <textarea id="admin-add-mod-feeding-guide" class="form-control" rows="2"
+              placeholder="e.g. Pakainin 3 beses sa isang araw kasama ang 2 masustansyang meryenda."></textarea>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Pamagat ng Aralin (Module Title): <span style="color: #DC2626;">*</span></label>
-            <input type="text" id="edit-module-title-input" class="form-control"
-              placeholder="e.g. Understanding Child Malnutrition" required>
-          </div>
-
-          <!-- Section: Ano ang Dapat na Pagkain (Recommended Foods) -->
-          <div style="background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 10px; padding: 1rem; margin-bottom: 1.15rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.45rem;">
-              <label class="form-label" style="color: #14532D; font-weight: 700; margin: 0;">
-                🥗 Ano ang Dapat na Pagkain (Recommended Foods &amp; Ingredients): <span style="color: #DC2626;">*</span>
-              </label>
-              <span style="font-size: 0.74rem; color: #166534; font-weight: 600;">Inirerekomenda ng MHO</span>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.35rem;">
+              <label class="form-label" style="margin:0;">Lesson Outline (1 lesson per line):</label>
+              <span style="font-size:0.75rem; color:#6B7280;">Format: Pamagat | Icon | Detalye</span>
             </div>
-            <input type="text" id="edit-module-foods" class="form-control"
-              placeholder="e.g. Sariwang Malunggay, Kalabasa, Monggo, Hard-boiled Egg, Dilaw na Camote, Dilis" required style="background: #FFFFFF;">
-            
-            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.35rem; flex-wrap: wrap;">
-              <span style="font-size: 0.73rem; color: #166534; font-weight: 600;">Mabilisang Idagdag:</span>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Malunggay')">+ 🌿 Malunggay</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Monggo')">+ 🍲 Monggo</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Nilagang Itlog')">+ 🥚 Itlog</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Kalabasa')">+ 🎃 Kalabasa</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Dilaw na Camote')">+ 🍠 Camote</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Dilis / Isda')">+ 🐟 Dilis/Isda</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Gatas ng Ina')">+ 👶 Gatas ng Ina</button>
-              <button type="button" class="tag-btn-add" onclick="MHODashboard.addFoodTag('Malinis na Tubig')">+ 💧 Tubig</button>
-            </div>
-
-            <div style="margin-top: 0.85rem;">
-              <label class="form-label" style="color: #14532D; font-weight: 700; margin-bottom: 0.25rem;">
-                🥣 Gabay sa Pagpapakain at Sukat ng Pagkain (Feeding Guidelines &amp; Portions):
-              </label>
-              <textarea id="edit-module-feeding-guide" class="form-control" rows="2" style="background: #FFFFFF;"
-                placeholder="Hal. Pakainin 3 beses sa isang araw. Ihalo ang 1 dakot ng sariwang malunggay sa lugaw o sabaw. Iwasan ang matatamis na inumin."></textarea>
-            </div>
-          </div>
-
-          <!-- Section: Food Image Selection -->
-          <div class="form-group" style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 1rem; margin-bottom: 1.15rem;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
-              <label class="form-label" style="font-weight: 700; color: #1E293B; margin: 0;">
-                📸 Larawan ng Module (Module &amp; Food Image):
-              </label>
-              <button type="button" class="btn btn-outline btn-sm" onclick="MHODashboard.resetModuleImage()" style="font-size: 0.75rem; color: #64748B; padding: 3px 8px; border-radius: 6px;" title="Ibalik sa orihinal na larawan">
-                🔄 Ibalik sa Default
-              </button>
-            </div>
-
-            <div style="display: flex; gap: 1rem; align-items: flex-start; flex-wrap: wrap;">
-              <!-- Thumbnail Preview Box -->
-              <div style="width: 140px; height: 100px; border-radius: 10px; overflow: hidden; background: #E2E8F0; flex-shrink: 0; border: 2px solid #94A3B8; box-shadow: 0 2px 4px rgba(0,0,0,0.06); position: relative;">
-                <img id="edit-module-image-preview" src="assets/images/module-malnutrition.jpg" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='assets/images/module-malnutrition.jpg'">
-                <div style="position: absolute; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.7); color: #fff; font-size: 0.68rem; text-align: center; padding: 2px 4px; font-weight: 600;">
-                  Preview
-                </div>
-              </div>
-
-              <!-- Controls -->
-              <div style="flex: 1; min-width: 260px; display: flex; flex-direction: column; gap: 0.55rem;">
-                <!-- Option 1: File Upload (Device) -->
-                <div>
-                  <input type="file" id="edit-module-file-input" accept="image/*" style="display: none;" onchange="MHODashboard.handleModuleImageUpload(this)">
-                  <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('edit-module-file-input').click()" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 700; font-size: 0.82rem; padding: 7px 14px; background: #16A34A; border-color: #15803D;">
-                    📁 Pumili / Palitan ang Larawan mula sa Device
-                  </button>
-                  <div id="edit-module-file-name" style="font-size: 0.75rem; color: #166534; font-weight: 600; margin-top: 4px;"></div>
-                </div>
-
-                <!-- Option 2: Preset Selection -->
-                <div>
-                  <label style="font-size: 0.76rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">
-                    O pumili mula sa mga preset na larawan:
-                  </label>
-                  <select id="edit-module-image-select" class="form-select" onchange="MHODashboard.handleImageSelectChange(this.value)" style="font-size: 0.82rem;">
-                    <option value="assets/images/module-malnutrition.jpg">🥑 Avocado &amp; Masusustansyang Prutas (Malnutrition Module)</option>
-                    <option value="assets/images/module-complementary.jpg">🍗 Inihaw na Manok &amp; Protina (Complementary Feeding)</option>
-                    <option value="assets/images/module-meals.jpg">🥗 Salmon &amp; Veggie Iron Plate (Nutrient-Dense Meals)</option>
-                    <option value="assets/images/module-habits.jpg">👶 Toddler Finger Food Plate (Healthy Habits)</option>
-                    <option value="custom">🌐 Maglagay ng Custom Image URL / Data Link...</option>
-                  </select>
-                </div>
-
-                <!-- Option 3: Image URL input -->
-                <div>
-                  <label style="font-size: 0.76rem; font-weight: 600; color: #475569; display: block; margin-bottom: 2px;">
-                    URL ng Larawan (Awtomatikong napupuno kapag nag-upload):
-                  </label>
-                  <input type="text" id="edit-module-image-input" class="form-control" placeholder="assets/images/... o https://... o data:image/..." style="font-size: 0.8rem;" oninput="MHODashboard.updateImagePreview(this.value)">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Buod at Paliwanag (Summary / Description): <span style="color: #DC2626;">*</span></label>
-            <textarea id="edit-module-summary" class="form-control" rows="2"
-              placeholder="Maikling paglalarawan na makikita ng magulang sa curriculum card" required></textarea>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">📖 Mga Aralin &amp; Detalye (Lessons List):</label>
-            <p style="font-size: 0.75rem; color: #64748B; margin: 0 0 0.35rem;">
-              Format: <code>Pamagat ng Aralin | Icon | Paliwanag</code> (Isang aralin bawat linya)
-            </p>
-            <textarea id="edit-module-lessons-text" class="form-control" rows="5"
-              placeholder="Ano ang Malnutrisyon? | 📖 | Ang malnutrisyon ay kakulangan sa wastong nutrisyon...&#10;Kahalagahan ng Malunggay | 🌿 | Maglagay ng malunggay sa huling 2 minuto ng pagluluto..."></textarea>
+            <textarea id="admin-add-mod-lessons" class="form-control" rows="4"
+              placeholder="Introduction to Child Nutrition | 📖 | Fundamentals of dietary diversity and linear growth.&#10;Key Micronutrients for Toddlers | 🔬 | Understanding Vitamin A, Iron, and Zinc intake.&#10;Actionable Home Feeding Habits | 🍲 | Practical steps for family meal preparation."></textarea>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
           <button type="button" class="btn btn-outline"
-            onclick="NutriApp.closeModal('modal-edit-module')">Kanselahin</button>
-          <button type="submit" class="btn btn-primary" style="font-weight: 700;">I-save ang Module sa Curricula →</button>
+            onclick="NutriApp.closeModal('modal-admin-add-module')">Cancel</button>
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="MHODashboard.submitNewModuleWithStatus('draft')"
+              style="background:#EFE9DF; color:#1C2826; border:1px solid #D5CFC3; font-weight:600;">Save as
+              Draft</button>
+            <button type="submit" class="btn btn-primary"
+              style="background:#2D6A4F; border-color:#2D6A4F; font-weight:700;">Create Module →</button>
+          </div>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- B. Edit Module Modal -->
+  <div id="modal-admin-edit-module" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title" id="admin-edit-mod-header-title">✏️ Edit Module</h2>
+          <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Update module specifications, lessons, and publishing workflow status
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-edit-module')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveEditModule(this);">
+        <input type="hidden" id="admin-edit-mod-id">
+        <div class="modal-body">
+          <div class="grid-2" style="margin-bottom: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Module Title: <span style="color:#DC2626;">*</span></label>
+              <input type="text" id="admin-edit-mod-title" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Version Tag: <span style="color:#DC2626;">*</span></label>
+              <input type="text" id="admin-edit-mod-version" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="grid-2" style="margin-bottom: 1rem;">
+            <div class="form-group">
+              <label class="form-label">Publishing Status: <span style="color:#DC2626;">*</span></label>
+              <select id="admin-edit-mod-status" class="form-select">
+                <option value="published">Published (Active)</option>
+                <option value="review">Review (Pending)</option>
+                <option value="draft">Draft (Work in Progress)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Estimated Duration:</label>
+              <input type="text" id="admin-edit-mod-duration" class="form-control">
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Summary &amp; Objectives: <span style="color:#DC2626;">*</span></label>
+            <textarea id="admin-edit-mod-summary" class="form-control" rows="2" required></textarea>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Recommended Foods:</label>
+            <input type="text" id="admin-edit-mod-foods" class="form-control">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label">Feeding Guidelines:</label>
+            <textarea id="admin-edit-mod-feeding-guide" class="form-control" rows="2"></textarea>
+          </div>
+
+          <div class="form-group">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.35rem;">
+              <label class="form-label" style="margin:0;">Lesson Outline (1 lesson per line):</label>
+              <span style="font-size:0.75rem; color:#6B7280;">Format: Pamagat | Icon | Detalye</span>
+            </div>
+            <textarea id="admin-edit-mod-lessons" class="form-control" rows="5"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+          <button type="button" class="btn btn-outline" style="color:#DC2626; border-color:#FCA5A5;"
+            onclick="MHODashboard.handleDeleteCurrentModule()">🗑️ Delete Module</button>
+          <div style="display:flex; gap:0.5rem;">
+            <button type="button" class="btn btn-outline"
+              onclick="NutriApp.closeModal('modal-admin-edit-module')">Cancel</button>
+            <button type="button" class="btn btn-secondary" id="btn-edit-mod-publish-shortcut"
+              onclick="MHODashboard.publishFromEditModal()"
+              style="background:#2D6A4F; color:#FFFFFF; border:none; font-weight:600; display:none;">Publish
+              Now</button>
+            <button type="submit" class="btn btn-primary"
+              style="background:#1C2826; border-color:#1C2826; font-weight:700;">Save Changes</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- C. Preview Module Curriculum Modal -->
+  <div id="modal-admin-preview-module" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 680px;">
+      <div class="modal-header preview-modal-header">
+        <div>
+          <div style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.3rem;">
+            <h2 class="modal-title" id="admin-prev-mod-title">Understanding Child Malnutrition</h2>
+            <span class="admin-module-version" id="admin-prev-mod-version"
+              style="font-weight:600; background:#EFE9DF; padding:2px 8px; border-radius:6px;">v2.1</span>
+            <span id="admin-prev-mod-status-tag"
+              style="font-size:0.75rem; padding:3px 10px; border-radius:9999px; font-weight:600;">Published</span>
+          </div>
+          <p style="font-size: 0.82rem; color: #6B7280; margin: 0;" id="admin-prev-mod-meta">
+            5 lessons · Last updated: Aug 15, 2026
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-preview-module')">&times;</button>
+      </div>
+      <div class="modal-body" style="max-height:65vh; overflow-y:auto;">
+        <div
+          style="background:#FAF8F5; border:1px solid #EAE3D6; border-radius:10px; padding:1rem 1.25rem; margin-bottom:1.15rem;">
+          <h4
+            style="font-size:0.86rem; color:#166534; font-weight:700; margin:0 0 0.4rem; text-transform:uppercase; letter-spacing:0.04em;">
+            Curriculum Overview</h4>
+          <p id="admin-prev-mod-summary" style="font-size:0.9rem; color:#2D3748; line-height:1.5; margin:0 0 0.75rem;">
+          </p>
+          <div id="admin-prev-mod-foods-section" style="font-size:0.82rem; color:#4A5568; line-height:1.45;"></div>
+        </div>
+
+        <h4 style="font-size:0.92rem; color:#1C2826; font-weight:700; margin:0 0 0.75rem;">Lessons &amp; Syllabus
+          Breakdown (<span id="admin-prev-mod-lessons-count">5</span> Lessons)</h4>
+        <div id="admin-prev-mod-lessons-container">
+          <!-- Lessons cards rendered dynamically -->
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-preview-module')">Close
+          Preview</button>
+        <div style="display:flex; gap:0.5rem;" id="admin-prev-mod-actions">
+          <!-- Dynamically populated buttons: Edit, Publish if draft/review -->
+        </div>
+      </div>
     </div>
   </div>
 
@@ -4006,8 +4416,10 @@
         <!-- Dynamically populated by MHODashboard.openFamilyFoodLog -->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-family-food-log')">Isara</button>
-        <button type="button" class="btn btn-primary" id="btn-food-log-send-advisory">Magpadala ng Abiso / Ayuda →</button>
+        <button type="button" class="btn btn-outline"
+          onclick="NutriApp.closeModal('modal-family-food-log')">Isara</button>
+        <button type="button" class="btn btn-primary" id="btn-food-log-send-advisory">Magpadala ng Abiso / Ayuda
+          →</button>
       </div>
     </div>
   </div>
@@ -4027,13 +4439,15 @@
       <form onsubmit="event.preventDefault(); MHODashboard.handleSendDietaryAdvisory(this);">
         <input type="hidden" id="advisory-child-id">
         <div class="modal-body">
-          <div id="advisory-family-summary" style="background:#F8FAFC; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:0.85rem;">
+          <div id="advisory-family-summary"
+            style="background:#F8FAFC; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px; margin-bottom:1rem; font-size:0.85rem;">
             <!-- Rendered dynamically -->
           </div>
 
           <div class="form-group">
             <label class="form-label">Uri ng Abiso / Interbensyon: <span style="color: #DC2626;">*</span></label>
-            <select id="advisory-preset-type" class="form-select" onchange="MHODashboard.handleAdvisoryPresetChange(this.value)">
+            <select id="advisory-preset-type" class="form-select"
+              onchange="MHODashboard.handleAdvisoryPresetChange(this.value)">
               <option value="malunggay">🌿 Paalala: Pagdaragdag ng Malunggay at Monggo sa Tanghalian</option>
               <option value="egg">🥚 Paalala: 1 Itlog Araw-araw para sa Paglaki ng Bata</option>
               <option value="ration">📦 Abiso: Iskedyul ng Pamamahagi ng Supplementary Food Pack</option>
@@ -4049,12 +4463,15 @@
               placeholder="Isulat ang tagubilin o gabay sa magulang..."></textarea>
           </div>
 
-          <div style="font-size:0.78rem; color:#6B7280; background:#FFFBEB; border:1px solid #FDE68A; padding:0.5rem 0.75rem; border-radius:6px;">
-            💡 Ang abisong ito ay direktang lalabas sa Parent Portal ng pamilya at sa talaan ng kanilang Barangay Health Worker.
+          <div
+            style="font-size:0.78rem; color:#6B7280; background:#FFFBEB; border:1px solid #FDE68A; padding:0.5rem 0.75rem; border-radius:6px;">
+            💡 Ang abisong ito ay direktang lalabas sa Parent Portal ng pamilya at sa talaan ng kanilang Barangay Health
+            Worker.
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-dietary-advisory')">Kanselahin</button>
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-dietary-advisory')">Kanselahin</button>
           <button type="submit" class="btn btn-primary" style="font-weight:700;">Ipadala ang Abiso sa Pamilya →</button>
         </div>
       </form>
@@ -4075,17 +4492,21 @@
       </div>
       <form onsubmit="event.preventDefault(); ParentModule.handleSaveDailyMealLog(this);">
         <div class="modal-body">
-          <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.84rem; color:#14532D;">
-            <strong>Paalala ng MHO:</strong> Ang pagtatala ng kinain ay tumutulong upang matiyak na nakakakuha ang bata ng sapat na Protina, Bitamina, at Enerhiya para maiwasan ang stunting.
+          <div
+            style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.84rem; color:#14532D;">
+            <strong>Paalala ng MHO:</strong> Ang pagtatala ng kinain ay tumutulong upang matiyak na nakakakuha ang bata
+            ng sapat na Protina, Bitamina, at Enerhiya para maiwasan ang stunting.
           </div>
 
           <div style="display:flex; flex-direction:column; gap:0.85rem;">
             <!-- Almusal -->
             <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
-              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🌅 Almusal (Breakfast)</strong>
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🌅 Almusal
+                (Breakfast)</strong>
               <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
-                  <input type="checkbox" name="mealFood" value="Lugaw na may Itlog" checked> 🥣 Lugaw na may Durog na Itlog
+                  <input type="checkbox" name="mealFood" value="Lugaw na may Itlog" checked> 🥣 Lugaw na may Durog na
+                  Itlog
                 </label>
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
                   <input type="checkbox" name="mealFood" value="Saba Banana / Prutas" checked> 🍌 Saging / Prutas
@@ -4098,10 +4519,12 @@
 
             <!-- Tanghalian -->
             <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
-              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">☀️ Tanghalian (Lunch)</strong>
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">☀️ Tanghalian
+                (Lunch)</strong>
               <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
-                  <input type="checkbox" name="mealFood" value="Ginisang Monggo na may Malunggay" checked> 🍲 Ginisang Monggo na may Malunggay
+                  <input type="checkbox" name="mealFood" value="Ginisang Monggo na may Malunggay" checked> 🍲 Ginisang
+                  Monggo na may Malunggay
                 </label>
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
                   <input type="checkbox" name="mealFood" value="Pounded Dilis / Isda" checked> 🐟 Dilis / Isda
@@ -4114,10 +4537,12 @@
 
             <!-- Meryenda -->
             <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
-              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🥪 Meryenda (Afternoon Snack)</strong>
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🥪 Meryenda
+                (Afternoon Snack)</strong>
               <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
-                  <input type="checkbox" name="mealFood" value="Nilagang Camote / Kalabasa" checked> 🍠 Dilaw na Camote Mash
+                  <input type="checkbox" name="mealFood" value="Nilagang Camote / Kalabasa" checked> 🍠 Dilaw na Camote
+                  Mash
                 </label>
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
                   <input type="checkbox" name="mealFood" value="Nilagang Itlog"> 🥚 Nilagang Itlog
@@ -4127,10 +4552,12 @@
 
             <!-- Hapunan -->
             <div style="background:#FFFFFF; border:1px solid #E2E8F0; padding:0.75rem 1rem; border-radius:8px;">
-              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🌙 Hapunan (Dinner)</strong>
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">🌙 Hapunan
+                (Dinner)</strong>
               <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
-                  <input type="checkbox" name="mealFood" value="Nilagang Isda at Gulay" checked> 🍲 Sabaw na may Isda at Malunggay
+                  <input type="checkbox" name="mealFood" value="Nilagang Isda at Gulay" checked> 🍲 Sabaw na may Isda at
+                  Malunggay
                 </label>
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
                   <input type="checkbox" name="mealFood" value="Kanin"> 🍚 Kanin
@@ -4140,13 +4567,16 @@
 
             <!-- Tubig at Kalinisan -->
             <div style="background:#F8FAFC; border:1px solid #CBD5E1; padding:0.75rem 1rem; border-radius:8px;">
-              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">💧 Tubig &amp; Kalinisan (WASH)</strong>
+              <strong style="color:#1E293B; font-size:0.9rem; display:block; margin-bottom:0.35rem;">💧 Tubig &amp;
+                Kalinisan (WASH)</strong>
               <div style="display:flex; flex-wrap:wrap; gap:0.6rem; font-size:0.82rem;">
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
-                  <input type="checkbox" name="mealWASH" value="Malinis na pinakuluang tubig" checked> 💧 Malinis na pinakuluang tubig (Walang juice/softdrinks)
+                  <input type="checkbox" name="mealWASH" value="Malinis na pinakuluang tubig" checked> 💧 Malinis na
+                  pinakuluang tubig (Walang juice/softdrinks)
                 </label>
                 <label style="display:inline-flex; align-items:center; gap:5px; cursor:pointer;">
-                  <input type="checkbox" name="mealWASH" value="Paghuhugas ng kamay" checked> 🧼 Naghugas ng kamay gamit ang sabon bago kumain
+                  <input type="checkbox" name="mealWASH" value="Paghuhugas ng kamay" checked> 🧼 Naghugas ng kamay gamit
+                  ang sabon bago kumain
                 </label>
               </div>
             </div>
@@ -4154,12 +4584,15 @@
 
           <div class="form-group" style="margin-top:0.85rem; margin-bottom:0;">
             <label class="form-label">Iba pang Naitala o Napansin sa Pagkain (Optional):</label>
-            <input type="text" id="parent-meal-notes" class="form-control" placeholder="Hal. Magana kumain kaninang tanghalian, naubos ang gulay.">
+            <input type="text" id="parent-meal-notes" class="form-control"
+              placeholder="Hal. Magana kumain kaninang tanghalian, naubos ang gulay.">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-parent-log-meal')">Kanselahin</button>
-          <button type="submit" class="btn btn-primary" style="font-weight:700;">I-save ang Pagkain Ngayong Araw ✓</button>
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-parent-log-meal')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="font-weight:700;">I-save ang Pagkain Ngayong Araw
+            ✓</button>
         </div>
       </form>
     </div>
@@ -4185,40 +4618,48 @@
             <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
               Pangaran kan Aki / Child Full Name: *
             </label>
-            <input type="text" id="parent-growth-child-name" class="form-control" required placeholder="Hal. Ethan Ramos">
+            <input type="text" id="parent-growth-child-name" class="form-control" required
+              placeholder="Hal. Ethan Ramos">
           </div>
 
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
+          <div class="grid-2"
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
             <div class="form-group">
               <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
                 Edad sa Buwan / Age (Months): *
               </label>
-              <input type="number" id="parent-growth-child-age" class="form-control" required min="1" max="72" placeholder="e.g. 18">
+              <input type="number" id="parent-growth-child-age" class="form-control" required min="1" max="72"
+                placeholder="e.g. 18">
             </div>
             <div class="form-group">
               <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
                 Taas / Height (cm): *
               </label>
-              <input type="number" id="parent-growth-child-height" class="form-control" required step="0.1" min="40" max="130" placeholder="e.g. 74.5">
+              <input type="number" id="parent-growth-child-height" class="form-control" required step="0.1" min="40"
+                max="130" placeholder="e.g. 74.5">
             </div>
           </div>
 
-          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
+          <div class="grid-2"
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
             <div class="form-group">
               <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
                 Timbang / Weight (kg): *
               </label>
-              <input type="number" id="parent-growth-child-weight" class="form-control" required step="0.1" min="2" max="40" placeholder="e.g. 8.5">
+              <input type="number" id="parent-growth-child-weight" class="form-control" required step="0.1" min="2"
+                max="40" placeholder="e.g. 8.5">
             </div>
             <div class="form-group">
               <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
                 MUAC Arm Circumference (mm): *
               </label>
-              <input type="number" id="parent-growth-child-muac" class="form-control" required min="70" max="220" placeholder="e.g. 125">
+              <input type="number" id="parent-growth-child-muac" class="form-control" required min="70" max="220"
+                placeholder="e.g. 125">
             </div>
           </div>
 
-          <div style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.85rem; padding: 0.5rem 0.75rem; background: #F8FAFC; border-radius: 6px; border: 1px solid #E2E8F0;">
+          <div
+            style="font-size: 0.75rem; color: #64748B; margin-bottom: 0.85rem; padding: 0.5rem 0.75rem; background: #F8FAFC; border-radius: 6px; border: 1px solid #E2E8F0;">
             ℹ️ <strong>MUAC Guide:</strong> &lt;115mm (Pula / SAM), 115–124mm (Dilaw / MAM), ≥125mm (Berde / Normal).
           </div>
 
@@ -4226,15 +4667,18 @@
             <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
               Tala sa Kalusugan / Notes o Obserbasyon:
             </label>
-            <input type="text" id="parent-growth-child-notes" class="form-control" placeholder="Hal. Magana kumain ng monggo at itlog; aktibong naglalaro.">
+            <input type="text" id="parent-growth-child-notes" class="form-control"
+              placeholder="Hal. Magana kumain ng monggo at itlog; aktibong naglalaro.">
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-parent-log-growth')">Kanselahin</button>
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-parent-log-growth')">Kanselahin</button>
           <button type="submit" class="btn btn-accent" style="font-weight: 700;">I-save ang Sukat ✓</button>
         </div>
       </form>
     </div>
+  </div>
   <!-- Modal: Administrator Add Barangay -->
   <div id="modal-admin-add-barangay" class="modal-backdrop">
     <div class="modal-dialog" style="max-width: 500px;">
@@ -4249,12 +4693,16 @@
       </div>
       <form onsubmit="event.preventDefault(); MHODashboard.handleSaveAddBarangay(this);">
         <div class="modal-body">
-          <div style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.83rem; color: #166534;">
-            ℹ️ Ang idadagdag na barangay ay awtomatikong lalabas sa pagpaparehistro (Sign Up) ng Magulang at BHW, at magagamit sa mga filter ng buong sistema.
+          <div
+            style="background: #F0FDF4; border: 1px solid #BBF7D0; padding: 0.75rem 1rem; border-radius: 8px; margin-bottom: 1rem; font-size: 0.83rem; color: #166534;">
+            ℹ️ Ang idadagdag na barangay ay awtomatikong lalabas sa pagpaparehistro (Sign Up) ng Magulang at BHW, at
+            magagamit sa mga filter ng buong sistema.
           </div>
           <div class="form-group">
-            <label class="form-label" style="font-weight: 600;">Pangalan ng Barangay: <span style="color: #DC2626;">*</span></label>
-            <input type="text" name="brgyName" class="form-control" placeholder="Hal. Barangay San Pedro o San Francisco" required autofocus>
+            <label class="form-label" style="font-weight: 600;">Pangalan ng Barangay: <span
+                style="color: #DC2626;">*</span></label>
+            <input type="text" name="brgyName" class="form-control"
+              placeholder="Hal. Barangay San Pedro o San Francisco" required autofocus>
           </div>
           <div class="form-group">
             <label class="form-label" style="font-weight: 600;">Mga Sakop na Purok / Zone (opsyonal):</label>
@@ -4262,7 +4710,8 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-add-barangay')">Kanselahin</button>
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-admin-add-barangay')">Kanselahin</button>
           <button type="submit" class="btn btn-primary" style="font-weight: 700;">💾 I-save ang Barangay</button>
         </div>
       </form>
@@ -4285,42 +4734,99 @@
         <input type="hidden" id="edit-brgy-id" name="brgyId">
         <input type="hidden" id="edit-brgy-old-name" name="brgyOldName">
         <div class="modal-body">
-          <div style="background: #FFFBEB; border: 1px solid #FDE68A; padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1.15rem; font-size: 0.83rem; color: #92400E;">
-            ⚠️ <strong>Mahalagang Paalala:</strong> Kapag binago ang pangalan ng barangay na ito, <u>lahat ng umiiral na rekord ng bata, account ng mga magulang at BHW, at mga ulat</u> sa ilalim ng barangay na ito ay awtomatikong ia-update sa bagong pangalan upang manatiling tugma sa mga filter ng sistema.
+          <div
+            style="background: #FFFBEB; border: 1px solid #FDE68A; padding: 0.85rem 1rem; border-radius: 8px; margin-bottom: 1.15rem; font-size: 0.83rem; color: #92400E;">
+            ⚠️ <strong>Mahalagang Paalala:</strong> Kapag binago ang pangalan ng barangay na ito, <u>lahat ng umiiral na
+              rekord ng bata, account ng mga magulang at BHW, at mga ulat</u> sa ilalim ng barangay na ito ay
+            awtomatikong ia-update sa bagong pangalan upang manatiling tugma sa mga filter ng sistema.
           </div>
           <div class="form-group">
             <label class="form-label" style="font-weight: 600;">Kasalukuyang Pangalan:</label>
-            <div id="edit-brgy-current-display" style="padding: 0.6rem 0.85rem; background: #F1F5F9; border-radius: 6px; font-weight: 700; color: #334155;">
+            <div id="edit-brgy-current-display"
+              style="padding: 0.6rem 0.85rem; background: #F1F5F9; border-radius: 6px; font-weight: 700; color: #334155;">
               -
             </div>
           </div>
           <div class="form-group">
-            <label class="form-label" style="font-weight: 600;">Bagong Pangalan ng Barangay: <span style="color: #DC2626;">*</span></label>
+            <label class="form-label" style="font-weight: 600;">Bagong Pangalan ng Barangay: <span
+                style="color: #DC2626;">*</span></label>
             <input type="text" id="edit-brgy-new-name" name="brgyNewName" class="form-control" required autofocus>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-admin-edit-barangay')">Kanselahin</button>
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-admin-edit-barangay')">Kanselahin</button>
           <button type="submit" class="btn btn-primary" style="font-weight: 700;">✓ I-update ang Pangalan</button>
         </div>
       </form>
     </div>
   </div>
+
+  <!-- Modal: Administrator Edit User Account -->
+  <div id="modal-admin-edit-user" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">✏️ Edit User Account</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Update user information, role assignment, and location
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-admin-edit-user')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); MHODashboard.handleSaveEditUser(this);">
+        <input type="hidden" name="editUserId" id="admin-edit-user-id">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Full Name: <span style="color: #DC2626;">*</span></label>
+            <input type="text" name="editUserName" id="admin-edit-user-name" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address: <span style="color: #DC2626;">*</span></label>
+            <input type="email" name="editUserEmail" id="admin-edit-user-email" class="form-control" required>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Assigned Role: <span style="color: #DC2626;">*</span></label>
+              <select name="editUserRole" id="admin-edit-user-role" class="form-select">
+                <option value="chw">Health Worker</option>
+                <option value="parent">Parent/Guardian</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Location / Zone: <span style="color: #DC2626;">*</span></label>
+              <input type="text" name="editUserLocation" id="admin-edit-user-location" class="form-control"
+                placeholder="e.g. Zone 1, Barangay Manguring" required>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-admin-edit-user')">Cancel</button>
+          <button type="submit" class="btn btn-primary"
+            style="background:#2D6A4F; border-color:#2D6A4F; font-weight:700;">Save Changes ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Scripts -->
-  <script src="js/config.js?v=3.1"></script>
+  <script src="js/config.js?v=5.9"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="js/supabaseClient.js?v=3.1"></script>
+  <script src="js/supabaseClient.js?v=5.9"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=3.1"></script>
-  <script src="js/data.js?v=3.1"></script>
-  <script src="js/exportUtils.js?v=3.1"></script>
-  <script src="js/healthWorker.js?v=3.1"></script>
-  <script src="js/parentLearning.js?v=3.1"></script>
-  <script src="js/mhoDashboard.js?v=3.1"></script>
-  <script src="js/announcements.js?v=3.1"></script>
-  <script src="js/i18n.js?v=3.1"></script>
-  <script src="js/app.js?v=3.1"></script>
+  <script src="js/apiClient.js?v=5.9"></script>
+  <script src="js/data.js?v=5.9"></script>
+  <script src="js/exportUtils.js?v=5.9"></script>
+  <script src="js/healthWorker.js?v=5.9"></script>
+  <script src="js/parentLearning.js?v=5.9"></script>
+  <script src="js/mhoDashboard.js?v=5.9"></script>
+  <script src="js/announcements.js?v=5.9"></script>
+  <script src="js/i18n.js?v=5.9"></script>
+  <script src="js/app.js?v=5.9"></script>
 </body>
 
 </html>

@@ -67,13 +67,270 @@ const NutriApp = {
     }
   },
 
-  // Switch between the 4 screens
+  // Switch between screens in the Auth Gateway
   switchAuthScreen(screenId) {
-    ['screen-role-signin', 'screen-role-signup', 'screen-auth-details', 'screen-auth-signin'].forEach(id => {
+    ['screen-role-signin', 'screen-role-signup', 'screen-auth-details', 'screen-auth-signin', 'screen-auth-forgot'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = (id === screenId) ? 'block' : 'none';
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  },
+
+  // Toggle password visibility (Show/Hide Password)
+  togglePasswordVisibility(inputId, btnEl) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    const isPassword = input.type === 'password';
+    input.type = isPassword ? 'text' : 'password';
+
+    const eyeOpenSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    const eyeSlashSvg = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+    if (btnEl) {
+      btnEl.innerHTML = isPassword ? eyeSlashSvg : eyeOpenSvg;
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const label = isPassword ? (isFil ? 'Itago ang password' : 'Hide password') : (isFil ? 'Ipakita ang password' : 'Show password');
+      btnEl.title = label;
+      btnEl.setAttribute('aria-label', label);
+    }
+  },
+
+  // Forgot Password flow state & methods
+  forgotPasswordState: {
+    matchedUser: null,
+    generatedCode: null,
+    currentStage: 1
+  },
+
+  goToForgotPassword(event) {
+    if (event && event.preventDefault) event.preventDefault();
+    this.switchAuthScreen('screen-auth-forgot');
+    this.resetForgotFlowStage(1);
+
+    // If user already typed an email on the sign-in form, pre-fill it!
+    const signinEmail = document.getElementById('input-signin-email');
+    const forgotEmail = document.getElementById('input-forgot-email');
+    if (signinEmail && forgotEmail && signinEmail.value.trim()) {
+      forgotEmail.value = signinEmail.value.trim();
+    }
+    if (forgotEmail) {
+      setTimeout(() => forgotEmail.focus(), 100);
+    }
+  },
+
+  resetForgotFlowStage(stage) {
+    this.forgotPasswordState.currentStage = stage;
+    const stage1 = document.getElementById('forgot-stage-1');
+    const stage2 = document.getElementById('forgot-stage-2');
+    const stage3 = document.getElementById('forgot-stage-3');
+
+    if (stage1) stage1.style.display = stage === 1 ? 'block' : 'none';
+    if (stage2) stage2.style.display = stage === 2 ? 'block' : 'none';
+    if (stage3) stage3.style.display = stage === 3 ? 'block' : 'none';
+
+    // Update step indicator pills
+    for (let i = 1; i <= 3; i++) {
+      const pill = document.getElementById(`forgot-step-pill-${i}`);
+      if (pill) {
+        pill.classList.remove('active', 'completed');
+        if (i === stage) {
+          pill.classList.add('active');
+        } else if (i < stage) {
+          pill.classList.add('completed');
+        }
+      }
+    }
+  },
+
+  handleForgotStep1(event) {
+    if (event) event.preventDefault();
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const emailInput = document.getElementById('input-forgot-email');
+    const query = (emailInput?.value || '').trim().toLowerCase();
+
+    if (!query) {
+      this.showToast(isFil ? 'Pakilagay ang iyong email o username.' : 'Please enter your email or username.', 'warning');
+      return;
+    }
+
+    const users = NutriStorage.getUsers();
+    const user = users.find(u => 
+      (u.email && u.email.toLowerCase() === query) ||
+      (u.name && u.name.toLowerCase() === query)
+    );
+
+    if (!user) {
+      this.showToast(
+        isFil 
+          ? '⛔ Hindi nahanap ang account gamit ang email o username na ito. Pakisuri ang spelling o magparehistro.'
+          : '⛔ No account found with this email or username. Please check your spelling or register.',
+        'warning'
+      );
+      return;
+    }
+
+    // Account found!
+    this.forgotPasswordState.matchedUser = user;
+    if (user.role) {
+      this.currentAuthRole = user.role;
+    }
+    
+    // Generate secure 6-digit verification code
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    this.forgotPasswordState.generatedCode = otp;
+
+    // Populate stage 2 information
+    const nameEl = document.getElementById('forgot-found-name');
+    const metaEl = document.getElementById('forgot-found-meta');
+    const codeDisplay = document.getElementById('forgot-generated-code-display');
+    const codeInput = document.getElementById('input-forgot-code');
+
+    if (nameEl) nameEl.textContent = user.name || 'User';
+    if (metaEl) {
+      const roleMap = {
+        parent: isFil ? 'Magulang / Tagapag-alaga' : 'Parent / Guardian',
+        chw: isFil ? 'Health Worker (BHW)' : 'Health Worker (BHW)',
+        mho: isFil ? 'Administrator (MHO)' : 'Administrator'
+      };
+      metaEl.textContent = `${user.barangay || 'Barangay Manguiring'} • ${roleMap[user.role] || user.role}`;
+    }
+    if (codeDisplay) codeDisplay.textContent = otp;
+    if (codeInput) codeInput.value = '';
+
+    this.resetForgotFlowStage(2);
+    this.showToast(
+      isFil
+        ? `✅ Nahanap ang account ni ${user.name}! Nabuo ang iyong 6-digit verification code.`
+        : `✅ Account found for ${user.name}! 6-digit verification code generated.`,
+      'success'
+    );
+
+    if (codeInput) {
+      setTimeout(() => codeInput.focus(), 150);
+    }
+  },
+
+  autoFillResetCode() {
+    const codeInput = document.getElementById('input-forgot-code');
+    if (codeInput && this.forgotPasswordState.generatedCode) {
+      codeInput.value = this.forgotPasswordState.generatedCode;
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      this.showToast(isFil ? 'Nailagay na ang verification code.' : 'Verification code applied.', 'info');
+      codeInput.focus();
+    }
+  },
+
+  handleForgotStep2(event) {
+    if (event) event.preventDefault();
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const codeInput = document.getElementById('input-forgot-code');
+    const entered = (codeInput?.value || '').trim();
+
+    if (!entered) {
+      this.showToast(isFil ? 'Pakilagay ang 6-digit code.' : 'Please enter the 6-digit code.', 'warning');
+      return;
+    }
+
+    if (entered !== this.forgotPasswordState.generatedCode) {
+      this.showToast(
+        isFil 
+          ? '🔑 Maling verification code. Pakisubukang muli o i-click ang Gamitin ang Code.'
+          : '🔑 Incorrect verification code. Please check and try again.',
+        'warning'
+      );
+      return;
+    }
+
+    // Code verified! Proceed to Step 3
+    this.resetForgotFlowStage(3);
+    const newPassInput = document.getElementById('input-forgot-new-pass');
+    const confirmPassInput = document.getElementById('input-forgot-confirm-pass');
+    if (newPassInput) newPassInput.value = '';
+    if (confirmPassInput) confirmPassInput.value = '';
+    if (newPassInput) {
+      setTimeout(() => newPassInput.focus(), 150);
+    }
+
+    this.showToast(
+      isFil 
+        ? '✅ Na-verify ang code! Ilagay ngayon ang iyong bagong password.' 
+        : '✅ Code verified! Please enter your new password.', 
+      'success'
+    );
+  },
+
+  handleForgotStep3(event) {
+    if (event) event.preventDefault();
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const newPassInput = document.getElementById('input-forgot-new-pass');
+    const confirmPassInput = document.getElementById('input-forgot-confirm-pass');
+
+    const newPass = (newPassInput?.value || '').trim();
+    const confirmPass = (confirmPassInput?.value || '').trim();
+
+    if (!newPass || newPass.length < 6) {
+      this.showToast(
+        isFil ? 'Ang password ay dapat may hindi bababa sa 6 na karakter.' : 'Password must be at least 6 characters.',
+        'warning'
+      );
+      return;
+    }
+
+    if (newPass !== confirmPass) {
+      this.showToast(
+        isFil ? 'Hindi magkatugma ang dalawang password.' : 'Passwords do not match.',
+        'warning'
+      );
+      return;
+    }
+
+    const user = this.forgotPasswordState.matchedUser;
+    if (!user) {
+      this.showToast(
+        isFil ? 'May error sa sesyon. Pakisubukang muli.' : 'Session error. Please start again.',
+        'warning'
+      );
+      this.resetForgotFlowStage(1);
+      return;
+    }
+
+    // Update user's password in NutriStorage
+    user.password = newPass;
+    NutriStorage.updateUser(user);
+
+    // Also update current user in storage if matching
+    const cur = NutriStorage.getCurrentUser();
+    if (cur && (cur.id === user.id || cur.email === user.email)) {
+      cur.password = newPass;
+      NutriStorage.setCurrentUser(cur);
+    }
+
+    // Log security audit trail
+    NutriStorage.logAudit(
+      'Password Reset Completed',
+      'Security & Access',
+      `User ${user.name} (${user.email}) successfully reset account password via verification flow.`,
+      user.name
+    );
+
+    // If live API sync is available
+    if (window.NutriApi && typeof NutriApi.saveUser === 'function') {
+      NutriApi.saveUser(user);
+    }
+
+    // Switch back to sign in screen and pre-fill credentials
+    this.proceedToSignInCredentials(true);
+    const signinEmail = document.getElementById('input-signin-email');
+    const signinPass = document.getElementById('input-signin-password');
+    if (signinEmail) signinEmail.value = user.email || user.name;
+    if (signinPass) signinPass.value = newPass;
+
+    this.showToast(
+      isFil
+        ? `🎉 Matagumpay na nabago ang password ni ${user.name}! Maaari ka nang mag-sign in gamit ang bagong password.`
+        : `🎉 Password successfully updated for ${user.name}! You can now sign in with your new password.`,
+      'success'
+    );
   },
 
   // Screen 1: Select role to continue (Sign In Flow)
@@ -109,7 +366,11 @@ const NutriApp = {
   },
 
   // Screen 1 Continue clicked -> Proceed to Screen 4 (Sign In Credentials)
-  proceedToSignInCredentials() {
+  proceedToSignInCredentials(preserveCredentials = false) {
+    if (preserveCredentials && typeof preserveCredentials === 'object' && preserveCredentials.preventDefault) {
+      preserveCredentials.preventDefault();
+      preserveCredentials = false;
+    }
     const role = this.currentAuthRole || 'parent';
     this.switchAuthScreen('screen-auth-signin');
 
@@ -131,8 +392,10 @@ const NutriApp = {
     if (badgeTitle) badgeTitle.textContent = isFil ? info.fil : info.en;
     if (badgeSub) badgeSub.textContent = isFil ? 'Pumapasok bilang' : 'Signing in as';
 
-    if (emailInput) emailInput.value = '';
-    if (passInput) passInput.value = '';
+    if (!preserveCredentials) {
+      if (emailInput) emailInput.value = '';
+      if (passInput) passInput.value = '';
+    }
   },
 
   // Screen 2 Continue clicked -> Proceed to Screen 3 (Your Details Registration Form)
@@ -153,7 +416,7 @@ const NutriApp = {
     const btnSubmit = document.getElementById('btn-details-submit');
     if (btnSubmit) {
       if (role === 'parent') {
-        btnSubmit.textContent = isFil ? 'Rehistrohon an Account / Create Account →' : 'Complete Parent & Child Registration →';
+        btnSubmit.textContent = isFil ? 'Kumpletuhin ang Pagrehistro ng Magulang at Bata →' : 'Complete Parent & Child Registration →';
       } else {
         btnSubmit.textContent = isFil ? 'Kumpletuhin ang Pagrehistro →' : 'Create Account →';
       }
@@ -208,170 +471,211 @@ const NutriApp = {
     const form = document.getElementById('form-auth-details');
     if (!form) return;
 
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
-    const name = (form.elements['regFullName']?.value || '').trim();
-    const barangay = (form.elements['regBarangayAddress']?.value || '').trim();
-    const email = (form.elements['regEmailAddress']?.value || '').trim();
-    const password = form.elements['regPassword']?.value || '';
-    const confirmPassword = form.elements['regConfirmPassword']?.value || '';
+    try {
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const name = (form.elements['regFullName']?.value || '').trim();
+      const barangay = (form.elements['regBarangayAddress']?.value || '').trim() || 'Barangay Manguiring';
+      const email = (form.elements['regEmailAddress']?.value || '').trim();
+      const password = form.elements['regPassword']?.value || '';
+      const confirmPassword = form.elements['regConfirmPassword']?.value || '';
 
-    if (!name || !barangay || !email || !password) {
-      this.showToast(isFil ? 'Pakilagay ang lahat ng kinakailangang impormasyon ng magulang.' : 'Please fill in all required parent fields.', 'warning');
-      return;
-    }
+      if (!name || !email || !password) {
+        this.showToast(isFil ? 'Pakilagay ang kumpletong impormasyon (Pangalan, Email/Username, at Password).' : 'Please fill in all required fields.', 'warning');
+        return;
+      }
 
-    if (password !== confirmPassword) {
-      this.showToast(isFil ? 'Hindi magkatugma ang mga password.' : 'Passwords do not match.', 'warning');
-      return;
-    }
+      if (password.length < 6) {
+        this.showToast(isFil ? 'Ang password ay dapat may hindi bababa sa 6 na karakter.' : 'Password must be at least 6 characters.', 'warning');
+        return;
+      }
 
-    const isParent = (this.currentAuthRole || 'parent') === 'parent';
-    let childName = '';
-    let childAge = 18;
-    let childGender = 'Male';
-    let childHeight = 75.0;
-    let childWeight = 9.0;
-    let statusInfo = { overallStatus: 'Normal', hfaStatus: 'Normal', wfaStatus: 'Normal', wfhStatus: 'Normal', muacStatus: 'Normal' };
+      if (password !== confirmPassword) {
+        this.showToast(isFil ? 'Hindi magkatugma ang mga password.' : 'Passwords do not match.', 'warning');
+        return;
+      }
 
-    if (isParent) {
-      childName = (form.elements['regChildName']?.value || '').trim();
-      childAge = parseInt(form.elements['regChildAge']?.value, 10);
-      childGender = form.elements['regChildGender']?.value || 'Male';
-      childHeight = parseFloat(form.elements['regChildHeight']?.value);
-      childWeight = parseFloat(form.elements['regChildWeight']?.value);
-
-      if (!childName || isNaN(childAge) || isNaN(childHeight) || isNaN(childWeight)) {
+      // Verify that the email or username is not already registered
+      const existingUsers = NutriStorage.getUsers();
+      if (existingUsers.some(u => (u.email && u.email.toLowerCase() === email.toLowerCase()) || (u.name && u.name.toLowerCase() === name.toLowerCase()))) {
         this.showToast(
           isFil 
-            ? 'Pakilagay ang kumpletong impormasyon ng bata (Pangalan, Edad sa buwan, Kasarian, Height, at Weight).' 
-            : 'Please provide all required child details (Name, Age in months, Gender, Height, and Weight).',
+            ? 'Mayroon nang account gamit ang email o pangalang ito. Pakigamit ang Sign In.' 
+            : 'An account with this email/username is already registered. Please proceed to Sign In.', 
           'warning'
         );
         return;
       }
 
-      // Calculate WHO Anthropometric Classification
-      if (window.CHWModule && typeof CHWModule.calculateNutritionalStatus === 'function') {
-        statusInfo = CHWModule.calculateNutritionalStatus(childAge, childGender, childHeight, childWeight, 125);
-      } else {
-        if (childHeight < 74.0 && childAge >= 12) statusInfo.overallStatus = 'Stunted';
-        else if (childWeight < 8.2 && childAge >= 12) statusInfo.overallStatus = 'Underweight';
-        else statusInfo.overallStatus = 'Normal';
+      const role = this.currentAuthRole || 'parent';
+      const isParent = role === 'parent';
+      const userId = 'usr-' + Date.now();
+      let childId = null;
+
+      let childName = '';
+      let childAge = 18;
+      let childGender = 'Male';
+      let childHeight = 75.0;
+      let childWeight = 9.5;
+      let statusInfo = { overallStatus: 'Normal', hfaStatus: 'Normal', wfaStatus: 'Normal', wfhStatus: 'Normal', muacStatus: 'Normal' };
+
+      if (isParent) {
+        childName = (form.elements['regChildName']?.value || '').trim();
+        const rawAge = parseInt(form.elements['regChildAge']?.value, 10);
+        childAge = !isNaN(rawAge) ? rawAge : 18;
+        childGender = form.elements['regChildGender']?.value || 'Male';
+        const rawHeight = parseFloat(form.elements['regChildHeight']?.value);
+        childHeight = !isNaN(rawHeight) ? rawHeight : 75.0;
+        const rawWeight = parseFloat(form.elements['regChildWeight']?.value);
+        childWeight = !isNaN(rawWeight) ? rawWeight : 9.5;
+
+        // If child name is provided, enroll child record in BHW and Admin registries
+        if (childName) {
+          childId = 'ch-' + Date.now();
+
+          // Calculate WHO Anthropometric Classification
+          if (window.CHWModule && typeof CHWModule.calculateNutritionalStatus === 'function') {
+            statusInfo = CHWModule.calculateNutritionalStatus(childAge, childGender, childHeight, childWeight, 125);
+          } else {
+            if (childHeight < 74.0 && childAge >= 12) statusInfo.overallStatus = 'Stunted';
+            else if (childWeight < 8.2 && childAge >= 12) statusInfo.overallStatus = 'Underweight';
+            else statusInfo.overallStatus = 'Normal';
+          }
+
+          // Register Child Record in NutriStorage (Automatically live-synced to BHW & Admin)
+          const childData = {
+            id: childId,
+            parentId: userId,
+            name: childName,
+            ageMonths: childAge,
+            sex: childGender,
+            parentName: name,
+            parentPhone: email,
+            parentEmail: email,
+            barangay: barangay,
+            heightCm: childHeight,
+            weightKg: childWeight,
+            muacMm: 125,
+            status: statusInfo.overallStatus,
+            hfaStatus: statusInfo.hfaStatus || 'Normal',
+            wfhStatus: statusInfo.wfhStatus || 'Normal',
+            wfaStatus: statusInfo.wfaStatus || 'Normal',
+            muacStatus: statusInfo.muacStatus || 'Normal',
+            improved: false,
+            lastAssessed: new Date().toISOString().split('T')[0],
+            assignedModules: ['mod-1', 'mod-2', 'mod-3', 'mod-4'],
+            completedModules: [],
+            quizScore: 0,
+            notes: `Bagong rehistro kan magulang na si ${name}. Initial record: ${childHeight}cm, ${childWeight}kg.`
+          };
+          NutriStorage.addChild(childData);
+          try {
+            localStorage.setItem('nutrilearn_selected_child_id', childId);
+          } catch (e) {}
+
+          // Enroll in Dietary Adherence records so Administrator can monitor meal compliance
+          try {
+            const adherenceKey = 'nutrilearn_diet_adherence_records_v3';
+            const existingAdherence = JSON.parse(localStorage.getItem(adherenceKey) || '[]');
+            existingAdherence.unshift({
+              id: 'meal-rec-' + Date.now(),
+              childName: childName,
+              childAgeMonths: childAge,
+              parentName: name,
+              barangay: barangay,
+              assignedFoods: ['Malunggay', 'Monggo', 'Itlog', 'Karot'],
+              complianceScore: 100,
+              status: 'Good Adherence',
+              mealsLoggedThisWeek: 1,
+              lastMealLogged: 'Bagong Rehistro (Enrolled)',
+              notes: 'Kagigibo pa sanang account kan magulang.'
+            });
+            localStorage.setItem(adherenceKey, JSON.stringify(existingAdherence));
+          } catch (err) {
+            console.warn('Dietary adherence sync warning:', err);
+          }
+        }
       }
 
-      // Register Child Record in NutriStorage (Automatically live-synced to BHW & Admin)
-      const childData = {
-        id: 'ch-' + Date.now(),
-        name: childName,
-        ageMonths: childAge,
-        sex: childGender,
-        parentName: name,
-        parentPhone: email,
-        barangay: barangay,
-        heightCm: childHeight,
-        weightKg: childWeight,
-        muacMm: 125,
-        status: statusInfo.overallStatus,
-        hfaStatus: statusInfo.hfaStatus || 'Normal',
-        wfhStatus: statusInfo.wfhStatus || 'Normal',
-        wfaStatus: statusInfo.wfaStatus || 'Normal',
-        muacStatus: statusInfo.muacStatus || 'Normal',
-        improved: false,
-        lastAssessed: new Date().toISOString().split('T')[0],
-        assignedModules: ['mod-1', 'mod-2', 'mod-3', 'mod-4'],
-        completedModules: [],
-        quizScore: 0,
-        notes: `Bagong rehistro kan magulang na si ${name}. Initial record: ${childHeight}cm, ${childWeight}kg.`
+      const userData = {
+        id: userId,
+        name,
+        email,
+        password,
+        barangay,
+        role: role,
+        status: 'Active',
+        registeredDate: new Date().toISOString().split('T')[0]
       };
-      NutriStorage.addChild(childData);
-      try {
-        localStorage.setItem('nutrilearn_selected_child_id', childData.id);
-      } catch (e) {}
 
-      // Enroll in Dietary Adherence records so Administrator can monitor meal compliance
-      try {
-        const adherenceKey = 'nutrilearn_diet_adherence_records_v3';
-        const existingAdherence = JSON.parse(localStorage.getItem(adherenceKey) || '[]');
-        existingAdherence.unshift({
-          id: 'meal-rec-' + Date.now(),
-          childName: childName,
-          childAgeMonths: childAge,
-          parentName: name,
-          barangay: barangay,
-          assignedFoods: ['Malunggay', 'Monggo', 'Itlog', 'Karot'],
-          complianceScore: 100,
-          status: 'Good Adherence',
-          mealsLoggedThisWeek: 1,
-          lastMealLogged: 'Bagong Rehistro (Enrolled)',
-          notes: 'Kagigibo pa sanang account kan magulang.'
-        });
-        localStorage.setItem(adherenceKey, JSON.stringify(existingAdherence));
-      } catch (err) {
-        console.warn('Dietary adherence sync warning:', err);
+      if (isParent) {
+        if (childId) {
+          userData.childId = childId;
+          userData.childName = childName;
+          userData.childAge = childAge;
+          userData.childGender = childGender;
+          userData.childHeight = childHeight;
+          userData.childWeight = childWeight;
+          userData.nutritionalStatus = statusInfo.overallStatus;
+        }
+      } else if (role === 'chw') {
+        userData.bhwId = 'BHW-' + Math.floor(1000 + Math.random() * 9000);
+      } else if (role === 'mho') {
+        userData.department = 'Municipal Health Office';
+        userData.designation = 'Nutrition Officer';
       }
+
+      const newUser = NutriStorage.registerUser(userData);
+
+      // Audit Log History with exact Date & Time
+      const auditRoleName = (role || 'parent').toUpperCase();
+      const auditDetails = (isParent && childId)
+        ? `Parent account registered: ${name} (${email}, ${barangay}) kaiba an aki na si ${childName} (${childAge} mos, ${childGender}, ${childHeight}cm, ${childWeight}kg, Status: ${statusInfo.overallStatus}). Naka-sync sa BHW at Admin records.`
+        : `Account registered: ${name} (${email}, Papel: ${auditRoleName}, Lugar: ${barangay}).`;
+
+      try {
+        NutriStorage.logAudit(
+          (isParent && childId) ? 'Parent & Child Account Registered' : 'New User Account Registered',
+          'Account Management',
+          auditDetails,
+          { name, role: role }
+        );
+      } catch (e) {
+        console.warn('Audit logging warning:', e);
+      }
+
+      // Live update BHW and Admin views if active
+      try {
+        if (window.CHWModule) {
+          if (typeof CHWModule.renderRegistryTable === 'function') CHWModule.renderRegistryTable();
+          if (typeof CHWModule.updateStatsBar === 'function') CHWModule.updateStatsBar();
+        }
+        if (window.MHODashboard) {
+          if (typeof MHODashboard.renderAdminRecords === 'function') MHODashboard.renderAdminRecords();
+          if (typeof MHODashboard.renderUsersTable === 'function') MHODashboard.renderUsersTable();
+          if (typeof MHODashboard.renderAuditLogsTable === 'function') MHODashboard.renderAuditLogsTable();
+          if (typeof MHODashboard.renderKPIs === 'function') MHODashboard.renderKPIs();
+        }
+        if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
+          ParentModule.renderChildGrowth();
+        }
+      } catch (e) {
+        console.warn('View update warning:', e);
+      }
+
+      this.hideStartupScreen();
+      this.switchRole(newUser.role);
+      this.updateUserHeaderBadge();
+
+      const msg = isFil
+        ? (childId 
+            ? `🎉 Matagumpay na nakarehistro si ${newUser.name}! Naka-sync na ang mga detalye ng bata sa talaan ng BHW at Admin.`
+            : `🎉 Matagumpay na nakarehistro si ${newUser.name}! Naka-log in na sa portal.`)
+        : `🎉 Welcome ${newUser.name}! Your account has been registered successfully.`;
+      this.showToast(msg, 'success');
+    } catch (err) {
+      console.error('Registration error:', err);
+      this.showToast('May naganap na error sa pagrehistro. Pakisubukang muli.', 'warning');
     }
-
-    const userData = {
-      name,
-      email,
-      password,
-      barangay,
-      role: this.currentAuthRole || 'parent',
-      status: 'Active',
-      registeredDate: new Date().toISOString().split('T')[0]
-    };
-
-    if (isParent) {
-      userData.childName = childName;
-      userData.childAge = childAge;
-      userData.childGender = childGender;
-      userData.childHeight = childHeight;
-      userData.childWeight = childWeight;
-      userData.nutritionalStatus = statusInfo.overallStatus;
-    } else if (this.currentAuthRole === 'chw') {
-      userData.bhwId = 'BHW-' + Math.floor(1000 + Math.random() * 9000);
-    } else if (this.currentAuthRole === 'mho') {
-      userData.department = 'Municipal Health Office';
-      userData.designation = 'Nutrition Officer';
-    }
-
-    const newUser = NutriStorage.registerUser(userData);
-
-    // Audit Log History with exact Date & Time
-    const auditDetails = isParent 
-      ? `Parent account registered: ${name} (${email}, ${barangay}) kaiba an aki na si ${childName} (${childAge} mos, ${childGender}, ${childHeight}cm, ${childWeight}kg, Status: ${statusInfo.overallStatus}). Naka-sync sa BHW at Admin records.`
-      : `Account registered: ${name} (${email}, Papel: ${this.currentAuthRole.toUpperCase()}, Lugar: ${barangay}).`;
-
-    NutriStorage.logAudit(
-      isParent ? 'Parent & Child Account Registered' : 'New User Account Registered',
-      'Account Management',
-      auditDetails,
-      { name, role: this.currentAuthRole || 'parent' }
-    );
-
-    // Live update BHW and Admin views if active
-    if (window.CHWModule) {
-      if (typeof CHWModule.renderRegistryTable === 'function') CHWModule.renderRegistryTable();
-      if (typeof CHWModule.updateStatsBar === 'function') CHWModule.updateStatsBar();
-    }
-    if (window.MHODashboard) {
-      if (typeof MHODashboard.renderAdminRecords === 'function') MHODashboard.renderAdminRecords();
-      if (typeof MHODashboard.renderUsersTable === 'function') MHODashboard.renderUsersTable();
-      if (typeof MHODashboard.renderAuditLogsTable === 'function') MHODashboard.renderAuditLogsTable();
-      if (typeof MHODashboard.renderKPIs === 'function') MHODashboard.renderKPIs();
-    }
-    if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
-      ParentModule.renderChildGrowth();
-    }
-
-    this.hideStartupScreen();
-    this.switchRole(newUser.role);
-    this.updateUserHeaderBadge();
-
-    const msg = isFil
-      ? `🎉 Matagumpay na nakarehistro si ${newUser.name}! Naka-sync na ang mga detalye ng bata sa talaan ng BHW at Admin.`
-      : `🎉 Welcome ${newUser.name}! Child health record successfully synced to BHW & Admin dashboards.`;
-    this.showToast(msg, 'success');
   },
 
   // Backward compatibility aliases
@@ -462,68 +766,14 @@ const NutriApp = {
     this.updateSignupRolePills(this.currentAuthRole);
   },
 
-  // Submit Startup Sign In
+  // Submit Startup Sign In (delegates to canonical submitSignIn)
   submitStartupSignIn(event) {
-    if (event) event.preventDefault();
-    const form = document.getElementById('startup-signin-form');
-    if (!form) return;
-
-    const emailOrName = form.elements['loginUsername'].value;
-    const password = form.elements['loginPassword'].value;
-
-    const result = NutriStorage.loginUser(emailOrName, password, this.currentAuthRole);
-    if (result.success) {
-      this.hideStartupScreen();
-      this.switchRole(result.user.role);
-      this.updateUserHeaderBadge();
-      this.showToast(`👋 Welcome, ${result.user.name}! Portal unlocked.`, 'success');
-    } else {
-      this.showToast(result.message, 'warning');
-    }
+    this.submitSignIn(event);
   },
 
-  // Submit Startup Sign Up
+  // Submit Startup Sign Up (delegates to canonical submitRegistration)
   submitStartupSignUp(event) {
-    if (event) event.preventDefault();
-    const form = document.getElementById('startup-signup-form');
-    if (!form) return;
-
-    const name = form.elements['regName'].value.trim();
-    const email = form.elements['regEmail'].value.trim();
-    const password = form.elements['regPassword'].value;
-
-    if (!name || !email || !password) {
-      this.showToast('Please fill in all required fields.', 'warning');
-      return;
-    }
-
-    const userData = {
-      name,
-      email,
-      password,
-      role: this.currentAuthRole
-    };
-
-    if (this.currentAuthRole === 'parent') {
-      userData.childName = form.elements['regChildName']?.value.trim() || '';
-      userData.childAge = parseInt(form.elements['regChildAge']?.value || '12', 10);
-      userData.barangay = form.elements['regBarangay']?.value || 'Barangay Manguiring';
-    } else if (this.currentAuthRole === 'chw') {
-      userData.bhwId = form.elements['regBhwId']?.value.trim() || 'BHW-' + Math.floor(1000 + Math.random() * 9000);
-      userData.barangay = form.elements['regBhwBarangay']?.value || 'Barangay Manguiring';
-    } else if (this.currentAuthRole === 'collector') {
-      userData.agency = form.elements['regCollectorAgency']?.value.trim() || 'Community Nutrition Survey Unit';
-      userData.barangay = form.elements['regCollectorBarangay']?.value || 'Barangay Manguiring';
-    } else if (this.currentAuthRole === 'mho') {
-      userData.department = form.elements['regMhoDept']?.value.trim() || 'Municipal Health Office';
-      userData.designation = form.elements['regMhoDesignation']?.value.trim() || 'Nutrition Officer';
-    }
-
-    const newUser = NutriStorage.registerUser(userData);
-    this.hideStartupScreen();
-    this.switchRole(newUser.role);
-    this.updateUserHeaderBadge();
-    this.showToast(`🎉 Registration successful! Welcome to NutriLearn, ${newUser.name}.`, 'success');
+    this.submitRegistration(event);
   },
 
 
@@ -888,15 +1138,17 @@ const NutriApp = {
     } else if (targetTab === 'barangays' && window.MHODashboard) {
       MHODashboard.renderBarangaysManager();
     } else if (targetTab === 'content' && window.MHODashboard) {
-      if (typeof MHODashboard.switchContentSubTab === 'function') {
-        MHODashboard.switchContentSubTab(MHODashboard.activeContentSubTab || 'modules');
-      } else {
-        MHODashboard.renderContentManagerModules();
-      }
+      MHODashboard.renderContentManagerModules();
     } else if (targetTab === 'users' && window.MHODashboard) {
       MHODashboard.renderUsersTable();
     } else if (targetTab === 'audit' && window.MHODashboard) {
       MHODashboard.renderAuditLogsTable();
+    } else if (targetTab === 'announcements' && window.AnnouncementsModule) {
+      if (typeof AnnouncementsModule.showListView === 'function') {
+        AnnouncementsModule.showListView();
+      } else {
+        AnnouncementsModule.renderAdminFeed();
+      }
     } else if (targetTab === 'overview' && window.MHODashboard) {
       if (typeof MHODashboard.updateOverviewHeader === 'function') {
         MHODashboard.updateOverviewHeader();
@@ -1164,6 +1416,12 @@ const NutriApp = {
       return;
     }
 
+    const existingUsers = NutriStorage.getUsers();
+    if (existingUsers.some(u => u.email && u.email.toLowerCase() === email.toLowerCase())) {
+      this.showToast('Mayroon nang account gamit ang email na ito. Pakigamit ang Sign In.', 'warning');
+      return;
+    }
+
     const userData = {
       name,
       email,
@@ -1329,3 +1587,10 @@ const NutriApp = {
 document.addEventListener('DOMContentLoaded', () => {
   NutriApp.init();
 });
+
+
+// Global window fallback for Forgot Password navigation
+window.goToForgotPassword = function(event) {
+  if (event && event.preventDefault) event.preventDefault();
+  if (window.NutriApp) window.NutriApp.goToForgotPassword(event);
+};

@@ -22,13 +22,19 @@ const NutriStorage = {
     const defaultBrgys = [
       { id: 'brgy-1', name: 'Barangay Manguiring', createdAt: '2026-08-01' }
     ];
-    localStorage.setItem(this.BARANGAYS_KEY, JSON.stringify(defaultBrgys));
+    if (!localStorage.getItem(this.BARANGAYS_KEY)) {
+      localStorage.setItem(this.BARANGAYS_KEY, JSON.stringify(defaultBrgys));
+    }
 
-    // Reset children to Barangay Manguiring records only
-    localStorage.setItem(this.CHILDREN_KEY, JSON.stringify(NUTRI_DATA.initialChildren));
+    // Initialize children to Barangay Manguiring records only if not yet set
+    if (!localStorage.getItem(this.CHILDREN_KEY)) {
+      localStorage.setItem(this.CHILDREN_KEY, JSON.stringify(NUTRI_DATA.initialChildren));
+    }
 
-    // Reset reports to Barangay Manguiring
-    localStorage.setItem(this.REPORTS_KEY, JSON.stringify(NUTRI_DATA.initialReports));
+    // Reports to Barangay Manguiring if not yet set
+    if (!localStorage.getItem(this.REPORTS_KEY)) {
+      localStorage.setItem(this.REPORTS_KEY, JSON.stringify(NUTRI_DATA.initialReports));
+    }
 
     // Learning modules
     if (!localStorage.getItem(this.MODULES_KEY)) {
@@ -36,42 +42,50 @@ const NutriStorage = {
     }
 
     // Audit logs
-    const initialLogs = [
-      {
-        id: 'log-seed-1',
-        timestamp: '09/10/2026, 09:00 AM',
-        category: 'Account Management',
-        action: 'System Initialized',
-        details: 'NutriLearn system initialized for Barangay Manguiring',
-        performedBy: 'Municipal Health Office',
-        userRole: 'mho'
-      }
-    ];
-    localStorage.setItem(this.AUDIT_KEY, JSON.stringify(initialLogs));
+    if (!localStorage.getItem(this.AUDIT_KEY)) {
+      const initialLogs = [
+        {
+          id: 'log-seed-1',
+          timestamp: '09/10/2026, 09:00 AM',
+          category: 'Account Management',
+          action: 'System Initialized',
+          details: 'NutriLearn system initialized for Barangay Manguiring',
+          performedBy: 'Municipal Health Office',
+          userRole: 'mho'
+        }
+      ];
+      localStorage.setItem(this.AUDIT_KEY, JSON.stringify(initialLogs));
+    }
 
     // Parent Cohort Groups for Manguiring
-    const initialGroups = [
-      {
-        id: 'grp-1',
-        name: 'Barangay Manguiring - First 1,000 Days Cohort',
-        barangay: 'Barangay Manguiring',
-        targetCategory: 'Infant Feeding & Complementary Foods',
-        facilitator: 'Community Health Worker, BNS',
-        assignedModules: ['mod-1', 'mod-2', 'mod-3'],
-        enrolledChildIds: ['ch-117', 'ch-118'],
-        adviceNotes: 'Meet every 2nd Tuesday for anthropometric tracking and Pinggang Pinoy cooking demo.',
-        createdAt: '2026-09-01'
-      }
-    ];
-    localStorage.setItem(this.GROUPS_KEY, JSON.stringify(initialGroups));
+    if (!localStorage.getItem(this.GROUPS_KEY)) {
+      const initialGroups = [
+        {
+          id: 'grp-1',
+          name: 'Barangay Manguiring - First 1,000 Days Cohort',
+          barangay: 'Barangay Manguiring',
+          targetCategory: 'Infant Feeding & Complementary Foods',
+          facilitator: 'Community Health Worker, BNS',
+          assignedModules: ['mod-1', 'mod-2', 'mod-3'],
+          enrolledChildIds: ['ch-117', 'ch-118'],
+          adviceNotes: 'Meet every 2nd Tuesday for anthropometric tracking and Pinggang Pinoy cooking demo.',
+          createdAt: '2026-09-01'
+        }
+      ];
+      localStorage.setItem(this.GROUPS_KEY, JSON.stringify(initialGroups));
+    }
 
     // Announcements for Manguiring
-    localStorage.setItem(this.ANNOUNCEMENTS_KEY, JSON.stringify(NUTRI_DATA.initialAnnouncements || []));
+    const currentAnn = localStorage.getItem(this.ANNOUNCEMENTS_KEY);
+    if (!currentAnn || !currentAnn.includes('Community Nutrition Seminar')) {
+      localStorage.setItem(this.ANNOUNCEMENTS_KEY, JSON.stringify(NUTRI_DATA.initialAnnouncements || []));
+    }
 
-    // Fresh system: remove all registered user accounts and reset active session
-    localStorage.setItem(this.USERS_KEY, JSON.stringify([]));
-    localStorage.removeItem(this.CURRENT_USER_KEY);
-    localStorage.removeItem(this.USER_PROGRESS_KEY);
+    // Initialize registered users array with seed users if not already present or missing seed users
+    const currentUsers = localStorage.getItem(this.USERS_KEY);
+    if (!currentUsers || !currentUsers.includes('Nurse Ana Reyes')) {
+      localStorage.setItem(this.USERS_KEY, JSON.stringify(NUTRI_DATA.initialUsers || []));
+    }
   },
 
   // ==========================================================================
@@ -131,7 +145,16 @@ const NutriStorage = {
       const data = localStorage.getItem(this.BARANGAYS_KEY);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          // If cached list contains the old 5 dummy barangays (San Jose, Santa Maria, etc.), reset to single official Barangay Manguiring
+          const hasOldDummies = parsed.some(b => b && (b.name === 'Barangay San Jose' || b.name === 'Barangay Santa Maria' || b.name === 'Barangay San Isidro'));
+          if (hasOldDummies) {
+            const clean = [{ id: 'brgy-1', name: 'Barangay Manguiring', createdAt: '2026-08-01' }];
+            localStorage.setItem(this.BARANGAYS_KEY, JSON.stringify(clean));
+            return clean;
+          }
+          return parsed;
+        }
       }
     } catch (e) {}
     const defaultBrgys = [
@@ -150,7 +173,7 @@ const NutriStorage = {
     this.populateAllBarangayDropdowns();
   },
 
-  addBarangay(name) {
+  addBarangay(name, zones) {
     const trimmed = (name || '').trim();
     if (!trimmed) throw new Error('Pakiusap ilagay ang wastong pangalan ng Barangay.');
 
@@ -161,6 +184,7 @@ const NutriStorage = {
     const newBrgy = {
       id: 'brgy-' + Date.now(),
       name: trimmed,
+      zones: zones ? zones.trim() : '',
       createdAt: new Date().toISOString().split('T')[0]
     };
     list.push(newBrgy);
@@ -169,13 +193,19 @@ const NutriStorage = {
     this.logAudit(
       'Barangay Added',
       'Account Management',
-      `Administrator registered new official barangay: "${trimmed}". Now available for Parent/BHW account creation and field monitoring.`,
+      `Administrator registered new official barangay: "${trimmed}"${zones ? ` (${zones})` : ''}. Now available for Parent/BHW account creation and field monitoring.`,
       'Administrator'
     );
 
     // Sync to backend if api is available
     if (window.NutriApi && typeof window.NutriApi.saveBarangay === 'function') {
       window.NutriApi.saveBarangay(newBrgy).catch(e => console.warn(e));
+    } else {
+      fetch('/api/barangays', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newBrgy)
+      }).catch(e => console.warn('Sync /api/barangays:', e));
     }
 
     return newBrgy;
@@ -388,13 +418,33 @@ const NutriStorage = {
 
   registerUser(userData) {
     const users = this.getUsers();
-    userData.id = 'usr-' + Date.now();
+    userData.id = userData.id || ('usr-' + Date.now());
     userData.status = userData.status || 'Active';
     userData.registeredDate = userData.registeredDate || new Date().toISOString().split('T')[0];
-    users.push(userData);
+    if (!userData.initials && userData.name) {
+      userData.initials = this.calculateInitials(userData.name);
+    }
+
+    const existingIdx = users.findIndex(u => 
+      u.id === userData.id || 
+      (u.email && userData.email && u.email.toLowerCase() === userData.email.toLowerCase())
+    );
+
+    if (existingIdx !== -1) {
+      users[existingIdx] = { ...users[existingIdx], ...userData };
+    } else {
+      users.push(userData);
+    }
+
     localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
     this.setCurrentUser(userData);
-    this.logAudit('User Account Created', 'Account Management', `Registered account for ${userData.name} (${userData.role.toUpperCase()})`);
+    this.logAudit('User Account Created', 'Account Management', `Registered account for ${userData.name} (${userData.role ? userData.role.toUpperCase() : 'USER'})`);
+
+    // Live sync to backend API if available
+    if (window.NutriApi && typeof NutriApi.saveUser === 'function') {
+      NutriApi.saveUser(userData);
+    }
+
     return userData;
   },
 
@@ -439,12 +489,54 @@ const NutriStorage = {
     const users = this.getUsers();
     const user = users.find(u => u.id === userId);
     if (user) {
-      user.status = user.status === 'Suspended' ? 'Active' : 'Suspended';
+      user.status = user.status === 'Active' ? 'Inactive' : 'Active';
       localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
       this.logAudit('Access Status Changed', 'Security & Access', `Account status for ${user.name} changed to ${user.status}`);
       return user.status;
     }
     return null;
+  },
+
+  // ==========================================================================
+  // REAL-TIME USER ONLINE PRESENCE SYSTEM
+  // ==========================================================================
+  ONLINE_PRESENCE_KEY: 'nutrilearn_online_presence',
+
+  getOnlinePresenceMap() {
+    try {
+      const data = localStorage.getItem(this.ONLINE_PRESENCE_KEY);
+      if (data) return JSON.parse(data);
+    } catch(e) {}
+    // Initial active users in system
+    const defaultOnline = {
+      'usr-1': true, // Nurse Ana Reyes
+      'usr-2': true  // Maria Santos
+    };
+    localStorage.setItem(this.ONLINE_PRESENCE_KEY, JSON.stringify(defaultOnline));
+    return defaultOnline;
+  },
+
+  isUserOnline(userId) {
+    if (!userId) return false;
+    const current = this.getCurrentUser();
+    if (current && (String(current.id) === String(userId) || current.email === userId)) {
+      return true;
+    }
+    const map = this.getOnlinePresenceMap();
+    return !!map[userId];
+  },
+
+  setUserOnlinePresence(userId, isOnline) {
+    const map = this.getOnlinePresenceMap();
+    map[userId] = !!isOnline;
+    localStorage.setItem(this.ONLINE_PRESENCE_KEY, JSON.stringify(map));
+  },
+
+  touchHeartbeat() {
+    const current = this.getCurrentUser();
+    if (current && current.id) {
+      this.setUserOnlinePresence(current.id, true);
+    }
   },
 
   // Helper to format clean display name from user input
@@ -475,68 +567,87 @@ const NutriStorage = {
   loginUser(emailOrName, password, role) {
     const users = this.getUsers();
     const rawInput = (emailOrName || '').trim();
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+
+    if (!rawInput) {
+      return {
+        success: false,
+        message: isFil ? 'Pakilagay ang email o username.' : 'Please enter your email or username.'
+      };
+    }
+
     const query = rawInput.toLowerCase();
-    
-    // 1. Find matching user in registered users
-    let found = users.find(u => 
-      (u.email.toLowerCase() === query || u.name.toLowerCase() === query) &&
-      u.password === password &&
-      (!role || u.role === role || (role === 'chw' && u.role === 'collector'))
+
+    // 1. Strict verification: Check if an account was actually created/registered
+    const matchedUser = users.find(u => 
+      (u.email && u.email.toLowerCase() === query) ||
+      (u.name && u.name.toLowerCase() === query)
     );
 
-    if (found) {
-      if (found.status === 'Suspended') {
-        return { success: false, message: '⛔ Account Suspended: Your access has been temporarily restricted by the Administrator. Please contact the Municipal Health Office.' };
-      }
-      if (!found.initials) {
-        found.initials = this.calculateInitials(found.name);
-      }
-      this.setCurrentUser(found);
-      return { success: true, user: found };
-    }
-
-    // 2. If user specifically typed Dr. Jose Lim
-    if (query.includes('jose') || query === 'dr.joselim@calabanga.gov.ph') {
-      const adminUser = {
-        id: 'usr-admin-mho',
-        name: 'Dr. Jose Lim',
-        email: 'dr.joselim@calabanga.gov.ph',
-        role: role || 'mho',
-        department: 'Barangay Manguiring Health Office, Calabanga',
-        designation: 'Municipal Health Officer',
-        initials: 'JL',
-        status: 'Active',
-        registeredDate: '2026-08-01'
+    // If the account does not exist in registered accounts, reject login
+    if (!matchedUser) {
+      return {
+        success: false,
+        message: isFil
+          ? '⛔ Walang nahanap na account. Ang mga nakapag-create lamang ng account ang maaaring mag-log in. Pindutin ang "Register here" para gumawa ng account.'
+          : '⛔ No account found. Only users who have created an account can sign in. Please click "Register here" to create an account.'
       };
-      this.setCurrentUser(adminUser);
-      return { success: true, user: adminUser };
     }
 
-    // 3. Dynamic authentication for whatever account/name the user typed (e.g. "Mark Anthony")
-    const formattedName = this.formatDisplayName(rawInput);
-    const initials = this.calculateInitials(formattedName);
-    const department = (role === 'mho') 
-      ? 'Barangay Manguiring Health Office, Calabanga'
-      : (role === 'chw' ? 'Barangay Manguiring Health Center' : 'Barangay Manguiring, Calabanga');
+    // 2. Strict password validation
+    if (matchedUser.password !== password) {
+      return {
+        success: false,
+        message: isFil
+          ? '🔑 Maling password. Pakisubukang muli.'
+          : '🔑 Incorrect password. Please try again.'
+      };
+    }
 
-    const dynamicUser = {
-      id: 'usr-' + Date.now(),
-      name: formattedName,
-      email: rawInput.includes('@') ? rawInput : `${rawInput.toLowerCase().replace(/\s+/g, '.')}@calabanga.gov.ph`,
-      password: password,
-      role: role || 'mho',
-      department: department,
-      designation: role === 'mho' ? 'Administrator' : (role === 'chw' ? 'Health Worker' : 'Parent'),
-      initials: initials,
-      status: 'Active',
-      registeredDate: new Date().toISOString().split('T')[0]
-    };
+    // 3. Status check: Ensure account is not suspended
+    if (matchedUser.status === 'Suspended') {
+      return {
+        success: false,
+        message: isFil
+          ? '⛔ Account Suspended: Ang iyong access ay pansamantalang sinuspinde ng Administrator. Makipag-ugnayan sa Municipal Health Office.'
+          : '⛔ Account Suspended: Your access has been temporarily restricted by the Administrator. Please contact the Municipal Health Office.'
+      };
+    }
 
-    // Save to users registry and activate session
-    users.push(dynamicUser);
-    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-    this.setCurrentUser(dynamicUser);
-    return { success: true, user: dynamicUser };
+    // 4. Role match validation against chosen portal
+    if (role && matchedUser.role !== role && !(role === 'chw' && matchedUser.role === 'collector')) {
+      const roleLabels = isFil ? {
+        parent: 'Magulang / Tagapag-alaga (Parent)',
+        chw: 'Manggagawa sa Kalusugan (BHW)',
+        mho: 'Administrator (MHO)',
+        collector: 'Tagakolekta ng Datos'
+      } : {
+        parent: 'Parent / Guardian',
+        chw: 'Health Worker (BHW)',
+        mho: 'Administrator',
+        collector: 'Field Data Collector'
+      };
+      const assignedRole = roleLabels[matchedUser.role] || matchedUser.role;
+      return {
+        success: false,
+        message: isFil
+          ? `⚠️ Ang account na ito ay nakarehistro bilang "${assignedRole}". Pakipili ang tamang portal para makapag-log in.`
+          : `⚠️ This account is registered as "${assignedRole}". Please select the correct portal to sign in.`
+      };
+    }
+
+    // 5. Successful authentication
+    if (!matchedUser.initials) {
+      matchedUser.initials = this.calculateInitials(matchedUser.name);
+    }
+    this.setCurrentUser(matchedUser);
+    this.logAudit(
+      'User Login',
+      'Security & Access',
+      `User ${matchedUser.name} (${(matchedUser.role || '').toUpperCase()}) successfully logged in`,
+      { name: matchedUser.name, role: matchedUser.role }
+    );
+    return { success: true, user: matchedUser };
   },
 
   // ==========================================================================
@@ -832,6 +943,20 @@ const NutriStorage = {
     return true;
   },
 
+  updateAnnouncement(updatedPost) {
+    let list = this.getAnnouncements();
+    const idx = list.findIndex(a => String(a.id) === String(updatedPost.id));
+    if (idx !== -1) {
+      list[idx] = { ...list[idx], ...updatedPost };
+      this.saveAnnouncements(list);
+      if (window.NutriApi && window.NutriApi.isAvailable) {
+        window.NutriApi.createAnnouncement(list[idx]).catch(e => console.warn('NutriApi announcement update error:', e));
+      }
+      return list[idx];
+    }
+    return null;
+  },
+
   // Bidirectional Cloud Synchronization
   async syncWithSupabase() {
     if (!window.NutriDb || !window.NutriDb.isConfigured()) return;
@@ -875,6 +1000,30 @@ const NutriStorage = {
           ParentModule.renderChildGrowth();
         }
       }
+
+      // Synchronize registered user accounts from backend API
+      if (window.NutriApi && typeof window.NutriApi.getUsers === 'function') {
+        try {
+          const apiUsers = await window.NutriApi.getUsers();
+          if (Array.isArray(apiUsers) && apiUsers.length > 0) {
+            const localUsers = this.getUsers();
+            let merged = [...localUsers];
+            let addedCount = 0;
+            apiUsers.forEach(au => {
+              if (!merged.some(lu => (lu.id && lu.id === au.id) || (lu.email && au.email && lu.email.toLowerCase() === au.email.toLowerCase()))) {
+                merged.push(au);
+                addedCount++;
+              }
+            });
+            if (addedCount > 0) {
+              localStorage.setItem(this.USERS_KEY, JSON.stringify(merged));
+            }
+          }
+        } catch (uErr) {
+          console.warn('API users sync warning:', uErr);
+        }
+      }
+
       console.log('✅ [NutriStorage] Cloud data synchronized successfully!');
     } catch (err) {
       console.warn('⚠️ [NutriStorage] Cloud sync note:', err.message);

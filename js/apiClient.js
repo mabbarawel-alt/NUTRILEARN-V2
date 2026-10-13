@@ -183,6 +183,41 @@
         }
       }
       return true;
+    },
+
+    // --------------------------------------------------------------------------
+    // User Accounts API
+    // --------------------------------------------------------------------------
+    async getUsers() {
+      if (this.isAvailable) {
+        try {
+          const res = await fetch(`${this.baseUrl}/users`);
+          if (res.ok) return await res.json();
+        } catch (e) {
+          console.warn('API getUsers error:', e);
+        }
+      }
+      return typeof NutriStorage !== 'undefined' ? NutriStorage.getUsers() : [];
+    },
+
+    async saveUser(userData) {
+      if (this.isAvailable && userData) {
+        try {
+          const res = await fetch(`${this.baseUrl}/users`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(userData)
+          });
+          if (res.ok) {
+            const data = await res.json();
+            console.log('✅ [NutriApi] User synced to backend API:', data.email || data.name);
+            return data;
+          }
+        } catch (e) {
+          console.warn('API saveUser error:', e);
+        }
+      }
+      return userData;
     }
   };
 

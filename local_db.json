@@ -1,141 +1,582 @@
 {
   "children": [
     {
-      "id": "ch-117",
-      "name": "Mark Anthony Jr.",
-      "first_name": "Mark Anthony",
-      "last_name": "Jr.",
-      "age_months": 12,
+      "first_name": "ss",
+      "last_name": "",
+      "age_months": 18,
       "sex": "Male",
-      "parent_name": "Mark Anthony",
-      "parent_phone": "0988-999-0011",
-      "barangay": "Barangay Manguiring",
-      "zone": "Zone 1",
+      "parent_name": "BB",
+      "parent_phone": "dd",
+      "barangay": "Barangay Belen",
       "height_cm": 75.0,
-      "weight_kg": 9.2,
-      "muac_mm": 128,
+      "weight_kg": 9.5,
+      "muac_mm": 125,
       "status": "Normal",
       "hfa_status": "Normal",
       "wfh_status": "Normal",
       "wfa_status": "Normal",
       "muac_status": "Normal",
       "improved": false,
-      "last_assessed": "2026-09-10",
-      "notes": "Registered baseline health census in Barangay Manguiring."
+      "last_assessed": "2026-10-13",
+      "notes": "Bagong rehistro kan magulang na si BB. Initial record: 75cm, 9.5kg.",
+      "id": "ch-4"
     },
     {
-      "id": "ch-118",
-      "name": "Carlo Mendoza",
-      "first_name": "Carlo",
-      "last_name": "Mendoza",
-      "age_months": 16,
+      "id": "ch-101",
+      "name": "Miguel Reyes",
+      "first_name": "Miguel",
+      "last_name": "Reyes",
+      "age_months": 12,
+      "ageMonths": 12,
       "sex": "Male",
-      "parent_name": "Janet Mendoza",
-      "parent_phone": "0999-000-1122",
+      "parent_name": "Ana Reyes",
+      "parentName": "Ana Reyes",
+      "parent_phone": "0917-234-5678",
       "barangay": "Barangay Manguiring",
-      "zone": "Zone 2",
-      "height_cm": 73.0,
-      "weight_kg": 8.1,
-      "muac_mm": 115,
-      "status": "Stunted",
-      "hfa_status": "Stunted",
-      "wfh_status": "Normal",
-      "wfa_status": "Underweight",
-      "muac_status": "Moderate",
-      "improved": false,
-      "last_assessed": "2026-09-08",
-      "notes": "Monitored for stunting in Manguiring Zone 2."
-    },
-    {
-      "id": "ch-119",
-      "name": "Angel Locsin",
-      "first_name": "Angel",
-      "last_name": "Locsin",
-      "age_months": 19,
-      "sex": "Female",
-      "parent_name": "Corazon Locsin",
-      "parent_phone": "0912-345-6789",
-      "barangay": "Barangay Manguiring",
-      "zone": "Zone 4",
-      "height_cm": 78.5,
-      "weight_kg": 10.1,
-      "muac_mm": 130,
-      "status": "Improved",
+      "zone": "Zone 5, Barangay Manguiring",
+      "height_cm": 75.0,
+      "heightCm": 75.0,
+      "weight_kg": 9.8,
+      "weightKg": 9.8,
+      "muac_mm": 128,
+      "muacMm": 128,
+      "status": "Normal",
       "hfa_status": "Normal",
       "wfh_status": "Normal",
       "wfa_status": "Normal",
       "muac_status": "Normal",
-      "improved": true,
-      "last_assessed": "2026-09-11",
-      "notes": "Marked clinical improvement in Manguiring Zone 4."
-    },
-    {
-      "id": "ch-120",
-      "name": "Samantha Reyes",
-      "first_name": "Samantha",
-      "last_name": "Reyes",
-      "age_months": 10,
-      "sex": "Female",
-      "parent_name": "Gloria Reyes",
-      "parent_phone": "0923-456-7890",
-      "barangay": "Barangay Manguiring",
-      "zone": "Zone 5",
-      "height_cm": 68.0,
-      "weight_kg": 6.8,
-      "muac_mm": 112,
-      "status": "Critical",
-      "hfa_status": "Stunted",
-      "wfh_status": "Wasted",
-      "wfa_status": "Underweight",
-      "muac_status": "Severe",
       "improved": false,
-      "last_assessed": "2026-09-07",
-      "notes": "Severe stunting and wasting case in Manguiring Zone 5."
+      "submitted_by": "Nurse Ana Reyes",
+      "submittedBy": "Nurse Ana Reyes",
+      "last_assessed": "2026-08-22",
+      "lastAssessed": "2026-08-22",
+      "notes": "Appropriate growth trajectory in Zone 5."
     },
     {
-      "id": "ch-121",
-      "name": "Gabriel Santos",
-      "first_name": "Gabriel",
+      "id": "ch-102",
+      "name": "Liam Santos",
+      "first_name": "Liam",
       "last_name": "Santos",
-      "age_months": 16,
+      "age_months": 18,
+      "ageMonths": 18,
       "sex": "Male",
-      "parent_name": "Maricel Santos",
-      "parent_phone": "0928-765-4321",
+      "parent_name": "Maria Santos",
+      "parentName": "Maria Santos",
+      "parent_phone": "0918-345-6789",
       "barangay": "Barangay Manguiring",
-      "zone": "Zone 7",
-      "height_cm": 76.5,
-      "weight_kg": 8.8,
-      "muac_mm": 121,
-      "status": "Moderate",
+      "zone": "Zone 1, Barangay Manguiring",
+      "height_cm": 72.5,
+      "heightCm": 72.5,
+      "weight_kg": 9.2,
+      "weightKg": 9.2,
+      "muac_mm": 118,
+      "muacMm": 118,
+      "status": "At Risk",
       "hfa_status": "Normal",
-      "wfh_status": "At Risk / Mild Wasting",
+      "wfh_status": "Normal",
       "wfa_status": "Underweight",
       "muac_status": "Moderate",
       "improved": false,
-      "last_assessed": "2026-09-12",
-      "notes": "Monitored under supplementary feeding in Purok 7 / Zone 7."
+      "submitted_by": "Nurse Ana Reyes",
+      "submittedBy": "Nurse Ana Reyes",
+      "last_assessed": "2026-08-20",
+      "lastAssessed": "2026-08-20",
+      "notes": "Monitored under supplementary feeding program."
+    },
+    {
+      "id": "ch-103",
+      "name": "Sofia Dela Cruz",
+      "first_name": "Sofia",
+      "last_name": "Dela Cruz",
+      "age_months": 24,
+      "ageMonths": 24,
+      "sex": "Female",
+      "parent_name": "Rose Dela Cruz",
+      "parentName": "Rose Dela Cruz",
+      "parent_phone": "0919-456-7890",
+      "barangay": "Barangay Manguiring",
+      "zone": "Zone 3, Barangay Manguiring",
+      "height_cm": 77.0,
+      "heightCm": 77.0,
+      "weight_kg": 8.8,
+      "weightKg": 8.8,
+      "muac_mm": 116,
+      "muacMm": 116,
+      "status": "At Risk",
+      "hfa_status": "Normal",
+      "wfh_status": "At Risk",
+      "wfa_status": "Underweight",
+      "muac_status": "Moderate",
+      "improved": false,
+      "submitted_by": "Nurse Ana Reyes",
+      "submittedBy": "Nurse Ana Reyes",
+      "last_assessed": "2026-08-18",
+      "lastAssessed": "2026-08-18",
+      "notes": "Monitored for slight weight lag in Zone 3."
     }
   ],
   "monthly_reports": [],
   "announcements": [
     {
       "id": "ann-1",
-      "title": "Barangay Manguiring: Community Health & Weighing Assembly",
-      "content": "All parents and guardians in Barangay Manguiring are invited to the nutrition orientation and monthly child anthropometric measurement at the Manguiring Health Center.",
+      "title": "Community Nutrition Seminar \u2014 September 2026",
+      "category": "Seminar",
+      "targetZones": "All Zones, Barangay Manguring",
+      "targetBarangays": [
+        "Barangay Manguiring",
+        "Barangay Manguring"
+      ],
+      "barangay": "Barangay Manguring",
+      "content": "The Barangay Manguring Health Center is organizing a community nutrition seminar covering IYCF best practices, malnutrition prevention, and complementary feeding. Parents/Guardians from every zone are invited. Health workers are requested to coordinate attendance with their assigned groups.",
+      "eventDate": "Sat, September 5, 2026",
+      "relayByDate": "August 29",
+      "eventTime": "9:00 AM \u2013 12:00 PM",
+      "location": "Barangay Manguring Covered Court, Calabanga",
+      "status": "relayed",
+      "statusText": "\u2713 Relayed to Parents/Guardians by Nurse Ana Reyes",
+      "relayedBy": "Nurse Ana Reyes",
+      "authorName": "Dr. Jose Lim",
+      "authorRole": "mho",
+      "authorDesignation": "Municipal Health Officer",
+      "targetAudience": "both",
       "priority": "normal",
-      "authorName": "Manguiring Health Worker",
-      "authorDesignation": "Barangay Nutrition Scholar",
-      "targetRole": "all",
-      "targetBarangays": ["Barangay Manguiring"],
-      "barangay": "Barangay Manguiring",
-      "createdAt": "2026-09-15T08:00:00.000Z",
-      "pinned": true
+      "createdAt": "2026-08-25T08:00:00.000Z",
+      "pinned": false
+    },
+    {
+      "id": "ann-2",
+      "title": "Monthly Weight Monitoring Drive \u2014 September",
+      "category": "Reminder",
+      "targetZones": "All Zones, Barangay Manguring",
+      "targetBarangays": [
+        "Barangay Manguiring",
+        "Barangay Manguring"
+      ],
+      "barangay": "Barangay Manguring",
+      "content": "All Health Workers are directed to conduct monthly anthropometric monitoring for enrolled children. Completed weight and height data must be submitted via NutriLearn by September 30, 2026. Parents/Guardians of children flagged as at risk or stunted should be prioritized.",
+      "eventDate": "Thu, September 10, 2026",
+      "relayByDate": "September 3",
+      "eventTime": "8:00 AM \u2013 4:00 PM",
+      "location": "Manguring Health Center, Zone 2",
+      "status": "overdue",
+      "statusText": "Relay overdue",
+      "relayedBy": "",
+      "authorName": "Dr. Jose Lim",
+      "authorRole": "mho",
+      "authorDesignation": "Municipal Health Officer",
+      "targetAudience": "bhw",
+      "priority": "high",
+      "createdAt": "2026-08-28T08:00:00.000Z",
+      "pinned": false
+    },
+    {
+      "id": "ann-3",
+      "title": "Updated WHO IYCF Guidelines 2026 \u2014 Training",
+      "category": "Update",
+      "targetZones": "Zones 1\u20136, Barangay Manguring",
+      "targetBarangays": [
+        "Barangay Manguiring",
+        "Barangay Manguring"
+      ],
+      "barangay": "Barangay Manguring",
+      "content": "The WHO has released updated Infant and Young Child Feeding (IYCF) guidelines. A briefing for all Health Workers will be held before the content is shared with Parents/Guardians through NutriLearn modules. Attendance is mandatory.",
+      "eventDate": "Fri, September 18, 2026",
+      "relayByDate": "September 11",
+      "eventTime": "1:00 PM \u2013 3:00 PM",
+      "location": "Manguring Barangay Hall, Zone 4",
+      "status": "overdue",
+      "statusText": "Relay overdue",
+      "relayedBy": "",
+      "authorName": "Dr. Jose Lim",
+      "authorRole": "mho",
+      "authorDesignation": "Municipal Health Officer",
+      "targetAudience": "both",
+      "priority": "high",
+      "createdAt": "2026-09-02T08:00:00.000Z",
+      "pinned": false
     }
   ],
-  "users": [],
-  "modules": [],
+  "users": [
+    {
+      "id": "usr-1",
+      "name": "Nurse Ana Reyes",
+      "email": "ana.reyes@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "chw",
+      "displayRole": "Health Worker",
+      "location": "Zone 1, Barangay Manguring",
+      "barangay": "Barangay Manguring",
+      "status": "Active",
+      "lastLogin": "Today",
+      "registeredDate": "2026-08-10"
+    },
+    {
+      "id": "usr-2",
+      "name": "Maria Santos",
+      "email": "maria.santos@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "parent",
+      "displayRole": "Parent/Guardian",
+      "location": "Zone 1, Barangay Manguring",
+      "barangay": "Barangay Manguring",
+      "status": "Active",
+      "lastLogin": "Today",
+      "registeredDate": "2026-08-12"
+    },
+    {
+      "id": "usr-3",
+      "name": "Nurse Ben Cruz",
+      "email": "ben.cruz@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "chw",
+      "displayRole": "Health Worker",
+      "location": "Zone 2, Barangay Manguring",
+      "barangay": "Barangay Manguring",
+      "status": "Active",
+      "lastLogin": "Yesterday",
+      "registeredDate": "2026-08-15"
+    },
+    {
+      "id": "usr-4",
+      "name": "Linda Mendoza",
+      "email": "linda.mendoza@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "parent",
+      "displayRole": "Parent/Guardian",
+      "location": "Zone 4, Barangay Manguring",
+      "barangay": "Barangay Manguring",
+      "status": "Inactive",
+      "lastLogin": "12 days ago",
+      "registeredDate": "2026-08-18"
+    },
+    {
+      "id": "usr-5",
+      "name": "Nurse Carla Lim",
+      "email": "carla.lim@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "chw",
+      "displayRole": "Health Worker",
+      "location": "Zone 5, Barangay Manguring",
+      "barangay": "Barangay Manguring",
+      "status": "Active",
+      "lastLogin": "2 days ago",
+      "registeredDate": "2026-08-20"
+    },
+    {
+      "id": "usr-6",
+      "name": "Rose Dela Cruz",
+      "email": "rose.delacruz@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "parent",
+      "displayRole": "Parent/Guardian",
+      "location": "Zone 3, Barangay Manguring",
+      "barangay": "Barangay Manguring",
+      "status": "Active",
+      "lastLogin": "3 days ago",
+      "registeredDate": "2026-08-22"
+    },
+    {
+      "id": "usr-admin",
+      "name": "Dr. Jose Lim",
+      "email": "mho@nutrilearn.ph",
+      "password": "Password123!",
+      "role": "mho",
+      "displayRole": "Administrator",
+      "location": "Barangay Manguring Health Office, Calabanga",
+      "barangay": "Barangay Manguring",
+      "status": "Active",
+      "lastLogin": "Today",
+      "registeredDate": "2026-08-01"
+    },
+    {
+      "id": "usr-1791808851195",
+      "name": "Mabbarawel",
+      "email": "mabbarawel@gbox.ncf.edu.ph",
+      "password": "111111",
+      "role": "parent",
+      "department": "Barangay Manguiring, Calabanga",
+      "designation": "Parent",
+      "initials": "MA",
+      "status": "Active",
+      "registeredDate": "2026-10-12",
+      "barangay": ""
+    },
+    {
+      "id": "usr-1791859409835",
+      "name": "Dwin",
+      "email": "zsenyioredwin@gmail.com",
+      "password": "111111",
+      "barangay": "Barangay Manguiring",
+      "role": "mho",
+      "status": "Active",
+      "registeredDate": "2026-10-13",
+      "department": "Municipal Health Office",
+      "designation": "Nutrition Officer",
+      "initials": "DW"
+    },
+    {
+      "id": "usr-1791867455992",
+      "name": "BB",
+      "email": "dd",
+      "password": "111111",
+      "barangay": "Barangay Belen",
+      "role": "parent",
+      "status": "Active",
+      "registeredDate": "2026-10-13",
+      "childId": "ch-1791867455992",
+      "childName": "ss",
+      "childAge": 18,
+      "childGender": "Male",
+      "childHeight": 75,
+      "childWeight": 9.5,
+      "nutritionalStatus": "Normal",
+      "initials": "BB"
+    }
+  ],
+  "modules": [
+    {
+      "id": "mod-malnutrition",
+      "number": "Module 1",
+      "title": "Understanding Child Malnutrition",
+      "version": "v2.1",
+      "lessonsCount": 5,
+      "lastUpdated": "Aug 15, 2026",
+      "status": "published",
+      "duration": "15 mins",
+      "summary": "Master the critical clinical differences between stunting, wasting, underweight, and micronutrient deficiencies based on updated WHO standards.",
+      "recommendedFoods": "Malunggay, Nilagang Itlog, Monggo, Kalabasa, Dilaw na Camote",
+      "feedingGuide": "Pakainin nang madalas gamit ang siksik-sustansyang pagkain. Isama ang berde at dilaw na gulay sa bawat pinggan.",
+      "lessons": [
+        {
+          "title": "Stunting vs Wasting: Understanding Growth Failure",
+          "icon": "\ud83d\udccf",
+          "content": "Stunting reflects chronic malnutrition affecting height-for-age, while wasting reflects acute recent weight loss.",
+          "completed": false
+        },
+        {
+          "title": "The First 1,000 Days Window",
+          "icon": "\u23f3",
+          "content": "Nutrition from conception to a child's second birthday permanently shapes brain architecture and physical stature.",
+          "completed": false
+        },
+        {
+          "title": "Critical Micronutrient Deficiencies",
+          "icon": "\ud83d\udd2c",
+          "content": "Recognizing vitamin A, iron deficiency anemia, and zinc deficiency signs in community health checks.",
+          "completed": false
+        },
+        {
+          "title": "Growth Chart Interpretation",
+          "icon": "\ud83d\udcc8",
+          "content": "How to plot and read WHO Z-score growth curves correctly to prevent faltering early.",
+          "completed": false
+        },
+        {
+          "title": "Catch-up Growth Intervention Protocols",
+          "icon": "\ud83c\udf31",
+          "content": "Immediate actionable steps when a child begins crossing downward percentile thresholds.",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "mod-feeding",
+      "number": "Module 2",
+      "title": "Complementary Feeding for Infants",
+      "version": "v1.8",
+      "lessonsCount": 6,
+      "lastUpdated": "Jul 30, 2026",
+      "status": "published",
+      "duration": "20 mins",
+      "summary": "Step-by-step guidance on introducing solid foods at 6 months while continuing breastfeeding, focusing on consistency and meal frequency.",
+      "recommendedFoods": "Lugaw na may Manok at Malunggay, Minasang Papaya, Nilagang Dilaw ng Itlog, Mashed Avocado",
+      "feedingGuide": "Magsimula sa malambot at madulas na lugaw sa edad na 6 buwan. Dagdagan ang lapot at dalas habang lumalaki ang sanggol.",
+      "lessons": [
+        {
+          "title": "When to Start: The 6-Month Mark",
+          "icon": "\ud83c\udf7c",
+          "content": "Why introducing foods before 6 months increases infection risk and delays proper gut maturation.",
+          "completed": false
+        },
+        {
+          "title": "Texture Progression from Puree to Solids",
+          "icon": "\ud83e\udd63",
+          "content": "Moving safely from smooth purees to practical mashed family foods without choking hazards.",
+          "completed": false
+        },
+        {
+          "title": "Meal Frequency & Portions by Age Band",
+          "icon": "\u23f0",
+          "content": "2-3 meals daily at 6-8 months, transitioning to 3-4 meals plus nutritious snacks at 9-23 months.",
+          "completed": false
+        },
+        {
+          "title": "Energy Density: Fortifying Lugaw",
+          "icon": "\u26a1",
+          "content": "Transforming plain water lugaw into nutrient-dense porridge with egg yolk, crushed seeds, and greens.",
+          "completed": false
+        },
+        {
+          "title": "Safe Water & Meal Preparation Hygiene",
+          "icon": "\ud83e\uddfc",
+          "content": "Handwashing and sanitary food storage techniques to prevent diarrheal disease.",
+          "completed": false
+        },
+        {
+          "title": "Responsive Cue Recognition",
+          "icon": "\ud83d\udc76",
+          "content": "Reading baby's natural cues for hunger and fullness without coercive feeding.",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "mod-meals",
+      "number": "Module 3",
+      "title": "Affordable Nutrient-Dense Meals",
+      "version": "v2.0",
+      "lessonsCount": 8,
+      "lastUpdated": "Aug 10, 2026",
+      "status": "published",
+      "duration": "25 mins",
+      "summary": "Cook balanced, budget-friendly Filipino meals using accessible barangay ingredients aligned with FNRI Pinggang Pinoy guidelines.",
+      "recommendedFoods": "Ginisang Monggo na may Malunggay, Tortang Talong na may Giniling, Sinabawang Isda, Kamote Cue na Walang Asukal",
+      "feedingGuide": "Sundin ang Pinggang Pinoy: kalahating plato ng gulay at prutas, sang-kapat na protina, at sang-kapat na kanin o pampalakas.",
+      "lessons": [
+        {
+          "title": "Pinggang Pinoy Food Group Proportions",
+          "icon": "\ud83c\udf7d\ufe0f",
+          "content": "Mastering Go, Grow, and Glow balance tailored for growing toddlers and nursing mothers.",
+          "completed": false
+        },
+        {
+          "title": "Malunggay: The Miracle Local Superfood",
+          "icon": "\ud83c\udf3f",
+          "content": "High calcium, iron, and vitamin A content in fresh backyard moringa leaves.",
+          "completed": false
+        },
+        {
+          "title": "Monggo & Legumes as Complete Proteins",
+          "icon": "\ud83c\udf72",
+          "content": "Combining legumes with rice to deliver high-quality amino acids at minimal household expense.",
+          "completed": false
+        },
+        {
+          "title": "One Egg a Day: Proven Stunting Prevention",
+          "icon": "\ud83e\udd5a",
+          "content": "Clinical evidence on how 1 egg daily provides choline, DHA, and bioavailable protein for linear growth.",
+          "completed": false
+        },
+        {
+          "title": "Nutrient-Dense Local Root Crops",
+          "icon": "\ud83c\udf60",
+          "content": "Yellow camote and gabi as vitamin-rich carbohydrate sources superior to refined white flour.",
+          "completed": false
+        },
+        {
+          "title": "Budget Smart Marketing & Ingredient Sourcing",
+          "icon": "\ud83d\uded2",
+          "content": "How to stretch PHP 150-200 to feed a family of four nutrient-dense whole foods.",
+          "completed": false
+        },
+        {
+          "title": "Cooking Methods that Preserve Vitamins",
+          "icon": "\ud83c\udf73",
+          "content": "Steaming and quick simmering techniques that prevent heat-sensitive micronutrient breakdown.",
+          "completed": false
+        },
+        {
+          "title": "Batch Meal Prep for Busy Caregivers",
+          "icon": "\ud83c\udf71",
+          "content": "Time-saving storage and reheating strategies for community health workers and working parents.",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "mod-habits",
+      "number": "Module 4",
+      "title": "Responsive Feeding Behaviors",
+      "version": "v1.2",
+      "lessonsCount": 4,
+      "lastUpdated": "Aug 20, 2026",
+      "status": "draft",
+      "duration": "15 mins",
+      "summary": "Develop positive mealtime routines, handle picky eating with patience, and avoid screen distractions to nurture lifelong healthy relationships with food.",
+      "recommendedFoods": "Finger Foods: Steamed Carrot Sticks, Soft Banana Slices, Boiled Egg Wedges, Avocado Cubes",
+      "feedingGuide": "Huwag pilitin ang bata kung busog na. Kumain nang sabay-sabay bilang pamilya nang walang TV o cellphone sa hapag-kainan.",
+      "lessons": [
+        {
+          "title": "Responsive Feeding: Talking & Encouragement",
+          "icon": "\ud83d\udde3\ufe0f",
+          "content": "Feed slowly and patiently with encouragement, never force-feeding. Maintain eye contact and smile.",
+          "completed": false
+        },
+        {
+          "title": "Handling Picky Eating with Patience",
+          "icon": "\ud83e\udd66",
+          "content": "A child may need to see, touch, and smell a new vegetable 10 to 15 times before accepting it.",
+          "completed": false
+        },
+        {
+          "title": "Creating a Screen-Free Mealtime Routine",
+          "icon": "\ud83d\udcf1",
+          "content": "Eating in front of screens disconnects children from internal fullness cues and slows chewing.",
+          "completed": false
+        },
+        {
+          "title": "Self-Feeding & Fine Motor Skill Development",
+          "icon": "\ud83d\udc76",
+          "content": "Offer safe finger foods to build hand-eye coordination and healthy eating confidence.",
+          "completed": false
+        }
+      ]
+    },
+    {
+      "id": "mod-stunting-2026",
+      "number": "Module 5",
+      "title": "WHO Updated Stunting Guidelines 2026",
+      "version": "v1.0",
+      "lessonsCount": 3,
+      "lastUpdated": "Aug 24, 2026",
+      "status": "review",
+      "duration": "20 mins",
+      "summary": "Comprehensive overview of the latest 2026 World Health Organization standards on community-level child stunting surveillance and intervention.",
+      "recommendedFoods": "Lipid-based Nutrient Supplements (LNS), Micronutrient Powder (MNP), Iron-fortified complementary foods",
+      "feedingGuide": "I-monitor ang length-for-age buwan-buwan. Agad na i-refer sa Rural Health Unit ang mga batang may severe linear faltering.",
+      "lessons": [
+        {
+          "title": "2026 Revised Anthropometric Screening Criteria",
+          "icon": "\ud83d\udccb",
+          "content": "Precision cutoff points for length-for-age Z-scores and community height-board calibration requirements.",
+          "completed": false
+        },
+        {
+          "title": "Small-Quantity Lipid-Based Supplements (SQ-LNS)",
+          "icon": "\ud83d\udc8a",
+          "content": "Evidence-backed supplementation protocols for infants aged 6-23 months at high stunting risk.",
+          "completed": false
+        },
+        {
+          "title": "BHW Community Action & Rapid Referral Pathways",
+          "icon": "\ud83c\udfe5",
+          "content": "Standardized triage workflows connecting barangay health stations to Municipal Health Offices.",
+          "completed": false
+        }
+      ]
+    }
+  ],
   "groups": [],
   "barangays": [
-    { "id": "brgy-1", "name": "Barangay Manguiring", "created_at": "2026-08-01" }
+    {
+      "id": "brgy-1",
+      "name": "Barangay Manguiring",
+      "created_at": "2026-08-01"
+    },
+    {
+      "id": "brgy-2",
+      "name": "Barangay Belen",
+      "created_at": "2026-10-13"
+    }
   ]
 }

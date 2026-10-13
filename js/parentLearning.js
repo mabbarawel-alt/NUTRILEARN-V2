@@ -318,17 +318,25 @@ const ParentModule = {
     const container = document.getElementById('parent-modules-container');
     if (!container) return;
 
+    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+
     container.innerHTML = this.nutritionModules.map(mod => {
       const completedCount = mod.lessons.filter(l => l.completed).length;
       const totalCount = mod.lessons.length;
       const pct = Math.round((completedCount / totalCount) * 100);
 
       const statusBadge = pct === 100 
-        ? '<span class="module-status-badge badge-completed">Completed</span>'
-        : (pct > 0 ? '<span class="module-status-badge badge-in-progress">In Progress</span>' : '<span class="module-status-badge badge-not-started">Not Started</span>');
+        ? `<span class="module-status-badge badge-completed">${isFil ? 'Natapos' : 'Completed'}</span>`
+        : (pct > 0 
+            ? `<span class="module-status-badge badge-in-progress">${isFil ? 'Ginagawa Pa' : 'In Progress'}</span>` 
+            : `<span class="module-status-badge badge-not-started">${isFil ? 'Hindi Pa Nasisimulan' : 'Not Started'}</span>`);
 
       const fillClass = pct === 100 ? 'fill-green' : (pct > 0 ? 'fill-orange' : 'fill-gray');
-      const actionText = pct === 100 ? 'Review Lessons →' : (pct > 0 ? 'Continue →' : 'Start →');
+      const actionText = pct === 100 
+        ? (isFil ? 'Balikan ang Aralin →' : 'Review Lessons →') 
+        : (pct > 0 
+            ? (isFil ? 'Magpatuloy →' : 'Continue →') 
+            : (isFil ? 'Simulan →' : 'Start →'));
 
       const foods = (mod.recommendedFoods || 'Malunggay, Monggo, Itlog, Camote')
         .split(',')
@@ -337,6 +345,9 @@ const ParentModule = {
       const foodSnippet = foods.length > 0 
         ? `<div style="font-size:0.75rem; color:#15803D; font-weight:600; margin:0.35rem 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">🌱 ${foods.slice(0, 3).join(', ')}${foods.length > 3 ? '...' : ''}</div>` 
         : '';
+
+      const lessonsLabel = isFil ? `${totalCount} aralin` : `${totalCount} lessons`;
+      const pctLabel = isFil ? `${pct}% tapos na` : `${pct}% complete`;
 
       return `
         <div class="nutrition-module-card" onclick="ParentModule.openModuleDrawer('${mod.id}')">
@@ -349,14 +360,14 @@ const ParentModule = {
             <div class="module-card-summary">${mod.summary}</div>
             ${foodSnippet}
             <div class="module-card-meta">
-              <span>📖 ${totalCount} lessons</span>
+              <span>📖 ${lessonsLabel}</span>
               <span>⏱ ${mod.duration}</span>
             </div>
             <div class="module-progress-track">
               <div class="module-progress-fill ${fillClass}" style="width: ${pct}%;"></div>
             </div>
             <div class="module-card-footer">
-              <span class="module-pct-text">${pct}% complete</span>
+              <span class="module-pct-text">${pctLabel}</span>
               <span class="module-action-link">${actionText}</span>
             </div>
           </div>
@@ -968,51 +979,56 @@ const ParentModule = {
   // ========================================================================
   selectedChildId: null,
 
-  // Get matching children for the logged-in parent
+  // Get matching children strictly belonging to the logged-in parent
   getChildrenForParent(user) {
     const allChildren = (typeof NutriStorage !== 'undefined' ? NutriStorage.getChildren() : []) || [];
     if (!allChildren.length) return [];
-    if (!user) return allChildren;
+    if (!user) return [];
 
+    const userId = (user.id || '').trim();
     const userName = (user.name || '').trim().toLowerCase();
     const userEmail = (user.email || '').trim().toLowerCase();
     const userPhone = (user.phone || '').trim().toLowerCase();
     const userChildName = (user.childName || '').trim().toLowerCase();
-    const userBrgy = (user.barangay || '').trim().toLowerCase();
+    const userChildId = (user.childId || '').trim();
 
-    // 1. Direct matches by childName or parent credentials
+    // STRICT ISOLATION: A parent only sees their own child/children
     let matches = allChildren.filter(c => {
-      const cName = (c.name || '').toLowerCase();
-      const pName = (c.parentName || '').toLowerCase();
-      const pPhone = (c.parentPhone || '').toLowerCase();
+      // 1. Direct parent account ID match
+      if (userId && c.parentId && String(c.parentId) === String(userId)) return true;
 
-      if (userChildName && (cName.includes(userChildName) || userChildName.includes(cName))) return true;
-      if (userName && (pName.includes(userName) || userName.includes(pName))) return true;
-      if (userEmail && pPhone.includes(userEmail)) return true;
-      if (userPhone && pPhone.includes(userPhone)) return true;
+      // 2. Direct child ID match linked to parent account
+      if (userChildId && String(c.id) === String(userChildId)) return true;
+
+      // 3. Direct parent email / phone match
+      const pPhone = (c.parentPhone || '').trim().toLowerCase();
+      const pEmail = (c.parentEmail || '').trim().toLowerCase();
+      if (userEmail && (pEmail === userEmail || pPhone === userEmail)) return true;
+      if (userPhone && (pPhone === userPhone || pEmail === userPhone)) return true;
+
+      // 4. Exact parent name match
+      const pName = (c.parentName || '').trim().toLowerCase();
+      if (userName && pName && (pName === userName || pName.includes(userName) || userName.includes(pName))) {
+        if (userChildName) {
+          const cName = (c.name || '').trim().toLowerCase();
+          return cName === userChildName || cName.includes(userChildName) || userChildName.includes(cName);
+        }
+        return true;
+      }
+
+      // 5. Direct child name match if specified on user registration
+      if (userChildName) {
+        const cName = (c.name || '').trim().toLowerCase();
+        if (cName === userChildName || cName.includes(userChildName) || userChildName.includes(cName)) {
+          return true;
+        }
+      }
+
       return false;
     });
 
-    // 2. Match by family surname
-    if (!matches.length && userName) {
-      const parts = userName.split(' ');
-      const lastName = parts.length > 1 ? parts[parts.length - 1] : '';
-      if (lastName && lastName.length > 2) {
-        matches = allChildren.filter(c => {
-          const pName = (c.parentName || '').toLowerCase();
-          const cName = (c.name || '').toLowerCase();
-          return pName.includes(lastName) || cName.includes(lastName);
-        });
-      }
-    }
-
-    // 3. Match by barangay if active parent
-    if (!matches.length && userBrgy) {
-      matches = allChildren.filter(c => (c.barangay || '').toLowerCase().includes(userBrgy));
-    }
-
-    // 4. Default: return all children so parent can always view community child records
-    return matches.length ? matches : allChildren;
+    // Parents only see their own children. Do NOT fall back to other children or barangay list.
+    return matches;
   },
 
   getActiveChild() {
@@ -1195,8 +1211,8 @@ const ParentModule = {
             <button class="btn btn-accent btn-sm" onclick="ParentModule.openParentLogGrowthModal(false)" style="font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
               ✏️ I-update ang Sukat
             </button>
-            <button class="btn btn-outline btn-sm" onclick="NutriApp.switchRole('chw')" title="Tingnan ang talaan sa BHW tools">
-              🩺 Tingnan sa BHW Tools
+            <button class="btn btn-outline btn-sm" onclick="ParentModule.openParentLogGrowthModal(true)" style="font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+              ➕ Magdagdag ng Anak
             </button>
           </div>
         </div>
@@ -1391,7 +1407,7 @@ const ParentModule = {
         NutriStorage.updateChild(existing);
       }
     } else {
-      // Create new child
+      // Create new child linked directly to this parent
       const newChild = {
         id: 'ch-' + Date.now(),
         name: name,
@@ -1399,6 +1415,8 @@ const ParentModule = {
         sex: 'Male',
         parentName: parentName,
         parentPhone: (user && user.email) ? user.email : '',
+        parentEmail: (user && user.email) ? user.email : '',
+        parentId: (user && user.id) ? user.id : '',
         barangay: barangay,
         heightCm: height,
         weightKg: weight,
