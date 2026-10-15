@@ -1,12 +1,14 @@
 {
   "children": [
     {
-      "first_name": "ss",
-      "last_name": "",
+      "id": "ch-4",
+      "name": "Sam Santos",
+      "first_name": "Sam",
+      "last_name": "Santos",
       "age_months": 18,
       "sex": "Male",
-      "parent_name": "BB",
-      "parent_phone": "dd",
+      "parent_name": "BB Santos",
+      "parent_phone": "0917-000-1122",
       "barangay": "Barangay Belen",
       "height_cm": 75.0,
       "weight_kg": 9.5,
@@ -16,10 +18,12 @@
       "wfh_status": "Normal",
       "wfa_status": "Normal",
       "muac_status": "Normal",
+      "deworming_status": "Up to Date",
+      "deworming_date": "2026-05-10",
+      "deworming_next_date": "2026-11-10",
       "improved": false,
       "last_assessed": "2026-10-13",
-      "notes": "Bagong rehistro kan magulang na si BB. Initial record: 75cm, 9.5kg.",
-      "id": "ch-4"
+      "notes": "Bagong rehistro kan magulang na si BB. Initial record: 75cm, 9.5kg."
     },
     {
       "id": "ch-101",
@@ -45,12 +49,15 @@
       "wfh_status": "Normal",
       "wfa_status": "Normal",
       "muac_status": "Normal",
+      "deworming_status": "Up to Date",
+      "deworming_date": "2026-06-15",
+      "deworming_next_date": "2026-12-15",
       "improved": false,
       "submitted_by": "Nurse Ana Reyes",
       "submittedBy": "Nurse Ana Reyes",
       "last_assessed": "2026-08-22",
       "lastAssessed": "2026-08-22",
-      "notes": "Appropriate growth trajectory in Zone 5."
+      "notes": "Appropriate growth trajectory in Zone 5. Dewormed on schedule."
     },
     {
       "id": "ch-102",
@@ -76,12 +83,15 @@
       "wfh_status": "Normal",
       "wfa_status": "Underweight",
       "muac_status": "Moderate",
+      "deworming_status": "Due for Deworming",
+      "deworming_date": "2026-02-10",
+      "deworming_next_date": "2026-08-10",
       "improved": false,
       "submitted_by": "Nurse Ana Reyes",
       "submittedBy": "Nurse Ana Reyes",
       "last_assessed": "2026-08-20",
       "lastAssessed": "2026-08-20",
-      "notes": "Monitored under supplementary feeding program."
+      "notes": "Monitored under supplementary feeding program. Scheduled for 2nd deworming dose."
     },
     {
       "id": "ch-103",

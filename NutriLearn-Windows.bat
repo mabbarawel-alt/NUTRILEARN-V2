@@ -29,6 +29,13 @@ if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
         python -c "import sys" >nul 2>&1
         if %ERRORLEVEL% equ 0 set "PYTHON_CMD=python"
     )
+    if not defined PYTHON_CMD (
+        where py >nul 2>&1
+        if %ERRORLEVEL% equ 0 (
+            py -c "import sys" >nul 2>&1
+            if %ERRORLEVEL% equ 0 set "PYTHON_CMD=py"
+        )
+    )
 )
 
 if defined PYTHON_CMD (

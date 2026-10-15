@@ -15,6 +15,7 @@ const NutriStorage = {
   GROUPS_KEY: 'nutrilearn_parent_groups_v1',
   AUDIT_KEY: 'nutrilearn_audit_logs_v1',
   BARANGAYS_KEY: 'nutrilearn_barangays_v1',
+  TRY_HOME_KEY: 'nutrilearn_try_home_submissions_v1',
 
   // Initialize storage with seed data if empty
   init() {
@@ -86,6 +87,72 @@ const NutriStorage = {
     if (!currentUsers || !currentUsers.includes('Nurse Ana Reyes')) {
       localStorage.setItem(this.USERS_KEY, JSON.stringify(NUTRI_DATA.initialUsers || []));
     }
+
+    // Initialize "Try It at Home" self-reported practical submissions
+    if (!localStorage.getItem(this.TRY_HOME_KEY)) {
+      localStorage.setItem(this.TRY_HOME_KEY, JSON.stringify(NUTRI_DATA.initialTryHomeSubmissions || []));
+    }
+  },
+
+  // ==========================================================================
+  // "TRY IT AT HOME" PRACTICAL FEEDING ACTION SUBMISSIONS
+  // (Nabugoomu, 2015; Kuchenbecker et al., 2017)
+  // ==========================================================================
+  getTryHomeSubmissions(filterBarangay = null) {
+    try {
+      const data = localStorage.getItem(this.TRY_HOME_KEY);
+      let subs = data ? JSON.parse(data) : (NUTRI_DATA.initialTryHomeSubmissions || []);
+      if (filterBarangay && filterBarangay !== 'ALL') {
+        subs = subs.filter(s => s.barangay === filterBarangay);
+      }
+      return subs;
+    } catch (e) {
+      console.error('Error fetching try home submissions:', e);
+      return [];
+    }
+  },
+
+  saveTryHomeSubmissions(submissions) {
+    localStorage.setItem(this.TRY_HOME_KEY, JSON.stringify(submissions));
+  },
+
+  addTryHomeSubmission(submission) {
+    const subs = this.getTryHomeSubmissions();
+    submission.id = submission.id || ('sub-' + Date.now());
+    submission.dateSubmitted = submission.dateSubmitted || new Date().toISOString().split('T')[0];
+    submission.timeSubmitted = submission.timeSubmitted || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    submission.evaluationStatus = submission.evaluationStatus || 'Pending Review';
+    subs.unshift(submission);
+    this.saveTryHomeSubmissions(subs);
+
+    this.logAudit(
+      'Feeding Action Self-Reported',
+      'Try It at Home Activity',
+      `Parent ${submission.parentName || 'Parent'} submitted feeding practice: "${submission.actionTitle}" for child ${submission.childName || 'Child'} (${submission.barangay || 'Community'})`,
+      { name: submission.parentName || 'Parent', role: 'parent' }
+    );
+    return submission;
+  },
+
+  evaluateTryHomeSubmission(submissionId, bhwFeedback, evaluationStatus = 'Evaluated', evaluatedBy = 'Barangay Health Worker') {
+    const subs = this.getTryHomeSubmissions();
+    const item = subs.find(s => s.id === submissionId);
+    if (!item) return false;
+
+    item.bhwFeedback = bhwFeedback;
+    item.evaluationStatus = evaluationStatus;
+    item.evaluatedBy = evaluatedBy;
+    item.evaluatedAt = new Date().toISOString().split('T')[0] + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    this.saveTryHomeSubmissions(subs);
+
+    this.logAudit(
+      'Feeding Practice Evaluated',
+      'Try It at Home Activity',
+      `BHW evaluated submission "${item.actionTitle}" for ${item.childName}: "${bhwFeedback.substring(0, 50)}..."`,
+      { name: evaluatedBy, role: 'chw' }
+    );
+    return item;
   },
 
   // ==========================================================================

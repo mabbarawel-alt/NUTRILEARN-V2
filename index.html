@@ -750,7 +750,12 @@
             </button>
             <button type="button" class="bhw-pill-btn" data-tab="groups" onclick="NutriApp.switchCHWSubTab('groups')">
               <span class="bhw-pill-icon">👥</span>
-              <span>Parent/Guardian Groups</span>
+              <span>Nutrition Classes &amp; Cohorts</span>
+            </button>
+            <button type="button" class="bhw-pill-btn" data-tab="evaluations"
+              onclick="NutriApp.switchCHWSubTab('evaluations')">
+              <span class="bhw-pill-icon">🥗</span>
+              <span>Try It at Home Reviews</span>
             </button>
             <button type="button" class="bhw-pill-btn" data-tab="announcements"
               onclick="NutriApp.switchCHWSubTab('announcements')">
@@ -1100,14 +1105,25 @@
               <div>
                 <h2 class="card-title"
                   style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.45rem; color: #1A382A; margin: 0 0 0.35rem 0;">
-                  ✓ Try It at Home: Daily Feeding &amp; Nutrition Practices
+                  ✓ Try It at Home: Daily Practical Feeding Actions
                 </h2>
                 <p class="card-subtitle" style="font-size: 0.88rem; color: #64748B; margin: 0;">
-                  Check off the evidence-based practices you've tried with your child. Every practice completed builds
-                  growth resilience!
+                  Check off the practical feeding actions you've tried with your child and self-report updates for
+                  health worker guidance.
                 </p>
+                <div style="margin-top: 5px;">
+                  <span class="badge"
+                    style="background:#ECFDF5; color:#047857; font-weight:700; border:1px solid #A7F3D0; font-size:0.74rem;">
+                    📚 Participatory Action Nutrition (Nabugoomu, 2015; Kuchenbecker et al., 2017)
+                  </span>
+                </div>
               </div>
               <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <button type="button" class="btn btn-primary btn-sm"
+                  onclick="ParentModule.openSubmitActionReportModal()"
+                  style="font-weight: 700; background: #0E3D26; border-color: #0E3D26;">
+                  📝 Mag-Self-Report ng Feeding Action
+                </button>
                 <button type="button" class="btn btn-accent btn-sm" onclick="ParentModule.openDailyMealLogModal()"
                   style="font-weight: 700;">
                   🍽️ I-log ang Kinain Ngayong Araw
@@ -1119,6 +1135,25 @@
             </div>
             <div class="try-at-home-checklist" id="home-actions-list-container">
               <!-- Rendered dynamically by ParentModule.renderHomeActionsChecklist() -->
+            </div>
+
+            <!-- Practical Actions Self-Report History & BHW Feedback -->
+            <div style="margin-top: 2rem; border-top: 1px solid #EAE6DF; padding-top: 1.25rem;">
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+                <div>
+                  <h3 style="font-size: 1.15rem; font-weight: 700; color: #14532D; margin: 0;">
+                    📬 Mga Na-Submit na Practical Feeding Actions &amp; Gabay ng BHW
+                  </h3>
+                  <p style="font-size: 0.82rem; color: #64748B; margin: 0.2rem 0 0 0;">
+                    Subaybayan ang iyong mga ipinasang feeding practices at ang pagsusuri at payo mula sa iyong Barangay
+                    Health Worker.
+                  </p>
+                </div>
+              </div>
+              <div id="parent-action-submissions-history">
+                <!-- Rendered dynamically by ParentModule.renderActionSubmissionsHistory() -->
+              </div>
             </div>
           </div>
         </div>
@@ -1602,23 +1637,65 @@
           </div>
         </div>
 
-        <!-- Tab Pane: Parent Groups & Lesson Assignment (Req #8 & Req #13) -->
+        <!-- Tab Pane: Parent Groups & Nutrition Classes -->
         <div class="chw-tab-pane" data-tab="groups" id="chw-tab-groups" style="display: none;">
           <div class="card">
-            <div class="card-header">
+            <div class="card-header"
+              style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
               <div>
-                <h2 class="card-title">👥 Community Parent Groups &amp; Lesson Assignment</h2>
-                <p class="card-subtitle">Plan parent cohorts, assign targeted feeding lessons, send tailored guidance,
-                  and track collective progress.</p>
+                <h2 class="card-title">👥 Community Nutrition Classes &amp; Parent Cohorts</h2>
+                <p class="card-subtitle">Plan and schedule community nutrition classes, assign targeted curriculum
+                  modules, send tailored guidance,
+                  and track attendance &amp; collective progress.</p>
               </div>
               <button class="btn btn-primary" onclick="CHWModule.openCreateGroupModal()">
-                + Plan New Parent Group
+                + Plan &amp; Schedule Nutrition Class
               </button>
             </div>
 
             <!-- Group Cards Container -->
             <div id="chw-groups-container">
               <!-- Dynamically populated by CHWModule.renderGroups() -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab Pane: "Try It at Home" Practical Action Reviews (Nabugoomu 2015; Kuchenbecker 2017) -->
+        <div class="chw-tab-pane" data-tab="evaluations" id="chw-tab-evaluations" style="display: none;">
+          <div class="card">
+            <div class="card-header"
+              style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
+              <div>
+                <h2 class="card-title">🥗 "Try It at Home" Practical Actions &amp; Self-Report Reviews</h2>
+                <p class="card-subtitle">
+                  Review practical feeding updates self-reported by parents (Nabugoomu, 2015; Kuchenbecker et al.,
+                  2017).
+                  Provide tailored guidance, portion advice, and encouragement to reinforce positive feeding behaviors.
+                </p>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="CHWModule.renderTryHomeEvaluationsTable()">
+                🔄 Refresh Submissions
+              </button>
+            </div>
+
+            <!-- Table of Parent Submissions -->
+            <div class="table-container" style="overflow-x:auto;">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>Bata at Magulang</th>
+                    <th>Barangay</th>
+                    <th>Feeding Practice</th>
+                    <th>Pagtanggap ng Bata</th>
+                    <th>Katayuan</th>
+                    <th>Gabay ng BHW</th>
+                    <th>Aksyon</th>
+                  </tr>
+                </thead>
+                <tbody id="chw-try-home-tbody">
+                  <!-- Populated dynamically by CHWModule.renderTryHomeEvaluationsTable() -->
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -3504,6 +3581,21 @@
             </div>
           </div>
 
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">💊 Katayuan sa Pagpupurga (Deworming):</label>
+              <select name="childDewormingStatus" class="form-select">
+                <option value="Up to Date">✓ Up to Date (Napurgahan na)</option>
+                <option value="Due for Deworming">⚠️ Due for Deworming (Kailangan nang Purga)</option>
+                <option value="Not Yet Eligible">Hindi Pa Kwalipikado (&lt; 12 mos)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Petsa ng Huling Purga (Deworming Date):</label>
+              <input type="date" name="childDewormingDate" class="form-control">
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Clinical Observations &amp; Family Notes:</label>
             <textarea name="childNotes" class="form-control" rows="2"
@@ -3549,6 +3641,20 @@
           <div class="form-group">
             <label class="form-label">Updated MUAC (mm):</label>
             <input type="number" id="edit-child-muac" class="form-control">
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">💊 Katayuan sa Pagpupurga (Deworming):</label>
+            <select id="edit-child-deworming-status" class="form-select">
+              <option value="Up to Date">✓ Up to Date (Napurgahan na)</option>
+              <option value="Due for Deworming">⚠️ Due for Deworming (Kailangan nang Purga)</option>
+              <option value="Not Yet Eligible">Hindi Pa Kwalipikado (&lt; 12 mos)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Petsa ng Huling Pagpupurga:</label>
+            <input type="date" id="edit-child-deworming-date" class="form-control">
           </div>
         </div>
         <div class="form-group">
@@ -3637,6 +3743,21 @@
               <option value="Critical">Critical Case (SAM / Severe Wasting)</option>
               <option value="Improved">Improved &amp; Recovered</option>
             </select>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">💊 Katayuan sa Pagpupurga (Deworming):</label>
+              <select id="admin-edit-child-deworming-status" class="form-select">
+                <option value="Up to Date">✓ Up to Date (Napurgahan na)</option>
+                <option value="Due for Deworming">⚠️ Due for Deworming (Kailangan nang Purga)</option>
+                <option value="Not Yet Eligible">Hindi Pa Kwalipikado (&lt; 12 mos)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Petsa ng Huling Pagpupurga:</label>
+              <input type="date" id="admin-edit-child-deworming-date" class="form-control">
+            </div>
           </div>
 
           <div class="form-group">
@@ -3975,14 +4096,14 @@
     </div>
   </div>
 
-  <!-- 2. Plan Parent Group Modal (Req #8) -->
+  <!-- 2. Plan Parent Group & Schedule Nutrition Class Modal -->
   <div id="modal-create-group" class="modal-backdrop">
-    <div class="modal-dialog" style="max-width: 540px;">
+    <div class="modal-dialog" style="max-width: 560px;">
       <div class="modal-header">
         <div>
-          <h2 class="modal-title">👥 Plan New Parent Group</h2>
+          <h2 class="modal-title">👥 Plan &amp; Schedule Nutrition Class / Cohort</h2>
           <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
-            Create community parent cohorts for targeted education &amp; progress tracking
+            Plan community nutrition classes, assign feeding lessons, and track parent attendance
           </p>
         </div>
         <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-create-group')">&times;</button>
@@ -3990,9 +4111,9 @@
       <form onsubmit="event.preventDefault(); CHWModule.handleSaveGroup(this);">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Group / Cohort Name: <span style="color: #DC2626;">*</span></label>
+            <label class="form-label">Pangalan ng Klase / Cohort: <span style="color: #DC2626;">*</span></label>
             <input type="text" name="groupName" class="form-control"
-              placeholder="e.g. Manguiring First 1,000 Days Batch 1" required>
+              placeholder="e.g. Manguiring Infant Feeding Class - Batch 1" required>
           </div>
 
           <div class="grid-2">
@@ -4005,7 +4126,23 @@
             <div class="form-group">
               <label class="form-label">Target Focus Category: <span style="color: #DC2626;">*</span></label>
               <input type="text" name="groupCategory" class="form-control"
-                placeholder="e.g. Stunting Prevention / Infant Feeding" required>
+                placeholder="e.g. Stunting Prevention / Pinggang Pinoy Demo" required>
+            </div>
+          </div>
+
+          <div class="grid-3" style="display: grid; grid-template-columns: 1.1fr 1fr 1.3fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label">Petsa ng Sesyon: *</label>
+              <input type="date" name="groupScheduledDate" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Oras ng Sesyon: *</label>
+              <input type="text" name="groupScheduledTime" class="form-control" value="09:00 AM" placeholder="09:00 AM">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Lugar / Venue: *</label>
+              <input type="text" name="groupVenue" class="form-control" value="Barangay Health Center"
+                placeholder="Barangay Health Center">
             </div>
           </div>
 
@@ -4016,14 +4153,14 @@
 
           <div class="form-group">
             <label class="form-label">Meeting Schedule &amp; Tailored Guidance:</label>
-            <textarea name="groupNotes" class="form-control" rows="3"
-              placeholder="e.g. Bi-weekly Tuesday feeding workshop and growth monitoring at Barangay Hall."></textarea>
+            <textarea name="groupNotes" class="form-control" rows="2"
+              placeholder="e.g. Pagluluto ng Pinggang Pinoy at buwanang pagtimbang sa Barangay Hall."></textarea>
           </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline"
             onclick="NutriApp.closeModal('modal-create-group')">Cancel</button>
-          <button type="submit" class="btn btn-primary">Create Parent Group</button>
+          <button type="submit" class="btn btn-primary">Schedule Nutrition Class</button>
         </div>
       </form>
     </div>
@@ -4663,6 +4800,27 @@
             ℹ️ <strong>MUAC Guide:</strong> &lt;115mm (Pula / SAM), 115–124mm (Dilaw / MAM), ≥125mm (Berde / Normal).
           </div>
 
+          <div class="grid-2"
+            style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 0.85rem;">
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+                💊 Katayuan sa Pagpupurga (Deworming):
+              </label>
+              <select id="parent-growth-child-deworming-status" class="form-select">
+                <option value="Up to Date">✓ Up to Date (Napurgahan na)</option>
+                <option value="Due for Deworming">⚠️ Due for Deworming (Kailangan nang Purga)</option>
+                <option value="Not Yet Eligible">Hindi Pa Kwalipikado (&lt; 12 mos)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
+                Petsa ng Huling Purga:
+              </label>
+              <input type="date" id="parent-growth-child-deworming-date" class="form-control">
+              <input type="hidden" id="parent-growth-child-deworming-next-date">
+            </div>
+          </div>
+
           <div class="form-group" style="margin-bottom: 0;">
             <label class="form-label" style="font-size: 0.82rem; font-weight: 600; color: #334155;">
               Tala sa Kalusugan / Notes o Obserbasyon:
@@ -4675,6 +4833,171 @@
           <button type="button" class="btn btn-outline"
             onclick="NutriApp.closeModal('modal-parent-log-growth')">Kanselahin</button>
           <button type="submit" class="btn btn-accent" style="font-weight: 700;">I-save ang Sukat ✓</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 12. Parent Self-Report Practical Feeding Action Modal (Nabugoomu 2015; Kuchenbecker 2017) -->
+  <div id="modal-parent-submit-action-report" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">📝 I-ulat ang Practical Feeding Action</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Mag-self-report ng feeding practice sa tahanan upang masuri at mabigyan ng gabay ng BHW
+          </p>
+        </div>
+        <button class="modal-close-btn"
+          onclick="NutriApp.closeModal('modal-parent-submit-action-report')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); ParentModule.handleSaveActionReport(this);">
+        <div class="modal-body">
+          <div
+            style="background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1rem;">
+            <div style="font-size: 0.85rem; color: #166534; font-weight: 600;">
+              👶 Para sa Batang: <span id="report-action-child-display" style="text-decoration: underline;">Ethan Ramos
+                (18 mos)</span>
+            </div>
+            <div style="font-size: 0.76rem; color: #15803D; margin-top: 2px;">
+              Awtomatikong makakarating ang ulat na ito sa iyong Barangay Health Worker para sa feedback at guidance.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Piling Practical Feeding Action / Recommendation: <span
+                style="color:#DC2626;">*</span></label>
+            <select name="actionTitle" id="report-action-select" class="form-select" required>
+              <!-- Populated dynamically -->
+            </select>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Oras ng Pagkain (Meal): <span style="color:#DC2626;">*</span></label>
+              <select name="actionMealType" class="form-select" required>
+                <option value="Almusal (Breakfast)">Almusal (Breakfast)</option>
+                <option value="Tanghalian (Lunch)" selected>Tanghalian (Lunch)</option>
+                <option value="Meryenda sa Hapon (Snack)">Meryenda sa Hapon (Snack)</option>
+                <option value="Hapunan (Dinner)">Hapunan (Dinner)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Petsa ng Pagpapakain: <span style="color:#DC2626;">*</span></label>
+              <input type="date" name="actionDate" id="report-action-date" class="form-control" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Mga Sangkap na Inihanda (Ingredients Used): <span
+                style="color:#DC2626;">*</span></label>
+            <input type="text" name="actionIngredients" class="form-control" required
+              placeholder="Hal. Lugaw na may dahon ng malunggay, 1/2 nilagang itlog, at kaunting mantika">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Pagtanggap at Reaksyon ng Bata: <span style="color:#DC2626;">*</span></label>
+            <select name="actionAcceptance" class="form-select" required>
+              <option value="Kinain nang buo (Enthusiastic)" selected>Kinain nang buo / Naubos ang hinanda</option>
+              <option value="Kinain ang kalahati (Moderate)">Kinain ang kalahati / Medyo nagustuhan</option>
+              <option value="Pihikan / Kailangan ng pasensya (Picky)">Pihikan / Kailangan ng higit na pasensya at
+                pag-eengganyo</option>
+              <option value="Tumanggi sa unang tikim (Will re-introduce)">Tumanggi sa unang tikim / Susubukan muli bukas
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">WASH &amp; Kalinisan na Isinagawa:</label>
+            <div
+              style="display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.82rem; color: #334155; margin-top: 4px;">
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="checkbox" name="washFollowed" value="Handwashing with soap" checked>
+                Naghugas ng kamay gamit ang sabon at malinis na tubig bago maghanda at magpakain
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="checkbox" name="washFollowed" value="Clean boiled water" checked>
+                Pinakulong malinis na inuming tubig ang ibinigay
+              </label>
+              <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="checkbox" name="washFollowed" value="Screen-free responsive feeding" checked>
+                Walang smartphone/TV habang kumakain; masayang nakipag-usap sa bata
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Tala, Obserbasyon, o Tanong sa BHW:</label>
+            <textarea name="actionNotes" class="form-control" rows="2"
+              placeholder="Hal. Nagustuhan niya ang sabaw, pero matagal bago ngumuya ng gulay. Anong magandang paraan para lumambot pa?"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-parent-submit-action-report')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary" style="background: #0E3D26; font-weight: 700;">
+            📤 I-submit sa Health Worker para sa Gabay
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 13. BHW Review & Guidance Evaluation Modal -->
+  <div id="modal-bhw-evaluate-action" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header">
+        <div>
+          <h2 class="modal-title">🩺 Suriin at Magbigay ng Gabay (BHW)</h2>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">
+            Suriin ang self-reported feeding action ng magulang at magbigay ng payo at pampatibay-loob
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-bhw-evaluate-action')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); CHWModule.handleSaveTryHomeEvaluation(this);">
+        <input type="hidden" id="eval-sub-id">
+        <div class="modal-body">
+          <!-- Submission Details Card -->
+          <div
+            style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+              <strong style="color: #0E3D26; font-size: 0.95rem;" id="eval-sub-child-name">Child Name</strong>
+              <span style="font-size: 0.78rem; color: #64748B;">Magulang: <strong id="eval-sub-parent-name">Parent
+                  Name</strong></span>
+            </div>
+            <div style="font-size: 0.84rem; color: #334155; line-height: 1.5;">
+              <div>🌱 <strong>Praktika:</strong> <span id="eval-sub-action-title">Action Title</span></div>
+              <div>🍲 <strong>Mga Sangkap:</strong> <span id="eval-sub-ingredients">Ingredients</span></div>
+              <div>👶 <strong>Reaksyon ng Bata:</strong> <span id="eval-sub-acceptance">Acceptance</span></div>
+              <div
+                style="margin-top: 0.35rem; padding-top: 0.35rem; border-top: 1px dashed #CBD5E1; font-style: italic; color: #475569;">
+                " <span id="eval-sub-notes">Parent Notes</span> "
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Status ng Pagsusuri: <span style="color:#DC2626;">*</span></label>
+            <select id="eval-sub-status" class="form-select" required>
+              <option value="Evaluated" selected>✓ Nasuri na (Evaluated &amp; Guided)</option>
+              <option value="Needs Follow-up">⚠️ Nangangailangan ng Pagbisita / Follow-up sa Bahay</option>
+              <option value="Excellent Adherence">🌟 Huwarang Pagsasagawa (Excellent Adherence)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label">Gabay at Payo ng BHW sa Magulang: <span style="color:#DC2626;">*</span></label>
+            <textarea id="eval-sub-feedback" class="form-control" rows="3" required
+              placeholder="Hal. Napakahusay Nanay! Magandang simula ang itlog at malunggay. Para naman sa gulay, gupitin ito nang napakapino at huwag pilitin kung ayaw sa una. Subukan muli kinabukasan."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-bhw-evaluate-action')">Kanselahin</button>
+          <button type="submit" class="btn btn-accent" style="font-weight: 700;">
+            💾 I-save at Ipadala ang Gabay sa Magulang
+          </button>
         </div>
       </form>
     </div>

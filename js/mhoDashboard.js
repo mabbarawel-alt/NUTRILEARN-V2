@@ -1962,6 +1962,9 @@ const MHODashboard = {
         status: st,
         hfa: hfa,
         wfa: wfa,
+        dewormingStatus: c.dewormingStatus || c.deworming_status || 'Up to Date',
+        dewormingDate: c.dewormingDate || c.deworming_date || '',
+        dewormingNextDate: c.dewormingNextDate || c.deworming_next_date || '',
         date: dt,
         submittedBy: submittedBy,
         improved: !!c.improved,
@@ -2062,6 +2065,7 @@ const MHODashboard = {
                   <div><strong>Kasarian (Sex):</strong> ${r.sex}</div>
                   <div><strong>HFA Status:</strong> ${r.hfa}</div>
                   <div><strong>WFA Status:</strong> ${r.wfa}</div>
+                  <div><strong>💊 Deworming (Purga):</strong> <span class="badge ${(r.dewormingStatus === 'Due for Deworming' || r.dewormingStatus === 'Due') ? 'badge-underweight' : 'badge-normal'}" style="font-size:0.75rem;">${r.dewormingStatus}</span> ${r.dewormingDate ? `(${r.dewormingDate})` : ''}</div>
                   ${r.notes ? `<div><strong>Notes:</strong> <em>${r.notes}</em></div>` : ''}
                 </div>
                 <div style="display: flex; gap: 0.5rem; align-items: center;">
@@ -2124,6 +2128,13 @@ const MHODashboard = {
     document.getElementById('admin-edit-child-status').value = child.status || 'Normal';
     document.getElementById('admin-edit-child-notes').value = child.notes || '';
 
+    const dewormStatusEl = document.getElementById('admin-edit-child-deworming-status');
+    const dewormDateEl = document.getElementById('admin-edit-child-deworming-date');
+    const dewormNextEl = document.getElementById('admin-edit-child-deworming-next-date');
+    if (dewormStatusEl) dewormStatusEl.value = child.dewormingStatus || child.deworming_status || 'Up to Date';
+    if (dewormDateEl) dewormDateEl.value = child.dewormingDate || child.deworming_date || '';
+    if (dewormNextEl) dewormNextEl.value = child.dewormingNextDate || child.deworming_next_date || '';
+
     const brgyBadge = document.getElementById('admin-edit-child-brgy-badge');
     if (brgyBadge) {
       brgyBadge.textContent = childBrgy;
@@ -2160,6 +2171,10 @@ const MHODashboard = {
     const status = document.getElementById('admin-edit-child-status').value;
     const notes = document.getElementById('admin-edit-child-notes').value.trim();
 
+    const dewormStatus = document.getElementById('admin-edit-child-deworming-status')?.value || 'Up to Date';
+    const dewormDate = document.getElementById('admin-edit-child-deworming-date')?.value || '';
+    const dewormNext = document.getElementById('admin-edit-child-deworming-next-date')?.value || '';
+
     if (isNaN(height) || height <= 0 || isNaN(weight) || weight <= 0) {
       alert('Pakiusap ilagay ang wastong sukat ng tangkad at timbang.');
       return;
@@ -2190,6 +2205,9 @@ const MHODashboard = {
     child.hfaStatus = hfaClass;
     child.wfaStatus = wfaClass;
     child.muacStatus = muacClass;
+    child.dewormingStatus = dewormStatus;
+    child.dewormingDate = dewormDate;
+    child.dewormingNextDate = dewormNext;
     child.improved = (status === 'Improved');
     child.notes = notes;
     child.lastAssessed = new Date().toISOString().split('T')[0];
@@ -2199,7 +2217,7 @@ const MHODashboard = {
     NutriStorage.logAudit(
       'Child Record Updated by Administrator',
       'Field Health Record',
-      `Admin updated measurements for ${child.name || 'Child'} in ${childBrgy}: Height ${height}cm, Weight ${weight}kg, MUAC ${muac}mm, Status: ${status}`,
+      `Admin updated measurements for ${child.name || 'Child'} in ${childBrgy}: Height ${height}cm, Weight ${weight}kg, MUAC ${muac}mm, Deworming: ${dewormStatus}, Status: ${status}`,
       'Administrator'
     );
 

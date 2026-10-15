@@ -425,10 +425,13 @@ const NUTRI_DATA = {
       wfhStatus: 'Normal',
       wfaStatus: 'Normal',
       muacStatus: 'Normal',
+      dewormingStatus: 'Up to Date',
+      dewormingDate: '2026-06-15',
+      dewormingNextDate: '2026-12-15',
       improved: false,
       submittedBy: 'Nurse Ana Reyes',
       lastAssessed: '2026-08-22',
-      notes: 'Appropriate growth trajectory in Zone 5.'
+      notes: 'Appropriate growth trajectory in Zone 5. Dewormed on schedule.'
     },
     {
       id: 'ch-102',
@@ -449,10 +452,13 @@ const NUTRI_DATA = {
       wfhStatus: 'Normal',
       wfaStatus: 'Underweight',
       muacStatus: 'Moderate',
+      dewormingStatus: 'Due for Deworming',
+      dewormingDate: '2026-02-10',
+      dewormingNextDate: '2026-08-10',
       improved: false,
       submittedBy: 'Nurse Ana Reyes',
       lastAssessed: '2026-08-20',
-      notes: 'Monitored under supplementary feeding program.'
+      notes: 'Monitored under supplementary feeding program. Scheduled for 2nd deworming dose.'
     },
     {
       id: 'ch-103',
@@ -579,7 +585,53 @@ const NUTRI_DATA = {
         "createdAt": "2026-09-02T08:00:00.000Z",
         "pinned": false
     }
-]
+  ],
+
+  // Initial "Try It at Home" Practical Self-Report Submissions (Nabugoomu 2015; Kuchenbecker et al. 2017)
+  initialTryHomeSubmissions: [
+    {
+      id: 'sub-1',
+      childId: 'ch-102',
+      childName: 'Liam Santos',
+      parentName: 'Maria Santos',
+      parentEmail: 'maria.santos@nutrilearn.ph',
+      barangay: 'Barangay Manguiring',
+      actionTitle: 'Fresh Malunggay Leaf Boost in Rice Porridge',
+      actionCategory: 'Micronutrient Fortification',
+      mealType: 'Breakfast',
+      dateSubmitted: '2026-10-14',
+      timeSubmitted: '08:30 AM',
+      ingredientsUsed: 'Lugaw, 1 dakot ng dahon ng Malunggay, 1/2 nilagang itlog',
+      childAcceptance: 'Kinain nang buo (Enthusiastic)',
+      washPracticesFollowed: ['Naghugas ng kamay gamit ang sabon at malinis na tubig', 'Pinakulo ang inuming tubig'],
+      parentNotes: 'Mas naging masarap ang lugaw nang haluan ng dinurog na pula ng itlog at sariwang malunggay. Naubos ni Liam ang 1 mangkok.',
+      evaluationStatus: 'Evaluated',
+      bhwFeedback: 'Napakagaling, Nanay Maria! Ang malunggay at itlog ay sagana sa iron at protina na mabisang lumalaban sa stunting. Ipagpatuloy ang pagpapakulo ng tubig.',
+      evaluatedBy: 'Nurse Ana Reyes (BHW)',
+      evaluatedAt: '2026-10-14 10:15 AM'
+    },
+    {
+      id: 'sub-2',
+      childId: 'ch-101',
+      childName: 'Miguel Reyes',
+      parentName: 'Ana Reyes',
+      parentEmail: 'ana.reyes@nutrilearn.ph',
+      barangay: 'Barangay Manguiring',
+      actionTitle: 'Affordable Ginisang Monggo with Dilis',
+      actionCategory: 'Plant Protein & Calcium',
+      mealType: 'Lunch',
+      dateSubmitted: '2026-10-15',
+      timeSubmitted: '12:15 PM',
+      ingredientsUsed: 'Monggo, pinatuyong dilis (tinik tinanggal), dahon ng ampalaya at kamote',
+      childAcceptance: 'Kinain ang kalahati (Moderate)',
+      washPracticesFollowed: ['Naghugas ng kamay bago maghanda', 'Naghugas ng kamay bago kumain ang bata'],
+      parentNotes: 'Medyo nanibago si Miguel sa lasa ng dahon pero nagustuhan ang sabaw ng monggo at kanin.',
+      evaluationStatus: 'Pending Review',
+      bhwFeedback: '',
+      evaluatedBy: '',
+      evaluatedAt: ''
+    }
+  ]
 };
 
 // WHO Simplified Anthropometric Standards for Community Health Workers

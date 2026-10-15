@@ -230,6 +230,7 @@ const ParentModule = {
     this.updateProgressHeader();
     this.initCustomMealBuilder();
     this.renderChildGrowth();
+    this.renderActionSubmissionsHistory();
   },
 
   // Load saved lesson and action progress from localStorage
@@ -1282,6 +1283,17 @@ const ParentModule = {
                   ${muacBandText} • Normal starts at 125 mm
                 </div>
               </div>
+
+              <!-- 4. Deworming Status Card -->
+              <div style="background:#FFFFFF; padding:1.1rem; border-radius:12px; border:1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
+                <div style="font-size:0.74rem; color:#64748B; font-weight:700; text-transform: uppercase;">💊 DEWORMING RECORD (Purga):</div>
+                <div style="font-size:1.25rem; font-weight:800; color:${(child.dewormingStatus === 'Due for Deworming' || child.dewormingStatus === 'Due') ? '#D97706' : '#15803D'}; margin:0.3rem 0; display:flex; align-items:center; gap:6px;">
+                  <span>${(child.dewormingStatus === 'Due for Deworming' || child.dewormingStatus === 'Due') ? '⚠️ Kailangan nang Purga' : '✓ Up to Date'}</span>
+                </div>
+                <div style="font-size:0.76rem; color:#64748B;">
+                  Huling Purga: <strong>${child.dewormingDate || 'Wala pang tala'}</strong> • Susunod: <strong>${child.dewormingNextDate || 'Tingnan sa Health Center'}</strong>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1342,6 +1354,16 @@ const ParentModule = {
       if (childWeightInput) childWeightInput.value = (user && user.childWeight) ? user.childWeight : 9.0;
       if (childMuacInput) childMuacInput.value = 125;
       if (childNotesInput) childNotesInput.value = '';
+      const dewormStatusInput = document.getElementById('parent-growth-child-deworming-status');
+      const dewormDateInput = document.getElementById('parent-growth-child-deworming-date');
+      const dewormNextInput = document.getElementById('parent-growth-child-deworming-next-date');
+      if (dewormStatusInput) dewormStatusInput.value = 'Up to Date';
+      if (dewormDateInput) dewormDateInput.value = new Date().toISOString().split('T')[0];
+      if (dewormNextInput) {
+        const next = new Date();
+        next.setMonth(next.getMonth() + 6);
+        dewormNextInput.value = next.toISOString().split('T')[0];
+      }
     } else {
       if (modalTitle) modalTitle.textContent = `I-update ang Sukat ni ${child.name}`;
       if (childIdInput) childIdInput.value = child.id;
@@ -1354,6 +1376,12 @@ const ParentModule = {
       if (childWeightInput) childWeightInput.value = child.weightKg || 9.0;
       if (childMuacInput) childMuacInput.value = child.muacMm || 125;
       if (childNotesInput) childNotesInput.value = child.notes || '';
+      const dewormStatusInput = document.getElementById('parent-growth-child-deworming-status');
+      const dewormDateInput = document.getElementById('parent-growth-child-deworming-date');
+      const dewormNextInput = document.getElementById('parent-growth-child-deworming-next-date');
+      if (dewormStatusInput) dewormStatusInput.value = child.dewormingStatus || 'Up to Date';
+      if (dewormDateInput) dewormDateInput.value = child.dewormingDate || '';
+      if (dewormNextInput) dewormNextInput.value = child.dewormingNextDate || '';
     }
 
     NutriApp.openModal('modal-parent-log-growth');
@@ -1368,6 +1396,9 @@ const ParentModule = {
     const weight = parseFloat(document.getElementById('parent-growth-child-weight')?.value);
     const muac = parseInt(document.getElementById('parent-growth-child-muac')?.value, 10) || 125;
     const notes = (document.getElementById('parent-growth-child-notes')?.value || '').trim();
+    const dewormingStatus = (document.getElementById('parent-growth-child-deworming-status')?.value || 'Up to Date');
+    const dewormingDate = (document.getElementById('parent-growth-child-deworming-date')?.value || '');
+    const dewormingNextDate = (document.getElementById('parent-growth-child-deworming-next-date')?.value || '');
 
     if (!name || isNaN(age) || isNaN(height) || isNaN(weight)) {
       NutriApp.showToast('Pakilagay ang kumpletong impormasyon ng bata (Pangalan, Edad, Taas, at Timbang).', 'warning');
@@ -1402,6 +1433,9 @@ const ParentModule = {
         existing.wfaStatus = classification.wfaStatus;
         existing.wfhStatus = classification.wfhStatus;
         existing.muacStatus = classification.muacStatus;
+        existing.dewormingStatus = dewormingStatus;
+        existing.dewormingDate = dewormingDate;
+        existing.dewormingNextDate = dewormingNextDate;
         existing.notes = notes;
         existing.lastAssessed = new Date().toISOString().split('T')[0];
         NutriStorage.updateChild(existing);
@@ -1426,6 +1460,9 @@ const ParentModule = {
         wfaStatus: classification.wfaStatus,
         wfhStatus: classification.wfhStatus,
         muacStatus: classification.muacStatus,
+        dewormingStatus: dewormingStatus,
+        dewormingDate: dewormingDate,
+        dewormingNextDate: dewormingNextDate,
         improved: false,
         lastAssessed: new Date().toISOString().split('T')[0],
         assignedModules: ['mod-1', 'mod-2', 'mod-3'],
@@ -1452,5 +1489,143 @@ const ParentModule = {
       if (typeof MHODashboard.renderAdminRecords === 'function') MHODashboard.renderAdminRecords();
       if (typeof MHODashboard.renderKPIs === 'function') MHODashboard.renderKPIs();
     }
+  },
+
+  // ==========================================================================
+  // "TRY IT AT HOME" PRACTICAL ACTION SUBMISSION & FEEDBACK (Nabugoomu 2015; Kuchenbecker 2017)
+  // ==========================================================================
+  openSubmitActionReportModal(actionId = null) {
+    const select = document.getElementById('report-action-select');
+    if (select) {
+      select.innerHTML = this.homeActions.map(act => 
+        `<option value="${act.title}" ${act.id === actionId ? 'selected' : ''}>${act.id}. ${act.title}</option>`
+      ).join('');
+    }
+
+    const child = this.getActiveChild();
+    const childDisplay = document.getElementById('report-action-child-display');
+    if (childDisplay && child) {
+      childDisplay.textContent = `${child.name} (${child.ageMonths} mos • ${child.barangay})`;
+    }
+
+    const dateInput = document.getElementById('report-action-date');
+    if (dateInput) {
+      dateInput.value = new Date().toISOString().split('T')[0];
+    }
+
+    NutriApp.openModal('modal-parent-submit-action-report');
+  },
+
+  handleSaveActionReport(form) {
+    const child = this.getActiveChild();
+    const user = NutriStorage.getCurrentUser();
+    const actionTitle = form.elements['actionTitle']?.value || 'Practical Feeding Action';
+    const mealType = form.elements['actionMealType']?.value || 'Lunch';
+    const date = form.elements['actionDate']?.value || new Date().toISOString().split('T')[0];
+    const ingredients = (form.elements['actionIngredients']?.value || '').trim();
+    const acceptance = form.elements['actionAcceptance']?.value || 'Kinain nang buo (Enthusiastic)';
+    const notes = (form.elements['actionNotes']?.value || '').trim();
+
+    const washBoxes = Array.from(form.querySelectorAll('input[name="washFollowed"]:checked')).map(el => el.value);
+
+    const submission = {
+      id: 'sub-' + Date.now(),
+      childId: child ? child.id : 'ch-102',
+      childName: child ? child.name : (user?.childName || 'Liam Santos'),
+      parentName: user?.name || (child ? child.parentName : 'Maria Santos'),
+      parentEmail: user?.email || '',
+      barangay: user?.barangay || (child ? child.barangay : 'Barangay Manguiring'),
+      actionTitle: actionTitle,
+      actionCategory: 'Try it at home (Nabugoomu, 2015; Kuchenbecker et al., 2017)',
+      mealType: mealType,
+      dateSubmitted: date,
+      timeSubmitted: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      ingredientsUsed: ingredients || 'Lokasyunal na masustansyang sangkap',
+      childAcceptance: acceptance,
+      washPracticesFollowed: washBoxes,
+      parentNotes: notes,
+      evaluationStatus: 'Pending Review',
+      bhwFeedback: '',
+      evaluatedBy: '',
+      evaluatedAt: ''
+    };
+
+    NutriStorage.addTryHomeSubmission(submission);
+    form.reset();
+    NutriApp.closeModal('modal-parent-submit-action-report');
+    NutriApp.showToast('🎉 Naipadala na ang iyong Feeding Action sa Health Worker para sa pagsusuri at gabay!', 'success');
+
+    this.renderActionSubmissionsHistory();
+
+    // Live refresh BHW reviews if open
+    if (window.CHWModule && typeof CHWModule.renderTryHomeEvaluationsTable === 'function') {
+      CHWModule.renderTryHomeEvaluationsTable();
+    }
+  },
+
+  renderActionSubmissionsHistory() {
+    const container = document.getElementById('parent-action-submissions-history');
+    if (!container) return;
+
+    const user = NutriStorage.getCurrentUser();
+    const child = this.getActiveChild();
+    const allSubs = NutriStorage.getTryHomeSubmissions();
+    const mySubs = allSubs.filter(s => 
+      (user && s.parentEmail && s.parentEmail.toLowerCase() === user.email?.toLowerCase()) ||
+      (child && s.childId === child.id) ||
+      (user && s.parentName && s.parentName.toLowerCase().includes(user.name.toLowerCase()))
+    );
+
+    if (mySubs.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 2rem 1rem; color: #64748B; background: #F8FAFC; border-radius: 8px; border: 1px dashed #CBD5E1;">
+          <div style="font-size: 2rem; margin-bottom: 0.35rem;">📝</div>
+          <div style="font-weight: 600; color: #1E293B;">Wala ka pang naisusumiteng Feeding Action</div>
+          <div style="font-size: 0.82rem; margin-top: 0.25rem;">
+            Pindutin ang <strong>"Mag-Self-Report ng Feeding Action"</strong> sa itaas pagkatapos subukan ang alinman sa mga rekomendasyon upang mabigyan ka ng gabay ng BHW.
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = mySubs.map(s => {
+      const isEvaluated = s.evaluationStatus === 'Evaluated';
+      return `
+        <div class="card" style="margin-bottom: 0.85rem; border: 1px solid #E2E8F0; padding: 1rem 1.15rem; background: #FFFFFF; border-left: 4px solid ${isEvaluated ? '#10B981' : '#F59E0B'};">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; flex-wrap: wrap;">
+            <div>
+              <div style="font-size: 0.96rem; font-weight: 700; color: #0E3D26;">
+                ${s.actionTitle}
+              </div>
+              <div style="font-size: 0.78rem; color: #64748B; margin-top: 2px;">
+                📅 ${s.dateSubmitted} (${s.mealType || 'Meal'}) • Para kay: <strong>${s.childName}</strong>
+              </div>
+            </div>
+            <span class="badge ${isEvaluated ? 'badge-normal' : 'badge-underweight'}" style="font-size: 0.75rem;">
+              ${isEvaluated ? '✓ Nasuri na ng BHW' : '⏳ Naghihintay ng Gabay'}
+            </span>
+          </div>
+
+          <div style="margin-top: 0.65rem; font-size: 0.84rem; color: #334155; line-height: 1.5;">
+            <div>🍲 <strong>Mga Sangkap:</strong> ${s.ingredientsUsed}</div>
+            <div>👶 <strong>Pagtanggap ng Bata:</strong> ${s.childAcceptance}</div>
+            ${s.parentNotes ? `<div>💬 <strong>Tala ng Magulang:</strong> ${s.parentNotes}</div>` : ''}
+          </div>
+
+          ${isEvaluated && s.bhwFeedback ? `
+            <div style="margin-top: 0.75rem; background: #F0FDF4; border: 1px solid #BBF7D0; border-radius: 6px; padding: 0.7rem 0.9rem; font-size: 0.82rem; color: #14532D;">
+              <strong>🩺 Gabay mula kay ${s.evaluatedBy || 'BHW'}:</strong>
+              <div style="margin-top: 0.2rem;">"${s.bhwFeedback}"</div>
+              <div style="font-size: 0.72rem; color: #059669; margin-top: 0.3rem;">Nasuri noong: ${s.evaluatedAt || 'Kamakailan'}</div>
+            </div>
+          ` : `
+            <div style="margin-top: 0.65rem; font-size: 0.78rem; color: #94A3B8; font-style: italic;">
+              Ipaparating ang payo at gabay ng iyong Barangay Health Worker dito kapag nasuri na ang iyong feeding log.
+            </div>
+          `}
+        </div>
+      `;
+    }).join('');
   }
 };

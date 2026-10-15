@@ -15,6 +15,7 @@ const CHWModule = {
     this.renderBHWDashboard();
     this.initGrowthCalculator();
     this.initGroups();
+    this.renderTryHomeEvaluationsTable();
   },
 
   bindEvents() {
@@ -292,6 +293,11 @@ const CHWModule = {
               <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:${muacColor};"></span>
               MUAC: ${c.muacMm} mm
             </div>
+            <div style="font-size: 0.72rem; margin-top: 3px;">
+              <span class="badge ${(c.dewormingStatus === 'Due for Deworming' || c.dewormingStatus === 'Due') ? 'badge-underweight' : 'badge-normal'}" style="font-size: 0.69rem; padding: 1px 6px;">
+                💊 ${c.dewormingStatus || 'Up to Date'}
+              </span>
+            </div>
           </td>
           <td>
             <span class="badge ${badgeClass}">${statusLabel}</span>
@@ -513,6 +519,13 @@ const CHWModule = {
     document.getElementById('edit-child-muac').value = child.muacMm;
     document.getElementById('edit-child-notes').value = child.notes || '';
 
+    const dewormStatusEl = document.getElementById('edit-child-deworming-status');
+    const dewormDateEl = document.getElementById('edit-child-deworming-date');
+    const dewormNextEl = document.getElementById('edit-child-deworming-next-date');
+    if (dewormStatusEl) dewormStatusEl.value = child.dewormingStatus || 'Up to Date';
+    if (dewormDateEl) dewormDateEl.value = child.dewormingDate || '';
+    if (dewormNextEl) dewormNextEl.value = child.dewormingNextDate || '';
+
     NutriApp.openModal('modal-edit-child');
   },
 
@@ -523,6 +536,9 @@ const CHWModule = {
     const height = parseFloat(form.elements['childHeight'].value);
     const weight = parseFloat(form.elements['childWeight'].value);
     const muac = parseInt(form.elements['childMuac'].value, 10);
+    const dewormingStatus = form.elements['childDewormingStatus'] ? form.elements['childDewormingStatus'].value : 'Up to Date';
+    const dewormingDate = form.elements['childDewormingDate'] ? form.elements['childDewormingDate'].value : new Date().toISOString().split('T')[0];
+    const dewormingNextDate = form.elements['childDewormingNextDate'] ? form.elements['childDewormingNextDate'].value : '';
 
     const classification = this.calculateNutritionalStatus(age, sex, height, weight, muac);
 
@@ -542,6 +558,9 @@ const CHWModule = {
       wfaStatus: classification.wfaStatus,
       wfhStatus: classification.wfhStatus,
       muacStatus: classification.muacStatus,
+      dewormingStatus: dewormingStatus,
+      dewormingDate: dewormingDate,
+      dewormingNextDate: dewormingNextDate,
       improved: false,
       assignedModules: ['mod-1', 'mod-3'],
       completedModules: [],
@@ -572,6 +591,10 @@ const CHWModule = {
     const muac = parseInt(document.getElementById('edit-child-muac').value, 10);
     const notes = document.getElementById('edit-child-notes').value;
 
+    const dewormStatus = document.getElementById('edit-child-deworming-status')?.value || 'Up to Date';
+    const dewormDate = document.getElementById('edit-child-deworming-date')?.value || '';
+    const dewormNext = document.getElementById('edit-child-deworming-next-date')?.value || '';
+
     const classification = this.calculateNutritionalStatus(age, child.sex, height, weight, muac);
 
     child.ageMonths = age;
@@ -583,15 +606,18 @@ const CHWModule = {
     child.wfaStatus = classification.wfaStatus;
     child.wfhStatus = classification.wfhStatus;
     child.muacStatus = classification.muacStatus;
+    child.dewormingStatus = dewormStatus;
+    child.dewormingDate = dewormDate;
+    child.dewormingNextDate = dewormNext;
     child.notes = notes;
     child.lastAssessed = new Date().toISOString().split('T')[0];
 
     NutriStorage.saveChildren(children);
 
     NutriStorage.logAudit(
-      'Child Measurements Updated',
+      'Child Measurements & Deworming Updated',
       'Field Health Record',
-      `BHW updated measurements for ${child.name}: Height ${child.heightCm}cm, Weight ${child.weightKg}kg, MUAC ${child.muacMm}mm, Status: ${child.status}`,
+      `BHW updated measurements for ${child.name}: Height ${child.heightCm}cm, Weight ${child.weightKg}kg, MUAC ${child.muacMm}mm, Deworming: ${child.dewormingStatus}`,
       { name: 'Barangay Health Worker', role: 'chw' }
     );
 
@@ -715,9 +741,12 @@ const CHWModule = {
               <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem;">
                 <h3 style="color:var(--color-primary-900); font-size:1.15rem; font-weight:700; margin:0;">${grp.name}</h3>
                 <span class="badge badge-normal" style="font-size:0.75rem;">${grp.barangay}</span>
+                <span class="badge" style="background:#FEF3C7; color:#92400E; font-size:0.72rem; font-weight:700; border:1px solid #FDE68A;">
+                  🗓️ ${grp.scheduledDate || 'Class Scheduled'} ${grp.scheduledTime ? '• ' + grp.scheduledTime : ''}
+                </span>
               </div>
               <div style="font-size:0.82rem; color:var(--text-muted);">
-                🎯 Target Focus: <strong>${grp.targetCategory}</strong> • Facilitator: <strong>${grp.facilitator}</strong>
+                🎯 Focus: <strong>${grp.targetCategory}</strong> • 📍 Venue: <strong>${grp.venue || 'Barangay Health Center'}</strong> • Facilitator: <strong>${grp.facilitator}</strong>
               </div>
             </div>
             <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
@@ -802,10 +831,13 @@ const CHWModule = {
     const targetCategory = form.elements['groupCategory'].value.trim();
     const facilitator = form.elements['groupFacilitator'].value.trim();
     const adviceNotes = form.elements['groupNotes'].value.trim();
+    const scheduledDate = form.elements['groupScheduledDate'] ? form.elements['groupScheduledDate'].value : '';
+    const scheduledTime = form.elements['groupScheduledTime'] ? form.elements['groupScheduledTime'].value : '';
+    const venue = form.elements['groupVenue'] ? form.elements['groupVenue'].value.trim() : 'Barangay Health Center';
 
     // Validation (Req #14)
     if (!name || !targetCategory || !facilitator) {
-      NutriApp.showToast('Please fill in all required group fields before saving.', 'warning');
+      NutriApp.showToast('Please fill in all required class/group fields before saving.', 'warning');
       return;
     }
 
@@ -815,6 +847,10 @@ const CHWModule = {
       targetCategory,
       facilitator,
       adviceNotes,
+      scheduledDate: scheduledDate || new Date().toISOString().split('T')[0],
+      scheduledTime: scheduledTime || '09:00 AM',
+      venue: venue || 'Barangay Health Center',
+      sessionStatus: 'Scheduled',
       assignedModules: ['mod-1', 'mod-3'],
       enrolledChildIds: []
     };
@@ -823,7 +859,7 @@ const CHWModule = {
     form.reset();
     NutriApp.closeModal('modal-create-group');
     this.renderGroups();
-    NutriApp.showToast(`🎉 Parent group "${name}" successfully created!`, 'success');
+    NutriApp.showToast(`🎉 Nutrition class "${name}" scheduled successfully!`, 'success');
   },
 
   handleDeleteGroup(groupId) {
@@ -989,6 +1025,122 @@ const CHWModule = {
     NutriApp.closeModal('modal-group-advice');
     this.renderGroups();
     NutriApp.showToast(`📢 Advice broadcasted to parents in ${group.name}!`, 'success');
+  },
+
+  // ==========================================================================
+  // "TRY IT AT HOME" PRACTICAL ACTION REVIEW & GUIDANCE EVALUATION
+  // (Nabugoomu 2015; Kuchenbecker et al. 2017)
+  // ==========================================================================
+  renderTryHomeEvaluationsTable() {
+    const tbody = document.getElementById('chw-try-home-tbody');
+    if (!tbody) return;
+
+    const subs = NutriStorage.getTryHomeSubmissions(this.activeFilterBarangay);
+
+    if (subs.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #64748B;">
+            <div style="font-size: 2rem; margin-bottom: 0.35rem;">🥗</div>
+            <div style="font-weight: 600;">Walang nakabinbing "Try It at Home" self-report submissions sa kasalukuyan.</div>
+            <div style="font-size: 0.8rem; color: #94A3B8; margin-top: 2px;">Lalabas dito kapag may magulang na nag-submit ng kanilang feeding practices sa tahanan.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = subs.map(s => {
+      const isEvaluated = s.evaluationStatus === 'Evaluated';
+      return `
+        <tr>
+          <td>
+            <div style="font-weight: 700; color: #0E3D26;">${s.childName}</div>
+            <div style="font-size: 0.78rem; color: #64748B;">Magulang: <strong>${s.parentName}</strong></div>
+          </td>
+          <td>
+            <span style="font-size: 0.82rem; color: #334155;">${s.barangay}</span>
+          </td>
+          <td>
+            <div style="font-weight: 600; color: #1E293B;">${s.actionTitle}</div>
+            <div style="font-size: 0.76rem; color: #64748B;">Sangkap: ${s.ingredientsUsed}</div>
+          </td>
+          <td>
+            <span class="badge" style="background: #FEF3C7; color: #92400E; font-size: 0.74rem;">
+              ${s.childAcceptance}
+            </span>
+            <div style="font-size: 0.74rem; color: #64748B; margin-top: 2px;">
+              ${s.dateSubmitted} (${s.mealType})
+            </div>
+          </td>
+          <td>
+            <span class="badge ${isEvaluated ? 'badge-normal' : 'badge-underweight'}" style="font-size: 0.75rem;">
+              ${isEvaluated ? '✓ Evaluated' : '⏳ Pending Review'}
+            </span>
+          </td>
+          <td>
+            <div style="font-size: 0.8rem; color: #334155; max-width: 200px; white-space: normal;">
+              ${s.bhwFeedback ? `"${s.bhwFeedback}"` : '<em style="color:#94A3B8;">Wala pang gabay</em>'}
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-outline btn-sm" onclick="CHWModule.openEvaluateTryHomeModal('${s.id}')" title="Magbigay ng gabay sa magulang">
+              ${isEvaluated ? '✏️ I-edit ang Gabay' : '🔍 Suriin at Gabayan'}
+            </button>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  openEvaluateTryHomeModal(submissionId) {
+    const subs = NutriStorage.getTryHomeSubmissions();
+    const sub = subs.find(s => s.id === submissionId);
+    if (!sub) return;
+
+    document.getElementById('eval-sub-id').value = sub.id;
+    document.getElementById('eval-sub-child-name').textContent = sub.childName;
+    document.getElementById('eval-sub-parent-name').textContent = sub.parentName;
+    document.getElementById('eval-sub-action-title').textContent = sub.actionTitle;
+    document.getElementById('eval-sub-ingredients').textContent = sub.ingredientsUsed;
+    document.getElementById('eval-sub-acceptance').textContent = sub.childAcceptance;
+    document.getElementById('eval-sub-notes').textContent = sub.parentNotes || 'Walang karagdagang tala';
+
+    const feedbackInput = document.getElementById('eval-sub-feedback');
+    if (feedbackInput) {
+      feedbackInput.value = sub.bhwFeedback || '';
+    }
+
+    const statusSelect = document.getElementById('eval-sub-status');
+    if (statusSelect) {
+      statusSelect.value = sub.evaluationStatus || 'Evaluated';
+    }
+
+    NutriApp.openModal('modal-bhw-evaluate-action');
+  },
+
+  handleSaveTryHomeEvaluation(form) {
+    const id = document.getElementById('eval-sub-id').value;
+    const feedback = (document.getElementById('eval-sub-feedback')?.value || '').trim();
+    const status = document.getElementById('eval-sub-status')?.value || 'Evaluated';
+    const user = NutriStorage.getCurrentUser();
+    const evaluatorName = user ? `${user.name} (BHW)` : 'Nurse Ana Reyes (BHW)';
+
+    if (!feedback) {
+      NutriApp.showToast('Pakilagay ang iyong gabay o payo para sa magulang.', 'warning');
+      return;
+    }
+
+    NutriStorage.evaluateTryHomeSubmission(id, feedback, status, evaluatorName);
+    NutriApp.closeModal('modal-bhw-evaluate-action');
+    NutriApp.showToast('🎉 Naipadala na ang iyong gabay at feedback sa magulang!', 'success');
+
+    this.renderTryHomeEvaluationsTable();
+
+    // Live update parent view if active
+    if (window.ParentModule && typeof ParentModule.renderActionSubmissionsHistory === 'function') {
+      ParentModule.renderActionSubmissionsHistory();
+    }
   }
 };
 

@@ -1102,6 +1102,8 @@ const NutriApp = {
       CHWModule.renderBHWDashboard();
     } else if (tabName === 'groups' && window.CHWModule) {
       CHWModule.renderGroups();
+    } else if (tabName === 'evaluations' && window.CHWModule) {
+      CHWModule.renderTryHomeEvaluationsTable();
     } else if (tabName === 'registry' && window.CHWModule) {
       CHWModule.renderRegistryTable();
       CHWModule.updateStatsBar();

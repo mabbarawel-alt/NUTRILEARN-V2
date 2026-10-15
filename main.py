@@ -103,9 +103,13 @@ async def get_children(barangay: Optional[str] = None):
 
 @app.post("/api/children")
 async def save_child(child: Dict[str, Any]):
+    first_name = child.get("name", "").split()[0] if child.get("name") else child.get("first_name", "Child")
+    last_name = " ".join(child.get("name", "").split()[1:]) if child.get("name") else child.get("last_name", "")
+    full_name = child.get("name") or f"{first_name} {last_name}".strip()
     payload = {
-        "first_name": child.get("name", "").split()[0] if child.get("name") else child.get("first_name", "Child"),
-        "last_name": " ".join(child.get("name", "").split()[1:]) if child.get("name") else child.get("last_name", ""),
+        "name": full_name,
+        "first_name": first_name,
+        "last_name": last_name,
         "age_months": int(child.get("ageMonths") or child.get("age_months") or 0),
         "sex": child.get("sex", "Male"),
         "parent_name": child.get("parentName") or child.get("parent_name") or "Guardian",
@@ -119,6 +123,9 @@ async def save_child(child: Dict[str, Any]):
         "wfh_status": child.get("wfhStatus") or child.get("wfh_status") or "Normal",
         "wfa_status": child.get("wfaStatus") or child.get("wfa_status") or "Normal",
         "muac_status": child.get("muacStatus") or child.get("muac_status") or "Normal",
+        "deworming_status": child.get("dewormingStatus") or child.get("deworming_status") or "Up to Date",
+        "deworming_date": child.get("dewormingDate") or child.get("deworming_date") or "",
+        "deworming_next_date": child.get("dewormingNextDate") or child.get("deworming_next_date") or "",
         "improved": bool(child.get("improved", False)),
         "last_assessed": child.get("lastAssessed") or child.get("last_assessed") or "2026-09-12",
         "notes": child.get("notes", "")
@@ -151,6 +158,9 @@ async def update_child(child_id: str, child: Dict[str, Any]):
         "weight_kg": float(child.get("weightKg") or child.get("weight_kg") or 0.0),
         "muac_mm": int(child.get("muacMm") or child.get("muac_mm") or 0),
         "status": child.get("status", "Normal"),
+        "deworming_status": child.get("dewormingStatus") or child.get("deworming_status") or "Up to Date",
+        "deworming_date": child.get("dewormingDate") or child.get("deworming_date") or "",
+        "deworming_next_date": child.get("dewormingNextDate") or child.get("deworming_next_date") or "",
         "improved": bool(child.get("improved", False)),
         "notes": child.get("notes", "")
     }
