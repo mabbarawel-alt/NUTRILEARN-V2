@@ -464,7 +464,7 @@ async def delete_barangay(brgy_id: str):
 # ==============================================================================
 
 # Mount static asset folders if they exist
-for folder in ["css", "js", "assets", "icon"]:
+for folder in ["css", "js", "assets", "icon", "video"]:
     p = BASE_DIR / folder
     if p.exists() and p.is_dir():
         app.mount(f"/{folder}", StaticFiles(directory=str(p)), name=folder)

@@ -3,8 +3,9 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0E3D26">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#19532B">
   <meta name="description"
     content="NutriLearn: Community e-learning and child malnutrition monitoring application for parents and health workers to reduce child stunting by 10%.">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -17,26 +18,77 @@
   <link rel="icon" type="image/png" href="icon/logo.png?v=5.0">
   <link rel="apple-touch-icon" href="icon/logo.png?v=5.0">
 
-  <!-- Google Fonts: Inter, Playfair Display & Outfit -->
+  <!-- Google Fonts: Inter, Outfit, and Playfair Display (Official Brand Typography) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Outfit:wght@600;700;800&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
     rel="stylesheet">
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css?v=6.3">
-  <link rel="stylesheet" href="css/components.css?v=6.3">
-  <link rel="stylesheet" href="css/admin.css?v=6.3">
-  <link rel="stylesheet" href="css/parent.css?v=6.3">
-  <link rel="stylesheet" href="css/bhw.css?v=6.3">
+  <link rel="stylesheet" href="css/styles.css?v=9.6">
+  <link rel="stylesheet" href="css/components.css?v=9.7">
+  <link rel="stylesheet" href="css/admin.css?v=9.6">
+  <link rel="stylesheet" href="css/parent.css?v=9.7">
+  <link rel="stylesheet" href="css/bhw.css?v=9.6">
+  <!-- Dedicated Mobile UI/UX Stylesheet (Isolated Mobile Fitment & Ergonomics) -->
+  <link rel="stylesheet" href="css/mobile.css?v=9.6">
+
+  <!-- Early Session Detection & Smooth Phase Restoration (Zero F5 Flash) -->
+  <script>
+    (function () {
+      try {
+        var user = localStorage.getItem('nutrilearn_current_user_v1');
+        if (user && JSON.parse(user)) {
+          document.documentElement.classList.add('user-logged-in');
+          var role = localStorage.getItem('nutrilearn_active_role');
+          if (!role) {
+            try { role = JSON.parse(user).role; } catch (e) {}
+          }
+          if (role) {
+            var normRole = (role === 'collector') ? 'chw' : role;
+            document.documentElement.classList.add('role-' + normRole);
+          }
+        }
+      } catch (e) { }
+    })();
+  </script>
+  <style>
+    html.user-logged-in #startup-auth-screen {
+      display: none !important;
+    }
+    html.user-logged-in #app-workspace {
+      display: block !important;
+    }
+    html.user-logged-in.role-parent #parent-top-taskbar {
+      display: flex !important;
+    }
+    html.user-logged-in.role-parent #standard-header-container,
+    html.user-logged-in.role-parent #admin-top-taskbar,
+    html.user-logged-in.role-parent #bhw-top-taskbar {
+      display: none !important;
+    }
+    html.user-logged-in.role-chw #bhw-top-taskbar {
+      display: flex !important;
+    }
+    html.user-logged-in.role-chw #standard-header-container,
+    html.user-logged-in.role-chw #admin-top-taskbar,
+    html.user-logged-in.role-chw #parent-top-taskbar {
+      display: none !important;
+    }
+    html.user-logged-in.role-mho #admin-top-taskbar {
+      display: flex !important;
+    }
+    html.user-logged-in.role-mho #standard-header-container,
+    html.user-logged-in.role-mho #parent-top-taskbar,
+    html.user-logged-in.role-mho #bhw-top-taskbar {
+      display: none !important;
+    }
+  </style>
 </head>
 
 <body>
 
-  <!-- ==========================================================================
-       STARTUP LOGIN GATEWAY SCREEN (Shown before using web app)
-       ========================================================================== -->
   <div id="startup-auth-screen" class="startup-gate-screen">
     <div class="startup-container">
       <!-- Upper Center Logo, App Name, Tagline & Description -->
@@ -59,7 +111,7 @@
         <div class="startup-top-lang-pill"
           style="margin-top: 0.45rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #FFFFFF; padding: 2px 6px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
           <span id="lbl-top-lang-title"
-            style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-left: 2px; margin-right: 2px;">🌐
+            style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-left: 2px; margin-right: 2px;">
             Wika:</span>
           <button type="button" class="btn-lang-choice active" id="btn-lang-top-fil"
             onclick="NutriI18n.setLanguage('fil')"
@@ -418,6 +470,30 @@
               Mag-sign In
             </button>
 
+            <!-- Default Test Authentication Accounts (Chapter 2.2 Prototype Verification) -->
+            <div class="test-accounts-panel" style="margin-top: 1.15rem; margin-bottom: 0.85rem; padding: 0.85rem; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 12px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem;">
+                <span style="font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #475569;">
+                  🧪 Default Test Accounts (Prototype Verification)
+                </span>
+                <span style="font-size: 0.68rem; color: #0D766E; font-weight: 600;">1-Click Login</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr; gap: 0.4rem;">
+                <button type="button" class="btn btn-sm" style="text-align: left; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; padding: 0.42rem 0.65rem; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; color: #1E293B; cursor: pointer;" onclick="NutriApp.quickLoginTestAccount('parent')">
+                  <span>👩‍👧 <strong>Guardian:</strong> Maria Santos</span>
+                  <span style="font-size: 0.7rem; color: #0D766E; font-weight: 600;">Sign in →</span>
+                </button>
+                <button type="button" class="btn btn-sm" style="text-align: left; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; padding: 0.42rem 0.65rem; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; color: #1E293B; cursor: pointer;" onclick="NutriApp.quickLoginTestAccount('chw')">
+                  <span>🩺 <strong>Health Worker:</strong> Nurse Ana Reyes</span>
+                  <span style="font-size: 0.7rem; color: #0D766E; font-weight: 600;">Sign in →</span>
+                </button>
+                <button type="button" class="btn btn-sm" style="text-align: left; display: flex; align-items: center; justify-content: space-between; font-size: 0.78rem; padding: 0.42rem 0.65rem; background: #FFFFFF; border: 1px solid #CBD5E1; border-radius: 8px; color: #1E293B; cursor: pointer;" onclick="NutriApp.quickLoginTestAccount('mho')">
+                  <span>📊 <strong>Administrator:</strong> Dr. Jose Lim</span>
+                  <span style="font-size: 0.7rem; color: #0D766E; font-weight: 600;">Sign in →</span>
+                </button>
+              </div>
+            </div>
+
             <div class="auth-footer-prompt" id="footer-prompt-signin-creds">
               Wala kang account? <button type="button" onclick="NutriApp.proceedToSignUpDetails()"
                 style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
@@ -603,7 +679,7 @@
           <nav class="parent-pill-tabs">
             <button type="button" class="parent-pill-btn active" data-tab="learning"
               onclick="ParentModule.switchTab('learning')">
-              <span class="parent-pill-icon">📖</span> My Learning
+              <span class="parent-pill-icon">📚</span> My Learning
             </button>
             <button type="button" class="parent-pill-btn" data-tab="meal-planner"
               onclick="ParentModule.switchTab('meal-planner')">
@@ -750,7 +826,7 @@
             </button>
             <button type="button" class="bhw-pill-btn" data-tab="groups" onclick="NutriApp.switchCHWSubTab('groups')">
               <span class="bhw-pill-icon">👥</span>
-              <span>Nutrition Classes &amp; Cohorts</span>
+              <span>Parent/Guardian Groups</span>
             </button>
             <button type="button" class="bhw-pill-btn" data-tab="evaluations"
               onclick="NutriApp.switchCHWSubTab('evaluations')">
@@ -1097,62 +1173,290 @@
           </div>
         </div>
 
-        <!-- Tab Pane: Try It at Home (10 Actionable Practices Checklist) -->
+        <!-- Tab Pane: Try It at Home (10 Actionable Practices - Matches Reference Mockup 100%) -->
         <div class="parent-tab-pane" id="parent-pane-try-at-home" style="display: none;">
-          <div class="card" style="border: 1px solid #EAE6DF; border-radius: 18px; padding: 1.5rem;">
-            <div class="card-header"
-              style="border-bottom: 1px solid #EAE6DF; padding-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
-              <div>
-                <h2 class="card-title"
-                  style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.45rem; color: #1A382A; margin: 0 0 0.35rem 0;">
-                  ✓ Try It at Home: Daily Practical Feeding Actions
-                </h2>
-                <p class="card-subtitle" style="font-size: 0.88rem; color: #64748B; margin: 0;">
-                  Check off the practical feeding actions you've tried with your child and self-report updates for
-                  health worker guidance.
-                </p>
-                <div style="margin-top: 5px;">
-                  <span class="badge"
-                    style="background:#ECFDF5; color:#047857; font-weight:700; border:1px solid #A7F3D0; font-size:0.74rem;">
-                    📚 Participatory Action Nutrition (Nabugoomu, 2015; Kuchenbecker et al., 2017)
-                  </span>
+          <style id="try-it-at-home-embedded-css">
+            .try-home-page-container {
+              max-width: 900px;
+              margin: 0 auto;
+              padding: 1rem 0.5rem 3.5rem;
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            }
+
+            /* Deep Forest Green Hero Banner */
+            .try-home-hero-banner {
+              background: #2D6A4F;
+              background: linear-gradient(135deg, #2E6845 0%, #204B31 100%);
+              border-radius: 18px;
+              padding: 2.25rem 2.25rem 2rem;
+              color: #FFFFFF;
+              margin-bottom: 1.5rem;
+              box-shadow: 0 4px 14px rgba(27, 77, 46, 0.12);
+            }
+
+            .try-home-hero-badge {
+              font-size: 0.74rem;
+              font-weight: 700;
+              letter-spacing: 0.08em;
+              text-transform: uppercase;
+              color: #B2D8C0;
+              margin-bottom: 0.65rem;
+            }
+
+            .try-home-hero-title {
+              font-family: 'Playfair Display', Georgia, serif;
+              font-size: 2.35rem;
+              font-weight: 700;
+              color: #FFFFFF;
+              line-height: 1.2;
+              margin: 0 0 0.7rem 0;
+            }
+
+            .try-home-hero-desc {
+              font-size: 0.94rem;
+              line-height: 1.55;
+              color: #D8EDE0;
+              margin: 0 0 1.6rem 0;
+              max-width: 680px;
+            }
+
+            /* Progress row */
+            .try-home-progress-row {
+              display: flex;
+              align-items: center;
+              gap: 1.25rem;
+            }
+
+            .try-home-progress-track {
+              flex: 1;
+              height: 9px;
+              background: rgba(255, 255, 255, 0.25);
+              border-radius: 999px;
+              overflow: hidden;
+            }
+
+            .try-home-progress-fill {
+              height: 100%;
+              background: #FFFFFF;
+              border-radius: 999px;
+              transition: width 0.35s ease-in-out;
+            }
+
+            .try-home-progress-label {
+              font-size: 0.95rem;
+              font-weight: 600;
+              color: #FFFFFF;
+              white-space: nowrap;
+              font-family: 'Inter', sans-serif;
+            }
+
+            /* Activities List */
+            .try-home-activities-list {
+              display: flex;
+              flex-direction: column;
+              gap: 13px;
+            }
+
+            /* Individual Activity Card */
+            .try-home-card {
+              background: #FFFFFF;
+              border: 1.5px solid #EAE3D8;
+              border-radius: 16px;
+              padding: 1.15rem 1.6rem;
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+              gap: 1.25rem;
+              box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+              transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+            }
+
+            .try-home-card:hover {
+              box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+            }
+
+            /* Completed Card State */
+            .try-home-card.is-tried {
+              border: 2px solid #285A3A;
+              background: #FFFFFF;
+            }
+
+            /* Number / Checkmark Badge */
+            .try-home-badge-col {
+              flex-shrink: 0;
+            }
+
+            .try-home-num-circle {
+              width: 44px;
+              height: 44px;
+              border-radius: 50%;
+              background: #F3EEE5;
+              color: #786C5E;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 1.05rem;
+              font-weight: 700;
+              transition: all 0.2s ease;
+            }
+
+            .try-home-card.is-tried .try-home-num-circle {
+              background: #285A3A;
+              color: #FFFFFF;
+            }
+
+            /* Content Column */
+            .try-home-content-col {
+              flex: 1;
+              min-width: 0;
+            }
+
+            .try-home-context {
+              font-size: 0.75rem;
+              font-weight: 600;
+              color: #7A897B;
+              margin-bottom: 0.25rem;
+            }
+
+            .try-home-item-title {
+              font-family: 'Playfair Display', Georgia, serif;
+              font-size: 1.1rem;
+              font-weight: 700;
+              color: #1E293B;
+              line-height: 1.35;
+              margin: 0 0 0.25rem 0;
+            }
+
+            .try-home-item-hint {
+              font-size: 0.83rem;
+              color: #64748B;
+              line-height: 1.45;
+              margin: 0;
+            }
+
+            /* Actions Column */
+            .try-home-action-col {
+              flex-shrink: 0;
+            }
+
+            /* "I tried it" button */
+            .btn-try-action {
+              background: #285A3A;
+              color: #FFFFFF;
+              border: none;
+              border-radius: 8px;
+              padding: 9px 22px;
+              font-size: 0.88rem;
+              font-weight: 600;
+              cursor: pointer;
+              transition: background 0.2s ease, transform 0.1s ease;
+              white-space: nowrap;
+            }
+
+            .btn-try-action:hover {
+              background: #1F472D;
+              transform: translateY(-1px);
+            }
+
+            .btn-try-action:active {
+              transform: translateY(0);
+            }
+
+            /* "Edit" button */
+            .btn-edit-action {
+              background: #EFE8DC;
+              color: #4A4036;
+              border: 1px solid #D8CFC2;
+              border-radius: 8px;
+              padding: 9px 24px;
+              font-size: 0.88rem;
+              font-weight: 600;
+              cursor: pointer;
+              transition: background 0.2s ease, transform 0.1s ease;
+              white-space: nowrap;
+            }
+
+            .btn-edit-action:hover {
+              background: #E4DCCF;
+            }
+
+            /* Responsive on Mobile */
+            @media (max-width: 640px) {
+              .try-home-page-container {
+                padding: 1rem 0.5rem 2.5rem;
+              }
+              .try-home-hero-banner {
+                padding: 1.5rem 1.25rem 1.35rem;
+                border-radius: 16px;
+              }
+              .try-home-hero-title {
+                font-size: 1.75rem;
+              }
+              .try-home-card {
+                padding: 1rem 0.95rem;
+                gap: 0.85rem;
+                border-radius: 14px;
+              }
+              .try-home-num-circle {
+                width: 38px;
+                height: 38px;
+                font-size: 0.95rem;
+              }
+              .try-home-item-title {
+                font-size: 0.98rem;
+              }
+              .btn-try-action, .btn-edit-action {
+                padding: 8px 14px;
+                font-size: 0.82rem;
+              }
+            }
+          </style>
+
+          <div class="try-home-page-container">
+            <!-- Hero Banner Matching Reference Screenshot -->
+            <div class="try-home-hero-banner">
+              <div class="try-home-hero-badge">LEARNING THROUGH EVERYDAY CARE</div>
+              <h1 class="try-home-hero-title">Try It at Home</h1>
+              <p class="try-home-hero-desc">
+                These 10 practical activities are provided by your Health Workers. Record what you tried, and use Edit if your answer changes.
+              </p>
+              <div class="try-home-progress-row">
+                <div class="try-home-progress-track">
+                  <div class="try-home-progress-fill" id="try-home-progress-bar" style="width: 10%;"></div>
+                </div>
+                <div class="try-home-progress-label">
+                  <span id="try-home-count">1</span> of 10 tried
                 </div>
               </div>
-              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                <button type="button" class="btn btn-primary btn-sm"
-                  onclick="ParentModule.openSubmitActionReportModal()"
-                  style="font-weight: 700; background: #0E3D26; border-color: #0E3D26;">
-                  📝 Mag-Self-Report ng Feeding Action
-                </button>
-                <button type="button" class="btn btn-accent btn-sm" onclick="ParentModule.openDailyMealLogModal()"
-                  style="font-weight: 700;">
-                  🍽️ I-log ang Kinain Ngayong Araw
-                </button>
-                <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('learning')">
-                  ← Back to My Learning
-                </button>
-              </div>
-            </div>
-            <div class="try-at-home-checklist" id="home-actions-list-container">
-              <!-- Rendered dynamically by ParentModule.renderHomeActionsChecklist() -->
             </div>
 
-            <!-- Practical Actions Self-Report History & BHW Feedback -->
-            <div style="margin-top: 2rem; border-top: 1px solid #EAE6DF; padding-top: 1.25rem;">
-              <div
-                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.85rem; flex-wrap: wrap; gap: 0.5rem;">
+            <!-- List of 10 Activities (Rendered Dynamically by ParentModule.renderHomeActionsChecklist()) -->
+            <div class="try-home-activities-list" id="home-actions-list-container">
+              <!-- Rendered dynamically -->
+            </div>
+
+            <!-- Optional BHW Guidance & Self-Report Feedback Tray -->
+            <div style="margin-top: 2.5rem; background: #FFFFFF; border: 1.5px solid #EAE3D8; border-radius: 16px; padding: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
                 <div>
-                  <h3 style="font-size: 1.15rem; font-weight: 700; color: #14532D; margin: 0;">
-                    📬 Mga Na-Submit na Practical Feeding Actions &amp; Gabay ng BHW
+                  <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: #1E293B; margin: 0 0 0.25rem 0;">
+                    📬 Barangay Health Worker Guidance &amp; Reports
                   </h3>
-                  <p style="font-size: 0.82rem; color: #64748B; margin: 0.2rem 0 0 0;">
-                    Subaybayan ang iyong mga ipinasang feeding practices at ang pagsusuri at payo mula sa iyong Barangay
-                    Health Worker.
+                  <p style="font-size: 0.84rem; color: #64748B; margin: 0;">
+                    Send notes or photos of your feeding actions to your BHW for personalized guidance.
                   </p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                  <button type="button" class="btn btn-primary btn-sm" onclick="ParentModule.openSubmitActionReportModal()" style="background: #285A3A; border-color: #285A3A; font-weight: 600; padding: 7px 16px; border-radius: 8px;">
+                    📝 Mag-Self-Report sa BHW
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.openDailyMealLogModal()" style="font-weight: 600; padding: 7px 16px; border-radius: 8px;">
+                    🍽️ I-log ang Kinain
+                  </button>
                 </div>
               </div>
               <div id="parent-action-submissions-history">
-                <!-- Rendered dynamically by ParentModule.renderActionSubmissionsHistory() -->
+                <!-- Rendered dynamically -->
               </div>
             </div>
           </div>
@@ -1240,94 +1544,606 @@
           </div>
         </div>
 
-        <!-- Tab Pane 2: Pinggang Pinoy Meal Planner -->
+        <!-- Tab Pane 2: Weekly Meal Planner (Matches Exact Design) -->
         <div class="parent-tab-pane" data-tab="meal-planner" style="display: none;">
-          <div class="card">
-            <div class="card-header">
-              <div>
-                <h2 class="card-title">Pinggang Pinoy: Local &amp; Affordable Meal Planner</h2>
-                <p class="card-subtitle">Healthy plates under ₱35–₱50 per serving using local backyard foods.</p>
+          <style id="weekly-meal-planner-embedded-css">
+            .weekly-meal-planner-container {
+              max-width: 980px !important;
+              margin: 0 auto !important;
+              padding: 0.5rem 0 2.5rem 0 !important;
+              box-sizing: border-box !important;
+            }
+            .weekly-meal-planner-header {
+              display: flex !important;
+              justify-content: space-between !important;
+              align-items: flex-start !important;
+              margin-bottom: 1.5rem !important;
+              flex-wrap: wrap !important;
+              gap: 1rem !important;
+            }
+            .weekly-meal-title-group {
+              flex: 1 !important;
+              min-width: 280px !important;
+            }
+            .weekly-meal-main-title {
+              font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+              font-size: 2.25rem !important;
+              font-weight: 700 !important;
+              color: #1A3828 !important;
+              letter-spacing: -0.015em !important;
+              margin: 0 0 0.35rem 0 !important;
+              line-height: 1.15 !important;
+            }
+            .weekly-meal-main-subtitle {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.95rem !important;
+              color: #6B7280 !important;
+              margin: 0 !important;
+              line-height: 1.45 !important;
+            }
+            .weekly-meal-header-badges {
+              display: inline-flex !important;
+              align-items: center !important;
+              gap: 0.75rem !important;
+              flex-wrap: wrap !important;
+            }
+            .meal-badge-age-target {
+              background: #2D6A4F !important;
+              color: #FFFFFF !important;
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.82rem !important;
+              font-weight: 600 !important;
+              padding: 0.45rem 1.15rem !important;
+              border-radius: 9999px !important;
+              white-space: nowrap !important;
+              letter-spacing: 0.01em !important;
+              display: inline-block !important;
+              box-shadow: 0 1px 3px rgba(45, 106, 79, 0.2) !important;
+            }
+            .meal-badge-daily-total {
+              background: transparent !important;
+              border: 1.5px solid #2D6A4F !important;
+              color: #2D6A4F !important;
+              font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Courier New", monospace !important;
+              font-size: 0.88rem !important;
+              font-weight: 500 !important;
+              padding: 0.38rem 1.15rem !important;
+              border-radius: 9999px !important;
+              white-space: nowrap !important;
+              display: inline-flex !important;
+              align-items: center !important;
+              gap: 6px !important;
+              letter-spacing: -0.01em !important;
+            }
+            .meal-badge-daily-total strong {
+              font-weight: 700 !important;
+              font-family: inherit !important;
+            }
+            .weekly-meal-cards-stack {
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 0.65rem !important;
+              margin-bottom: 2.25rem !important;
+            }
+            .weekly-meal-row-card {
+              background: #FFFFFF !important;
+              border: 1px solid #EAE6DF !important;
+              border-radius: 16px !important;
+              padding: 0.85rem 1.6rem !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: space-between !important;
+              gap: 1.25rem !important;
+              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02) !important;
+              transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease !important;
+              box-sizing: border-box !important;
+            }
+            .weekly-meal-row-card:hover {
+              border-color: #D1D5DB !important;
+              box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
+              transform: translateY(-1px) !important;
+            }
+            .weekly-meal-row-left {
+              display: flex !important;
+              align-items: center !important;
+              gap: 1.25rem !important;
+              flex: 1 !important;
+              min-width: 0 !important;
+            }
+            .meal-custom-icon-wrapper {
+              width: 32px !important;
+              height: 32px !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              flex-shrink: 0 !important;
+            }
+            .meal-period-badge {
+              background: #ECE8E1 !important;
+              color: #554F46 !important;
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.76rem !important;
+              font-weight: 600 !important;
+              padding: 0.32rem 0.95rem !important;
+              border-radius: 9999px !important;
+              white-space: nowrap !important;
+              min-width: 110px !important;
+              text-align: center !important;
+              flex-shrink: 0 !important;
+              display: inline-block !important;
+            }
+            .meal-text-group {
+              flex: 1 !important;
+              min-width: 0 !important;
+            }
+            .meal-dish-title {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.98rem !important;
+              font-weight: 700 !important;
+              color: #1F2937 !important;
+              letter-spacing: -0.01em !important;
+              line-height: 1.3 !important;
+            }
+            .meal-nutrients-sub {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.8rem !important;
+              color: #6B7280 !important;
+              margin-top: 2px !important;
+              line-height: 1.35 !important;
+            }
+            .meal-price-badge {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 1.05rem !important;
+              font-weight: 700 !important;
+              color: #2D6A4F !important;
+              flex-shrink: 0 !important;
+              padding-left: 0.5rem !important;
+            }
+            .superfoods-guide-section {
+              margin-bottom: 1.75rem !important;
+            }
+            .superfoods-guide-title {
+              font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
+              font-size: 1.55rem !important;
+              font-weight: 700 !important;
+              color: #1A3828 !important;
+              margin: 0 0 1.15rem 0 !important;
+              letter-spacing: -0.015em !important;
+            }
+            .superfoods-guide-grid {
+              display: grid !important;
+              grid-template-columns: repeat(3, 1fr) !important;
+              gap: 1.25rem !important;
+            }
+            .superfood-feature-card {
+              background: #FFFFFF !important;
+              border: 1px solid #EAE6DF !important;
+              border-radius: 16px !important;
+              padding: 1.5rem 1.4rem !important;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+              transition: transform 0.18s ease, box-shadow 0.18s ease !important;
+              box-sizing: border-box !important;
+            }
+            .superfood-feature-card:hover {
+              transform: translateY(-2px) !important;
+              box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04) !important;
+            }
+            .superfood-card-icon {
+              width: 36px !important;
+              height: 36px !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: flex-start !important;
+              margin-bottom: 0.75rem !important;
+            }
+            .superfood-card-title {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 1rem !important;
+              font-weight: 700 !important;
+              color: #1F2937 !important;
+              margin: 0 0 0.85rem 0 !important;
+            }
+            .superfood-benefits-list {
+              list-style: none !important;
+              list-style-type: none !important;
+              padding: 0 !important;
+              margin: 0 !important;
+              display: flex !important;
+              flex-direction: column !important;
+              gap: 0.65rem !important;
+            }
+            .superfood-benefits-list li {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.82rem !important;
+              color: #4B5563 !important;
+              line-height: 1.45 !important;
+              display: flex !important;
+              align-items: center !important;
+              gap: 0.6rem !important;
+              list-style: none !important;
+              list-style-type: none !important;
+            }
+            .sf-check {
+              width: 18px !important;
+              height: 18px !important;
+              border-radius: 50% !important;
+              display: inline-flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              font-size: 0.72rem !important;
+              font-weight: 700 !important;
+              flex-shrink: 0 !important;
+            }
+            .sf-check-green {
+              background: #E8F5E9 !important;
+              color: #2E7D32 !important;
+            }
+            .sf-check-yellow {
+              background: #FEF9C3 !important;
+              color: #CA8A04 !important;
+            }
+            .sf-check-blue {
+              background: #EFF6FF !important;
+              color: #2563EB !important;
+            }
+            .who-guidelines-banner-card {
+              background: #FFFFFF !important;
+              border: 1px solid #EAE6DF !important;
+              border-radius: 16px !important;
+              padding: 1.35rem 1.75rem !important;
+              display: flex !important;
+              align-items: flex-start !important;
+              gap: 1.35rem !important;
+              box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+              margin-bottom: 1.5rem !important;
+              box-sizing: border-box !important;
+            }
+            .who-tip-icon {
+              width: 36px !important;
+              height: 36px !important;
+              display: flex !important;
+              align-items: center !important;
+              justify-content: center !important;
+              flex-shrink: 0 !important;
+              padding-top: 2px !important;
+            }
+            .who-tip-body {
+              flex: 1 !important;
+            }
+            .who-tip-heading {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.95rem !important;
+              font-weight: 700 !important;
+              color: #1F2937 !important;
+              margin: 0 0 0.4rem 0 !important;
+            }
+            .who-tip-paragraph {
+              font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+              font-size: 0.83rem !important;
+              color: #6B7280 !important;
+              line-height: 1.55 !important;
+              margin: 0 !important;
+            }
+            @media (max-width: 820px) {
+              .superfoods-guide-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.85rem !important;
+              }
+              .weekly-meal-row-card {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 1rem 1.15rem !important;
+                gap: 0.75rem !important;
+              }
+              .weekly-meal-row-left {
+                flex-wrap: wrap !important;
+                gap: 0.65rem !important;
+                width: 100% !important;
+              }
+              .meal-price-badge {
+                align-self: flex-end !important;
+                padding-left: 0 !important;
+              }
+            }
+          </style>
+          <div class="weekly-meal-planner-container">
+            <!-- 1. Top Section Header -->
+            <div class="weekly-meal-planner-header">
+              <div class="weekly-meal-title-group">
+                <h1 class="weekly-meal-main-title">Weekly Meal Plan</h1>
+                <p class="weekly-meal-main-subtitle">Nutritious, affordable meals using locally available Filipino ingredients</p>
+              </div>
+              <div class="weekly-meal-header-badges">
+                <span class="meal-badge-age-target">For children 6–23 months</span>
+                <span class="meal-badge-daily-total"><strong style="font-family: inherit;">₱96/day</strong> total</span>
               </div>
             </div>
 
-            <div class="grid-2" style="align-items: center; margin-bottom: 2rem;">
-              <!-- Interactive Plate Visualizer -->
-              <div style="text-align: center;">
-                <div class="plate-visualizer">
-                  <div class="plate-section plate-go">
-                    <span>🟡 GO (1/4)</span>
-                    <span style="font-size:0.65rem; opacity:0.9;">Rice / Camote</span>
+            <!-- 2. Daily Meals Schedule List (5 Items) -->
+            <div class="weekly-meal-cards-stack">
+              <!-- Meal 1: Breakfast -->
+              <div class="weekly-meal-row-card">
+                <div class="weekly-meal-row-left">
+                  <div class="meal-custom-icon-wrapper meal-icon-breakfast" title="Breakfast">
+                    <svg width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="sunriseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stop-color="#F59E0B" />
+                          <stop offset="50%" stop-color="#FB7185" />
+                          <stop offset="100%" stop-color="#38BDF8" />
+                        </linearGradient>
+                      </defs>
+                      <rect width="32" height="32" rx="6" fill="url(#sunriseGrad)"/>
+                      <circle cx="16" cy="18" r="6.5" fill="#FEF08A"/>
+                      <path d="M0 20C4.5 19 8.5 21 13 20C17.5 19 22 21 26 20C28.5 19.5 30.5 20 32 20V26C32 29.314 29.314 32 26 32H6C2.686 32 0 29.314 0 26V20Z" fill="#1E40AF" fill-opacity="0.95"/>
+                      <path d="M0 24.5C5 23.5 9 25.5 14 24.5C19 23.5 23 25.5 28 24.5C30 24 31.5 24.5 32 24.5V26C32 29.314 29.314 32 26 32H6C2.686 32 0 29.314 0 26V24.5Z" fill="#172554"/>
+                    </svg>
                   </div>
-                  <div class="plate-section plate-grow">
-                    <span>🔴 GROW (1/4)</span>
-                    <span style="font-size:0.65rem; opacity:0.9;">Monggo / Egg / Dilis</span>
-                  </div>
-                  <div class="plate-section plate-glow">
-                    <span>🟢 GLOW (1/2)</span>
-                    <span style="font-size:0.65rem; opacity:0.9;">Malunggay / Kalabasa / Papaya</span>
+                  <span class="meal-period-badge">Breakfast</span>
+                  <div class="meal-text-group">
+                    <div class="meal-dish-title">Lugaw with malunggay and egg</div>
+                    <div class="meal-nutrients-sub">Key nutrients: Iron, Protein, Folate</div>
                   </div>
                 </div>
-                <p style="font-size:0.82rem; color:var(--text-muted);">
-                  <strong>Golden Rule:</strong> Half of the plate should always be colorful fruits and leafy green
-                  vegetables!
+                <div class="meal-price-badge">₱18</div>
+              </div>
+
+              <!-- Meal 2: Morning Snack -->
+              <div class="weekly-meal-row-card">
+                <div class="weekly-meal-row-left">
+                  <div class="meal-custom-icon-wrapper meal-icon-snack1" title="Morning Snack">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="16" cy="16" r="6.5" fill="#EAB308"/>
+                      <circle cx="16" cy="4" r="1.8" fill="#EAB308"/>
+                      <circle cx="16" cy="28" r="1.8" fill="#EAB308"/>
+                      <circle cx="4" cy="16" r="1.8" fill="#EAB308"/>
+                      <circle cx="28" cy="16" r="1.8" fill="#EAB308"/>
+                      <circle cx="7.5" cy="7.5" r="1.8" fill="#EAB308"/>
+                      <circle cx="24.5" cy="24.5" r="1.8" fill="#EAB308"/>
+                      <circle cx="7.5" cy="24.5" r="1.8" fill="#EAB308"/>
+                      <circle cx="24.5" cy="7.5" r="1.8" fill="#EAB308"/>
+                    </svg>
+                  </div>
+                  <span class="meal-period-badge">Morning Snack</span>
+                  <div class="meal-text-group">
+                    <div class="meal-dish-title">Kamote (sweet potato) with peanut butter</div>
+                    <div class="meal-nutrients-sub">Key nutrients: Vitamin A, Healthy Fats</div>
+                  </div>
+                </div>
+                <div class="meal-price-badge">₱10</div>
+              </div>
+
+              <!-- Meal 3: Lunch -->
+              <div class="weekly-meal-row-card">
+                <div class="weekly-meal-row-left">
+                  <div class="meal-custom-icon-wrapper meal-icon-lunch" title="Lunch">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 14C4 20.8 9 26 16 26C23 26 28 20.8 28 14H4Z" fill="#334155"/>
+                      <ellipse cx="16" cy="14" rx="12" ry="3.8" fill="#E11D48"/>
+                      <ellipse cx="13" cy="14" rx="4.5" ry="1.8" fill="#16A34A"/>
+                      <circle cx="20" cy="13.5" r="2.2" fill="#F59E0B"/>
+                      <circle cx="17" cy="14.8" r="1.2" fill="#FFFFFF"/>
+                      <line x1="2" y1="9.5" x2="29" y2="15" stroke="#92400E" stroke-width="2.2" stroke-linecap="round"/>
+                    </svg>
+                  </div>
+                  <span class="meal-period-badge">Lunch</span>
+                  <div class="meal-text-group">
+                    <div class="meal-dish-title">Sinigang na isda with kangkong</div>
+                    <div class="meal-nutrients-sub">Key nutrients: Omega-3, Vitamin C, Calcium</div>
+                  </div>
+                </div>
+                <div class="meal-price-badge">₱35</div>
+              </div>
+
+              <!-- Meal 4: Afternoon Snack -->
+              <div class="weekly-meal-row-card">
+                <div class="weekly-meal-row-left">
+                  <div class="meal-custom-icon-wrapper meal-icon-snack2" title="Afternoon Snack">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <circle cx="13" cy="12" r="6.5" fill="#EAB308"/>
+                      <line x1="13" y1="2" x2="13" y2="4.5" stroke="#EAB308" stroke-width="1.8" stroke-linecap="round"/>
+                      <line x1="4.5" y1="12" x2="2" y2="12" stroke="#EAB308" stroke-width="1.8" stroke-linecap="round"/>
+                      <line x1="6.5" y1="5.5" x2="8" y2="7" stroke="#EAB308" stroke-width="1.8" stroke-linecap="round"/>
+                      <path d="M10 24H24C26.5 24 28.5 22 28.5 19.5C28.5 17.2 26.8 15.3 24.5 15C24 12 21.3 9.8 18 9.8C15.2 9.8 12.8 11.4 11.8 13.7C11.5 13.6 11.1 13.5 10.7 13.5C8 13.5 5.8 15.6 5.8 18.2C5.8 20.9 7.8 24 10 24Z" fill="#CBD5E1"/>
+                      <path d="M9 25H23C25.5 25 27.5 23 27.5 20.5C27.5 18.2 25.8 16.3 23.5 16C23 13 20.3 10.8 17 10.8C14.2 10.8 11.8 12.4 10.8 14.7C10.5 14.6 10.1 14.5 9.7 14.5C7 14.5 4.8 16.6 4.8 19.2C4.8 21.9 6.8 25 9 25Z" fill="#F8FAFC"/>
+                    </svg>
+                  </div>
+                  <span class="meal-period-badge">Afternoon Snack</span>
+                  <div class="meal-text-group">
+                    <div class="meal-dish-title">Banana with sesame seeds</div>
+                    <div class="meal-nutrients-sub">Key nutrients: Potassium, Zinc, Iron</div>
+                  </div>
+                </div>
+                <div class="meal-price-badge">₱8</div>
+              </div>
+
+              <!-- Meal 5: Dinner -->
+              <div class="weekly-meal-row-card">
+                <div class="weekly-meal-row-left">
+                  <div class="meal-custom-icon-wrapper meal-icon-dinner" title="Dinner">
+                    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M23.5 17.8C23.3 22.4 19.5 26.2 14.8 26.2C9.8 26.2 5.8 22.1 5.8 17.1C5.8 12.1 9.8 8 14.8 8C15.8 8 16.8 8.2 17.7 8.6C14.7 10.1 12.6 13.3 12.6 16.9C12.6 21.2 15.8 24.6 19.8 25C21.1 25.1 22.3 24.8 23.5 24.2C23.7 22.3 23.7 20.1 23.5 17.8Z" fill="#F59E0B"/>
+                    </svg>
+                  </div>
+                  <span class="meal-period-badge">Dinner</span>
+                  <div class="meal-text-group">
+                    <div class="meal-dish-title">Monggo guisado with malunggay</div>
+                    <div class="meal-nutrients-sub">Key nutrients: Protein, Iron, Folate</div>
+                  </div>
+                </div>
+                <div class="meal-price-badge">₱25</div>
+              </div>
+            </div>
+
+            <!-- 3. Local Superfoods Guide (3 Cards Grid) -->
+            <div class="superfoods-guide-section">
+              <h2 class="superfoods-guide-title">Local Superfoods Guide</h2>
+              <div class="superfoods-guide-grid">
+                <!-- Superfood 1: Malunggay (Moringa) -->
+                <div class="superfood-feature-card">
+                  <div class="superfood-card-icon">
+                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 29C13 24 19 17 27 7" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
+                      <path d="M12 24C10 20 11 16 15 16C17 20 15 24 12 24Z" fill="#34A853"/>
+                      <path d="M18 19C17 15 19 11 23 12C24 16 21 19 18 19Z" fill="#4CAF50"/>
+                      <path d="M22 15C24 11 28 11 29 14C27 17 23 17 22 15Z" fill="#81C784"/>
+                      <path d="M15 22C17 20 21 21 21 24C18 26 15 25 15 22Z" fill="#81C784"/>
+                      <path d="M27 7C28 3 32 4 33 7C31 10 28 10 27 7Z" fill="#2E7D32"/>
+                    </svg>
+                  </div>
+                  <h3 class="superfood-card-title">Malunggay (Moringa)</h3>
+                  <ul class="superfood-benefits-list">
+                    <li><span class="sf-check sf-check-green">✓</span> <span>7× more Vitamin C than oranges</span></li>
+                    <li><span class="sf-check sf-check-green">✓</span> <span>4× more Calcium than milk</span></li>
+                    <li><span class="sf-check sf-check-green">✓</span> <span>3× more Iron than spinach</span></li>
+                  </ul>
+                </div>
+
+                <!-- Superfood 2: Kamote (Sweet Potato) -->
+                <div class="superfood-feature-card">
+                  <div class="superfood-card-icon">
+                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M7 11C10 6 18 7 24 13C30 19 31 27 26 30C21 33 13 31 8 25C3 19 4 15 7 11Z" fill="#E11D48"/>
+                      <path d="M8 12C11 8 18 8 23 14C27 18 28 24 25 27C21 23 15 18 8 12Z" fill="#FB923C"/>
+                      <path d="M9 14C12 11 16 12 19 16C17 19 13 18 9 14Z" fill="#FDE047"/>
+                    </svg>
+                  </div>
+                  <h3 class="superfood-card-title">Kamote (Sweet Potato)</h3>
+                  <ul class="superfood-benefits-list">
+                    <li><span class="sf-check sf-check-yellow">✓</span> <span>Rich in Vitamin A (beta-carotene)</span></li>
+                    <li><span class="sf-check sf-check-yellow">✓</span> <span>Good source of Vitamin C</span></li>
+                    <li><span class="sf-check sf-check-yellow">✓</span> <span>Supports immune function</span></li>
+                  </ul>
+                </div>
+
+                <!-- Superfood 3: Monggo (Mung Beans) -->
+                <div class="superfood-feature-card">
+                  <div class="superfood-card-icon">
+                    <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <ellipse cx="14" cy="14" rx="4.5" ry="3" transform="rotate(-30 14 14)" fill="#78350F"/>
+                      <circle cx="14" cy="14" r="0.8" fill="#FEF3C7"/>
+                      <ellipse cx="22" cy="13" rx="4.5" ry="3" transform="rotate(35 22 13)" fill="#881337"/>
+                      <circle cx="22" cy="13" r="0.8" fill="#FCE7F3"/>
+                      <ellipse cx="18" cy="22" rx="5" ry="3.2" transform="rotate(-15 18 22)" fill="#78350F"/>
+                      <circle cx="18" cy="22" r="0.8" fill="#FEF3C7"/>
+                      <ellipse cx="10" cy="21" rx="4" ry="2.8" transform="rotate(40 10 21)" fill="#881337"/>
+                      <ellipse cx="26" cy="22" rx="4" ry="2.8" transform="rotate(-40 26 22)" fill="#881337"/>
+                    </svg>
+                  </div>
+                  <h3 class="superfood-card-title">Monggo (Mung Beans)</h3>
+                  <ul class="superfood-benefits-list">
+                    <li><span class="sf-check sf-check-blue">✓</span> <span>High plant-based protein</span></li>
+                    <li><span class="sf-check sf-check-blue">✓</span> <span>Rich in folate for brain development</span></li>
+                    <li><span class="sf-check sf-check-blue">✓</span> <span>Affordable and widely available</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Feeding Tip from WHO Guidelines Card -->
+            <div class="who-guidelines-banner-card">
+              <div class="who-tip-icon">
+                <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 4C12.477 4 8 8.477 8 14C8 17.5 10 20.5 13 22.5V25C13 25.552 13.448 26 14 26H22C22.552 26 23 25.552 23 25V22.5C26 20.5 28 17.5 28 14C28 8.477 23.523 4 18 4Z" fill="#FBBF24"/>
+                  <path d="M14 28H22V29C22 29.552 21.552 30 21 30H15C14.448 30 14 29.552 14 29V28Z" fill="#9CA3AF"/>
+                  <path d="M15 26H21V28H15V26Z" fill="#D1D5DB"/>
+                  <path d="M15 15C15 13 16 11 18 11C20 11 21 13 21 15" stroke="#D97706" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+              </div>
+              <div class="who-tip-body">
+                <h4 class="who-tip-heading">Feeding Tip from WHO Guidelines</h4>
+                <p class="who-tip-paragraph">
+                  For children 6–8 months, start with 2–3 meals per day of thick porridge and mashed foods. Increase to 3–4 meals per day for children 9–23 months, adding snacks as desired. Always wash hands before preparing food and feeding your child.
                 </p>
               </div>
-
-              <!-- Custom Meal Cost Calculator -->
-              <div
-                style="background: var(--bg-surface-subtle); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
-                <h3 style="font-size: 1.05rem; color: var(--color-primary-900); margin-bottom: 0.75rem;">Build Your
-                  Budget Meal:</h3>
-
-                <div class="form-group">
-                  <label class="form-label">🟡 Pick GO Food (Energy):</label>
-                  <select id="meal-builder-go" class="form-select">
-                    <option value="camote" data-cost="8">Boiled Yellow Camote (Sweet Potato) - ₱8</option>
-                    <option value="rice" data-cost="10">White Rice (Lugaw or Steamed) - ₱10</option>
-                    <option value="corn" data-cost="9">Boiled Yellow Corn (Mais) - ₱9</option>
-                    <option value="saba" data-cost="7">Boiled Saba Banana - ₱7</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">🔴 Pick GROW Food (Protein &amp; Calcium):</label>
-                  <select id="meal-builder-grow" class="form-select">
-                    <option value="monggo" data-cost="12">Mung Beans (Monggo) Mash - ₱12</option>
-                    <option value="egg" data-cost="10">Hardboiled Egg Yolk - ₱10</option>
-                    <option value="dilis" data-cost="8">Powdered Dried Dilis (Anchovies) - ₱8</option>
-                    <option value="tilapia" data-cost="18">Steamed Fresh Tilapia Flakes - ₱18</option>
-                    <option value="tofu" data-cost="8">Fresh Soya Bean Curd (Tofu/Tokwa) - ₱8</option>
-                  </select>
-                </div>
-
-                <div class="form-group">
-                  <label class="form-label">🟢 Pick GLOW Food (Vitamins &amp; Minerals):</label>
-                  <select id="meal-builder-glow" class="form-select">
-                    <option value="malunggay" data-cost="3">Fresh Malunggay Leaves (Backyard) - ₱3</option>
-                    <option value="kalabasa" data-cost="6">Steamed Kalabasa (Squash) - ₱6</option>
-                    <option value="papaya" data-cost="5">Mashed Ripe Papaya - ₱5</option>
-                    <option value="kangkong" data-cost="4">Blanched Kangkong Tips - ₱4</option>
-                  </select>
-                </div>
-
-                <div
-                  style="background:#FFFFFF; border:1.5px solid var(--color-accent-400); border-radius:var(--radius-md); padding:1rem; display:flex; justify-content:space-between; align-items:center;">
-                  <div>
-                    <div style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">
-                      Estimated Cost:</div>
-                    <div id="meal-calc-total"
-                      style="font-size:1.35rem; font-weight:800; color:var(--color-primary-800);">₱23 per serving</div>
-                  </div>
-                  <span class="badge badge-improved">100% Balanced</span>
-                </div>
-              </div>
             </div>
 
-            <!-- Recipe Card Library -->
-            <h3 style="font-size: 1.15rem; color: var(--color-primary-900); margin-bottom: 1rem;">Tested Low-Cost
-              Community Recipes</h3>
-            <div class="grid-2" id="recipes-container">
-              <!-- Populated by parentLearning.js -->
+            <!-- 5. Interactive Pinggang Pinoy Calculator & Tested Community Recipes (Preserves existing functional logic) -->
+            <div class="interactive-meal-tools-collapsible" style="margin-top: 2rem;">
+              <details class="interactive-tools-details" style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <summary style="padding: 1rem 1.4rem; font-weight: 700; color: #19532B; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; background: #FAF7F2; border-bottom: 1px solid #EAE6DF;">
+                  <span style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                    <span>🛠️</span> <strong>Pinggang Pinoy Interactive Calculator &amp; Recipe Library</strong>
+                  </span>
+                  <span style="font-size: 0.8rem; background: #E2ECE5; color: #19532B; padding: 2px 10px; border-radius: 9999px;">I-click para buksan / Click to open ▾</span>
+                </summary>
+                
+                <div style="padding: 1.5rem;">
+                  <div class="grid-2" style="align-items: center; margin-bottom: 2rem;">
+                    <!-- Interactive Plate Visualizer -->
+                    <div style="text-align: center;">
+                      <div class="plate-visualizer">
+                        <div class="plate-section plate-go">
+                          <span>🟡 GO (1/4)</span>
+                          <span style="font-size:0.65rem; opacity:0.9;">Rice / Camote</span>
+                        </div>
+                        <div class="plate-section plate-grow">
+                          <span>🔴 GROW (1/4)</span>
+                          <span style="font-size:0.65rem; opacity:0.9;">Monggo / Egg / Dilis</span>
+                        </div>
+                        <div class="plate-section plate-glow">
+                          <span>🟢 GLOW (1/2)</span>
+                          <span style="font-size:0.65rem; opacity:0.9;">Malunggay / Kalabasa / Papaya</span>
+                        </div>
+                      </div>
+                      <p style="font-size:0.82rem; color:var(--text-muted); margin-top: 0.5rem;">
+                        <strong>Golden Rule:</strong> Half of the plate should always be colorful fruits and leafy green vegetables!
+                      </p>
+                    </div>
+
+                    <!-- Custom Meal Cost Calculator -->
+                    <div style="background: var(--bg-surface-subtle); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+                      <h3 style="font-size: 1.05rem; color: var(--color-primary-900); margin-bottom: 0.75rem;">Build Your Budget Meal:</h3>
+
+                      <div class="form-group">
+                        <label class="form-label">🟡 Pick GO Food (Energy):</label>
+                        <select id="meal-builder-go" class="form-select">
+                          <option value="camote" data-cost="8">Boiled Yellow Camote (Sweet Potato) - ₱8</option>
+                          <option value="rice" data-cost="10">White Rice (Lugaw or Steamed) - ₱10</option>
+                          <option value="corn" data-cost="9">Boiled Yellow Corn (Mais) - ₱9</option>
+                          <option value="saba" data-cost="7">Boiled Saba Banana - ₱7</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">🔴 Pick GROW Food (Protein &amp; Calcium):</label>
+                        <select id="meal-builder-grow" class="form-select">
+                          <option value="monggo" data-cost="12">Mung Beans (Monggo) Mash - ₱12</option>
+                          <option value="egg" data-cost="10">Hardboiled Egg Yolk - ₱10</option>
+                          <option value="dilis" data-cost="8">Powdered Dried Dilis (Anchovies) - ₱8</option>
+                          <option value="tilapia" data-cost="18">Steamed Fresh Tilapia Flakes - ₱18</option>
+                          <option value="tofu" data-cost="8">Fresh Soya Bean Curd (Tofu/Tokwa) - ₱8</option>
+                        </select>
+                      </div>
+
+                      <div class="form-group">
+                        <label class="form-label">🟢 Pick GLOW Food (Vitamins &amp; Minerals):</label>
+                        <select id="meal-builder-glow" class="form-select">
+                          <option value="malunggay" data-cost="3">Fresh Malunggay Leaves (Backyard) - ₱3</option>
+                          <option value="kalabasa" data-cost="6">Steamed Kalabasa (Squash) - ₱6</option>
+                          <option value="papaya" data-cost="5">Mashed Ripe Papaya - ₱5</option>
+                          <option value="kangkong" data-cost="4">Blanched Kangkong Tips - ₱4</option>
+                        </select>
+                      </div>
+
+                      <div style="background:#FFFFFF; border:1.5px solid var(--color-accent-400); border-radius:var(--radius-md); padding:1rem; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                          <div style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">
+                            Estimated Cost:</div>
+                          <div id="meal-calc-total" style="font-size:1.35rem; font-weight:800; color:var(--color-primary-800);">₱23 per serving</div>
+                        </div>
+                        <span class="badge badge-improved">100% Balanced</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Recipe Card Library -->
+                  <h3 style="font-size: 1.15rem; color: var(--color-primary-900); margin-bottom: 1rem;">Tested Low-Cost Community Recipes</h3>
+                  <div class="grid-2" id="recipes-container">
+                    <!-- Populated by parentLearning.js -->
+                  </div>
+                </div>
+              </details>
             </div>
           </div>
         </div>
@@ -1637,25 +2453,90 @@
           </div>
         </div>
 
-        <!-- Tab Pane: Parent Groups & Nutrition Classes -->
+        <!-- Tab Pane: Parent/Guardian Groups (Exact Design Specification) -->
         <div class="chw-tab-pane" data-tab="groups" id="chw-tab-groups" style="display: none;">
-          <div class="card">
-            <div class="card-header"
-              style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
-              <div>
-                <h2 class="card-title">👥 Community Nutrition Classes &amp; Parent Cohorts</h2>
-                <p class="card-subtitle">Plan and schedule community nutrition classes, assign targeted curriculum
-                  modules, send tailored guidance,
-                  and track attendance &amp; collective progress.</p>
+          <div class="pgg-view-container">
+            <!-- Header Row: Title & Subtitle on Left, Search Bar on Right -->
+            <div class="pgg-header-row">
+              <div class="pgg-title-block">
+                <h1 class="pgg-main-title">Parent/Guardian Groups</h1>
+                <p class="pgg-subtitle">Track home actions and nutrition status for each enrolled family in Barangay
+                  Manguring</p>
               </div>
-              <button class="btn btn-primary" onclick="CHWModule.openCreateGroupModal()">
-                + Plan &amp; Schedule Nutrition Class
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <div class="pgg-search-wrapper">
+                  <input type="text" id="pgg-search-input" class="pgg-search-input"
+                    placeholder="Search by name or barangay..." oninput="CHWModule.handlePggSearch(this.value)">
+                </div>
+                <button type="button" class="btn btn-sm btn-outline"
+                  style="border-radius: 9999px; background: #FFFFFF; font-weight: 600; border: 1px solid #D5CFC5; color: #1C2B22;"
+                  onclick="CHWModule.openAddParentGroupModal()" title="Add new enrolled family">
+                  + Add Family
+                </button>
+                <button type="button" class="btn btn-sm btn-primary"
+                  style="border-radius: 9999px; font-weight: 600; background: #1E4D38; border-color: #1E4D38;"
+                  onclick="CHWModule.openCreateGroupModal()" title="Schedule Nutrition Class">
+                  🗓️ Schedule Class
+                </button>
+              </div>
+            </div>
+
+            <!-- Filter Bar: All, Improving (4), Stable (2), Critical (2) -->
+            <div class="pgg-filter-bar">
+              <button type="button" class="pgg-filter-pill active" id="pgg-pill-all"
+                onclick="CHWModule.setPggFilter('All')">
+                All
+              </button>
+              <button type="button" class="pgg-filter-pill" id="pgg-pill-improving"
+                onclick="CHWModule.setPggFilter('Improving')">
+                Improving (4)
+              </button>
+              <button type="button" class="pgg-filter-pill" id="pgg-pill-stable"
+                onclick="CHWModule.setPggFilter('Stable')">
+                Stable (2)
+              </button>
+              <button type="button" class="pgg-filter-pill" id="pgg-pill-critical"
+                onclick="CHWModule.setPggFilter('Critical')">
+                Critical (2)
               </button>
             </div>
 
-            <!-- Group Cards Container -->
-            <div id="chw-groups-container">
-              <!-- Dynamically populated by CHWModule.renderGroups() -->
+            <!-- Parent/Guardian Groups Table Card -->
+            <div class="pgg-table-card">
+              <table class="pgg-table">
+                <thead>
+                  <tr>
+                    <th>Parent/Guardian</th>
+                    <th>Zone</th>
+                    <th>Child</th>
+                    <th>Status</th>
+                    <th>Actions Tried</th>
+                    <th>Action Progress</th>
+                    <th>Last Active</th>
+                  </tr>
+                </thead>
+                <tbody id="pgg-tbody">
+                  <!-- Dynamically populated by CHWModule.renderParentGuardianGroupsTable() -->
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Collapsible / Integrated Nutrition Class Cohorts Section -->
+            <div style="margin-top: 2.25rem; padding-top: 1.5rem; border-top: 1px dashed #D5CFC5;">
+              <div
+                style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:0.5rem;">
+                <div>
+                  <h3 style="font-size: 1.15rem; font-weight: 700; color: #1C2B22; margin: 0;">
+                    👥 Scheduled Nutrition Classes &amp; Cohort Sessions
+                  </h3>
+                  <p style="font-size: 0.85rem; color: #5C5852; margin: 0.2rem 0 0 0;">
+                    Manage scheduled group sessions, venue locations, and lesson curriculum assignments.
+                  </p>
+                </div>
+              </div>
+              <div id="chw-groups-container">
+                <!-- Dynamically populated by CHWModule.renderGroups() -->
+              </div>
             </div>
           </div>
         </div>
@@ -3146,6 +4027,91 @@
         </ul>
       </div>
     </footer>
+
+    <!-- ======================================================================
+         MOBILE BOTTOM NAVIGATION BAR (Thumb-friendly & dynamic per user role)
+         ====================================================================== -->
+    <nav id="mobile-bottom-nav" class="mobile-bottom-nav" aria-label="Mobile Navigation">
+      <!-- 1. BHW / Health Worker Bottom Tabs -->
+      <div id="mobile-nav-bhw" class="mobile-nav-role-group" style="display: none;">
+        <button type="button" class="mobile-nav-item bhw-pill-btn active" data-tab="dashboard"
+          onclick="NutriApp.switchCHWSubTab('dashboard')">
+          <span class="mobile-nav-icon">📊</span>
+          <span class="mobile-nav-label">Dashboard</span>
+        </button>
+        <button type="button" class="mobile-nav-item bhw-pill-btn" data-tab="groups"
+          onclick="NutriApp.switchCHWSubTab('groups')">
+          <span class="mobile-nav-icon">👥</span>
+          <span class="mobile-nav-label">Families</span>
+        </button>
+        <button type="button" class="mobile-nav-fab" onclick="NutriApp.openModal('modal-add-child')" title="Log Child">
+          <span class="mobile-nav-fab-icon">➕</span>
+        </button>
+        <button type="button" class="mobile-nav-item bhw-pill-btn" data-tab="registry"
+          onclick="NutriApp.switchCHWSubTab('registry')">
+          <span class="mobile-nav-icon">👶</span>
+          <span class="mobile-nav-label">Registry</span>
+        </button>
+        <button type="button" class="mobile-nav-item bhw-pill-btn" data-tab="announcements"
+          onclick="NutriApp.switchCHWSubTab('announcements')">
+          <span class="mobile-nav-icon">📢</span>
+          <span class="mobile-nav-label">Notices</span>
+        </button>
+      </div>
+
+      <!-- 2. Parent Bottom Tabs -->
+      <div id="mobile-nav-parent" class="mobile-nav-role-group" style="display: none;">
+        <button type="button" class="mobile-nav-item parent-pill-btn active" data-tab="learning"
+          onclick="ParentModule.switchTab('learning')">
+          <span class="mobile-nav-icon">📖</span>
+          <span class="mobile-nav-label">Learning</span>
+        </button>
+        <button type="button" class="mobile-nav-item parent-pill-btn" data-tab="meal-planner"
+          onclick="ParentModule.switchTab('meal-planner')">
+          <span class="mobile-nav-icon">🍲</span>
+          <span class="mobile-nav-label">Meals</span>
+        </button>
+        <button type="button" class="mobile-nav-item parent-pill-btn" data-tab="try-at-home"
+          onclick="ParentModule.switchTab('try-at-home')">
+          <span class="mobile-nav-icon">✓</span>
+          <span class="mobile-nav-label">Actions</span>
+        </button>
+        <button type="button" class="mobile-nav-item parent-pill-btn" data-tab="growth-tracker"
+          onclick="ParentModule.switchTab('growth-tracker')">
+          <span class="mobile-nav-icon">📈</span>
+          <span class="mobile-nav-label">Growth</span>
+        </button>
+      </div>
+
+      <!-- 3. Admin / MHO Bottom Tabs -->
+      <div id="mobile-nav-mho" class="mobile-nav-role-group" style="display: none;">
+        <button type="button" class="mobile-nav-item admin-tab-btn active" data-tab="overview"
+          onclick="NutriApp.switchMHOSubTab('overview')">
+          <span class="mobile-nav-icon">📊</span>
+          <span class="mobile-nav-label">Overview</span>
+        </button>
+        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="records"
+          onclick="NutriApp.switchMHOSubTab('records')">
+          <span class="mobile-nav-icon">📋</span>
+          <span class="mobile-nav-label">Records</span>
+        </button>
+        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="barangays"
+          onclick="NutriApp.switchMHOSubTab('barangays')">
+          <span class="mobile-nav-icon">🏛️</span>
+          <span class="mobile-nav-label">Barangay</span>
+        </button>
+        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="announcements"
+          onclick="NutriApp.switchMHOSubTab('announcements')">
+          <span class="mobile-nav-icon">📢</span>
+          <span class="mobile-nav-label">Notices</span>
+        </button>
+        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="users"
+          onclick="NutriApp.switchMHOSubTab('users')">
+          <span class="mobile-nav-icon">👥</span>
+          <span class="mobile-nav-label">Users</span>
+        </button>
+      </div>
+    </nav>
   </div><!-- End #app-workspace -->
 
   <!-- ==========================================================================
@@ -3516,17 +4482,21 @@
       <form id="add-child-form">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Child Full Name:</label>
+            <label class="form-label">Child Full Name (Buong Pangalan ng Bata) *:</label>
             <input type="text" name="childName" class="form-control" required placeholder="e.g. Joshua Garcia">
           </div>
 
-          <div class="grid-2">
+          <div class="grid-3" style="display: grid; grid-template-columns: 1.2fr 0.9fr 0.9fr; gap: 0.75rem;">
             <div class="form-group">
-              <label class="form-label">Age in Months (6-59):</label>
-              <input type="number" name="childAge" class="form-control" min="6" max="59" value="18" required>
+              <label class="form-label">Date of Birth (Kapanganakan) *:</label>
+              <input type="date" id="add-child-birthdate" name="childBirthDate" class="form-control" required onchange="NutriMobile.onBirthDateChange(this.value, 'add')">
             </div>
             <div class="form-group">
-              <label class="form-label">Sex:</label>
+              <label class="form-label">Age (Buwan / Months) *:</label>
+              <input type="number" id="add-child-age" name="childAge" class="form-control" min="0" max="72" value="18" required oninput="NutriMobile.calcLiveZScore()">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Sex (Kasarian) *:</label>
               <select name="childSex" class="form-select" required>
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -3566,19 +4536,50 @@
             </div>
           </div>
 
-          <div class="grid-3">
+          <div class="grid-3 mobile-touch-stepper-grid">
             <div class="form-group">
               <label class="form-label">Height (cm):</label>
-              <input type="number" name="childHeight" class="form-control" step="0.1" value="73.5" required>
+              <div class="touch-stepper-wrap">
+                <button type="button" class="btn-touch-step" onclick="NutriMobile.stepInput('add-child-height', -0.5)"
+                  aria-label="Bawasan ang taas">-</button>
+                <input type="number" id="add-child-height" name="childHeight" class="form-control" step="0.1"
+                  value="73.5" required oninput="NutriMobile.calcLiveZScore()">
+                <button type="button" class="btn-touch-step" onclick="NutriMobile.stepInput('add-child-height', 0.5)"
+                  aria-label="Dagdagan ang taas">+</button>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">Weight (kg):</label>
-              <input type="number" name="childWeight" class="form-control" step="0.1" value="8.1" required>
+              <div class="touch-stepper-wrap">
+                <button type="button" class="btn-touch-step" onclick="NutriMobile.stepInput('add-child-weight', -0.1)"
+                  aria-label="Bawasan ang timbang">-</button>
+                <input type="number" id="add-child-weight" name="childWeight" class="form-control" step="0.1"
+                  value="8.1" required oninput="NutriMobile.calcLiveZScore()">
+                <button type="button" class="btn-touch-step" onclick="NutriMobile.stepInput('add-child-weight', 0.1)"
+                  aria-label="Dagdagan ang timbang">+</button>
+              </div>
             </div>
             <div class="form-group">
               <label class="form-label">MUAC (mm):</label>
-              <input type="number" name="childMuac" class="form-control" value="116" required>
+              <div class="touch-stepper-wrap">
+                <button type="button" class="btn-touch-step" onclick="NutriMobile.stepInput('add-child-muac', -1)"
+                  aria-label="Bawasan ang MUAC">-</button>
+                <input type="number" id="add-child-muac" name="childMuac" class="form-control" value="116" required
+                  oninput="NutriMobile.calcLiveZScore()">
+                <button type="button" class="btn-touch-step" onclick="NutriMobile.stepInput('add-child-muac', 1)"
+                  aria-label="Dagdagan ang MUAC">+</button>
+              </div>
             </div>
+          </div>
+
+          <!-- Real-time Live WHO Z-Score & MUAC Band Preview Indicator -->
+          <div id="add-child-live-preview" class="mobile-live-who-pill">
+            <div class="live-pill-content">
+              <span class="live-pill-dot" id="live-who-dot" style="background: #10B981;"></span>
+              <span id="live-who-text">Tantiya (WHO): Normal Growth (Live Assessment)</span>
+            </div>
+            <span id="live-muac-badge" class="badge badge-underweight" style="font-size:0.75rem;">MUAC: 116mm (Dilaw /
+              At Risk)</span>
           </div>
 
           <div class="grid-2">
@@ -3625,22 +4626,50 @@
         </div>
         <div class="grid-2">
           <div class="form-group">
+            <label class="form-label">Petsa ng Kapanganakan (DOB):</label>
+            <input type="date" id="edit-child-birthdate" class="form-control" onchange="NutriMobile.onBirthDateChange(this.value, 'edit')">
+          </div>
+          <div class="form-group">
             <label class="form-label">Updated Age (Months):</label>
-            <input type="number" id="edit-child-age" class="form-control" min="6" max="59">
+            <div class="touch-stepper-wrap">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-age', -1)">-</button>
+              <input type="number" id="edit-child-age" class="form-control" min="0" max="72">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-age', 1)">+</button>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">Updated Height (cm):</label>
-            <input type="number" id="edit-child-height" class="form-control" step="0.1">
+            <div class="touch-stepper-wrap">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-height', -0.5)">-</button>
+              <input type="number" id="edit-child-height" class="form-control" step="0.1">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-height', 0.5)">+</button>
+            </div>
           </div>
         </div>
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Updated Weight (kg):</label>
-            <input type="number" id="edit-child-weight" class="form-control" step="0.1">
+            <div class="touch-stepper-wrap">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-weight', -0.1)">-</button>
+              <input type="number" id="edit-child-weight" class="form-control" step="0.1">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-weight', 0.1)">+</button>
+            </div>
           </div>
           <div class="form-group">
             <label class="form-label">Updated MUAC (mm):</label>
-            <input type="number" id="edit-child-muac" class="form-control">
+            <div class="touch-stepper-wrap">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-muac', -1)">-</button>
+              <input type="number" id="edit-child-muac" class="form-control">
+              <button type="button" class="btn-touch-step"
+                onclick="NutriMobile.stepInput('edit-child-muac', 1)">+</button>
+            </div>
           </div>
         </div>
         <div class="grid-2">
@@ -3674,7 +4703,7 @@
     <div class="modal-dialog" style="max-width: 580px;">
       <div class="modal-header">
         <div>
-          <div class="modal-title">✏️ I-update ang Talaan ng Bata (Admin)</div>
+          <div class="modal-title"> I-update ang Talaan ng Bata (Admin)</div>
           <div style="font-size: 0.8rem; color: #475569; margin-top: 3px;">
             Aktibong Barangay: <span id="admin-edit-child-brgy-badge" class="badge"
               style="background: #10B981; color: #fff; font-weight: 700; font-size: 0.78rem;">Barangay Manguiring</span>
@@ -3701,7 +4730,7 @@
             </div>
           </div>
 
-          <div class="grid-2">
+          <div class="grid-3" style="display: grid; grid-template-columns: 1fr 1.1fr 0.9fr; gap: 0.75rem;">
             <div class="form-group">
               <label class="form-label">Zone / Purok: *</label>
               <select id="admin-edit-child-zone" class="form-select" required>
@@ -3711,12 +4740,16 @@
                 <option value="Zone 4">Zone 4</option>
                 <option value="Zone 5">Zone 5</option>
                 <option value="Zone 6">Zone 6</option>
-                <option value="Zone 7">Zone 7 (Purok 7)</option>
+                <option value="Zone 7">Zone 7</option>
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Edad (Buwan / Months): *</label>
-              <input type="number" id="admin-edit-child-age" class="form-control" min="6" max="59" required>
+              <label class="form-label">Kapanganakan (DOB):</label>
+              <input type="date" id="admin-edit-child-birthdate" class="form-control" onchange="NutriMobile.onBirthDateChange(this.value, 'admin')">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Edad (Buwan): *</label>
+              <input type="number" id="admin-edit-child-age" class="form-control" min="0" max="72" required>
             </div>
           </div>
 
@@ -5002,6 +6035,195 @@
       </form>
     </div>
   </div>
+
+  <!-- Modal: Parent/Guardian Groups Family Detail & Actions Progress -->
+  <div id="modal-pgg-family-detail" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header" style="background: #FAF7F2; border-bottom: 1px solid #E5DFD5;">
+        <div>
+          <h2 class="modal-title"
+            style="color: #19532B; font-family: var(--font-heading); font-size: 1.35rem; font-weight: 700;">
+            📋 Family Nutrition &amp; Home Actions
+          </h2>
+          <p style="font-size: 0.82rem; color: #5C5852; margin: 0.2rem 0 0 0;">
+            Track practical feeding actions tried at home and nutrition status
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-pgg-family-detail')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); CHWModule.handleSaveFamilyDetail(this);">
+        <input type="hidden" id="pgg-detail-id">
+        <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+          <!-- Family Summary Badge Card -->
+          <div
+            style="background: #F4EFE6; border: 1px solid #E5DFD5; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+              <div>
+                <div style="font-size: 1.1rem; font-weight: 700; color: #1C2B22;" id="pgg-detail-parent-name">Maria
+                  Santos</div>
+                <div style="font-size: 0.84rem; color: #5C5852; margin-top: 2px;">
+                  📍 <span id="pgg-detail-zone">Zone 1</span> • 📞 <span id="pgg-detail-phone">0918-345-6789</span>
+                </div>
+              </div>
+              <div style="text-align: right;">
+                <div style="font-size: 0.95rem; font-weight: 700; color: #1E4D38;" id="pgg-detail-child-info">Liam (18
+                  mo)</div>
+                <div style="font-size: 0.76rem; color: #6B665F; margin-top: 2px;">Barangay Manguring</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Status Selector -->
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem;">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" style="font-weight: 600; font-size: 0.82rem; color: #1C2B22;">Katayuan / Status:
+                *</label>
+              <select id="pgg-detail-status" class="form-select" required
+                onchange="CHWModule.updateModalProgressPreview()">
+                <option value="Improving">Improving (Bumabuti)</option>
+                <option value="Stable">Stable (Matatag)</option>
+                <option value="Critical">Critical (Nanganganib)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label class="form-label" style="font-weight: 600; font-size: 0.82rem; color: #1C2B22;">Huling Aktibo /
+                Last Active:</label>
+              <input type="text" id="pgg-detail-lastactive" class="form-control" value="Today">
+            </div>
+          </div>
+
+          <!-- Progress Bar & Summary -->
+          <div
+            style="margin-bottom: 1.15rem; background: #FAF7F2; border: 1px solid #EAE5DC; border-radius: 8px; padding: 0.75rem 1rem;">
+            <div
+              style="display: flex; justify-content: space-between; align-items: center; font-size: 0.84rem; font-weight: 600; margin-bottom: 0.4rem; color: #1C2B22;">
+              <span>Action Progress: <strong id="pgg-detail-actions-count">3 / 5</strong></span>
+              <span id="pgg-detail-progress-pct" style="color: #1E4D38;">60%</span>
+            </div>
+            <div style="width: 100%; height: 8px; background: #E5DFD5; border-radius: 9999px; overflow: hidden;">
+              <div id="pgg-detail-progress-bar"
+                style="height: 100%; width: 60%; background: #C86A2E; border-radius: 9999px; transition: width 0.3s ease;">
+              </div>
+            </div>
+          </div>
+
+          <!-- 5 Evidence-based Home Feeding Actions Checkboxes -->
+          <div class="form-group" style="margin-bottom: 1rem;">
+            <label class="form-label"
+              style="font-weight: 600; font-size: 0.84rem; color: #1C2B22; margin-bottom: 0.4rem;">
+              🌱 Mga Praktikal na Feeding Action na Naisagawa sa Bahay (5 Target Actions):
+            </label>
+            <div id="pgg-detail-actions-checklist" style="display: flex; flex-direction: column; gap: 0.45rem;">
+              <!-- Populated dynamically with checkboxes -->
+            </div>
+          </div>
+
+          <!-- BHW Clinical & Guidance Notes -->
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 600; font-size: 0.82rem; color: #1C2B22;">Tala at Gabay ng
+              Health Worker (Notes):</label>
+            <textarea id="pgg-detail-notes" class="form-control" rows="3"
+              placeholder="Hal. Maayos ang pagtanggap sa dinurog na gulay. Patuloy na i-monitor ang timbang sa susunod na buwan."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer"
+          style="background: #FAF7F2; border-top: 1px solid #E5DFD5; display: flex; justify-content: space-between;">
+          <button type="button" class="btn btn-outline btn-sm" onclick="NutriApp.closeModal('modal-pgg-family-detail')">
+            Isara / Close
+          </button>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="submit" class="btn btn-primary btn-sm"
+              style="background: #1E4D38; border-color: #1E4D38; font-weight: 700;">
+              💾 I-save ang Pagbabago
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Add New Enrolled Family to Parent/Guardian Groups -->
+  <div id="modal-pgg-add-family" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header" style="background: #FAF7F2; border-bottom: 1px solid #E5DFD5;">
+        <div>
+          <h2 class="modal-title"
+            style="color: #19532B; font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700;">
+            ➕ Magrehistro ng Pamilya sa Parent/Guardian Groups
+          </h2>
+          <p style="font-size: 0.82rem; color: #5C5852; margin: 0.2rem 0 0 0;">
+            Barangay Manguring Community Health Monitoring
+          </p>
+        </div>
+        <button class="modal-close-btn" onclick="NutriApp.closeModal('modal-pgg-add-family')">&times;</button>
+      </div>
+      <form onsubmit="event.preventDefault(); CHWModule.handleSaveNewFamily(this);">
+        <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Pangalan ng Magulang / Guardian:
+              *</label>
+            <input type="text" name="parentName" class="form-control" required placeholder="Hal. Maria Santos">
+          </div>
+
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Telepono / Phone: *</label>
+              <input type="tel" name="parentPhone" class="form-control" required placeholder="0918-123-4567">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Purok / Zone: *</label>
+              <select name="zone" class="form-select" required>
+                <option value="Zone 1">Zone 1</option>
+                <option value="Zone 2">Zone 2</option>
+                <option value="Zone 3">Zone 3</option>
+                <option value="Zone 4">Zone 4</option>
+                <option value="Zone 5">Zone 5</option>
+                <option value="Zone 6">Zone 6</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Pangalan ng Bata / Child:
+                *</label>
+              <input type="text" name="childName" class="form-control" required placeholder="Hal. Liam">
+            </div>
+            <div class="form-group">
+              <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Edad / Age (buwan): *</label>
+              <input type="number" name="childAgeMonths" class="form-control" required min="1" max="72" value="18">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Panimulang Katayuan (Status):
+              *</label>
+            <select name="status" class="form-select" required>
+              <option value="Improving" selected>Improving (Bumabuti)</option>
+              <option value="Stable">Stable (Matatag)</option>
+              <option value="Critical">Critical (Nanganganib)</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 0;">
+            <label class="form-label" style="font-weight: 600; font-size: 0.82rem;">Paunang Tala / Initial
+              Notes:</label>
+            <textarea name="notes" class="form-control" rows="2"
+              placeholder="Hal. Bagong rehistro sa Barangay Manguring supplementary feeding."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer" style="background: #FAF7F2; border-top: 1px solid #E5DFD5;">
+          <button type="button" class="btn btn-outline"
+            onclick="NutriApp.closeModal('modal-pgg-add-family')">Kanselahin</button>
+          <button type="submit" class="btn btn-primary"
+            style="background: #1E4D38; border-color: #1E4D38; font-weight: 700;">
+            ➕ I-rehistro ang Pamilya
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Modal: Administrator Add Barangay -->
   <div id="modal-admin-add-barangay" class="modal-backdrop">
     <div class="modal-dialog" style="max-width: 500px;">
@@ -5135,6 +6357,85 @@
     </div>
   </div>
 
+  <!-- Modal: Edit Try It at Home Activity -->
+  <div id="modal-edit-try-activity" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 440px; border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+      <div class="modal-header" style="background: #FAF7F2; border-bottom: 1px solid #EAE3D8; padding: 1.15rem 1.4rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div id="modal-edit-activity-context" style="font-size: 0.75rem; font-weight: 700; color: #2E6845; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">PRACTICAL FEEDING ACTION</div>
+          <div class="modal-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #1E2522;">
+            I-edit ang Aktibidad
+          </div>
+        </div>
+        <button type="button" class="btn-modal-close" onclick="NutriApp.closeModal('modal-edit-try-activity')" style="background: none; border: none; font-size: 1.5rem; color: #64748B; cursor: pointer; line-height: 1;">×</button>
+      </div>
+      <form onsubmit="ParentModule.saveActivityEdit(event)" style="margin: 0;">
+        <div class="modal-body" style="padding: 1.35rem 1.4rem;">
+          <!-- Activity preview card -->
+          <div style="background: #F8F5EE; border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; border: 1px solid #EAE3D8;">
+            <h4 id="modal-edit-activity-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.05rem; font-weight: 700; color: #1E2522; margin: 0 0 0.25rem 0;"></h4>
+            <p id="modal-edit-activity-hint" style="font-size: 0.82rem; color: #64748B; margin: 0; line-height: 1.45;"></p>
+          </div>
+
+          <!-- Status Selector: Only Tried or Not yet -->
+          <div>
+            <label style="display: block; font-size: 0.86rem; font-weight: 700; color: #374151; margin-bottom: 0.65rem;">Katayuan (Status):</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <label id="label-edit-status-tried" style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1.5px solid #2E6845; border-radius: 10px; background: #F0FDF4; cursor: pointer; transition: all 0.2s;">
+                <input type="radio" name="modalEditStatus" id="modal-edit-status-tried" value="tried" checked onchange="ParentModule.updateEditStatusUI()" style="accent-color: #2E6845;">
+                <span style="font-size: 0.9rem; font-weight: 600; color: #14532D;">✓ Tried</span>
+              </label>
+              <label id="label-edit-status-untried" style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1px solid #D1D5DB; border-radius: 10px; background: #F9FAFB; cursor: pointer; transition: all 0.2s;">
+                <input type="radio" name="modalEditStatus" id="modal-edit-status-untried" value="untried" onchange="ParentModule.updateEditStatusUI()" style="accent-color: #2E6845;">
+                <span style="font-size: 0.9rem; font-weight: 500; color: #4B5563;">○ Not yet</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 0.9rem 1.4rem; background: #FAF7F2; border-top: 1px solid #EAE3D8; display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;">
+          <button type="button" class="btn btn-ghost" style="color: #64748B; font-weight: 600; padding: 8px 16px;" onclick="NutriApp.closeModal('modal-edit-try-activity')">
+            Kanselahin (Cancel)
+          </button>
+          <button type="submit" class="btn btn-primary" style="background: #2E6845; border-color: #2E6845; color: #FFFFFF; font-weight: 700; padding: 9px 22px; border-radius: 8px;">
+            I-save ang Pagbabago ✓
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Inactivity Timeout Warning Modal (Thesis Chapter 2.2 Security & Privacy: 30-min Inactivity Limit) -->
+  <div id="modal-inactivity-warning" class="modal-backdrop">
+    <div class="modal-dialog" style="max-width: 440px; text-align: center;">
+      <div class="modal-header" style="background: #FEF3C7; color: #92400E; justify-content: center;">
+        <div class="modal-title" style="font-size: 1.1rem; font-weight: 700;">⏱ Babala sa Hindi Aktibong Sesyon</div>
+      </div>
+      <div class="modal-body" style="padding: 1.5rem 1.25rem;">
+        <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
+        <h3 style="font-size: 1.15rem; color: #1E293B; margin-bottom: 0.4rem; font-weight: 800;">
+          Kusang Magla-logout ang Sesyon
+        </h3>
+        <p style="font-size: 0.88rem; color: #475569; line-height: 1.55; margin-bottom: 1rem;">
+          Alinsunod sa <em>Data Privacy at Child Protection Guidelines</em> (Chapter 2.2), ang mga sesyon ay kusang nagla-log out pagkatapos ng <strong>30 minuto</strong> na walang galaw upang maprotektahan ang pribadong datos ng pamilya at mga bata.
+        </p>
+        <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 10px; padding: 0.85rem; margin-bottom: 1.25rem;">
+          <span style="font-size: 0.88rem; color: #B45309; font-weight: 600;">
+            Magla-log out sa loob ng: <strong id="inactivity-countdown" style="font-size: 1.2rem; color: #B91C1C;">120</strong> segundo
+          </span>
+        </div>
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+          <button type="button" class="btn btn-outline" onclick="InactivityManager.performLogout('manual')">
+            Mag-log out Na
+          </button>
+          <button type="button" class="btn btn-primary" onclick="InactivityManager.stayLoggedIn()">
+            Manatiling Naka-log in
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Scripts -->
   <script src="js/config.js?v=5.9"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
@@ -5145,11 +6446,12 @@
   <script src="js/data.js?v=5.9"></script>
   <script src="js/exportUtils.js?v=5.9"></script>
   <script src="js/healthWorker.js?v=5.9"></script>
-  <script src="js/parentLearning.js?v=5.9"></script>
+  <script src="js/parentLearning.js?v=6.4"></script>
   <script src="js/mhoDashboard.js?v=5.9"></script>
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=5.9"></script>
-  <script src="js/app.js?v=5.9"></script>
+  <script src="js/mobileUX.js?v=6.3"></script>
+  <script src="js/app.js?v=6.3"></script>
 </body>
 
 </html>

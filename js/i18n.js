@@ -333,7 +333,7 @@ const NutriI18n = {
     const parentTabs = document.querySelectorAll('.parent-pill-btn');
     parentTabs.forEach(btn => {
       const tab = btn.dataset.tab;
-      if (tab === 'learning') btn.innerHTML = `<span class="parent-pill-icon">📖</span> ${t.parent_tab_learning}`;
+      if (tab === 'learning') btn.innerHTML = `<span class="parent-pill-icon">🥗</span> ${t.parent_tab_learning}`;
       if (tab === 'meal-planner') btn.innerHTML = `<span class="parent-pill-icon">🍲</span> ${t.parent_tab_meal}`;
       if (tab === 'try-at-home') btn.innerHTML = `<span class="parent-pill-icon">✓</span> ${t.parent_tab_try}`;
       if (tab === 'growth-tracker') btn.innerHTML = `<span class="parent-pill-icon">📈</span> ${t.parent_tab_growth}`;

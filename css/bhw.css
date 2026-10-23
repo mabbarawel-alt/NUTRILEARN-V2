@@ -5,13 +5,13 @@
 
 /* BHW Role Base Background & Layout */
 body.role-chw {
-  background-color: #FAF8F5 !important;
+  background-color: #FAF7F2 !important;
   color: #1F2937;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans);
 }
 
 body.role-chw #app-workspace {
-  background-color: #FAF8F5;
+  background-color: #FAF7F2;
   min-height: 100vh;
 }
 
@@ -26,7 +26,7 @@ body.role-chw .app-header {
 }
 
 body.role-chw .main-content {
-  background-color: #FAF8F5;
+  background-color: #FAF7F2;
   padding: 1.5rem 1rem 3rem 1rem;
   max-width: 1180px;
   margin: 0 auto;
@@ -83,10 +83,10 @@ body.role-chw #view-chw > .hero-banner {
 }
 
 .bhw-brand-name {
-  font-family: 'Outfit', 'Playfair Display', Georgia, sans-serif;
+  font-family: var(--font-heading);
   font-size: 1.2rem;
   font-weight: 800;
-  color: #1A382A;
+  color: #19532B;
   letter-spacing: -0.02em;
 }
 
@@ -133,10 +133,10 @@ body.role-chw #view-chw > .hero-banner {
 }
 
 .bhw-pill-btn.active {
-  background: #0E3D26 !important;
+  background: #19532B !important;
   color: #FFFFFF !important;
   font-weight: 700;
-  box-shadow: 0 2px 6px rgba(14, 61, 38, 0.25);
+  box-shadow: 0 2px 6px rgba(25, 83, 43, 0.25);
 }
 
 .bhw-pill-icon {
@@ -191,14 +191,14 @@ body.role-chw #view-chw > .hero-banner {
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #0E3D26;
+  background: #19532B;
   color: #FFFFFF;
   font-weight: 700;
   font-size: 0.78rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 4px rgba(14, 61, 38, 0.2);
+  box-shadow: 0 1px 4px rgba(25, 83, 43, 0.2);
 }
 
 
@@ -231,10 +231,10 @@ body.role-chw #view-chw > .hero-banner {
 }
 
 .bhw-greeting-title {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 2.15rem;
   font-weight: 800;
-  color: #1A382A;
+  color: #19532B;
   margin: 0 0 0.35rem 0;
   letter-spacing: -0.01em;
 }
@@ -246,9 +246,9 @@ body.role-chw #view-chw > .hero-banner {
   font-weight: 500;
 }
 
-/* Alert / Relay Announcements Banner (Warm Rust-Orange) */
+/* Alert / Relay Announcements Banner (Brand Crisp Carrot) */
 .bhw-alert-banner {
-  background: #C85A17;
+  background: #FE6015; /* Brand Crisp Carrot */
   color: #FFFFFF;
   border-radius: 14px;
   padding: 1.15rem 1.6rem;
@@ -257,7 +257,7 @@ body.role-chw #view-chw > .hero-banner {
   align-items: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 4px 14px rgba(200, 90, 23, 0.22);
+  box-shadow: 0 4px 14px rgba(254, 96, 21, 0.28);
 }
 
 .bhw-alert-banner-left {
@@ -333,10 +333,10 @@ body.role-chw #view-chw > .hero-banner {
 }
 
 .bhw-stat-num {
-  font-family: 'Outfit', 'Playfair Display', Georgia, serif;
+  font-family: var(--font-sans);
   font-size: 2.35rem;
   font-weight: 800;
-  color: #1A382A;
+  color: #19532B;
   line-height: 1.1;
   margin-bottom: 0.35rem;
   letter-spacing: -0.02em;
@@ -354,12 +354,12 @@ body.role-chw #view-chw > .hero-banner {
   color: #718096;
 }
 
-/* Card 2: Critical Cases (Highlighted Solid Warm Rust-Orange) */
+/* Card 2: Critical Cases (Highlighted Solid Crisp Carrot) */
 .bhw-stat-card-critical {
-  background: #C85A17 !important;
+  background: #FE6015 !important; /* Brand Crisp Carrot */
   color: #FFFFFF !important;
   border: none !important;
-  box-shadow: 0 4px 14px rgba(200, 90, 23, 0.25);
+  box-shadow: 0 4px 14px rgba(254, 96, 21, 0.28);
 }
 
 .bhw-stat-card-critical .bhw-stat-num {
@@ -384,10 +384,10 @@ body.role-chw #view-chw > .hero-banner {
 }
 
 .bhw-card-heading {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 1.35rem;
-  font-weight: 800;
-  color: #1A382A;
+  font-weight: 700;
+  color: #19532B;
   margin: 0 0 1.15rem 0;
   letter-spacing: -0.01em;
 }
@@ -502,5 +502,257 @@ body.role-chw #view-chw > .hero-banner {
   .bhw-alert-banner {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   PARENT/GUARDIAN GROUPS - REPLICATING EXACT DESIGN SPECIFICATION
+   Warm cream theme, serif title, filter pills, custom progress bars & table
+   ========================================================================== */
+.pgg-view-container {
+  background-color: #FAF7F2;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem 2.5rem 1.75rem;
+  color: #1C2B22;
+}
+
+.pgg-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.pgg-title-block h1.pgg-main-title {
+  font-family: var(--font-heading);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #19532B;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.02em;
+}
+
+.pgg-subtitle {
+  color: #5C5852;
+  font-size: 0.95rem;
+  margin: 0;
+  font-weight: 400;
+}
+
+.pgg-search-wrapper {
+  position: relative;
+  min-width: 280px;
+}
+
+.pgg-search-input {
+  width: 100%;
+  padding: 0.55rem 1rem 0.55rem 1rem;
+  background: #FFFFFF;
+  border: 1px solid #D5CFC5;
+  border-radius: 9999px;
+  font-size: 0.88rem;
+  color: #1C2B22;
+  outline: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.pgg-search-input::placeholder {
+  color: #9C968B;
+  font-style: normal;
+}
+
+.pgg-search-input:focus {
+  border-color: #1E4D38;
+  box-shadow: 0 0 0 3px rgba(30, 77, 56, 0.12);
+}
+
+/* Filter Pills: All, Improving (4), Stable (2), Critical (2) */
+.pgg-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.pgg-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 1.15rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  background: #EFECE6;
+  color: #5C5852;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.pgg-filter-pill:hover {
+  background: #E5DFD5;
+  color: #1C2B22;
+}
+
+.pgg-filter-pill.active {
+  background: #1E4D38 !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(30, 77, 56, 0.22);
+}
+
+/* Parent/Guardian Table Container */
+.pgg-table-card {
+  background: #FFFFFF;
+  border: 1px solid #E5DFD5;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.pgg-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.pgg-table thead th {
+  background: #F4EFE6;
+  color: #6B665F;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.85rem 1.15rem;
+  border-bottom: 1px solid #E5DFD5;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+.pgg-table tbody tr {
+  border-bottom: 1px solid #EFEAE1;
+  transition: background 0.15s ease;
+}
+
+.pgg-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.pgg-table tbody tr:hover {
+  background: #FAF7F2;
+  cursor: pointer;
+}
+
+.pgg-table td {
+  padding: 0.95rem 1.15rem;
+  font-size: 0.9rem;
+  color: #1C2B22;
+  vertical-align: middle;
+}
+
+.pgg-cell-parent {
+  font-weight: 700;
+  color: #1C2B22;
+  font-size: 0.95rem;
+}
+
+.pgg-cell-zone {
+  color: #5C5852;
+  white-space: nowrap;
+}
+
+.pgg-cell-child {
+  color: #4A463F;
+  white-space: nowrap;
+}
+
+.pgg-cell-status {
+  font-weight: 600;
+}
+
+.pgg-cell-status.status-improving {
+  color: #1C2B22;
+}
+
+.pgg-cell-status.status-stable {
+  color: #1C2B22;
+}
+
+.pgg-cell-status.status-critical {
+  color: #1C2B22;
+}
+
+.pgg-cell-actions-count {
+  font-size: 0.9rem;
+  color: #1C2B22;
+  white-space: nowrap;
+  letter-spacing: 0.05em;
+}
+
+.pgg-progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  white-space: nowrap;
+}
+
+.pgg-progress-track {
+  width: 100px;
+  height: 6px;
+  background: #EAE5DC;
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pgg-progress-bar {
+  height: 100%;
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+/* Progress bar exact color nuances */
+.pgg-bar-coral {
+  background-color: #D93829 !important; /* Critical 20% */
+}
+
+.pgg-bar-amber {
+  background-color: #C86A2E !important; /* 40% - 60% */
+}
+
+.pgg-bar-green {
+  background-color: #236B4D !important; /* 80% */
+}
+
+.pgg-bar-empty {
+  background-color: transparent !important; /* 0% */
+}
+
+.pgg-progress-text {
+  font-size: 0.8rem;
+  color: #6B665F;
+  min-width: 32px;
+}
+
+.pgg-cell-lastactive {
+  color: #6B665F;
+  font-size: 0.86rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .pgg-table-card {
+    overflow-x: auto;
+  }
+  .pgg-header-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pgg-search-wrapper {
+    width: 100%;
   }
 }

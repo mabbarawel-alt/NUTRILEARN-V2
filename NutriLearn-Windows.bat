@@ -24,19 +24,15 @@ set "PYTHON_CMD="
 if exist "%LOCALAPPDATA%\Python\bin\python.exe" (
     set "PYTHON_CMD=%LOCALAPPDATA%\Python\bin\python.exe"
 ) else (
-    where python >nul 2>&1
-    if %ERRORLEVEL% equ 0 (
-        python -c "import sys" >nul 2>&1
-        if %ERRORLEVEL% equ 0 set "PYTHON_CMD=python"
-    )
-    if not defined PYTHON_CMD (
-        where py >nul 2>&1
-        if %ERRORLEVEL% equ 0 (
-            py -c "import sys" >nul 2>&1
-            if %ERRORLEVEL% equ 0 set "PYTHON_CMD=py"
+    for /f "delims=" %%p in ('where python 2^>nul') do (
+        echo "%%p" | findstr /i "WindowsApps" >nul
+        if errorlevel 1 (
+            set "PYTHON_CMD=%%p"
+            goto :found_python
         )
     )
 )
+:found_python
 
 if defined PYTHON_CMD (
     "%PYTHON_CMD%" -c "import uvicorn" >nul 2>&1
@@ -51,8 +47,10 @@ if defined PYTHON_CMD (
     )
     timeout /t 1 /nobreak >nul
 ) else (
-    echo [INFO] Python runtime not detected. Launching web app directly...
-    set TARGET_URL=index.html
+    echo [INFO] Python runtime not detected. Launching PowerShell HTTP server on port 8080...
+    start /B powershell -NoProfile -ExecutionPolicy Bypass -File .\server.ps1 >nul 2>&1
+    set TARGET_URL=http://localhost:8080/index.html
+    timeout /t 1 /nobreak >nul
 )
 
 :: Try to launch with Microsoft Edge in app standalone mode

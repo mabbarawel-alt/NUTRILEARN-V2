@@ -1,5 +1,5 @@
-// NutriLearn Service Worker - v6.3.0
-const CACHE_NAME = 'nutrilearn-v6.3.0';
+// NutriLearn Service Worker - v7.3.0
+const CACHE_NAME = 'nutrilearn-v7.3.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',

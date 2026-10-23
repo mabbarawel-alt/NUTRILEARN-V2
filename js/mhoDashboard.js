@@ -2135,6 +2135,9 @@ const MHODashboard = {
     if (dewormDateEl) dewormDateEl.value = child.dewormingDate || child.deworming_date || '';
     if (dewormNextEl) dewormNextEl.value = child.dewormingNextDate || child.deworming_next_date || '';
 
+    const birthDateEl = document.getElementById('admin-edit-child-birthdate');
+    if (birthDateEl) birthDateEl.value = child.birthDate || child.birth_date || '';
+
     const brgyBadge = document.getElementById('admin-edit-child-brgy-badge');
     if (brgyBadge) {
       brgyBadge.textContent = childBrgy;
@@ -2170,6 +2173,12 @@ const MHODashboard = {
     const zone = zoneEl ? zoneEl.value : (child.zone || 'Zone 1');
     const status = document.getElementById('admin-edit-child-status').value;
     const notes = document.getElementById('admin-edit-child-notes').value.trim();
+
+    const birthDateInput = document.getElementById('admin-edit-child-birthdate');
+    if (birthDateInput && birthDateInput.value) {
+      child.birthDate = birthDateInput.value;
+      child.birth_date = birthDateInput.value;
+    }
 
     const dewormStatus = document.getElementById('admin-edit-child-deworming-status')?.value || 'Up to Date';
     const dewormDate = document.getElementById('admin-edit-child-deworming-date')?.value || '';

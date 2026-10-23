@@ -587,6 +587,194 @@ const NUTRI_DATA = {
     }
   ],
 
+  // Initial Parent/Guardian Groups Dataset (Matches BHW Phase Specification)
+  initialParentGuardianGroups: [
+    {
+      id: 'pgg-1',
+      parentName: 'Maria Santos',
+      parentPhone: '0918-345-6789',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 1',
+      childName: 'Liam',
+      childAgeMonths: 18,
+      status: 'Improving',
+      actionsTried: 3,
+      actionsTotal: 5,
+      progressPct: 60,
+      lastActive: 'Today',
+      lastActiveDate: '2026-10-15',
+      actionsList: [
+        { title: 'Enriched Lugaw with Malunggay & Egg', tried: true, date: '2026-10-14' },
+        { title: 'Boiled safe drinking water & WASH protocol', tried: true, date: '2026-10-13' },
+        { title: 'Responsive positive feeding (Patience with picky eating)', tried: true, date: '2026-10-15' },
+        { title: 'Daily Animal Protein (Fish/Chicken liver mashing)', tried: false, date: null },
+        { title: 'Affordable Kamote & Yellow Vegetable Puree', tried: false, date: null }
+      ],
+      notes: 'Active participant in feeding action self-reports. Child Liam shows steady weight improvement.'
+    },
+    {
+      id: 'pgg-2',
+      parentName: 'Rose Dela Cruz',
+      parentPhone: '0919-456-7890',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 3',
+      childName: 'Sofia',
+      childAgeMonths: 24,
+      status: 'Critical',
+      actionsTried: 1,
+      actionsTotal: 5,
+      progressPct: 20,
+      lastActive: '3 days ago',
+      lastActiveDate: '2026-10-12',
+      actionsList: [
+        { title: 'Boiled safe drinking water & WASH protocol', tried: true, date: '2026-10-11' },
+        { title: 'Enriched Lugaw with Malunggay & Egg', tried: false, date: null },
+        { title: 'Responsive positive feeding (Patience with picky eating)', tried: false, date: null },
+        { title: 'Daily Animal Protein (Fish/Chicken liver mashing)', tried: false, date: null },
+        { title: 'Affordable Kamote & Yellow Vegetable Puree', tried: false, date: null }
+      ],
+      notes: 'Child has low appetite and moderate wasting. Needs immediate BHW home visit and supplementary feeding.'
+    },
+    {
+      id: 'pgg-3',
+      parentName: 'Ana Reyes',
+      parentPhone: '0917-234-5678',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 5',
+      childName: 'Miguel',
+      childAgeMonths: 12,
+      status: 'Improving',
+      actionsTried: 4,
+      actionsTotal: 5,
+      progressPct: 80,
+      lastActive: 'Yesterday',
+      lastActiveDate: '2026-10-14',
+      actionsList: [
+        { title: 'Enriched Lugaw with Malunggay & Egg', tried: true, date: '2026-10-10' },
+        { title: 'Boiled safe drinking water & WASH protocol', tried: true, date: '2026-10-12' },
+        { title: 'Affordable Ginisang Monggo with Dilis', tried: true, date: '2026-10-14' },
+        { title: 'Affordable Kamote & Yellow Vegetable Puree', tried: true, date: '2026-10-11' },
+        { title: 'Responsive positive feeding (Patience with picky eating)', tried: false, date: null }
+      ],
+      notes: 'Completed infant complementary feeding lessons and consistent daily mashing practices.'
+    },
+    {
+      id: 'pgg-4',
+      parentName: 'Linda Mendoza',
+      parentPhone: '0920-567-8901',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 1',
+      childName: 'Isabella',
+      childAgeMonths: 8,
+      status: 'Stable',
+      actionsTried: 2,
+      actionsTotal: 5,
+      progressPct: 40,
+      lastActive: '2 days ago',
+      lastActiveDate: '2026-10-13',
+      actionsList: [
+        { title: 'Exclusive Breastfeeding & Clean WASH', tried: true, date: '2026-10-12' },
+        { title: 'Mashed Papaya & Yellow Fruit introduction', tried: true, date: '2026-10-13' },
+        { title: 'Enriched Lugaw with Malunggay & Egg', tried: false, date: null },
+        { title: 'Daily Animal Protein (Egg yolk)', tried: false, date: null },
+        { title: 'Responsive positive feeding', tried: false, date: null }
+      ],
+      notes: 'Consistent breastfeeding alongside introduced pureed fruits and vegetable broths.'
+    },
+    {
+      id: 'pgg-5',
+      parentName: 'Grace Tolentino',
+      parentPhone: '0921-678-9012',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 4',
+      childName: 'Nathan',
+      childAgeMonths: 36,
+      status: 'Critical',
+      actionsTried: 0,
+      actionsTotal: 5,
+      progressPct: 0,
+      lastActive: '5 days ago',
+      lastActiveDate: '2026-10-10',
+      actionsList: [
+        { title: 'Enriched Lugaw with Malunggay & Egg', tried: false, date: null },
+        { title: 'Boiled safe drinking water & WASH protocol', tried: false, date: null },
+        { title: 'Responsive positive feeding', tried: false, date: null },
+        { title: 'Daily Animal Protein (Fish/Chicken)', tried: false, date: null },
+        { title: 'Affordable Kamote & Vegetable Puree', tried: false, date: null }
+      ],
+      notes: 'Severe picky eating reported. No practical feeding actions completed yet. Alert flagged for BHW guidance.'
+    },
+    {
+      id: 'pgg-6',
+      parentName: 'Joanna Bautista',
+      parentPhone: '0922-789-0123',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 3',
+      childName: 'Ella',
+      childAgeMonths: 14,
+      status: 'Improving',
+      actionsTried: 3,
+      actionsTotal: 5,
+      progressPct: 60,
+      lastActive: 'Today',
+      lastActiveDate: '2026-10-15',
+      actionsList: [
+        { title: 'Mashed banana with breastmilk & minced fish', tried: true, date: '2026-10-15' },
+        { title: 'Enriched Lugaw with Malunggay', tried: true, date: '2026-10-13' },
+        { title: 'Boiled safe drinking water & WASH protocol', tried: true, date: '2026-10-14' },
+        { title: 'Daily Animal Protein (Egg)', tried: false, date: null },
+        { title: 'Affordable Kamote Puree', tried: false, date: null }
+      ],
+      notes: 'Child appetite responding very well to small frequent nutrient-dense snacks.'
+    },
+    {
+      id: 'pgg-7',
+      parentName: 'Cristina Vega',
+      parentPhone: '0923-890-1234',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 5',
+      childName: 'Leon',
+      childAgeMonths: 20,
+      status: 'Stable',
+      actionsTried: 2,
+      actionsTotal: 5,
+      progressPct: 40,
+      lastActive: 'Yesterday',
+      lastActiveDate: '2026-10-14',
+      actionsList: [
+        { title: 'Affordable Ginisang Monggo soup', tried: true, date: '2026-10-14' },
+        { title: 'Boiled safe drinking water & WASH protocol', tried: true, date: '2026-10-13' },
+        { title: 'Enriched Lugaw with Malunggay & Egg', tried: false, date: null },
+        { title: 'Daily Animal Protein (Fish)', tried: false, date: null },
+        { title: 'Responsive positive feeding', tried: false, date: null }
+      ],
+      notes: 'Preparing budget-friendly monggo soup twice a week.'
+    },
+    {
+      id: 'pgg-8',
+      parentName: 'Nora Flores',
+      parentPhone: '0924-901-2345',
+      barangay: 'Barangay Manguring',
+      zone: 'Zone 6',
+      childName: 'Mia',
+      childAgeMonths: 10,
+      status: 'Improving',
+      actionsTried: 4,
+      actionsTotal: 5,
+      progressPct: 80,
+      lastActive: 'Today',
+      lastActiveDate: '2026-10-15',
+      actionsList: [
+        { title: 'Enriched Lugaw with Malunggay & Egg yolk', tried: true, date: '2026-10-15' },
+        { title: 'Boiled safe drinking water & WASH protocol', tried: true, date: '2026-10-14' },
+        { title: 'Mashed Kamote with breastmilk', tried: true, date: '2026-10-13' },
+        { title: 'Responsive positive feeding', tried: true, date: '2026-10-12' },
+        { title: 'Daily Minced Fish & Vegetables', tried: false, date: null }
+      ],
+      notes: 'High caregiver confidence score reported. Excellent sanitation and safe feeding routine.'
+    }
+  ],
+
   // Initial "Try It at Home" Practical Self-Report Submissions (Nabugoomu 2015; Kuchenbecker et al. 2017)
   initialTryHomeSubmissions: [
     {

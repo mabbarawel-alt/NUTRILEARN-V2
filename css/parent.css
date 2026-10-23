@@ -5,19 +5,19 @@
 
 /* Parent Role Base Background & Layout */
 body.role-parent {
-  background-color: #FAF8F5 !important;
+  background-color: #FAF7F2 !important;
   color: #1F2937;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-sans);
 }
 
 body.role-parent #app-workspace {
-  background-color: #FAF8F5;
+  background-color: #FAF7F2;
   min-height: 100vh;
 }
 
 body.role-parent .app-header {
-  background: #FFFFFF !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+  background: #FAF7F2 !important;
+  box-shadow: none !important;
   border-bottom: 1px solid #EAE6DF !important;
   padding: 0 !important;
   position: sticky;
@@ -26,7 +26,7 @@ body.role-parent .app-header {
 }
 
 body.role-parent .main-content {
-  background-color: #FAF8F5;
+  background-color: #FAF7F2;
   padding: 1.5rem 1rem 3rem 1rem;
   max-width: 1180px;
   margin: 0 auto;
@@ -83,10 +83,10 @@ body.role-parent #view-parent > .hero-banner {
 }
 
 .parent-brand-name {
-  font-family: 'Outfit', 'Playfair Display', Georgia, sans-serif;
+  font-family: var(--font-heading);
   font-size: 1.35rem;
   font-weight: 800;
-  color: #1A382A;
+  color: #19532B;
   letter-spacing: -0.02em;
 }
 
@@ -133,10 +133,11 @@ body.role-parent #view-parent > .hero-banner {
 }
 
 .parent-pill-btn.active {
-  background: #0E3D26 !important;
+  background: #2E6845 !important;
   color: #FFFFFF !important;
-  font-weight: 700;
-  box-shadow: 0 2px 6px rgba(14, 61, 38, 0.25);
+  font-weight: 600;
+  border-radius: 9999px;
+  box-shadow: none;
 }
 
 .parent-pill-icon {
@@ -179,46 +180,41 @@ body.role-parent #view-parent > .hero-banner {
 }
 
 .parent-user-loc-sub {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   color: #64748B;
-  max-width: 140px;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .parent-user-avatar-circle {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
-  background: #0E3D26;
+  background: #2D6A4F;
   color: #FFFFFF;
   font-weight: 700;
-  font-size: 0.78rem;
+  font-size: 0.82rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 1px 4px rgba(14, 61, 38, 0.2);
+  box-shadow: 0 1px 3px rgba(45, 106, 79, 0.2);
 }
 
-
-
 .btn-clean-signout {
-  padding: 5px 14px;
-  border-radius: 9999px;
-  border: 1.5px solid #D1D5DB;
+  padding: 5px 12px;
+  border-radius: 8px;
+  border: 1px solid #D6D0C5;
   background: #FFFFFF;
   color: #4B5563;
-  font-size: 0.82rem;
-  font-weight: 600;
+  font-size: 0.8rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .btn-clean-signout:hover {
-  background: #FEF2F2;
-  border-color: #FECACA;
-  color: #B91C1C;
+  background: #FAF7F2;
+  border-color: #BDB6AA;
+  color: #1F2937;
 }
 
 /* 2. UPCOMING EVENTS & REMINDERS BAR */
@@ -230,10 +226,10 @@ body.role-parent #view-parent > .hero-banner {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-family: 'Outfit', 'Playfair Display', Georgia, sans-serif;
+  font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 700;
-  color: #372549;
+  color: #19532B;
   margin-bottom: 0.65rem;
 }
 
@@ -258,8 +254,8 @@ body.role-parent #view-parent > .hero-banner {
 }
 
 .upcoming-tag-pill {
-  background: #FEF3C7;
-  color: #92400E;
+  background: #FE6015; /* Brand Crisp Carrot */
+  color: #FFFFFF;
   font-weight: 700;
   font-size: 0.72rem;
   padding: 3px 9px;
@@ -269,7 +265,7 @@ body.role-parent #view-parent > .hero-banner {
 
 /* 3. GREEN WELCOME HERO CARD */
 .parent-hero-green {
-  background: linear-gradient(135deg, #235D3A 0%, #2D6A4F 100%);
+  background: linear-gradient(135deg, #19532B 0%, #267941 100%);
   border-radius: 20px;
   padding: 2rem 2.25rem;
   color: #FFFFFF;
@@ -278,7 +274,7 @@ body.role-parent #view-parent > .hero-banner {
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 6px 20px rgba(35, 93, 58, 0.15);
+  box-shadow: 0 6px 20px rgba(25, 83, 43, 0.2);
   position: relative;
   overflow: hidden;
 }
@@ -295,7 +291,7 @@ body.role-parent #view-parent > .hero-banner {
 }
 
 .parent-hero-name {
-  font-family: 'Outfit', 'Playfair Display', Georgia, sans-serif;
+  font-family: var(--font-heading);
   font-size: 2.35rem;
   font-weight: 800;
   letter-spacing: -0.02em;
@@ -335,7 +331,7 @@ body.role-parent #view-parent > .hero-banner {
 }
 
 .parent-hero-stat-pct {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--font-sans);
   font-size: 2.2rem;
   font-weight: 800;
   line-height: 1;
@@ -387,15 +383,15 @@ body.role-parent #view-parent > .hero-banner {
 
 .parent-metric-icon {
   font-size: 1.1rem;
-  color: #2E7D32;
+  color: #19532B;
   line-height: 1;
 }
 
 .parent-metric-num {
-  font-family: 'Outfit', 'Inter', sans-serif;
+  font-family: var(--font-sans);
   font-size: 1.75rem;
   font-weight: 800;
-  color: #1F2937;
+  color: #19532B;
   margin: 0.4rem 0 0.15rem 0;
   line-height: 1.1;
 }
@@ -403,15 +399,15 @@ body.role-parent #view-parent > .hero-banner {
 .parent-metric-label {
   font-size: 0.78rem;
   font-weight: 600;
-  color: #6B7280;
+  color: #5D7266;
 }
 
 /* 5. NUTRITION MODULES 2x2 GRID */
 .parent-modules-heading {
-  font-family: 'Playfair Display', Georgia, serif;
+  font-family: var(--font-heading);
   font-size: 1.45rem;
-  font-weight: 800;
-  color: #1A382A;
+  font-weight: 700;
+  color: #19532B;
   margin: 0 0 1.15rem 0;
 }
 
@@ -920,20 +916,1126 @@ body.role-parent #view-parent > .hero-banner {
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 768px) {
+  /* 1. CLEAN MOBILE HEADER */
+  .parent-taskbar-clean {
+    padding: 0.5rem 0.85rem !important;
+    gap: 0.5rem !important;
+    width: 100% !important;
+    justify-content: space-between !important;
+    min-height: 48px !important;
+  }
+
+  .parent-taskbar-left {
+    gap: 0.5rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .parent-brand-logo-img {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .parent-brand-name-img {
+    height: 18px !important;
+    max-width: 110px !important;
+  }
+
+  /* CRITICAL: Hide horizontal pill tabs on mobile because they belong in Fixed Bottom Nav */
   .parent-pill-tabs {
-    overflow-x: auto;
-    width: 100%;
-    padding-bottom: 4px;
+    display: none !important;
   }
+
+  .parent-taskbar-right {
+    gap: 0.4rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Hide long location subtitle on mobile */
+  .parent-user-loc-sub {
+    display: none !important;
+  }
+
+  .parent-user-title-name {
+    font-size: 0.78rem !important;
+    max-width: 85px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  .parent-user-avatar-circle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.75rem !important;
+  }
+
+  .btn-clean-signout {
+    padding: 4px 8px !important;
+    font-size: 0.72rem !important;
+    border-radius: 8px !important;
+  }
+
+  /* 2. UPCOMING EVENTS & REMINDERS - MOBILE FITMENT */
+  .upcoming-events-bar {
+    margin-bottom: 1rem !important;
+  }
+
+  .upcoming-events-title {
+    font-size: 1rem !important;
+    margin-bottom: 0.45rem !important;
+  }
+
+  .upcoming-events-card {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.75rem !important;
+    padding: 0.85rem 1rem !important;
+    border-radius: 14px !important;
+  }
+
+  .upcoming-events-content {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 0.45rem !important;
+    width: 100% !important;
+    font-size: 0.84rem !important;
+    line-height: 1.45 !important;
+  }
+
+  .upcoming-events-content span {
+    word-break: normal !important;
+    overflow-wrap: break-word !important;
+  }
+
+  .upcoming-tag-pill {
+    font-size: 0.7rem !important;
+    padding: 2px 8px !important;
+    align-self: flex-start !important;
+  }
+
+  .upcoming-events-card .btn {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.82rem !important;
+    border-radius: 9px !important;
+  }
+
+  /* 3. GREEN WELCOME HERO CARD */
+  .parent-hero-green {
+    padding: 1.25rem 1.15rem !important;
+    border-radius: 18px !important;
+    margin-bottom: 1rem !important;
+    gap: 1rem !important;
+  }
+
+  .parent-hero-greeting {
+    font-size: 0.78rem !important;
+    margin-bottom: 0.15rem !important;
+  }
+
+  .parent-hero-name {
+    font-size: 1.55rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .parent-hero-tag {
+    font-size: 0.72rem !important;
+    padding: 2px 8px !important;
+    margin: 0.35rem 0 !important;
+    display: inline-block !important;
+  }
+
+  .parent-hero-desc {
+    font-size: 0.82rem !important;
+    line-height: 1.4 !important;
+    margin-top: 0.35rem !important;
+  }
+
+  .parent-hero-right {
+    padding-top: 0.75rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .parent-hero-stat-pct {
+    font-size: 1.5rem !important;
+  }
+
+  .parent-hero-stat-label {
+    font-size: 0.75rem !important;
+  }
+
+  .parent-hero-sprout-circle {
+    width: 44px !important;
+    height: 44px !important;
+    font-size: 1.25rem !important;
+  }
+
+  /* 4. SUMMARY METRICS GRID */
   .parent-metrics-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.75rem;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 0.65rem !important;
+    margin-bottom: 1.15rem !important;
   }
+
   .parent-metric-card {
-    padding: 1rem;
+    padding: 0.85rem 0.95rem !important;
+    border-radius: 14px !important;
   }
+
   .parent-metric-num {
-    font-size: 1.45rem;
+    font-size: 1.45rem !important;
+    line-height: 1.2 !important;
+  }
+
+  .parent-metric-label {
+    font-size: 0.72rem !important;
+  }
+
+  /* 5. VIEW CONTAINER PADDING (Leave clearance for Bottom Nav) */
+  .view-section {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+    padding-bottom: 85px !important;
   }
 }
+
+/* ==========================================================================
+   WEEKLY MEAL PLANNER (Parent Phase - Matches Target Design Exactly)
+   ========================================================================== */
+
+.weekly-meal-planner-container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0.25rem 0 2rem 0;
+}
+
+/* Header */
+.weekly-meal-planner-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.65rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.weekly-meal-title-group {
+  flex: 1;
+  min-width: 280px;
+}
+
+.weekly-meal-main-title {
+  font-family: var(--font-heading) !important;
+  font-size: 2.25rem !important;
+  font-weight: 700 !important;
+  color: #1A3828 !important;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.35rem 0 !important;
+  line-height: 1.15;
+}
+
+.weekly-meal-main-subtitle {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: #5C675F;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.weekly-meal-header-badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.meal-badge-age-target {
+  background: #2D6A4F;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.45rem 1.15rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+  box-shadow: 0 1px 3px rgba(45, 106, 79, 0.2);
+}
+
+.meal-badge-daily-total {
+  background: transparent;
+  border: 1.5px solid #2D6A4F;
+  color: #2D6A4F;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 0.38rem 1.15rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: -0.01em;
+}
+
+/* 5 Daily Meal Rows */
+.weekly-meal-cards-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-bottom: 2.25rem;
+}
+
+.weekly-meal-row-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE6DF;
+  border-radius: 16px;
+  padding: 0.85rem 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.weekly-meal-row-card:hover {
+  border-color: #D1D5DB;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transform: translateY(-1px);
+}
+
+.weekly-meal-row-left {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.meal-custom-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.meal-period-badge {
+  background: #ECE8E1;
+  color: #554F46;
+  font-family: var(--font-sans);
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0.32rem 0.95rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+  min-width: 110px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.meal-text-group {
+  flex: 1;
+  min-width: 0;
+}
+
+.meal-dish-title {
+  font-family: var(--font-sans);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #1F2937;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.meal-nutrients-sub {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  color: #6B7280;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+.meal-price-badge {
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #2D6A4F;
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+}
+
+/* Local Superfoods Guide Section */
+.superfoods-guide-section {
+  margin-bottom: 1.75rem;
+}
+
+.superfoods-guide-title {
+  font-family: var(--font-heading) !important;
+  font-size: 1.55rem !important;
+  font-weight: 700 !important;
+  color: #1A3828 !important;
+  margin: 0 0 1.15rem 0 !important;
+  letter-spacing: -0.015em;
+}
+
+.superfoods-guide-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.superfood-feature-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE6DF;
+  border-radius: 16px;
+  padding: 1.5rem 1.4rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.superfood-feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
+}
+
+.superfood-card-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.superfood-card-title {
+  font-family: var(--font-sans) !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  color: #1F2937 !important;
+  margin: 0 0 0.85rem 0 !important;
+}
+
+.superfood-benefits-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.superfood-benefits-list li {
+  font-family: var(--font-sans);
+  font-size: 0.82rem;
+  color: #4B5563;
+  line-height: 1.45;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.sf-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sf-check-green {
+  background: #E8F5E9;
+  color: #2E7D32;
+}
+
+.sf-check-yellow {
+  background: #FEF9C3;
+  color: #CA8A04;
+}
+
+.sf-check-blue {
+  background: #EFF6FF;
+  color: #2563EB;
+}
+
+/* Feeding Tip from WHO Guidelines Card */
+.who-guidelines-banner-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE6DF;
+  border-radius: 16px;
+  padding: 1.35rem 1.75rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.35rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  margin-bottom: 1.5rem;
+}
+
+.who-tip-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.who-tip-body {
+  flex: 1;
+}
+
+.who-tip-heading {
+  font-family: var(--font-sans) !important;
+  font-size: 0.95rem !important;
+  font-weight: 700 !important;
+  color: #1F2937 !important;
+  margin: 0 0 0.4rem 0 !important;
+}
+
+.who-tip-paragraph {
+  font-family: var(--font-sans);
+  font-size: 0.83rem;
+  color: #6B7280;
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 820px) {
+  .superfoods-guide-grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .weekly-meal-row-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.15rem;
+    gap: 0.75rem;
+  }
+
+  .weekly-meal-row-left {
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    width: 100%;
+  }
+
+  .meal-price-badge {
+    align-self: flex-end;
+    padding-left: 0;
+  }
+}
+
+/* ==========================================================================
+   TRY IT AT HOME - PARENT PHASE (Matches Reference Mockup 100%)
+   ========================================================================== */
+.try-home-page-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1.5rem 0.5rem 3.5rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Deep Forest Green Hero Banner */
+.try-home-hero-banner {
+  background: #2D6A4F;
+  background: linear-gradient(135deg, #2E6845 0%, #204B31 100%);
+  border-radius: 18px;
+  padding: 2.25rem 2.25rem 2rem;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 14px rgba(27, 77, 46, 0.12);
+}
+
+.try-home-hero-badge {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #B2D8C0;
+  margin-bottom: 0.65rem;
+}
+
+.try-home-hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.35rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  line-height: 1.2;
+  margin: 0 0 0.7rem 0;
+}
+
+.try-home-hero-desc {
+  font-size: 0.94rem;
+  line-height: 1.55;
+  color: #D8EDE0;
+  margin: 0 0 1.6rem 0;
+  max-width: 680px;
+}
+
+/* Progress row */
+.try-home-progress-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.try-home-progress-track {
+  flex: 1;
+  height: 9px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.try-home-progress-fill {
+  height: 100%;
+  background: #FFFFFF;
+  border-radius: 999px;
+  transition: width 0.35s ease-in-out;
+}
+
+.try-home-progress-label {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  white-space: nowrap;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Activities List */
+.try-home-activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+/* Individual Activity Card */
+.try-home-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EAE3D8;
+  border-radius: 16px;
+  padding: 1.15rem 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.try-home-card:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Completed Card State */
+.try-home-card.is-tried {
+  border: 2px solid #285A3A;
+  background: #FFFFFF;
+}
+
+/* Number / Checkmark Badge */
+.try-home-badge-col {
+  flex-shrink: 0;
+}
+
+.try-home-num-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #F3EEE5;
+  color: #786C5E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.try-home-card.is-tried .try-home-num-circle {
+  background: #285A3A;
+  color: #FFFFFF;
+}
+
+/* Content Column */
+.try-home-content-col {
+  flex: 1;
+  min-width: 0;
+}
+
+.try-home-context {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #7A897B;
+  margin-bottom: 0.25rem;
+}
+
+.try-home-item-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1E293B;
+  line-height: 1.35;
+  margin: 0 0 0.25rem 0;
+}
+
+.try-home-item-hint {
+  font-size: 0.83rem;
+  color: #64748B;
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Actions Column */
+.try-home-action-col {
+  flex-shrink: 0;
+}
+
+/* "I tried it" button */
+.btn-try-action {
+  background: #285A3A;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  padding: 9px 22px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn-try-action:hover {
+  background: #1F472D;
+  transform: translateY(-1px);
+}
+
+.btn-try-action:active {
+  transform: translateY(0);
+}
+
+/* "Edit" button */
+.btn-edit-action {
+  background: #EFE8DC;
+  color: #4A4036;
+  border: 1px solid #D8CFC2;
+  border-radius: 8px;
+  padding: 9px 24px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  white-space: nowrap;
+}
+
+.btn-edit-action:hover {
+  background: #E4DCCF;
+}
+
+/* Responsive on Mobile */
+@media (max-width: 640px) {
+  .try-home-page-container {
+    padding: 1rem 0.5rem 2.5rem;
+  }
+  .try-home-hero-banner {
+    padding: 1.5rem 1.25rem 1.35rem;
+    border-radius: 16px;
+  }
+  .try-home-hero-title {
+    font-size: 1.75rem;
+  }
+  .try-home-card {
+    padding: 1rem 0.95rem;
+    gap: 0.85rem;
+    border-radius: 14px;
+  }
+  .try-home-num-circle {
+    width: 38px;
+    height: 38px;
+    font-size: 0.95rem;
+  }
+  .try-home-item-title {
+    font-size: 0.98rem;
+  }
+  .btn-try-action, .btn-edit-action {
+    padding: 8px 14px;
+    font-size: 0.82rem;
+  }
+}
+
+/* ==========================================================================
+   WEIGHT TRACKER - PARENT PHASE (Matches Reference Mockup 100%)
+   ========================================================================== */
+.weight-tracker-page-container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 1.25rem 0.5rem 3.5rem;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Header */
+.wt-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.wt-title-block h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 2.15rem;
+  font-weight: 700;
+  color: #1E2522;
+  margin: 0 0 0.35rem 0;
+  line-height: 1.2;
+}
+
+.wt-title-block p {
+  font-size: 0.88rem;
+  color: #78716C;
+  margin: 0;
+  line-height: 1.45;
+}
+
+.wt-child-info,
+.wt-child-badge {
+  font-size: 0.92rem;
+  color: #78716C;
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 0.35rem;
+}
+
+.wt-child-info strong,
+.wt-child-badge strong {
+  color: #1E2522;
+  font-weight: 700;
+}
+
+/* 4 Metric Cards Grid */
+.wt-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.wt-metric-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE2D5;
+  border-radius: 16px;
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.wt-metric-card.highlight {
+  background: #FEF9E7;
+  border-color: #F6E6A6;
+}
+
+.wt-metric-icon {
+  font-size: 1.4rem;
+  margin-bottom: 0.65rem;
+  line-height: 1;
+}
+
+.wt-metric-val {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1E2522;
+  line-height: 1.2;
+  margin-bottom: 0.25rem;
+}
+
+.wt-metric-card.highlight .wt-metric-val {
+  color: #854D0E;
+}
+
+.wt-metric-val.green {
+  color: #2E6845;
+}
+
+.wt-metric-label {
+  font-size: 0.78rem;
+  color: #78716C;
+  font-weight: 500;
+}
+
+.wt-metric-card.highlight .wt-metric-label {
+  color: #92400E;
+}
+
+/* Growth Chart Card */
+.wt-chart-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE2D5;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.wt-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.wt-chart-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1E2522;
+  margin: 0;
+}
+
+.wt-chart-legend {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.82rem;
+  color: #78716C;
+}
+
+.wt-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.wt-legend-line-green {
+  display: inline-block;
+  width: 18px;
+  height: 2px;
+  background: #2E6845;
+  border-radius: 2px;
+}
+
+.wt-legend-line-dashed {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  border-top: 2px dashed #DC2626;
+}
+
+/* SVG Chart Box */
+.wt-chart-svg-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.wt-chart-svg {
+  width: 100%;
+  height: auto;
+  min-height: 220px;
+  display: block;
+}
+
+/* Bottom 2-Column Grid */
+.wt-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+/* Log New Weight Card */
+.wt-form-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE2D5;
+  border-radius: 16px;
+  padding: 1.6rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.wt-card-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1E2522;
+  margin: 0 0 1.25rem 0;
+}
+
+.wt-field-group {
+  margin-bottom: 1rem;
+}
+
+.wt-field-label {
+  display: block;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 0.35rem;
+}
+
+.wt-input {
+  width: 100%;
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid #DFD9CE;
+  background: #ECE6DC;
+  font-size: 0.9rem;
+  color: #1E2522;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.wt-input::placeholder {
+  color: #8F877B;
+}
+
+.wt-input:focus {
+  outline: none;
+  border-color: #2E6845;
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(46, 104, 69, 0.12);
+}
+
+.btn-wt-save {
+  width: 100%;
+  background: #2E6845;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 10px;
+  padding: 13px 18px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.1s ease;
+  margin-top: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.btn-wt-save:hover {
+  background: #235236;
+}
+
+.btn-wt-save:active {
+  transform: translateY(1px);
+}
+
+/* Callout Box */
+.wt-callout-box {
+  background: #F8F3EA;
+  border: 1px solid #EFE8DC;
+  border-radius: 12px;
+  padding: 13px 15px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: #78716C;
+  line-height: 1.45;
+}
+
+.wt-callout-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+/* Weight History Card */
+.wt-history-card {
+  background: #FFFFFF;
+  border: 1px solid #EAE2D5;
+  border-radius: 16px;
+  padding: 1.6rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  display: flex;
+  flex-direction: column;
+}
+
+.wt-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.wt-history-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.wt-history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.wt-history-list::-webkit-scrollbar-thumb {
+  background: #C7BEB1;
+  border-radius: 9999px;
+}
+
+.wt-history-item {
+  background: #ECE6DC;
+  border: 1px solid #DFD9CE;
+  border-radius: 12px;
+  padding: 13px 18px;
+  transition: background 0.15s ease;
+}
+
+.wt-history-item:hover {
+  background: #E6DFD4;
+}
+
+.wt-history-top {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 0.2rem;
+}
+
+.wt-history-val {
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: #1E2522;
+}
+
+.wt-history-delta {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2E6845;
+}
+
+.wt-history-date {
+  font-size: 0.78rem;
+  color: #78716C;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .wt-metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .wt-bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+

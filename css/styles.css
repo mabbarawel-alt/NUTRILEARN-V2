@@ -4,76 +4,103 @@
    ========================================================================== */
 
 :root {
-  /* Primary Dark Green Palette */
-  --color-primary-900: #082819;
-  --color-primary-800: #0E3D26;
-  /* Main Brand Green */
-  --color-primary-700: #145333;
-  --color-primary-600: #1B6A42;
-  --color-primary-500: #228553;
+  /* ==========================================================================
+     OFFICIAL BRAND DESIGN SYSTEM (Brand Guidelines 2026)
+     - Typography: Nunito
+     - Palette: Sunshine (#FFCA28), Cream (#F5E8CC), Crisp Carrot (#FE6015),
+                Forest Green (#19532B), Tomato Burst (#D42318), Kiwi (#8BC024)
+     ========================================================================== */
 
-  /* Mint & Leaf Accents */
-  --color-accent-600: #16A34A;
-  --color-accent-500: #22C55E;
-  --color-accent-400: #4ADE80;
-  --color-accent-200: #BBF7D0;
-  --color-accent-100: #DCFCE7;
-  --color-accent-50: #F0FDF4;
+  /* Brand Palette Raw Hex */
+  --color-forest-green: #19532B;
+  --color-kiwi: #8BC024;
+  --color-sunshine: #FFCA28;
+  --color-crisp-carrot: #FE6015;
+  --color-tomato-burst: #D42318;
+  --color-cream: #F5E8CC;
+  --color-cream-light: #FAF7F2;
+
+  /* Primary Forest Green Palette */
+  --color-primary-950: #0A2613;
+  --color-primary-900: #0E351B;
+  --color-primary-800: #19532B; /* Brand Forest Green */
+  --color-primary-700: #1F6335;
+  --color-primary-600: #267941;
+  --color-primary-500: #2E904F;
+  --color-primary-400: #3EA664;
+  --color-primary-300: #62C184;
+  --color-primary-200: #9CE0B5;
+  --color-primary-100: #D2F2DF;
+  --color-primary-50:  #EBF8F1;
+
+  /* Kiwi Fresh Accents */
+  --color-accent-700: #19532B;
+  --color-accent-600: #6E9B1A;
+  --color-accent-500: #8BC024; /* Brand Kiwi */
+  --color-accent-400: #9ED62E;
+  --color-accent-300: #BCE367;
+  --color-accent-200: #DAF2A2;
+  --color-accent-100: #EDFAD0;
+  --color-accent-50:  #F7FDEB;
+
+  /* Crisp Carrot, Sunshine & Tomato Accents */
+  --color-carrot: #FE6015;      /* Brand Crisp Carrot */
+  --color-sunshine: #FFCA28;    /* Brand Sunshine */
+  --color-tomato: #D42318;      /* Brand Tomato Burst */
+  --color-cream-surface: #F5E8CC; /* Brand Cream */
 
   /* Nutrition Status Semantic Colors */
-  --status-normal-bg: #ECFDF5;
-  --status-normal-text: #065F46;
-  --status-normal-border: #A7F3D0;
+  --status-normal-bg: #EDFAD0;
+  --status-normal-text: #19532B;
+  --status-normal-border: #8BC024;
 
-  --status-improved-bg: #F0FDF4;
-  --status-improved-text: #166534;
-  --status-improved-border: #86EFAC;
+  --status-improved-bg: #EDFAD0;
+  --status-improved-text: #19532B;
+  --status-improved-border: #8BC024;
 
-  --status-risk-bg: #FFFBEB;
-  --status-risk-text: #92400E;
-  --status-risk-border: #FDE68A;
+  --status-risk-bg: #FFF9E6;
+  --status-risk-text: #966600;
+  --status-risk-border: #FFCA28;
 
-  --status-severe-bg: #FEF2F2;
-  --status-severe-text: #991B1B;
-  --status-severe-border: #FECACA;
+  --status-severe-bg: #FEECEB;
+  --status-severe-text: #D42318;
+  --status-severe-border: #FCA5A5;
 
   /* MUAC Color Bands */
-  --muac-red: #EF4444;
-  /* Severe Malnutrition: < 115mm */
-  --muac-yellow: #F59E0B;
-  /* Moderate Malnutrition: 115 - 125mm */
-  --muac-green: #10B981;
-  /* Normal: > 125mm */
+  --muac-red: #D42318;    /* Severe Malnutrition: < 115mm (Tomato Burst) */
+  --muac-yellow: #FFCA28; /* Moderate Malnutrition: 115 - 125mm (Sunshine) */
+  --muac-green: #8BC024;  /* Normal: > 125mm (Kiwi) */
 
   /* Neutral Backgrounds & Surfaces */
-  --bg-page: #F7FAF8;
+  --bg-page: #FAF7F2; /* Cream-Light background */
   --bg-surface: #FFFFFF;
-  --bg-surface-subtle: #F0F5F2;
-  --border-light: #E2EBE5;
-  --border-medium: #CBD8D0;
+  --bg-surface-subtle: #F5E8CC;
+  --border-light: #E8E2D5;
+  --border-medium: #D8CFBF;
 
   /* Text & Typographic Hierarchy */
-  --text-primary: #111E17;
-  --text-secondary: #475850;
-  --text-muted: #6B7D74;
+  --text-primary: #19532B;
+  --text-secondary: #2C4838;
+  --text-muted: #5D7266;
   --text-on-dark: #FFFFFF;
-  --text-on-dark-muted: #D1E7DD;
+  --text-on-dark-muted: #E2ECD8;
 
   /* Shadows & Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 24px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 26px;
   --radius-full: 9999px;
 
-  --shadow-sm: 0 1px 3px rgba(10, 36, 23, 0.06), 0 1px 2px rgba(10, 36, 23, 0.04);
-  --shadow-md: 0 4px 6px -1px rgba(10, 36, 23, 0.08), 0 2px 4px -2px rgba(10, 36, 23, 0.05);
-  --shadow-lg: 0 10px 15px -3px rgba(10, 36, 23, 0.10), 0 4px 6px -4px rgba(10, 36, 23, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(10, 36, 23, 0.15), 0 8px 10px -6px rgba(10, 36, 23, 0.08);
+  --shadow-sm: 0 1px 3px rgba(25, 83, 43, 0.08), 0 1px 2px rgba(25, 83, 43, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(25, 83, 43, 0.10), 0 2px 4px -2px rgba(25, 83, 43, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(25, 83, 43, 0.12), 0 4px 6px -4px rgba(25, 83, 43, 0.06);
+  --shadow-xl: 0 20px 25px -5px rgba(25, 83, 43, 0.16), 0 8px 10px -6px rgba(25, 83, 43, 0.08);
 
-  /* Typography Font Stack */
+  /* Typography Font Stack - Inter, Playfair Display, Outfit */
   --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-accent: 'Outfit', sans-serif;
 
   --max-content-width: 1240px;
   --header-height: 62px;
@@ -109,6 +136,11 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.015em;
 }
 
 /* Accessibility */
@@ -328,7 +360,7 @@ body {
   border-radius: 50%;
   background: #FFFFFF;
   border: 1.5px solid #CBD5E1;
-  color: #0E3D26;
+  color: #19532B;
   font-size: 1.35rem;
   font-weight: 800;
   cursor: pointer;
@@ -345,11 +377,11 @@ body {
 }
 
 .sub-nav-arrow:hover {
-  background: #0E3D26;
+  background: #19532B;
   color: #FFFFFF;
-  border-color: #0E3D26;
+  border-color: #19532B;
   transform: scale(1.1);
-  box-shadow: 0 4px 10px rgba(14, 61, 38, 0.28);
+  box-shadow: 0 4px 10px rgba(25, 83, 43, 0.28);
 }
 
 .sub-nav-arrow:active {
@@ -394,7 +426,7 @@ body {
 }
 
 .sub-nav-container::-webkit-scrollbar-thumb:hover {
-  background: #0E3D26;
+  background: #19532B;
 }
 
 .sub-nav-link {
@@ -553,13 +585,49 @@ main.main-content {
 }
 
 .btn-accent {
-  background-color: var(--color-accent-600);
-  color: #FFFFFF;
+  background-color: var(--color-accent-500); /* Brand Kiwi */
+  color: #19532B;
+  font-weight: 700;
 }
 
 .btn-accent:hover {
-  background-color: var(--color-accent-500);
-  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.35);
+  background-color: var(--color-accent-400);
+  box-shadow: 0 4px 14px rgba(139, 192, 36, 0.4);
+}
+
+.btn-carrot {
+  background-color: var(--color-crisp-carrot); /* Brand Crisp Carrot #FE6015 */
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(254, 96, 21, 0.28);
+}
+
+.btn-carrot:hover {
+  background-color: #E24F08;
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(254, 96, 21, 0.4);
+}
+
+.btn-sunshine {
+  background-color: var(--color-sunshine); /* Brand Sunshine #FFCA28 */
+  color: #5C4000;
+  font-weight: 700;
+}
+
+.btn-sunshine:hover {
+  background-color: #FBBF24;
+  box-shadow: 0 4px 12px rgba(255, 202, 40, 0.4);
+}
+
+.btn-danger {
+  background-color: var(--color-tomato-burst); /* Brand Tomato Burst #D42318 */
+  color: #FFFFFF;
+  font-weight: 700;
+}
+
+.btn-danger:hover {
+  background-color: #B91C1C;
+  box-shadow: 0 4px 12px rgba(212, 35, 24, 0.35);
 }
 
 .btn-outline {
@@ -942,11 +1010,11 @@ main.main-content {
   }
 
   .sub-nav-link.active {
-    background: #0E3D26 !important;
+    background: #19532B !important;
     color: #FFFFFF !important;
-    border-color: #0E3D26 !important;
+    border-color: #19532B !important;
     font-weight: 700 !important;
-    box-shadow: 0 2px 6px rgba(14, 61, 38, 0.25) !important;
+    box-shadow: 0 2px 6px rgba(25, 83, 43, 0.25) !important;
   }
 
   /* Compact Main Content & Hero Banner */

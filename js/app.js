@@ -30,14 +30,63 @@ const NutriApp = {
     if (window.AnnouncementsModule) {
       AnnouncementsModule.init();
     }
+    if (typeof InactivityManager !== 'undefined') {
+      InactivityManager.init();
+    }
 
     // Sync cloud database with local storage if configured
     if (typeof NutriStorage.syncWithSupabase === 'function') {
       NutriStorage.syncWithSupabase();
     }
 
-    // The selection of User Portal and Sign In appears immediately before using the system!
-    this.showStartupScreen();
+    // Check if user is already authenticated to restore session or show gateway
+    const currentUser = (typeof NutriStorage !== 'undefined' && typeof NutriStorage.getCurrentUser === 'function')
+      ? NutriStorage.getCurrentUser()
+      : null;
+
+    if (currentUser && currentUser.role) {
+      this.restoreUserSession(currentUser);
+    } else {
+      this.showStartupScreen();
+    }
+  },
+
+  // Restore logged-in user session and specific phase/sub-tab upon page load or F5 refresh
+  restoreUserSession(currentUser) {
+    document.documentElement.classList.add('user-logged-in');
+    const normRole = (currentUser.role === 'collector') ? 'chw' : currentUser.role;
+    document.documentElement.classList.add('role-' + normRole);
+    this.hideStartupScreen();
+
+    // 1. Identify target sub-tab from URL hash or persisted storage
+    let targetTab = null;
+    if (window.location.hash) {
+      const hash = window.location.hash.replace(/^#/, '').trim();
+      if (hash) targetTab = hash;
+    }
+    if (!targetTab) {
+      targetTab = sessionStorage.getItem('nutrilearn_active_tab') || localStorage.getItem('nutrilearn_active_tab');
+    }
+
+    // 2. Switch to active role and restore sub-tab
+    const role = currentUser.role || 'parent';
+    this.switchRole(role, targetTab);
+
+    // 3. Update profile badges in header / taskbar
+    this.updateUserHeaderBadge();
+
+    // 4. Update mobile bottom navigation
+    if (window.NutriMobile) {
+      NutriMobile.updateRoleBottomNav(role);
+      if (targetTab) {
+        NutriMobile.updateActiveBottomTab(role === 'collector' ? 'bhw' : role, targetTab);
+      }
+    }
+
+    // 5. Inactivity timer reset
+    if (typeof InactivityManager !== 'undefined') {
+      InactivityManager.resetTimer();
+    }
   },
 
   // Show Startup Authentication Gateway
@@ -51,7 +100,25 @@ const NutriApp = {
     if (workspace) {
       workspace.style.display = 'none';
     }
-    this.goToRoleSelectSignIn();
+    document.documentElement.classList.remove('user-logged-in');
+
+    // Restore unauthenticated gateway screen if user refreshed during login/register
+    const savedAuthScreen = sessionStorage.getItem('nutrilearn_auth_screen');
+    const savedAuthRole = sessionStorage.getItem('nutrilearn_auth_role');
+    if (savedAuthRole) {
+      this.currentAuthRole = savedAuthRole;
+    }
+    if (savedAuthScreen === 'screen-role-signup') {
+      this.goToRoleSelectSignUp();
+    } else if (savedAuthScreen === 'screen-auth-signin') {
+      this.proceedToSignInCredentials(true);
+    } else if (savedAuthScreen === 'screen-auth-details') {
+      this.proceedToSignUpDetails();
+    } else if (savedAuthScreen === 'screen-auth-forgot') {
+      this.switchAuthScreen('screen-auth-forgot');
+    } else {
+      this.goToRoleSelectSignIn();
+    }
   },
 
   // Hide Startup Authentication Gateway
@@ -65,10 +132,19 @@ const NutriApp = {
     if (workspace) {
       workspace.style.display = 'block';
     }
+    document.documentElement.classList.add('user-logged-in');
+  },
+
+  // Quick toggle to pause/resume ambient video (no-op since video removed)
+  toggleBgVideo() {
+    return;
   },
 
   // Switch between screens in the Auth Gateway
   switchAuthScreen(screenId) {
+    try {
+      sessionStorage.setItem('nutrilearn_auth_screen', screenId);
+    } catch (e) {}
     ['screen-role-signin', 'screen-role-signup', 'screen-auth-details', 'screen-auth-signin', 'screen-auth-forgot'].forEach(id => {
       const el = document.getElementById(id);
       if (el) el.style.display = (id === screenId) ? 'block' : 'none';
@@ -350,6 +426,9 @@ const NutriApp = {
   // User clicks a role card on Screen 1 or Screen 2
   selectRole(role, context) {
     this.currentAuthRole = role;
+    try {
+      sessionStorage.setItem('nutrilearn_auth_role', role);
+    } catch (e) {}
     this.updateRoleCardSelection(context || 'signin', role);
   },
 
@@ -455,6 +534,9 @@ const NutriApp = {
       if (window.ParentModule && typeof ParentModule.renderChildGrowth === 'function') {
         ParentModule.renderChildGrowth();
       }
+      if (typeof InactivityManager !== 'undefined') {
+        InactivityManager.resetTimer();
+      }
       const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
       const welcome = isFil
         ? `👋 Maligayang pagdating, ${result.user.name}! Naka-log in na.`
@@ -463,6 +545,23 @@ const NutriApp = {
     } else {
       this.showToast(result.message, 'warning');
     }
+  },
+
+  // 1-Click Login for Prototype Verification (Chapter 2.2 Default Test Authentication Accounts)
+  quickLoginTestAccount(role) {
+    const defaultAccounts = {
+      parent: { email: 'maria.santos@nutrilearn.ph', pass: 'Password123!' },
+      chw: { email: 'ana.reyes@nutrilearn.ph', pass: 'Password123!' },
+      mho: { email: 'mho@nutrilearn.ph', pass: 'Password123!' }
+    };
+    const acc = defaultAccounts[role] || defaultAccounts.parent;
+    this.currentAuthRole = role;
+    this.proceedToSignInCredentials(true);
+    const emailInput = document.getElementById('input-signin-email');
+    const passInput = document.getElementById('input-signin-password');
+    if (emailInput) emailInput.value = acc.email;
+    if (passInput) passInput.value = acc.pass;
+    this.submitSignIn();
   },
 
   // Submit Registration (Screen 3)
@@ -723,6 +822,7 @@ const NutriApp = {
     if (workspace) {
       workspace.style.display = 'block';
     }
+    document.documentElement.classList.add('user-logged-in');
   },
 
   // Update Startup Form Banner and Fields based on chosen portal
@@ -779,6 +879,21 @@ const NutriApp = {
 
   logout() {
     NutriStorage.setCurrentUser(null);
+    try {
+      sessionStorage.removeItem('nutrilearn_active_tab');
+      sessionStorage.removeItem('nutrilearn_active_role');
+      sessionStorage.removeItem('nutrilearn_active_module');
+      localStorage.removeItem('nutrilearn_active_tab');
+      localStorage.removeItem('nutrilearn_active_role');
+      localStorage.removeItem('nutrilearn_active_module');
+      sessionStorage.removeItem('nutrilearn_auth_screen');
+      sessionStorage.removeItem('nutrilearn_auth_role');
+      document.documentElement.classList.remove('user-logged-in', 'role-parent', 'role-chw', 'role-mho');
+      if (window.location.hash) {
+        history.replaceState(null, '', window.location.pathname + window.location.search);
+      }
+    } catch (e) {}
+
     document.body.classList.remove('role-mho', 'role-parent', 'role-chw');
     const adminTopTaskbar = document.getElementById('admin-top-taskbar');
     const parentTopTaskbar = document.getElementById('parent-top-taskbar');
@@ -790,9 +905,11 @@ const NutriApp = {
     if (standardHeader) standardHeader.style.display = 'flex';
     this.updateUserHeaderBadge();
 
-    // Hide all view sections
+    // Hide all view sections & mobile bottom navigation
     document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
     document.querySelectorAll('.sub-nav').forEach(nav => nav.style.display = 'none');
+    const mobileBottomNav = document.getElementById('mobile-bottom-nav');
+    if (mobileBottomNav) mobileBottomNav.style.display = 'none';
 
     this.showStartupScreen();
     this.showToast('You have signed out. Please choose your portal and sign in to continue.', 'info');
@@ -875,6 +992,16 @@ const NutriApp = {
       });
     });
 
+    // Escape key closes open modal & restores scroll
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        const activeModal = document.querySelector('.modal-backdrop.open, .modal-backdrop.active');
+        if (activeModal) {
+          this.closeModal(activeModal.id);
+        }
+      }
+    });
+
     // PWA Install prompt capture
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
@@ -885,8 +1012,16 @@ const NutriApp = {
   },
 
   // Switch Stakeholder Role & Isolate Features
-  switchRole(role) {
+  switchRole(role, targetSubTab = null) {
     this.currentRole = role;
+
+    // Persist active role
+    try {
+      sessionStorage.setItem('nutrilearn_active_role', role);
+      localStorage.setItem('nutrilearn_active_role', role);
+      document.documentElement.classList.remove('role-parent', 'role-chw', 'role-mho');
+      document.documentElement.classList.add('role-' + (role === 'collector' ? 'chw' : role));
+    } catch (e) {}
 
     // Toggle Main View Sections: Show ONLY the active portal
     document.querySelectorAll('.view-section').forEach(sec => {
@@ -943,6 +1078,11 @@ const NutriApp = {
 
     this.updateUserHeaderBadge();
 
+    // Update Mobile Bottom Nav for active role
+    if (window.NutriMobile) {
+      NutriMobile.updateRoleBottomNav(role);
+    }
+
     if (parentSubNav) parentSubNav.style.display = 'none';
     if (chwSubNav) chwSubNav.style.display = 'none';
     if (mhoSubNav) mhoSubNav.style.display = 'none';
@@ -963,26 +1103,53 @@ const NutriApp = {
     if (pillTitle) pillTitle.textContent = portalMeta[role]?.title || 'NutriLearn';
     if (pillTag) pillTag.textContent = portalMeta[role]?.tag || 'Community Health';
 
-    // Initialize or Refresh views
+    // Initialize or Refresh views with proper sub-tab restoration
     if (role === 'chw' || role === 'collector') {
       CHWModule.renderRegistryTable();
       CHWModule.updateStatsBar();
       CHWModule.renderBHWDashboard();
-      this.switchCHWSubTab(role === 'collector' ? 'registry' : 'dashboard');
+      const validCHWTabs = ['dashboard', 'groups', 'evaluations', 'announcements', 'registry'];
+      const defaultCHWTab = role === 'collector' ? 'registry' : 'dashboard';
+      let chwTab = targetSubTab;
+      if (!chwTab || !validCHWTabs.includes(chwTab)) {
+        chwTab = sessionStorage.getItem('nutrilearn_active_tab') || defaultCHWTab;
+      }
+      this.switchCHWSubTab(validCHWTabs.includes(chwTab) ? chwTab : defaultCHWTab);
     } else if (role === 'mho') {
       MHODashboard.init();
-      this.switchMHOSubTab('overview');
+      const validMHOTabs = ['overview', 'records', 'barangays', 'content', 'users', 'audit', 'announcements'];
+      let mhoTab = (targetSubTab === 'dashboard') ? 'overview' : targetSubTab;
+      if (!mhoTab || !validMHOTabs.includes(mhoTab)) {
+        mhoTab = sessionStorage.getItem('nutrilearn_active_tab') || 'overview';
+      }
+      this.switchMHOSubTab(validMHOTabs.includes(mhoTab) ? mhoTab : 'overview');
     } else if (role === 'parent') {
       ParentModule.renderModuleCards();
       ParentModule.renderHomeActionsChecklist();
       ParentModule.updateProgressHeader();
       ParentModule.renderChildGrowth();
-      ParentModule.switchTab('learning');
+      const validParentTabs = ['learning', 'meal-planner', 'try-at-home', 'growth-tracker'];
+      let parentTab = targetSubTab;
+      if (parentTab === 'dashboard') parentTab = 'learning';
+      if (!parentTab || !validParentTabs.includes(parentTab)) {
+        parentTab = sessionStorage.getItem('nutrilearn_active_tab') || 'learning';
+      }
+      ParentModule.switchTab(validParentTabs.includes(parentTab) ? parentTab : 'learning');
+
+      const savedModule = sessionStorage.getItem('nutrilearn_active_module') || localStorage.getItem('nutrilearn_active_module');
+      if (parentTab === 'learning' && savedModule && typeof ParentModule.openModuleDrawer === 'function') {
+        ParentModule.openModuleDrawer(savedModule);
+      }
     }
 
     if (window.AnnouncementsModule) {
       AnnouncementsModule.renderAllFeeds();
       AnnouncementsModule.renderDashboardWidgets();
+    }
+
+    // Synchronize role bottom navigation bar on mobile
+    if (window.NutriMobile) {
+      NutriMobile.updateRoleBottomNav(role);
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1080,6 +1247,13 @@ const NutriApp = {
 
   // Switch Sub-tabs in CHW / Data Collector View
   switchCHWSubTab(tabName) {
+    if (!tabName) tabName = 'dashboard';
+    try {
+      sessionStorage.setItem('nutrilearn_active_tab', tabName);
+      localStorage.setItem('nutrilearn_active_tab', tabName);
+      history.replaceState(null, '', '#' + tabName);
+    } catch (e) {}
+
     // Update Clean BHW Top Taskbar pill tabs
     document.querySelectorAll('.bhw-pill-btn').forEach(btn => {
       const isActive = btn.dataset.tab === tabName;
@@ -1101,6 +1275,7 @@ const NutriApp = {
     if (tabName === 'dashboard' && window.CHWModule) {
       CHWModule.renderBHWDashboard();
     } else if (tabName === 'groups' && window.CHWModule) {
+      CHWModule.renderParentGuardianGroupsTable();
       CHWModule.renderGroups();
     } else if (tabName === 'evaluations' && window.CHWModule) {
       CHWModule.renderTryHomeEvaluationsTable();
@@ -1112,7 +1287,12 @@ const NutriApp = {
 
   // Switch Sub-tabs in MHO View
   switchMHOSubTab(tabName) {
-    const targetTab = (tabName === 'dashboard') ? 'overview' : tabName;
+    const targetTab = (tabName === 'dashboard') ? 'overview' : (tabName || 'overview');
+    try {
+      sessionStorage.setItem('nutrilearn_active_tab', targetTab);
+      localStorage.setItem('nutrilearn_active_tab', targetTab);
+      history.replaceState(null, '', '#' + targetTab);
+    } catch (e) {}
 
     // Update Clean Admin Top Taskbar pills
     document.querySelectorAll('.admin-tab-btn').forEach(btn => {
@@ -1463,23 +1643,16 @@ const NutriApp = {
     });
   },
 
-  // Switch Sub-tabs in CHW View
-  switchCHWSubTab(tabName) {
-    document.querySelectorAll('.chw-sub-link').forEach(link => {
-      link.classList.toggle('active', link.dataset.tab === tabName);
-    });
-
-    document.querySelectorAll('.chw-tab-pane').forEach(pane => {
-      pane.style.display = pane.dataset.tab === tabName ? 'block' : 'none';
-    });
-  },
 
   // Modal Open / Close Handlers
   openModal(modalId) {
     const modal = document.getElementById(modalId);
     if (modal) {
+      modal.style.display = 'flex';
       modal.classList.add('open');
+      modal.classList.add('active');
       document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     }
   },
 
@@ -1487,7 +1660,13 @@ const NutriApp = {
     const modal = document.getElementById(modalId);
     if (modal) {
       modal.classList.remove('open');
+      modal.classList.remove('active');
+      modal.style.display = 'none';
+    }
+    const anyOpen = document.querySelectorAll('.modal-backdrop.open');
+    if (!anyOpen || anyOpen.length === 0) {
       document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
   },
 
@@ -1584,6 +1763,125 @@ const NutriApp = {
     if (window.NutriI18n) NutriI18n.toggleLanguage();
   }
 };
+
+// ==============================================================================
+// INACTIVITY SESSION TIMEOUT MANAGER (Thesis Chapter 2.2 Security & Privacy)
+// Automatically times out user session after 30 minutes of inactivity to protect family privacy
+// ==============================================================================
+const InactivityManager = {
+  TIMEOUT_MS: 30 * 60 * 1000, // 30 minutes (1,800,000 ms)
+  WARNING_MS: 28 * 60 * 1000, // Warning at 28 minutes
+  COUNTDOWN_SEC: 120, // 2-minute countdown (120 seconds)
+  timer: null,
+  countdownInterval: null,
+  isWarningShowing: false,
+  remainingSeconds: 120,
+
+  init() {
+    this.bindActivityListeners();
+    this.resetTimer();
+  },
+
+  bindActivityListeners() {
+    const reset = () => {
+      // Don't reset if warning modal is already waiting for user choice
+      if (!this.isWarningShowing) {
+        this.resetTimer();
+      }
+    };
+
+    ['mousemove', 'mousedown', 'keydown', 'touchstart', 'scroll', 'click'].forEach(evt => {
+      window.addEventListener(evt, reset, { passive: true });
+    });
+  },
+
+  resetTimer() {
+    if (this.timer) clearTimeout(this.timer);
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+    this.isWarningShowing = false;
+    this.remainingSeconds = this.COUNTDOWN_SEC;
+
+    // Only run inactivity timer if a user is actively logged in
+    const currentUser = window.NutriStorage ? NutriStorage.getCurrentUser() : null;
+    const startupScreen = document.getElementById('startup-auth-screen');
+    const isAppActive = startupScreen && startupScreen.style.display === 'none';
+
+    if (currentUser && isAppActive) {
+      this.timer = setTimeout(() => {
+        this.showWarning();
+      }, this.WARNING_MS);
+    }
+  },
+
+  showWarning() {
+    const currentUser = window.NutriStorage ? NutriStorage.getCurrentUser() : null;
+    if (!currentUser) return;
+
+    this.isWarningShowing = true;
+    this.remainingSeconds = this.COUNTDOWN_SEC;
+    const modal = document.getElementById('modal-inactivity-warning');
+    const countdownEl = document.getElementById('inactivity-countdown');
+    if (countdownEl) countdownEl.textContent = this.remainingSeconds;
+    if (modal) modal.style.display = 'flex';
+
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+    this.countdownInterval = setInterval(() => {
+      this.remainingSeconds--;
+      if (countdownEl) countdownEl.textContent = this.remainingSeconds;
+
+      if (this.remainingSeconds <= 0) {
+        clearInterval(this.countdownInterval);
+        this.performLogout('timeout');
+      }
+    }, 1000);
+  },
+
+  stayLoggedIn() {
+    const modal = document.getElementById('modal-inactivity-warning');
+    if (modal) modal.style.display = 'none';
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+    this.isWarningShowing = false;
+    this.resetTimer();
+    if (window.NutriApp) {
+      NutriApp.showToast('✅ Na-extend ang iyong sesyon. Salamat!', 'success');
+    }
+  },
+
+  performLogout(reason = 'timeout') {
+    const modal = document.getElementById('modal-inactivity-warning');
+    if (modal) modal.style.display = 'none';
+    if (this.countdownInterval) clearInterval(this.countdownInterval);
+    this.isWarningShowing = false;
+
+    const user = window.NutriStorage ? NutriStorage.getCurrentUser() : null;
+    if (user && window.NutriStorage) {
+      NutriStorage.logAudit(
+        'Session Timed Out (Inactivity)',
+        'Security & Access',
+        `User ${user.name} automatically logged out after 30 minutes of inactivity to protect family privacy (Chapter 2.2).`,
+        user.name
+      );
+    }
+
+    if (window.NutriApp) {
+      NutriApp.logout();
+      if (reason === 'timeout') {
+        const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+        const msg = isFil
+          ? '🔒 Kusang nag-log out ang sesyon dahil sa 30 minuto ng walang aktibidad upang maprotektahan ang pribadong datos ng pamilya.'
+          : '🔒 Session timed out after 30 minutes of inactivity to protect family privacy.';
+        NutriApp.showToast(msg, 'warning');
+      }
+    }
+  },
+
+  // Instant trigger helper for prototype evaluation and defense demonstrations
+  testTriggerWarning() {
+    this.showWarning();
+  }
+};
+
+window.InactivityManager = InactivityManager;
 
 // Bootstrap on DOM ready
 document.addEventListener('DOMContentLoaded', () => {

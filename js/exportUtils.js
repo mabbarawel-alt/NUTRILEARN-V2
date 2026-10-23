@@ -13,6 +13,7 @@ const NutriStorage = {
   CURRENT_USER_KEY: 'nutrilearn_current_user_v1',
   ANNOUNCEMENTS_KEY: 'nutrilearn_announcements_v1',
   GROUPS_KEY: 'nutrilearn_parent_groups_v1',
+  PARENT_GROUPS_TRACKER_KEY: 'nutrilearn_parent_groups_tracker_v1',
   AUDIT_KEY: 'nutrilearn_audit_logs_v1',
   BARANGAYS_KEY: 'nutrilearn_barangays_v1',
   TRY_HOME_KEY: 'nutrilearn_try_home_submissions_v1',
@@ -91,6 +92,88 @@ const NutriStorage = {
     // Initialize "Try It at Home" self-reported practical submissions
     if (!localStorage.getItem(this.TRY_HOME_KEY)) {
       localStorage.setItem(this.TRY_HOME_KEY, JSON.stringify(NUTRI_DATA.initialTryHomeSubmissions || []));
+    }
+
+    // Initialize Parent/Guardian Groups Tracker (BHW Phase exact design specification)
+    if (!localStorage.getItem(this.PARENT_GROUPS_TRACKER_KEY)) {
+      localStorage.setItem(this.PARENT_GROUPS_TRACKER_KEY, JSON.stringify(NUTRI_DATA.initialParentGuardianGroups || []));
+    }
+  },
+
+  // ==========================================================================
+  // PARENT/GUARDIAN GROUPS TRACKER (BHW Phase Specification)
+  // ==========================================================================
+  getParentGroupsTracker() {
+    try {
+      const data = localStorage.getItem(this.PARENT_GROUPS_TRACKER_KEY);
+      if (data) {
+        return JSON.parse(data);
+      }
+      return NUTRI_DATA.initialParentGuardianGroups || [];
+    } catch (e) {
+      console.error('Error reading parent groups tracker:', e);
+      return NUTRI_DATA.initialParentGuardianGroups || [];
+    }
+  },
+
+  saveParentGroupsTracker(records) {
+    try {
+      localStorage.setItem(this.PARENT_GROUPS_TRACKER_KEY, JSON.stringify(records));
+      return true;
+    } catch (e) {
+      console.error('Error saving parent groups tracker:', e);
+      return false;
+    }
+  },
+
+  updateParentGroupItem(id, updates) {
+    try {
+      const records = this.getParentGroupsTracker();
+      const idx = records.findIndex(r => r.id === id);
+      if (idx !== -1) {
+        records[idx] = { ...records[idx], ...updates };
+        this.saveParentGroupsTracker(records);
+        return records[idx];
+      }
+      return null;
+    } catch (e) {
+      console.error('Error updating parent group item:', e);
+      return null;
+    }
+  },
+
+  addParentGroupItem(item) {
+    try {
+      const records = this.getParentGroupsTracker();
+      const newItem = {
+        id: item.id || `pgg-${Date.now()}`,
+        parentName: item.parentName || 'Parent Name',
+        parentPhone: item.parentPhone || '',
+        barangay: item.barangay || 'Barangay Manguring',
+        zone: item.zone || 'Zone 1',
+        childName: item.childName || 'Child',
+        childAgeMonths: item.childAgeMonths || 12,
+        status: item.status || 'Stable',
+        actionsTried: item.actionsTried || 0,
+        actionsTotal: item.actionsTotal || 5,
+        progressPct: item.progressPct !== undefined ? item.progressPct : Math.round(((item.actionsTried || 0) / (item.actionsTotal || 5)) * 100),
+        lastActive: item.lastActive || 'Today',
+        lastActiveDate: new Date().toISOString().split('T')[0],
+        actionsList: item.actionsList || [
+          { title: 'Enriched Lugaw with Malunggay & Egg', tried: false, date: null },
+          { title: 'Boiled safe drinking water & WASH protocol', tried: false, date: null },
+          { title: 'Responsive positive feeding', tried: false, date: null },
+          { title: 'Daily Animal Protein (Fish/Egg)', tried: false, date: null },
+          { title: 'Affordable Kamote Puree', tried: false, date: null }
+        ],
+        notes: item.notes || ''
+      };
+      records.unshift(newItem);
+      this.saveParentGroupsTracker(records);
+      return newItem;
+    } catch (e) {
+      console.error('Error adding parent group item:', e);
+      return null;
     }
   },
 

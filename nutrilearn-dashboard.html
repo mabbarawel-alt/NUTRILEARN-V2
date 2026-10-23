@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NutriLearn — Field Records Dashboard</title>
-  
-  <!-- Google Fonts: Plus Jakarta Sans & Playfair Display -->
+
+  <!-- Google Fonts: Inter and Playfair Display -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+    rel="stylesheet">
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -18,32 +21,36 @@
         extend: {
           colors: {
             brand: {
-              50: '#F0F7F4',
-              100: '#D8EDE2',
-              500: '#2D6A4F',
-              600: '#1E4E3A',
-              700: '#194130',
-              800: '#143828',
-              900: '#0F291E',
-              dark: '#1E382A'
+              50: '#EBF8F1',
+              100: '#D2F2DF',
+              500: '#2E904F',
+              600: '#267941',
+              700: '#1F6335',
+              800: '#19532B',
+              900: '#0E351B',
+              dark: '#19532B',
+              kiwi: '#8BC024',
+              carrot: '#FE6015',
+              sunshine: '#FFCA28',
+              cream: '#F5E8CC'
             },
             warm: {
-              cream: '#FBF9F5',
+              cream: '#FAF7F2',
               surface: '#FFFFFF',
               card: '#FAF7F2',
-              pill: '#F1ECE3',
-              pillHover: '#E5DFD4',
-              border: '#EAE4D8',
-              borderInput: '#DDD7CD',
-              textMuted: '#78716C'
+              pill: '#F5E8CC',
+              pillHover: '#EBE0C4',
+              border: '#E8E2D5',
+              borderInput: '#D8CFBF',
+              textMuted: '#5D7266'
             },
             rust: {
-              500: '#D96528',
-              600: '#C2561D'
+              500: '#FE6015',
+              600: '#E24F08'
             }
           },
           fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+            sans: ['"Inter"', 'system-ui', '-apple-system', 'sans-serif'],
             display: ['"Playfair Display"', 'Georgia', 'serif']
           },
           boxShadow: {
@@ -71,13 +78,16 @@
       width: 6px;
       height: 6px;
     }
+
     ::-webkit-scrollbar-track {
       background: #F4EFEA;
     }
+
     ::-webkit-scrollbar-thumb {
       background: #D5CEBE;
       border-radius: 9999px;
     }
+
     ::-webkit-scrollbar-thumb:hover {
       background: #B8B09F;
     }
@@ -88,6 +98,7 @@
     }
   </style>
 </head>
+
 <body class="bg-warm-cream min-h-screen flex flex-col text-slate-800">
 
   <!-- =========================================================================
@@ -95,15 +106,19 @@
        ========================================================================= -->
   <header class="bg-white border-b border-warm-border sticky top-0 z-40 transition-all">
     <div class="max-w-[1260px] mx-auto px-4 sm:px-6 lg:px-8 h-[74px] flex items-center justify-between gap-4">
-      
+
       <!-- Left: NutriLearn Brand Logo -->
       <div class="flex items-center gap-8 shrink-0">
         <a href="#" class="flex items-center gap-2.5 group focus:outline-none" aria-label="NutriLearn Home">
           <!-- Leaf Brand Icon -->
-          <div class="w-9 h-9 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-500 shadow-sm transition-transform duration-200 group-hover:scale-105">
+          <div
+            class="w-9 h-9 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-500 shadow-sm transition-transform duration-200 group-hover:scale-105">
             <svg class="w-5 h-5 fill-current text-brand-500" viewBox="0 0 24 24">
-              <path d="M17.657 16.657c-2.42 2.42-6.07 2.82-8.91 1.2a1 1 0 0 1-.29-.26l-3.3-4.13a1 1 0 0 1 .15-1.39l4.58-3.93c1.78-1.53 4.28-1.89 6.42-.92a9.96 9.96 0 0 1 2.35 1.57c2.42 2.42 1.42 6.44-1 8.86zM6.5 12.5l2.4 3 2.1-1.8-2.4-3-2.1 1.8z" opacity="0.3"/>
-              <path d="M21 3C14 3 9 7 9 13c0 2.21.89 4.21 2.34 5.66A9.957 9.957 0 0 1 5 21a1 1 0 1 1 0-2c3.55 0 6.63-1.84 8.35-4.65C17.72 13.62 21 8.87 21 3z"/>
+              <path
+                d="M17.657 16.657c-2.42 2.42-6.07 2.82-8.91 1.2a1 1 0 0 1-.29-.26l-3.3-4.13a1 1 0 0 1 .15-1.39l4.58-3.93c1.78-1.53 4.28-1.89 6.42-.92a9.96 9.96 0 0 1 2.35 1.57c2.42 2.42 1.42 6.44-1 8.86zM6.5 12.5l2.4 3 2.1-1.8-2.4-3-2.1 1.8z"
+                opacity="0.3" />
+              <path
+                d="M21 3C14 3 9 7 9 13c0 2.21.89 4.21 2.34 5.66A9.957 9.957 0 0 1 5 21a1 1 0 1 1 0-2c3.55 0 6.63-1.84 8.35-4.65C17.72 13.62 21 8.87 21 3z" />
             </svg>
           </div>
           <!-- Brand Wordmark -->
@@ -112,26 +127,32 @@
               <span class="font-extrabold text-xl tracking-tight text-slate-900">Nutri</span>
               <span class="font-extrabold text-xl tracking-tight text-brand-500">Learn</span>
             </div>
-            <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-400 -mt-1 hidden sm:block">Child Health &amp; Nutrition</span>
+            <span class="text-[10px] uppercase tracking-wider font-semibold text-slate-400 -mt-1 hidden sm:block">Child
+              Health &amp; Nutrition</span>
           </div>
         </a>
 
         <!-- Center: Primary Navigation Links (Desktop) -->
         <nav class="hidden md:flex items-center gap-1.5 bg-warm-card p-1.5 rounded-full border border-warm-border/80">
-          <a href="#overview" onclick="handleNavClick('Overview', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+          <a href="#overview" onclick="handleNavClick('Overview', event)"
+            class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
             Overview
           </a>
-          <a href="#field-records" onclick="handleNavClick('Field Records', event)" class="nav-tab-active px-4 py-1.5 rounded-full text-xs font-bold bg-brand-500 text-white shadow-sm transition-all-200 flex items-center gap-1.5">
+          <a href="#field-records" onclick="handleNavClick('Field Records', event)"
+            class="nav-tab-active px-4 py-1.5 rounded-full text-xs font-bold bg-brand-500 text-white shadow-sm transition-all-200 flex items-center gap-1.5">
             <span>📋</span>
             <span>Field Records</span>
           </a>
-          <a href="#announcements" onclick="handleNavClick('Announcements', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+          <a href="#announcements" onclick="handleNavClick('Announcements', event)"
+            class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
             Announcements
           </a>
-          <a href="#users" onclick="handleNavClick('Users', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+          <a href="#users" onclick="handleNavClick('Users', event)"
+            class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
             Users
           </a>
-          <a href="#content" onclick="handleNavClick('Content', event)" class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
+          <a href="#content" onclick="handleNavClick('Content', event)"
+            class="px-3.5 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/80 transition-all-200">
             Content
           </a>
         </nav>
@@ -140,13 +161,17 @@
       <!-- Right: User Profile & Actions -->
       <div class="flex items-center gap-3.5">
         <!-- User Badge -->
-        <div class="flex items-center gap-3 pl-2 sm:pl-3 pr-2 py-1.5 rounded-full hover:bg-warm-card border border-transparent hover:border-warm-border transition-all-200 cursor-pointer" onclick="showToast('Viewing Dr. Jose Lim profile (MHO)')" title="View Account Profile">
+        <div
+          class="flex items-center gap-3 pl-2 sm:pl-3 pr-2 py-1.5 rounded-full hover:bg-warm-card border border-transparent hover:border-warm-border transition-all-200 cursor-pointer"
+          onclick="showToast('Viewing Dr. Jose Lim profile (MHO)')" title="View Account Profile">
           <div class="text-right hidden sm:block">
             <div class="text-sm font-bold text-slate-900 leading-tight">Dr. Jose Lim</div>
-            <div class="text-[11px] font-medium text-slate-500 leading-tight">Barangay Manguring Health Office, Calabanga</div>
+            <div class="text-[11px] font-medium text-slate-500 leading-tight">Barangay Manguring Health Office,
+              Calabanga</div>
           </div>
           <!-- Avatar Initials -->
-          <div class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold text-xs flex items-center justify-center shadow-sm border border-brand-600">
+          <div
+            class="w-9 h-9 rounded-full bg-brand-500 text-white font-bold text-xs flex items-center justify-center shadow-sm border border-brand-600">
             JL
           </div>
         </div>
@@ -155,14 +180,17 @@
         <div class="h-6 w-[1px] bg-warm-border hidden sm:block"></div>
 
         <!-- Sign Out Button -->
-        <button type="button" onclick="handleSignOut()" class="px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-red-700 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 rounded-full transition-all-200 shadow-2xs">
+        <button type="button" onclick="handleSignOut()"
+          class="px-3.5 py-1.5 text-xs font-semibold text-slate-600 hover:text-red-700 bg-white hover:bg-red-50 border border-slate-200 hover:border-red-200 rounded-full transition-all-200 shadow-2xs">
           Sign out
         </button>
 
         <!-- Mobile Menu Toggle -->
-        <button type="button" onclick="toggleMobileNav()" class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-warm-card focus:outline-none" aria-label="Toggle Navigation">
+        <button type="button" onclick="toggleMobileNav()"
+          class="md:hidden p-2 rounded-xl text-slate-600 hover:bg-warm-card focus:outline-none"
+          aria-label="Toggle Navigation">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
           </svg>
         </button>
       </div>
@@ -170,11 +198,16 @@
 
     <!-- Mobile Navigation Drawer -->
     <div id="mobile-nav-panel" class="hidden md:hidden px-4 pb-4 pt-2 border-t border-warm-border bg-white space-y-1">
-      <a href="#overview" onclick="handleNavClick('Overview', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Overview</a>
-      <a href="#field-records" onclick="handleNavClick('Field Records', event)" class="block px-3 py-2 rounded-lg text-sm font-bold bg-brand-500 text-white">📋 Field Records</a>
-      <a href="#announcements" onclick="handleNavClick('Announcements', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Announcements</a>
-      <a href="#users" onclick="handleNavClick('Users', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Users</a>
-      <a href="#content" onclick="handleNavClick('Content', event)" class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Content</a>
+      <a href="#overview" onclick="handleNavClick('Overview', event)"
+        class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Overview</a>
+      <a href="#field-records" onclick="handleNavClick('Field Records', event)"
+        class="block px-3 py-2 rounded-lg text-sm font-bold bg-brand-500 text-white">📋 Field Records</a>
+      <a href="#announcements" onclick="handleNavClick('Announcements', event)"
+        class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Announcements</a>
+      <a href="#users" onclick="handleNavClick('Users', event)"
+        class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Users</a>
+      <a href="#content" onclick="handleNavClick('Content', event)"
+        class="block px-3 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-warm-card">Content</a>
     </div>
   </header>
 
@@ -196,15 +229,18 @@
 
       <div class="flex items-center gap-3">
         <!-- Add Child (Extra utility to test reactivity) -->
-        <button type="button" onclick="openAddRecordModal()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-brand-600 bg-white border border-brand-600/30 hover:border-brand-600 hover:bg-brand-50 shadow-xs transition-all-200">
+        <button type="button" onclick="openAddRecordModal()"
+          class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-brand-600 bg-white border border-brand-600/30 hover:border-brand-600 hover:bg-brand-50 shadow-xs transition-all-200">
           <span>➕</span>
           <span>Add Record</span>
         </button>
 
         <!-- Export CSV Button (Matching Screenshot) -->
-        <button type="button" id="btn-export-csv" onclick="exportRecordsToCSV()" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-[0.98] shadow-sm transition-all-200">
+        <button type="button" id="btn-export-csv" onclick="exportRecordsToCSV()"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold text-white bg-brand-600 hover:bg-brand-700 active:scale-[0.98] shadow-sm transition-all-200">
           <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/>
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
           </svg>
           <span>Export CSV</span>
         </button>
@@ -212,12 +248,16 @@
     </div>
 
     <!-- 3. METRIC SUMMARY CARDS (Row of 4) -->
-    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-7" aria-label="Nutrition KPI Metrics">
-      
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-7"
+      aria-label="Nutrition KPI Metrics">
+
       <!-- Card 1: Total Records -->
-      <div onclick="filterByStatus('ALL')" class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-slate-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden" title="Click to view all records">
+      <div onclick="filterByStatus('ALL')"
+        class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-slate-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden"
+        title="Click to view all records">
         <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-warm-card border border-warm-border flex items-center justify-center text-lg text-slate-700 group-hover:scale-110 transition-transform">
+          <div
+            class="w-10 h-10 rounded-xl bg-warm-card border border-warm-border flex items-center justify-center text-lg text-slate-700 group-hover:scale-110 transition-transform">
             📋
           </div>
           <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Metric</span>
@@ -229,9 +269,12 @@
       </div>
 
       <!-- Card 2: Stunted (Highlighted prominently in solid rust-orange) -->
-      <div onclick="filterByStatus('Stunted')" class="metric-card group bg-rust-500 border border-rust-500 text-white rounded-2xl p-5 shadow-stunted hover:bg-rust-600 transition-all-200 cursor-pointer relative overflow-hidden" title="Click to filter Stunted records">
+      <div onclick="filterByStatus('Stunted')"
+        class="metric-card group bg-rust-500 border border-rust-500 text-white rounded-2xl p-5 shadow-stunted hover:bg-rust-600 transition-all-200 cursor-pointer relative overflow-hidden"
+        title="Click to filter Stunted records">
         <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-lg text-white group-hover:scale-110 transition-transform">
+          <div
+            class="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center text-lg text-white group-hover:scale-110 transition-transform">
             ✏️
           </div>
           <span class="text-[11px] font-bold text-white/80 uppercase tracking-wider">Priority</span>
@@ -243,9 +286,12 @@
       </div>
 
       <!-- Card 3: At Risk (Warning Icon) -->
-      <div onclick="filterByStatus('At Risk')" class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-amber-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden" title="Click to filter At Risk records">
+      <div onclick="filterByStatus('At Risk')"
+        class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-amber-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden"
+        title="Click to filter At Risk records">
         <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-lg text-amber-600 group-hover:scale-110 transition-transform">
+          <div
+            class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200/60 flex items-center justify-center text-lg text-amber-600 group-hover:scale-110 transition-transform">
             ⚠️
           </div>
           <span class="text-[11px] font-bold text-amber-500 uppercase tracking-wider">Monitoring</span>
@@ -257,9 +303,12 @@
       </div>
 
       <!-- Card 4: Normal (Checkmark Icon) -->
-      <div onclick="filterByStatus('Normal')" class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-emerald-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden" title="Click to filter Normal records">
+      <div onclick="filterByStatus('Normal')"
+        class="metric-card group bg-white border border-warm-border rounded-2xl p-5 hover:border-emerald-300 hover:shadow-card transition-all-200 cursor-pointer relative overflow-hidden"
+        title="Click to filter Normal records">
         <div class="flex items-start justify-between">
-          <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-lg text-emerald-600 group-hover:scale-110 transition-transform">
+          <div
+            class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center text-lg text-emerald-600 group-hover:scale-110 transition-transform">
             ✅
           </div>
           <span class="text-[11px] font-bold text-emerald-600 uppercase tracking-wider">Optimal</span>
@@ -274,66 +323,44 @@
 
     <!-- 4. INTERACTIVE CONTROLS BAR -->
     <div class="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3.5 mb-5">
-      
+
       <!-- Full-Width Responsive Search Bar -->
       <div class="relative flex-1">
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
-        <input 
-          type="text" 
-          id="search-input" 
-          oninput="handleSearchInput(this.value)"
-          placeholder="Search by child, Parent/Guardian, zone, or Health Worker..." 
-          class="w-full pl-11 pr-10 py-3 bg-white border border-warm-borderInput rounded-full text-xs sm:text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all-200 shadow-2xs"
-        />
+        <input type="text" id="search-input" oninput="handleSearchInput(this.value)"
+          placeholder="Search by child, Parent/Guardian, zone, or Health Worker..."
+          class="w-full pl-11 pr-10 py-3 bg-white border border-warm-borderInput rounded-full text-xs sm:text-sm text-slate-800 placeholder-slate-400 outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/15 transition-all-200 shadow-2xs" />
         <!-- Clear search icon -->
-        <button 
-          id="clear-search-btn" 
-          onclick="clearSearch()" 
+        <button id="clear-search-btn" onclick="clearSearch()"
           class="hidden absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-slate-600"
-          title="Clear search"
-        >
+          title="Clear search">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       <!-- Filter Pill Buttons -->
       <div class="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 shrink-0">
-        <button 
-          type="button" 
-          id="filter-pill-all"
-          onclick="filterByStatus('ALL')" 
-          class="filter-pill active px-4 py-2.5 rounded-full text-xs font-bold transition-all-200 shrink-0 bg-brand-500 text-white shadow-2xs"
-        >
+        <button type="button" id="filter-pill-all" onclick="filterByStatus('ALL')"
+          class="filter-pill active px-4 py-2.5 rounded-full text-xs font-bold transition-all-200 shrink-0 bg-brand-500 text-white shadow-2xs">
           All
         </button>
-        <button 
-          type="button" 
-          id="filter-pill-normal"
-          onclick="filterByStatus('Normal')" 
-          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0"
-        >
+        <button type="button" id="filter-pill-normal" onclick="filterByStatus('Normal')"
+          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0">
           Normal
         </button>
-        <button 
-          type="button" 
-          id="filter-pill-atrisk"
-          onclick="filterByStatus('At Risk')" 
-          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0"
-        >
+        <button type="button" id="filter-pill-atrisk" onclick="filterByStatus('At Risk')"
+          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0">
           At Risk
         </button>
-        <button 
-          type="button" 
-          id="filter-pill-stunted"
-          onclick="filterByStatus('Stunted')" 
-          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0"
-        >
+        <button type="button" id="filter-pill-stunted" onclick="filterByStatus('Stunted')"
+          class="filter-pill px-4 py-2.5 rounded-full text-xs font-semibold bg-warm-pill text-slate-600 hover:bg-warm-pillHover transition-all-200 shrink-0">
           Stunted
         </button>
       </div>
@@ -346,8 +373,10 @@
           <thead>
             <tr class="bg-warm-card/90 border-b border-warm-border/80">
               <th scope="col" class="py-3.5 px-5 text-xs font-semibold text-slate-500 tracking-normal">Child</th>
-              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Parent/Guardian</th>
-              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Manguring Zone</th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Parent/Guardian
+              </th>
+              <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Manguring Zone
+              </th>
               <th scope="col" class="py-3.5 px-3 text-xs font-semibold text-slate-500 tracking-normal">Age</th>
               <th scope="col" class="py-3.5 px-3 text-xs font-semibold text-slate-500 tracking-normal">Weight</th>
               <th scope="col" class="py-3.5 px-4 text-xs font-semibold text-slate-500 tracking-normal">Status</th>
@@ -364,14 +393,16 @@
 
       <!-- Empty State (Shown when filters match 0 items) -->
       <div id="table-empty-state" class="hidden py-14 px-4 text-center">
-        <div class="w-14 h-14 mx-auto rounded-full bg-warm-card border border-warm-border flex items-center justify-center text-2xl text-slate-400 mb-3">
+        <div
+          class="w-14 h-14 mx-auto rounded-full bg-warm-card border border-warm-border flex items-center justify-center text-2xl text-slate-400 mb-3">
           🔍
         </div>
         <h3 class="text-base font-bold text-slate-800">No matching records found</h3>
         <p class="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
           We couldn't find any child records matching your search query or selected status filter.
         </p>
-        <button type="button" onclick="resetAllFilters()" class="mt-4 px-4 py-2 rounded-full text-xs font-bold text-brand-600 bg-brand-50 hover:bg-brand-100 transition-colors">
+        <button type="button" onclick="resetAllFilters()"
+          class="mt-4 px-4 py-2 rounded-full text-xs font-bold text-brand-600 bg-brand-50 hover:bg-brand-100 transition-colors">
           Reset Filters
         </button>
       </div>
@@ -389,16 +420,20 @@
        ========================================================================= -->
 
   <!-- Child Detailed Drawer / Accordion Modal -->
-  <div id="detail-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-2xs transition-opacity">
-    <div class="bg-white rounded-3xl border border-warm-border shadow-2xl max-w-md w-full p-6 relative transform transition-all">
-      <button onclick="closeDetailModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100">
+  <div id="detail-modal"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-2xs transition-opacity">
+    <div
+      class="bg-white rounded-3xl border border-warm-border shadow-2xl max-w-md w-full p-6 relative transform transition-all">
+      <button onclick="closeDetailModal()"
+        class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
       <div class="flex items-center gap-3 mb-4">
-        <div class="w-12 h-12 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-xl text-brand-500">
+        <div
+          class="w-12 h-12 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-xl text-brand-500">
           👶
         </div>
         <div>
@@ -439,7 +474,8 @@
       </div>
 
       <div class="flex justify-end gap-2">
-        <button type="button" onclick="closeDetailModal()" class="px-5 py-2 rounded-full text-xs font-semibold text-slate-600 bg-warm-pill hover:bg-warm-pillHover transition-colors">
+        <button type="button" onclick="closeDetailModal()"
+          class="px-5 py-2 rounded-full text-xs font-semibold text-slate-600 bg-warm-pill hover:bg-warm-pillHover transition-colors">
           Close
         </button>
       </div>
@@ -447,16 +483,19 @@
   </div>
 
   <!-- Add Child Record Modal -->
-  <div id="add-record-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-2xs transition-opacity">
+  <div id="add-record-modal"
+    class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-2xs transition-opacity">
     <div class="bg-white rounded-3xl border border-warm-border shadow-2xl max-w-lg w-full p-6 relative">
-      <button onclick="closeAddRecordModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100">
+      <button onclick="closeAddRecordModal()"
+        class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 p-1.5 rounded-full hover:bg-slate-100">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
       <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-lg text-brand-500">
+        <div
+          class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center text-lg text-brand-500">
           ➕
         </div>
         <div>
@@ -469,18 +508,21 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Child Name *</label>
-            <input type="text" id="new-child-name" required placeholder="e.g. Mateo Cruz" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+            <input type="text" id="new-child-name" required placeholder="e.g. Mateo Cruz"
+              class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Parent / Guardian *</label>
-            <input type="text" id="new-parent-name" required placeholder="e.g. Elena Cruz" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+            <input type="text" id="new-parent-name" required placeholder="e.g. Elena Cruz"
+              class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Manguring Zone *</label>
-            <select id="new-zone" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white">
+            <select id="new-zone"
+              class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white">
               <option value="Zone 1, Barangay Manguring">Zone 1, Barangay Manguring</option>
               <option value="Zone 2, Barangay Manguring">Zone 2, Barangay Manguring</option>
               <option value="Zone 3, Barangay Manguring">Zone 3, Barangay Manguring</option>
@@ -490,18 +532,21 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Age *</label>
-            <input type="text" id="new-age" required placeholder="e.g. 14 mo or 2 yrs" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+            <input type="text" id="new-age" required placeholder="e.g. 14 mo or 2 yrs"
+              class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Weight (kg) *</label>
-            <input type="number" step="0.1" id="new-weight" required placeholder="e.g. 9.5" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+            <input type="number" step="0.1" id="new-weight" required placeholder="e.g. 9.5"
+              class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Nutrition Status *</label>
-            <select id="new-status" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white">
+            <select id="new-status"
+              class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 bg-white">
               <option value="Normal">Normal</option>
               <option value="At Risk">At Risk</option>
               <option value="Stunted">Stunted</option>
@@ -511,14 +556,17 @@
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Submitted By</label>
-          <input type="text" id="new-submitter" value="Nurse Ana Reyes" class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
+          <input type="text" id="new-submitter" value="Nurse Ana Reyes"
+            class="w-full px-3.5 py-2 text-xs border border-warm-borderInput rounded-xl outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500">
         </div>
 
         <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeAddRecordModal()" class="px-4 py-2 rounded-full text-xs font-semibold text-slate-600 bg-warm-pill hover:bg-warm-pillHover transition-colors">
+          <button type="button" onclick="closeAddRecordModal()"
+            class="px-4 py-2 rounded-full text-xs font-semibold text-slate-600 bg-warm-pill hover:bg-warm-pillHover transition-colors">
             Cancel
           </button>
-          <button type="submit" class="px-5 py-2 rounded-full text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-xs">
+          <button type="submit"
+            class="px-5 py-2 rounded-full text-xs font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-xs">
             Save Record
           </button>
         </div>
@@ -527,7 +575,8 @@
   </div>
 
   <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900 text-white shadow-xl text-xs font-semibold">
+  <div id="toast"
+    class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-3 px-4 py-3 rounded-2xl bg-slate-900 text-white shadow-xl text-xs font-semibold">
     <span id="toast-icon">✨</span>
     <span id="toast-message">Notification message</span>
   </div>
@@ -932,4 +981,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -7,6 +7,8 @@ const CHWModule = {
   activeFilterStatus: 'ALL',
   activeFilterBarangay: 'ALL',
   searchQuery: '',
+  pggStatusFilter: 'All',
+  pggSearchQuery: '',
 
   init() {
     this.bindEvents();
@@ -519,6 +521,9 @@ const CHWModule = {
     document.getElementById('edit-child-muac').value = child.muacMm;
     document.getElementById('edit-child-notes').value = child.notes || '';
 
+    const birthDateEl = document.getElementById('edit-child-birthdate');
+    if (birthDateEl) birthDateEl.value = child.birthDate || '';
+
     const dewormStatusEl = document.getElementById('edit-child-deworming-status');
     const dewormDateEl = document.getElementById('edit-child-deworming-date');
     const dewormNextEl = document.getElementById('edit-child-deworming-next-date');
@@ -531,6 +536,30 @@ const CHWModule = {
 
   // Save new child
   handleSaveChild(form) {
+    const name = form.elements['childName'].value.trim();
+    const barangay = form.elements['childBarangay'].value;
+    const birthDate = form.elements['childBirthDate'] ? form.elements['childBirthDate'].value : '';
+
+    // Validation & Duplicate Checking (Thesis UC-01 Step 4 & Appendix D interview pain point)
+    if (birthDate) {
+      const bDate = new Date(birthDate);
+      if (bDate > new Date()) {
+        NutriApp.showToast('⚠️ Maling Petsa: Hindi maaaring sa hinaharap ang petsa ng kapanganakan ng bata.', 'warning');
+        return;
+      }
+    }
+
+    const existingChildren = NutriStorage.getChildren();
+    const isDuplicate = existingChildren.some(c => 
+      c.name && c.name.trim().toLowerCase() === name.toLowerCase() &&
+      (!barangay || !c.barangay || c.barangay.toLowerCase() === barangay.toLowerCase())
+    );
+
+    if (isDuplicate) {
+      NutriApp.showToast(`⚠️ May umiiral nang talaan para kay "${name}" sa ${barangay}. Mangyaring buksan ang umiiral na rekord upang maiwasan ang duplicate entries (Operation Timbang standards).`, 'warning');
+      return;
+    }
+
     const age = parseInt(form.elements['childAge'].value, 10);
     const sex = form.elements['childSex'].value;
     const height = parseFloat(form.elements['childHeight'].value);
@@ -543,12 +572,13 @@ const CHWModule = {
     const classification = this.calculateNutritionalStatus(age, sex, height, weight, muac);
 
     const newChild = {
-      name: form.elements['childName'].value.trim(),
+      name: name,
+      birthDate: birthDate,
       ageMonths: age,
       sex: sex,
       parentName: form.elements['parentName'].value.trim(),
       parentPhone: form.elements['parentPhone'].value.trim(),
-      barangay: form.elements['childBarangay'].value,
+      barangay: barangay,
       zone: form.elements['childZone'] ? form.elements['childZone'].value : 'Zone 1',
       heightCm: height,
       weightKg: weight,
@@ -590,6 +620,11 @@ const CHWModule = {
     const weight = parseFloat(document.getElementById('edit-child-weight').value);
     const muac = parseInt(document.getElementById('edit-child-muac').value, 10);
     const notes = document.getElementById('edit-child-notes').value;
+
+    const birthDateInput = document.getElementById('edit-child-birthdate');
+    if (birthDateInput && birthDateInput.value) {
+      child.birthDate = birthDateInput.value;
+    }
 
     const dewormStatus = document.getElementById('edit-child-deworming-status')?.value || 'Up to Date';
     const dewormDate = document.getElementById('edit-child-deworming-date')?.value || '';
@@ -691,7 +726,251 @@ const CHWModule = {
   // PARENT GROUPS & LESSON ASSIGNMENT (Req #8 & Req #13)
   // ==========================================================================
   initGroups() {
+    this.renderParentGuardianGroupsTable();
     this.renderGroups();
+  },
+
+  // ==========================================================================
+  // PARENT/GUARDIAN GROUPS TRACKER (BHW Phase Exact Specification)
+  // Track home actions and nutrition status for each enrolled family
+  // ==========================================================================
+  setPggFilter(status) {
+    this.pggStatusFilter = status;
+    const pills = ['all', 'improving', 'stable', 'critical'];
+    pills.forEach(p => {
+      const el = document.getElementById(`pgg-pill-${p}`);
+      if (el) {
+        if (p === status.toLowerCase()) el.classList.add('active');
+        else el.classList.remove('active');
+      }
+    });
+    this.renderParentGuardianGroupsTable();
+  },
+
+  handlePggSearch(query) {
+    this.pggSearchQuery = (query || '').toLowerCase().trim();
+    this.renderParentGuardianGroupsTable();
+  },
+
+  renderParentGuardianGroupsTable() {
+    const tbody = document.getElementById('pgg-tbody');
+    if (!tbody) return;
+
+    const allRecords = NutriStorage.getParentGroupsTracker();
+
+    // Dynamic counts for pills matching screenshot (Improving: 4, Stable: 2, Critical: 2)
+    const totalCount = allRecords.length;
+    const improvingCount = allRecords.filter(r => (r.status || '').toLowerCase() === 'improving').length;
+    const stableCount = allRecords.filter(r => (r.status || '').toLowerCase() === 'stable').length;
+    const criticalCount = allRecords.filter(r => (r.status || '').toLowerCase() === 'critical').length;
+
+    // Update pill labels dynamically
+    const pillAll = document.getElementById('pgg-pill-all');
+    if (pillAll) pillAll.textContent = 'All';
+    const pillImp = document.getElementById('pgg-pill-improving');
+    if (pillImp) pillImp.textContent = `Improving (${improvingCount})`;
+    const pillStb = document.getElementById('pgg-pill-stable');
+    if (pillStb) pillStb.textContent = `Stable (${stableCount})`;
+    const pillCrit = document.getElementById('pgg-pill-critical');
+    if (pillCrit) pillCrit.textContent = `Critical (${criticalCount})`;
+
+    let filtered = [...allRecords];
+
+    if (this.pggStatusFilter && this.pggStatusFilter !== 'All') {
+      filtered = filtered.filter(r => (r.status || '').toLowerCase() === this.pggStatusFilter.toLowerCase());
+    }
+
+    if (this.pggSearchQuery) {
+      filtered = filtered.filter(r => 
+        (r.parentName || '').toLowerCase().includes(this.pggSearchQuery) ||
+        (r.childName || '').toLowerCase().includes(this.pggSearchQuery) ||
+        (r.zone || '').toLowerCase().includes(this.pggSearchQuery) ||
+        (r.barangay || '').toLowerCase().includes(this.pggSearchQuery) ||
+        (r.status || '').toLowerCase().includes(this.pggSearchQuery)
+      );
+    }
+
+    if (filtered.length === 0) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="7" style="text-align: center; padding: 2.5rem 1rem; color: #6B665F;">
+            <div style="font-size: 1.8rem; margin-bottom: 0.35rem;">🔍</div>
+            <div style="font-weight: 600; font-size: 0.95rem;">Walang natagpuang pamilya</div>
+            <div style="font-size: 0.82rem; margin-top: 0.2rem;">Subukang baguhin ang search query o filter tab.</div>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(r => {
+      const actionsTried = r.actionsTried !== undefined ? r.actionsTried : 0;
+      const actionsTotal = r.actionsTotal || 5;
+      const progressPct = r.progressPct !== undefined ? r.progressPct : Math.round((actionsTried / actionsTotal) * 100);
+
+      // Color coding for progress bar matching exact screenshot
+      let barClass = 'pgg-bar-green';
+      if (progressPct === 0) {
+        barClass = 'pgg-bar-empty';
+      } else if (progressPct <= 20) {
+        barClass = 'pgg-bar-coral';
+      } else if (progressPct <= 60) {
+        barClass = 'pgg-bar-amber';
+      } else {
+        barClass = 'pgg-bar-green';
+      }
+
+      return `
+        <tr onclick="CHWModule.openParentGroupDetailModal('${r.id}')" title="Pindutin para makita at i-update ang pamilyang ito">
+          <td class="pgg-cell-parent">${r.parentName}</td>
+          <td class="pgg-cell-zone">${r.zone}</td>
+          <td class="pgg-cell-child">${r.childName}, ${r.childAgeMonths} mo</td>
+          <td><span class="pgg-cell-status status-${(r.status || '').toLowerCase()}">${r.status}</span></td>
+          <td class="pgg-cell-actions-count">${actionsTried} / ${actionsTotal}</td>
+          <td>
+            <div class="pgg-progress-cell">
+              <div class="pgg-progress-track">
+                <div class="pgg-progress-bar ${barClass}" style="width: ${progressPct}%;"></div>
+              </div>
+              <span class="pgg-progress-text">${progressPct}%</span>
+            </div>
+          </td>
+          <td class="pgg-cell-lastactive">${r.lastActive || 'Today'}</td>
+        </tr>
+      `;
+    }).join('');
+  },
+
+  openParentGroupDetailModal(id) {
+    const allRecords = NutriStorage.getParentGroupsTracker();
+    const item = allRecords.find(r => r.id === id);
+    if (!item) return;
+
+    document.getElementById('pgg-detail-id').value = item.id;
+    document.getElementById('pgg-detail-parent-name').textContent = item.parentName;
+    document.getElementById('pgg-detail-zone').textContent = item.zone;
+    document.getElementById('pgg-detail-phone').textContent = item.parentPhone || '0918-000-0000';
+    document.getElementById('pgg-detail-child-info').textContent = `${item.childName} (${item.childAgeMonths} mo)`;
+    document.getElementById('pgg-detail-status').value = item.status;
+    document.getElementById('pgg-detail-lastactive').value = item.lastActive || 'Today';
+    document.getElementById('pgg-detail-notes').value = item.notes || '';
+
+    // Render 5 interactive action checkboxes
+    const actionsList = item.actionsList || [
+      { title: 'Enriched Lugaw with Malunggay & Egg', tried: item.actionsTried >= 1 },
+      { title: 'Boiled safe drinking water & WASH protocol', tried: item.actionsTried >= 2 },
+      { title: 'Responsive positive feeding (Patience with picky eating)', tried: item.actionsTried >= 3 },
+      { title: 'Daily Animal Protein (Fish/Chicken liver/Egg)', tried: item.actionsTried >= 4 },
+      { title: 'Affordable Kamote & Yellow Vegetable Puree', tried: item.actionsTried >= 5 }
+    ];
+
+    const checklistContainer = document.getElementById('pgg-detail-actions-checklist');
+    if (checklistContainer) {
+      checklistContainer.innerHTML = actionsList.map((act, idx) => `
+        <label style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.84rem; color: #1C2B22; cursor: pointer; padding: 0.35rem 0.5rem; background: ${act.tried ? '#ECFDF5' : '#FFFFFF'}; border: 1px solid ${act.tried ? '#A7F3D0' : '#E5DFD5'}; border-radius: 6px;">
+          <input type="checkbox" class="pgg-action-chk" data-index="${idx}" ${act.tried ? 'checked' : ''} onchange="CHWModule.updateModalProgressPreview()">
+          <span style="font-weight: ${act.tried ? '600' : '400'};">${act.title}</span>
+        </label>
+      `).join('');
+    }
+
+    this.updateModalProgressPreview();
+    NutriApp.openModal('modal-pgg-family-detail');
+  },
+
+  updateModalProgressPreview() {
+    const checkboxes = document.querySelectorAll('.pgg-action-chk');
+    const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+    const totalCount = checkboxes.length || 5;
+    const pct = Math.round((checkedCount / totalCount) * 100);
+
+    const countEl = document.getElementById('pgg-detail-actions-count');
+    if (countEl) countEl.textContent = `${checkedCount} / ${totalCount}`;
+
+    const pctEl = document.getElementById('pgg-detail-progress-pct');
+    if (pctEl) pctEl.textContent = `${pct}%`;
+
+    const barEl = document.getElementById('pgg-detail-progress-bar');
+    if (barEl) {
+      barEl.style.width = `${pct}%`;
+      if (pct === 0) barEl.style.backgroundColor = 'transparent';
+      else if (pct <= 20) barEl.style.backgroundColor = '#D93829';
+      else if (pct <= 60) barEl.style.backgroundColor = '#C86A2E';
+      else barEl.style.backgroundColor = '#236B4D';
+    }
+  },
+
+  handleSaveFamilyDetail(form) {
+    const id = document.getElementById('pgg-detail-id').value;
+    const status = document.getElementById('pgg-detail-status').value;
+    const lastActive = document.getElementById('pgg-detail-lastactive').value;
+    const notes = document.getElementById('pgg-detail-notes').value;
+
+    const checkboxes = document.querySelectorAll('.pgg-action-chk');
+    const checkedCount = Array.from(checkboxes).filter(c => c.checked).length;
+    const totalCount = checkboxes.length || 5;
+    const progressPct = Math.round((checkedCount / totalCount) * 100);
+
+    const allRecords = NutriStorage.getParentGroupsTracker();
+    const item = allRecords.find(r => r.id === id);
+
+    let updatedActionsList = item && item.actionsList ? [...item.actionsList] : [];
+    checkboxes.forEach((chk, idx) => {
+      if (updatedActionsList[idx]) {
+        updatedActionsList[idx].tried = chk.checked;
+        if (chk.checked && !updatedActionsList[idx].date) {
+          updatedActionsList[idx].date = new Date().toISOString().split('T')[0];
+        }
+      }
+    });
+
+    NutriStorage.updateParentGroupItem(id, {
+      status,
+      lastActive,
+      notes,
+      actionsTried: checkedCount,
+      actionsTotal: totalCount,
+      progressPct,
+      actionsList: updatedActionsList
+    });
+
+    NutriApp.closeModal('modal-pgg-family-detail');
+    this.renderParentGuardianGroupsTable();
+    NutriApp.showToast('Nai-update ang home actions at progress para sa pamilya!', 'success');
+  },
+
+  openAddParentGroupModal() {
+    NutriApp.openModal('modal-pgg-add-family');
+  },
+
+  handleSaveNewFamily(form) {
+    const fd = new FormData(form);
+    const parentName = fd.get('parentName');
+    const parentPhone = fd.get('parentPhone');
+    const zone = fd.get('zone');
+    const childName = fd.get('childName');
+    const childAgeMonths = parseInt(fd.get('childAgeMonths') || 12);
+    const status = fd.get('status') || 'Stable';
+    const notes = fd.get('notes') || '';
+
+    NutriStorage.addParentGroupItem({
+      parentName,
+      parentPhone,
+      zone,
+      childName,
+      childAgeMonths,
+      status,
+      actionsTried: 0,
+      actionsTotal: 5,
+      progressPct: 0,
+      lastActive: 'Today',
+      notes
+    });
+
+    NutriApp.closeModal('modal-pgg-add-family');
+    form.reset();
+    this.renderParentGuardianGroupsTable();
+    NutriApp.showToast(`Matagumpay na nairehistro ang pamilya ni ${parentName}!`, 'success');
   },
 
   renderGroups() {

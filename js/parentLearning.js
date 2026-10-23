@@ -208,18 +208,68 @@ const ParentModule = {
     }
   ],
 
-  // 10 Daily Nutrition Practices for "Try It at Home"
+  // 10 Practical Feeding Activities for "Try It at Home" (Matches Reference Mockup)
   homeActions: [
-    { id: 1, title: 'Fresh Malunggay Leaf Boost', tip: 'Add 1 handful of fresh malunggay leaves to your child\'s soup or rice porridge.' },
-    { id: 2, title: 'Affordable Ginisang Monggo', tip: 'Prepare boiled monggo with dilis or small fish for lunch protein.' },
-    { id: 3, title: 'Daily Hard-Boiled Egg Snack', tip: 'Offer 1 whole hard-boiled or scrambled egg as an afternoon growth snack.' },
-    { id: 4, title: 'Yellow Camote Energy Mash', tip: 'Serve mashed yellow/orange sweet potato with 1/2 teaspoon of healthy coconut oil.' },
-    { id: 5, title: 'Clean Handwashing with Soap', tip: 'Wash hands with soap and water before handling food and feeding your child.' },
-    { id: 6, title: 'Clean Boiled Drinking Water', tip: 'Ensure your child drinks clean, boiled water throughout the day instead of sugary drinks.' },
-    { id: 7, title: 'Soft Finger Foods Practice', tip: 'Offer soft finger foods (steamed carrots, banana slices) so child practices self-feeding.' },
-    { id: 8, title: 'Responsive Mealtime Conversation', tip: 'Talk, smile, and make eye contact during mealtimes without TV or phone distractions.' },
-    { id: 9, title: 'Fresh Local Fruits After Meal', tip: 'Serve fresh sliced papaya, saba banana, or avocado after family meals.' },
-    { id: 10, title: 'Monthly Barangay Growth Weigh-in', tip: 'Attend the monthly barangay weighing and MUAC growth check-up with your BHW.' }
+    {
+      id: 1,
+      context: 'After "Iron-Rich Foods Are a Priority"',
+      title: "Serve malunggay with tonight's dinner.",
+      tip: "Add washed leaves to lugaw, soup, monggo, or scrambled egg."
+    },
+    {
+      id: 2,
+      context: 'After "What to Feed First"',
+      title: "Prepare one thick, nutrient-rich porridge.",
+      tip: "The food should stay on the spoon instead of running off like water."
+    },
+    {
+      id: 3,
+      context: 'After "Safe Water and Hygiene"',
+      title: "Wash your hands and your child's hands before the next meal.",
+      tip: "Use soap and clean running water for at least 20 seconds."
+    },
+    {
+      id: 4,
+      context: 'After "Recognizing Hunger and Fullness Cues"',
+      title: "Let your child decide when they are full at one meal.",
+      tip: "Watch for turning away or closing the mouth, and avoid forcing another bite."
+    },
+    {
+      id: 5,
+      context: 'After "Planning on a Budget"',
+      title: "Add one affordable local protein to tomorrow's meal plan.",
+      tip: "Choose egg, monggo, dilis, sardines, or another option available nearby."
+    },
+    {
+      id: 6,
+      context: 'After "Kamote as a Nutritious Base"',
+      title: "Add one orange or dark green vegetable to a meal.",
+      tip: "Try squash, kamote, malunggay, kangkong, or another affordable local vegetable."
+    },
+    {
+      id: 7,
+      context: 'After "Safe Water and Hygiene"',
+      title: "Offer a drink using a clean cup instead of a feeding bottle.",
+      tip: "Cups are easier to clean well and can lower the risk of infection."
+    },
+    {
+      id: 8,
+      context: 'After "Creating a Positive Meal Environment"',
+      title: "Share one calm meal together without phones or television.",
+      tip: "Sit with your child, talk gently, and give them time to eat without pressure."
+    },
+    {
+      id: 9,
+      context: 'After "Supporting Healthy Habits Long-Term"',
+      title: "Offer one nutritious food your child is still learning to enjoy.",
+      tip: "A child may need to see a food many times. Offer it gently without forcing a bite."
+    },
+    {
+      id: 10,
+      context: 'After "Iron-Rich Foods Are a Priority"',
+      title: "Pair an iron-rich food with a source of Vitamin C.",
+      tip: "Serve monggo, egg, fish, or malunggay with tomato, papaya, mango, or calamansi."
+    }
   ],
 
   init() {
@@ -245,7 +295,7 @@ const ParentModule = {
         }
       }
 
-      // 2. Load lesson completion progress
+      // 2. Load lesson completion progress & Try It at Home practical action timestamps
       const savedProgress = localStorage.getItem('nutrilearn_parent_modules_v3');
       if (savedProgress) {
         const parsed = JSON.parse(savedProgress);
@@ -254,6 +304,10 @@ const ParentModule = {
             mod.lessons.forEach((l, idx) => {
               if (parsed[mod.id].completedLessons && parsed[mod.id].completedLessons.includes(idx)) {
                 l.completed = true;
+              }
+              if (parsed[mod.id].completedActions && parsed[mod.id].completedActions[idx]) {
+                l.actionCompleted = true;
+                l.actionCompletedAt = parsed[mod.id].completedActions[idx];
               }
             });
           }
@@ -268,8 +322,15 @@ const ParentModule = {
     try {
       const state = {};
       this.nutritionModules.forEach(mod => {
+        const actionMap = {};
+        mod.lessons.forEach((l, i) => {
+          if (l.actionCompleted) {
+            actionMap[i] = l.actionCompletedAt || new Date().toLocaleDateString();
+          }
+        });
         state[mod.id] = {
-          completedLessons: mod.lessons.map((l, i) => l.completed ? i : -1).filter(i => i >= 0)
+          completedLessons: mod.lessons.map((l, i) => l.completed ? i : -1).filter(i => i >= 0),
+          completedActions: actionMap
         };
       });
       localStorage.setItem('nutrilearn_parent_modules_v3', JSON.stringify(state));
@@ -280,6 +341,14 @@ const ParentModule = {
 
   // Switch Sub-Tabs in Parent Portal: 'learning', 'meal-planner', 'try-at-home', 'growth-tracker'
   switchTab(tabId) {
+    if (!tabId || tabId === 'dashboard') tabId = 'learning';
+
+    try {
+      sessionStorage.setItem('nutrilearn_active_tab', tabId);
+      localStorage.setItem('nutrilearn_active_tab', tabId);
+      history.replaceState(null, '', '#' + tabId);
+    } catch (e) {}
+
     // 1. Update top taskbar pill buttons
     document.querySelectorAll('.parent-pill-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.tab === tabId);
@@ -304,10 +373,22 @@ const ParentModule = {
       this.renderChildGrowth();
     } else if (tabId === 'meal-planner') {
       if (mealPane) mealPane.style.display = 'block';
+      try {
+        sessionStorage.removeItem('nutrilearn_active_module');
+        localStorage.removeItem('nutrilearn_active_module');
+      } catch (e) {}
     } else if (tabId === 'try-at-home') {
       if (tryAtHomePane) tryAtHomePane.style.display = 'block';
+      try {
+        sessionStorage.removeItem('nutrilearn_active_module');
+        localStorage.removeItem('nutrilearn_active_module');
+      } catch (e) {}
     } else if (tabId === 'growth-tracker') {
       if (growthPane) growthPane.style.display = 'block';
+      try {
+        sessionStorage.removeItem('nutrilearn_active_module');
+        localStorage.removeItem('nutrilearn_active_module');
+      } catch (e) {}
       this.renderChildGrowth();
     }
 
@@ -380,6 +461,10 @@ const ParentModule = {
   // Open the interactive module lesson accordion drawer (Screenshot 2)
   openModuleDrawer(moduleId) {
     this.currentModuleId = moduleId;
+    try {
+      sessionStorage.setItem('nutrilearn_active_module', moduleId);
+      localStorage.setItem('nutrilearn_active_module', moduleId);
+    } catch (e) {}
     const mod = this.nutritionModules.find(m => m.id === moduleId) || this.nutritionModules[0];
     const drawer = document.getElementById('parent-module-lesson-drawer');
     const grid = document.getElementById('parent-modules-container');
@@ -469,6 +554,7 @@ const ParentModule = {
           const iconStatus = lesson.completed 
             ? '<div class="lesson-status-icon">✓</div>' 
             : '<div class="lesson-status-icon incomplete">○</div>';
+          const practicalTip = lesson.tryHomeAction || this.getLessonPracticalAction(mod.id, lesson.title);
 
           return `
             <div class="lesson-accordion-item ${isInitiallyOpen ? 'active' : ''}" id="accordion-item-${idx}">
@@ -488,6 +574,37 @@ const ParentModule = {
                 <div class="lesson-quote-box">
                   ${lesson.content}
                 </div>
+
+                <!-- Thesis Chapter 2.1 & UC-02: Try It at Home Practical Action Item with Tap Done Button -->
+                <div class="try-home-lesson-box" style="margin: 0.85rem 0; padding: 0.95rem; background: #F0FDF4; border: 1.5px solid #86EFAC; border-radius: 10px;">
+                  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.45rem; flex-wrap: wrap; gap: 0.5rem;">
+                    <div style="display: flex; align-items: center; gap: 0.45rem;">
+                      <span style="font-size: 1.15rem;">🌱</span>
+                      <strong style="color: #14532D; font-size: 0.86rem;">Try It at Home: Praktikal na Pagpapakain (Nabugoomu 2015)</strong>
+                    </div>
+                    <span class="badge ${lesson.actionCompleted ? 'badge-normal' : 'badge-underweight'}" style="font-size: 0.72rem; padding: 3px 8px;">
+                      ${lesson.actionCompleted ? '🟢 Tapos na (Action Completed)' : '🟡 In Progress (Awaiting Home Action)'}
+                    </span>
+                  </div>
+                  <div style="font-size: 0.83rem; color: #166534; line-height: 1.5; margin-bottom: 0.65rem;">
+                    💡 <strong>Gawin sa Bahay:</strong> ${practicalTip}
+                  </div>
+                  <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center;">
+                    ${lesson.actionCompleted ? `
+                      <button type="button" class="btn btn-sm btn-outline" style="background: #FFFFFF; color: #15803D; border-color: #86EFAC; font-size: 0.76rem; padding: 4px 10px;" onclick="ParentModule.toggleLessonActionDone('${mod.id}', ${idx}, event)">
+                        ✓ Nagawa Na (${lesson.actionCompletedAt || 'Nai-log'}) - I-undo
+                      </button>
+                    ` : `
+                      <button type="button" class="btn btn-sm btn-accent" style="font-size: 0.78rem; font-weight: 700; padding: 5px 12px; background: #16A34A; border-color: #16A34A; color: #FFFFFF;" onclick="ParentModule.tapActionDone('${mod.id}', ${idx}, event)">
+                        ✓ Nagawa Ko Na (Tap Done)
+                      </button>
+                    `}
+                    <button type="button" class="btn btn-sm btn-outline" style="font-size: 0.75rem; background: #FFFFFF; padding: 4px 10px;" onclick="ParentModule.switchTab('meal-planner')">
+                      🍲 Tingnan ang Step-by-Step Gabay sa Pagkain →
+                    </button>
+                  </div>
+                </div>
+
                 <div class="lesson-actions-row">
                   <button type="button" class="btn btn-sm ${lesson.completed ? 'btn-outline' : 'btn-accent'}" 
                     style="font-size: 0.78rem; padding: 4px 12px;"
@@ -516,6 +633,10 @@ const ParentModule = {
 
   // Close the drawer and return to 2x2 grid
   closeModuleDrawer() {
+    try {
+      sessionStorage.removeItem('nutrilearn_active_module');
+      localStorage.removeItem('nutrilearn_active_module');
+    } catch (e) {}
     const drawer = document.getElementById('parent-module-lesson-drawer');
     const grid = document.getElementById('parent-modules-container');
     const heading = document.getElementById('parent-modules-grid-heading');
@@ -524,6 +645,104 @@ const ParentModule = {
     if (grid) grid.style.display = 'grid';
     if (heading) heading.textContent = 'Your Nutrition Modules';
     this.renderModuleCards();
+    this.updateProgressHeader();
+  },
+
+  // Get specific practical feeding action for each lesson
+  getLessonPracticalAction(modId, lessonTitle) {
+    const title = (lessonTitle || '').toLowerCase();
+    if (title.includes('malunggay')) {
+      return 'Maghalo ng 1 dakot ng sariwang dahon ng malunggay sa lugaw o hapunan ng bata ngayong gabi.';
+    }
+    if (title.includes('monggo') || title.includes('protein')) {
+      return 'Ihanda ang ginisang monggo na may dilis o maliliit na isda para sa pananghaliang protina ng bata.';
+    }
+    if (title.includes('egg') || title.includes('itlog') || title.includes('snack')) {
+      return 'Maghain ng 1 buong pinakuluang itlog (hard-boiled egg) bilang pampatangkad na meryenda.';
+    }
+    if (title.includes('camote') || title.includes('solid') || title.includes('first food')) {
+      return 'Ihain ang pinalambot na dilaw na kamote na may 1/2 kutsaritang mantika ng niyog para sa dagdag enerhiya.';
+    }
+    if (title.includes('wash') || title.includes('hygiene') || title.includes('safe food')) {
+      return 'Hugasan ang kamay gamit ang sabon at malinis na tubig sa loob ng 20 segundo bago maghanda ng pagkain.';
+    }
+    if (title.includes('stunting') || title.includes('height') || title.includes('milestone')) {
+      return 'Sukatin ang tangkad at timbang ng bata ngayong linggo kasama ang Barangay Nutrition Scholar (BNS).';
+    }
+    if (title.includes('texture') || title.includes('finger food') || title.includes('self-feeding')) {
+      return 'Mag-alok ng malalambot na finger foods (hiniwang saba na saging, pinasingawang kalabasa) para sa bata.';
+    }
+    if (title.includes('responsive') || title.includes('screen-free') || title.includes('picky')) {
+      return 'Maghapunan nang sabay ang pamilya nang walang telebisyon o cellphone sa hapag-kainan.';
+    }
+    return 'Subukan ang isang masustansyang rekomendasyon gamit ang mga abot-kayang lokal na sangkap.';
+  },
+
+  // Tap "Done" on Try It at Home action (Thesis Chapter 2.1 & UC-02)
+  tapActionDone(moduleId, index, event) {
+    if (event) event.stopPropagation();
+    const mod = this.nutritionModules.find(m => m.id === moduleId);
+    if (!mod || !mod.lessons[index]) return;
+
+    const lesson = mod.lessons[index];
+    lesson.actionCompleted = true;
+    lesson.actionCompletedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+    lesson.completed = true;
+
+    // Log practical activity completion (Thesis Chapter 3.1.3 UC-02 & Nabugoomu 2015)
+    const currentUser = NutriStorage.getCurrentUser();
+    const child = this.getActiveChild();
+    const actionTip = lesson.tryHomeAction || this.getLessonPracticalAction(mod.id, lesson.title);
+
+    try {
+      NutriStorage.saveTryHomeSubmission({
+        childId: child ? child.id : 'ch-102',
+        childName: child ? child.name : (currentUser?.childName || 'Child'),
+        parentName: currentUser ? currentUser.name : 'Parent',
+        parentEmail: currentUser ? currentUser.email : '',
+        barangay: currentUser?.barangay || (child ? child.barangay : 'Barangay Manguiring'),
+        actionTitle: `Try It at Home: ${lesson.title}`,
+        actionCategory: 'Lesson Practical Feeding Action',
+        mealType: 'Dinner/Lunch',
+        dateSubmitted: new Date().toISOString().split('T')[0],
+        timeSubmitted: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        ingredientsUsed: 'Sariwang gulay, malunggay, itlog, o lokal na masustansyang sangkap',
+        childAcceptance: 'Kinain nang masigla ng bata',
+        washPracticesFollowed: ['Naghugas ng kamay gamit ang sabon', 'Pinakuluang inuming tubig'],
+        parentNotes: `Nagawa ang praktikal na gawain para sa aralin: "${actionTip}".`,
+        evaluationStatus: 'Pending Review'
+      });
+    } catch (e) {
+      console.warn('Try home action log error:', e);
+    }
+
+    this.saveProgressState();
+    this.openModuleDrawer(moduleId);
+    this.updateProgressHeader();
+    NutriApp.showToast(`🎉 Nagawa mo na ang practical action para sa "${lesson.title}"! Naitala ang timestamp sa system.`, 'success');
+
+    // Live update BHW reviews table if loaded
+    if (window.CHWModule && typeof CHWModule.renderTryHomeEvaluationsTable === 'function') {
+      CHWModule.renderTryHomeEvaluationsTable();
+    }
+  },
+
+  // Toggle Action Done undo
+  toggleLessonActionDone(moduleId, index, event) {
+    if (event) event.stopPropagation();
+    const mod = this.nutritionModules.find(m => m.id === moduleId);
+    if (!mod || !mod.lessons[index]) return;
+
+    const lesson = mod.lessons[index];
+    lesson.actionCompleted = !lesson.actionCompleted;
+    if (!lesson.actionCompleted) {
+      lesson.actionCompletedAt = null;
+    } else {
+      lesson.actionCompletedAt = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', month: 'short', day: 'numeric' });
+    }
+
+    this.saveProgressState();
+    this.openModuleDrawer(moduleId);
     this.updateProgressHeader();
   },
 
@@ -561,13 +780,13 @@ const ParentModule = {
     NutriApp.showToast(mod.lessons[index].completed ? '🎉 Lesson marked as completed!' : 'Lesson status updated.', 'success');
   },
 
-  // Render "Try It at Home" 10 actionable practices checklist
+  // Render "Try It at Home" 10 actionable practices (Matches Reference Mockup)
   renderHomeActionsChecklist() {
     const container = document.getElementById('home-actions-list-container');
     if (!container) return;
 
-    // Load saved checked indexes
-    let checkedSet = new Set([0]); // Default item 0 checked (1/10 = 10% Actions Tried)
+    // Load saved checked indexes - default to [1]
+    let checkedSet = new Set([1]);
     try {
       const saved = localStorage.getItem('nutrilearn_home_actions_checked');
       if (saved) {
@@ -575,37 +794,63 @@ const ParentModule = {
       }
     } catch (e) {}
 
+    const total = this.homeActions.length;
+    const count = checkedSet.size;
+    const pct = Math.round((count / total) * 100);
+
+    // Update progress bar and counter
+    const progressBar = document.getElementById('try-home-progress-bar');
+    const countLabel = document.getElementById('try-home-count');
+    if (progressBar) progressBar.style.width = `${pct}%`;
+    if (countLabel) countLabel.textContent = count;
+
     container.innerHTML = this.homeActions.map((act, idx) => {
       const isChecked = checkedSet.has(idx);
+      const num = idx + 1;
+
       return `
-        <div class="home-action-item ${isChecked ? 'checked' : ''}" onclick="ParentModule.toggleHomeAction(${idx})">
-          <div class="home-action-checkbox">
-            ${isChecked ? '✓' : ''}
+        <div class="try-home-card ${isChecked ? 'is-tried' : ''}" id="try-home-card-${idx}">
+          <div class="try-home-badge-col">
+            <div class="try-home-num-circle">
+              ${isChecked ? `
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              ` : num}
+            </div>
           </div>
-          <div class="home-action-text">
-            <div class="home-action-title">${act.title}</div>
-            <div class="home-action-tip">${act.tip}</div>
+          <div class="try-home-content-col">
+            <div class="try-home-context">${act.context || 'Practical Feeding Action'}</div>
+            <h3 class="try-home-item-title">${act.title}</h3>
+            <p class="try-home-item-hint">${act.tip}</p>
+          </div>
+          <div class="try-home-action-col">
+            ${isChecked ? `
+              <button type="button" class="btn-edit-action" onclick="ParentModule.openEditActivityModal(${idx})">
+                Edit
+              </button>
+            ` : `
+              <button type="button" class="btn-try-action" onclick="ParentModule.markActivityTried(${idx})">
+                I tried it
+              </button>
+            `}
           </div>
         </div>
       `;
     }).join('');
 
-    this.updateHomeActionsMetrics(checkedSet.size);
+    this.updateHomeActionsMetrics(count);
   },
 
-  // Toggle home action item checkbox
-  toggleHomeAction(index) {
-    let checkedSet = new Set([0]);
+  // Mark an activity as tried
+  markActivityTried(index) {
+    let checkedSet = new Set([1]);
     try {
       const saved = localStorage.getItem('nutrilearn_home_actions_checked');
       if (saved) checkedSet = new Set(JSON.parse(saved));
     } catch (e) {}
 
-    if (checkedSet.has(index)) {
-      checkedSet.delete(index);
-    } else {
-      checkedSet.add(index);
-    }
+    checkedSet.add(index);
 
     try {
       localStorage.setItem('nutrilearn_home_actions_checked', JSON.stringify([...checkedSet]));
@@ -623,8 +868,147 @@ const ParentModule = {
       }
     } catch (e) {}
 
+    // Ensure body scroll is never locked
+    document.body.style.overflow = '';
     this.renderHomeActionsChecklist();
-    NutriApp.showToast('✅ Home action progress updated!', 'success');
+    NutriApp.showToast(`🎉 "${this.homeActions[index].title}" marked as tried!`, 'success');
+  },
+
+  // Open modal to edit activity status (Tried vs Not yet)
+  openEditActivityModal(index) {
+    const act = this.homeActions[index];
+    if (!act) return;
+    this.selectedEditActivityIndex = index;
+
+    let checkedSet = new Set([1]);
+    try {
+      const saved = localStorage.getItem('nutrilearn_home_actions_checked');
+      if (saved) checkedSet = new Set(JSON.parse(saved));
+    } catch (e) {}
+
+    const isTried = checkedSet.has(index);
+
+    const contextEl = document.getElementById('modal-edit-activity-context');
+    const titleEl = document.getElementById('modal-edit-activity-title');
+    const hintEl = document.getElementById('modal-edit-activity-hint');
+    const statusTriedRadio = document.getElementById('modal-edit-status-tried');
+    const statusUntriedRadio = document.getElementById('modal-edit-status-untried');
+
+    if (contextEl) contextEl.textContent = act.context || 'PRACTICAL FEEDING ACTION';
+    if (titleEl) titleEl.textContent = act.title || '';
+    if (hintEl) hintEl.textContent = act.tip || '';
+
+    if (statusTriedRadio && statusUntriedRadio) {
+      statusTriedRadio.checked = isTried;
+      statusUntriedRadio.checked = !isTried;
+    }
+
+    this.updateEditStatusUI();
+    NutriApp.openModal('modal-edit-try-activity');
+  },
+
+  updateEditStatusUI() {
+    const statusTriedRadio = document.getElementById('modal-edit-status-tried');
+    const labelTried = document.getElementById('label-edit-status-tried');
+    const labelUntried = document.getElementById('label-edit-status-untried');
+    if (!statusTriedRadio || !labelTried || !labelUntried) return;
+
+    if (statusTriedRadio.checked) {
+      labelTried.style.borderColor = '#2E6845';
+      labelTried.style.background = '#F0FDF4';
+      labelUntried.style.borderColor = '#D1D5DB';
+      labelUntried.style.background = '#F9FAFB';
+    } else {
+      labelTried.style.borderColor = '#D1D5DB';
+      labelTried.style.background = '#F9FAFB';
+      labelUntried.style.borderColor = '#2E6845';
+      labelUntried.style.background = '#F0FDF4';
+    }
+  },
+
+  // Save changes from Edit Modal (Tried vs Not yet)
+  saveActivityEdit(event) {
+    if (event) event.preventDefault();
+    const idx = this.selectedEditActivityIndex;
+    if (idx === null || idx === undefined || !this.homeActions[idx]) {
+      NutriApp.closeModal('modal-edit-try-activity');
+      return;
+    }
+
+    const statusTriedRadio = document.getElementById('modal-edit-status-tried');
+    const isNowTried = statusTriedRadio ? statusTriedRadio.checked : true;
+
+    // Update checked set
+    let checkedSet = new Set([1]);
+    try {
+      const saved = localStorage.getItem('nutrilearn_home_actions_checked');
+      if (saved) checkedSet = new Set(JSON.parse(saved));
+    } catch (e) {}
+
+    if (isNowTried) {
+      checkedSet.add(idx);
+    } else {
+      checkedSet.delete(idx);
+    }
+
+    try {
+      localStorage.setItem('nutrilearn_home_actions_checked', JSON.stringify([...checkedSet]));
+
+      // Live sync to dietary adherence records
+      const records = JSON.parse(localStorage.getItem('nutrilearn_diet_adherence_records_v3') || '[]');
+      const target = records.find(r => r.parentName.includes('Maria') || r.childName.includes('Chloe')) || records[0];
+      if (target) {
+        const actionScore = Math.min(100, Math.round((checkedSet.size / this.homeActions.length) * 100));
+        target.adherenceRate = Math.max(target.adherenceRate, actionScore);
+        target.complianceStatus = target.adherenceRate >= 80 ? 'Compliant' : (target.adherenceRate >= 50 ? 'Moderate' : 'Non-Compliant');
+        if (isNowTried) {
+          target.lastMealLogged = this.homeActions[idx].title;
+          target.lastMealDate = 'Ngayong ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+        localStorage.setItem('nutrilearn_diet_adherence_records_v3', JSON.stringify(records));
+      }
+    } catch (e) {}
+
+    NutriApp.closeModal('modal-edit-try-activity');
+    this.renderHomeActionsChecklist();
+    NutriApp.showToast(isNowTried ? `🎉 Minarkahan bilang Tried!` : `Minarkahan bilang Not yet.`, 'success');
+  },
+
+  // Unmark an activity as tried (backward compatibility)
+  unmarkActivityTried(index = null) {
+    const idx = (index !== null) ? index : this.selectedEditActivityIndex;
+    if (idx === null || idx === undefined) return;
+
+    let checkedSet = new Set([1]);
+    try {
+      const saved = localStorage.getItem('nutrilearn_home_actions_checked');
+      if (saved) checkedSet = new Set(JSON.parse(saved));
+    } catch (e) {}
+
+    checkedSet.delete(idx);
+
+    try {
+      localStorage.setItem('nutrilearn_home_actions_checked', JSON.stringify([...checkedSet]));
+    } catch (e) {}
+
+    NutriApp.closeModal('modal-edit-try-activity');
+    this.renderHomeActionsChecklist();
+    NutriApp.showToast('Aktibidad minarkahan bilang hindi pa nasusubukan.', 'info');
+  },
+
+  // Toggle home action item (backward compatibility)
+  toggleHomeAction(index) {
+    let checkedSet = new Set([1]);
+    try {
+      const saved = localStorage.getItem('nutrilearn_home_actions_checked');
+      if (saved) checkedSet = new Set(JSON.parse(saved));
+    } catch (e) {}
+
+    if (checkedSet.has(index)) {
+      this.unmarkActivityTried(index);
+    } else {
+      this.markActivityTried(index);
+    }
   },
 
   // Open modal for parent to log today's meal
@@ -1100,7 +1484,7 @@ const ParentModule = {
           <div style="font-size: 3rem; margin-bottom: 0.75rem;">👶</div>
           <h3 style="color: #0E3D26; margin-bottom: 0.5rem;">Wala Pang Nakatalang Bata</h3>
           <p style="color: #64748B; max-width: 480px; margin: 0 auto 1.5rem auto; font-size: 0.9rem;">
-            Hindi pa nakakonekta ang rekord ng iyong anak. I-update o magrehistro upang masubaybayan ang Height, Weight, at MUAC growth.
+            Hindi pa nakakonekta ang rekord ng iyong anak. I-update o magrehistro upang masubaybayan ang paglaki ng bata.
           </p>
           <button class="btn btn-accent" onclick="ParentModule.openParentLogGrowthModal(true)">
             ➕ Magrehistro ng Rekord ng Bata
@@ -1110,222 +1494,335 @@ const ParentModule = {
       return;
     }
 
-    // Calculate WHO cutoff references for this child's age
-    const age = parseInt(child.ageMonths, 10) || 12;
-    const sex = child.sex || 'Male';
-    const ageBrackets = [6, 9, 12, 15, 18, 21, 24];
-    let closestAge = 12;
-    let minDiff = 999;
-    for (const b of ageBrackets) {
-      const diff = Math.abs(age - b);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestAge = b;
+    const childId = child.id || 'ch-102';
+    const childName = child.name || 'Liam Santos';
+    const history = this.getChildWeightHistory(childId);
+
+    // Calculate metrics
+    const latestRecord = history.length > 0 ? history[0] : null;
+    const currentWeight = latestRecord ? latestRecord.weight : (child.weightKg || 9.2);
+    const recordsLogged = history.length;
+
+    let deltaVal = 0.2;
+    let deltaSign = '+';
+    if (history.length >= 2) {
+      const diff = +(history[0].weight - history[1].weight).toFixed(1);
+      deltaVal = Math.abs(diff).toFixed(1);
+      deltaSign = diff >= 0 ? '+' : '-';
+    }
+
+    // Determine status
+    let whoStatus = child.status || child.nutritionStatus || 'At Risk';
+    if (whoStatus === 'Underweight' || whoStatus === 'Wasted' || whoStatus === 'Stunted') {
+      whoStatus = 'At Risk';
+    }
+
+    // Today's date for form input
+    const todayStr = new Date().toISOString().split('T')[0];
+
+    // Build History Items HTML
+    const historyItemsHtml = history.map((item, idx) => {
+      let deltaSpan = '';
+      if (idx < history.length - 1) {
+        const prev = history[idx + 1];
+        const diff = +(item.weight - prev.weight).toFixed(1);
+        if (diff >= 0) {
+          deltaSpan = `<span class="wt-history-delta">▲ ${diff} kg</span>`;
+        } else {
+          deltaSpan = `<span class="wt-history-delta" style="color:#DC2626;">▼ ${Math.abs(diff)} kg</span>`;
+        }
       }
-    }
+      const weightDisplay = (item.weight % 1 === 0) ? `${item.weight} kg` : `${item.weight.toFixed(1)} kg`;
+      const dateDisplay = this.formatWeightDate(item.date);
+      const noteDisplay = item.note ? ` · ${item.note}` : '';
 
-    const hfaTarget = (typeof WHO_STANDARDS !== 'undefined' && WHO_STANDARDS.heightForAge && WHO_STANDARDS.heightForAge[closestAge])
-      ? (sex === 'Female' ? WHO_STANDARDS.heightForAge[closestAge].femaleCutoff : WHO_STANDARDS.heightForAge[closestAge].maleCutoff)
-      : 76.9;
-
-    const wfaTarget = (typeof WHO_STANDARDS !== 'undefined' && WHO_STANDARDS.weightForAge && WHO_STANDARDS.weightForAge[closestAge])
-      ? (sex === 'Female' ? WHO_STANDARDS.weightForAge[closestAge].femaleCutoff : WHO_STANDARDS.weightForAge[closestAge].maleCutoff)
-      : 8.8;
-
-    // MUAC band info
-    let muacDotColor = '#10B981';
-    let muacBandText = 'Green Band (Normal)';
-    if (child.muacMm < 115) {
-      muacDotColor = '#EF4444';
-      muacBandText = 'Red Band (SAM - Severe Acute)';
-    } else if (child.muacMm < 125) {
-      muacDotColor = '#F59E0B';
-      muacBandText = 'Yellow Band (MAM - Moderate Acute)';
-    }
-
-    // Badge for primary status
-    let badgeClass = 'badge-normal';
-    let statusLabel = child.status || 'Normal';
-    let guidanceColor = '#10B981';
-    let guidanceTitle = 'Appropriate Growth & Weight Trajectory';
-    let guidanceDesc = 'Patuloy na magbigay ng masusustansyang pagkain ayon sa Pinggang Pinoy (Go, Grow, Glow). Ipagpatuloy ang regular na pagpapainom ng malinis na tubig at paghuhugas ng kamay.';
-
-    if (child.improved) {
-      badgeClass = 'badge-completed';
-      statusLabel = 'Improved & Recovered';
-      guidanceColor = '#10B981';
-      guidanceTitle = 'Matagumpay na Pag-unlad!';
-      guidanceDesc = 'Naabot na ng bata ang malusog na timbang at taas. Ipagpatuloy ang balanseng pagkain upang mapanatili ang tamang nutrisyon.';
-    } else if (child.status === 'Stunted') {
-      badgeClass = 'badge-stunted';
-      statusLabel = 'Stunted (Maliit para sa edad)';
-      guidanceColor = '#EF4444';
-      guidanceTitle = 'Target: 10% Stunting Reduction Trajectory';
-      guidanceDesc = 'Pataasin ang sustansya ng bawat pagkain: Maghalo ng Malunggay, Monggo, at Itlog sa Lugaw araw-araw. Magdagdag ng kaunting mantika o gata para sa brain development.';
-    } else if (child.status === 'Wasted') {
-      badgeClass = 'badge-wasted';
-      statusLabel = 'Wasted (Payat para sa tangkad)';
-      guidanceColor = '#C2410C';
-      guidanceTitle = 'Kailangan ng Mas Madalas na Pagpapakain';
-      guidanceDesc = 'Dagdagan ang dalas ng pagkain (4-5 beses kada araw). Magbigay ng masustansyang meryenda tulad ng nilagang itlog o mashed camote na may gatas.';
-    } else if (child.status === 'Underweight') {
-      badgeClass = 'badge-underweight';
-      statusLabel = 'Underweight (Mababang Timbang)';
-      guidanceColor = '#F59E0B';
-      guidanceTitle = 'I-boost ang Timbang ng Bata';
-      guidanceDesc = 'Bigyan ng pagkaing mayaman sa protina at enerhiya: isda, manok, itlog, at monggo. Siguraduhing malinis ang inuming tubig upang maiwasan ang impeksyon.';
-    }
-
-    // Multi-children switcher pills if parent has >1 child
-    let childSelectorHtml = '';
-    if (parentChildren.length > 1) {
-      childSelectorHtml = `
-        <div style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:1.25rem; padding:0.6rem 0.85rem; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:12px;">
-          <span style="font-size:0.8rem; font-weight:700; color:#475569;">Pumili ng Bata:</span>
-          ${parentChildren.map(c => `
-            <button type="button" 
-              class="btn btn-sm ${String(c.id) === String(child.id) ? 'btn-primary' : 'btn-outline'}" 
-              onclick="ParentModule.selectChild('${c.id}')"
-              style="font-size:0.8rem; padding:4px 12px; border-radius:9999px;">
-              ${c.sex === 'Female' ? '👧' : '👦'} ${c.name} (${c.ageMonths} mos)
-            </button>
-          `).join('')}
-          <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.openParentLogGrowthModal(true)" style="font-size:0.78rem; padding:4px 10px; margin-left:auto;">
-            ➕ Dagdag Rekord
-          </button>
+      return `
+        <div class="wt-history-item">
+          <div class="wt-history-top">
+            <span class="wt-history-val">${weightDisplay}</span>
+            ${deltaSpan}
+          </div>
+          <div class="wt-history-date">${dateDisplay}${noteDisplay}</div>
         </div>
       `;
-    }
+    }).join('');
+
+    // Generate Chart SVG
+    const chartSvg = this.generateWeightChartSvg(history, 9.2);
 
     container.innerHTML = `
-      <div class="card" style="border: 1px solid #EAE6DF; border-radius: 18px; overflow: hidden;">
-        <div class="card-header" style="border-bottom: 1px solid #EAE6DF; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-          <div>
-            <h2 class="card-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.45rem; color: #1A382A; margin: 0 0 0.25rem 0;">
-              Child Growth &amp; Feeding Log
-            </h2>
-            <p class="card-subtitle" style="font-size: 0.86rem; color: #64748B; margin: 0;">
-              Live-synced measurements from Community Health Workers (BHW) and parent feeding updates.
-            </p>
+      <div class="weight-tracker-page-container">
+        <!-- Header -->
+        <div class="wt-header-row">
+          <div class="wt-title-block">
+            <h1>Weight Tracker</h1>
+            <p>Optional for Parents/Guardians: log home measurements if you want to monitor weight between Health Worker visits</p>
           </div>
-          <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
-            <button class="btn btn-accent btn-sm" onclick="ParentModule.openParentLogGrowthModal(false)" style="font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">
-              ✏️ I-update ang Sukat
-            </button>
-            <button class="btn btn-outline btn-sm" onclick="ParentModule.openParentLogGrowthModal(true)" style="font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
-              ➕ Magdagdag ng Anak
-            </button>
+          <div class="wt-child-info wt-child-badge">
+            Child: <strong>${childName}</strong>
           </div>
         </div>
 
-        <div style="padding: 1.5rem;">
-          ${childSelectorHtml}
+        <!-- 4 Metric Cards Grid -->
+        <div class="wt-metrics-grid">
+          <div class="wt-metric-card">
+            <div class="wt-metric-icon">⚖️</div>
+            <div class="wt-metric-val">${currentWeight % 1 === 0 ? currentWeight : currentWeight.toFixed(1)} kg</div>
+            <div class="wt-metric-label">Current Weight</div>
+          </div>
+          <div class="wt-metric-card">
+            <div class="wt-metric-icon">🗓️</div>
+            <div class="wt-metric-val">${recordsLogged}</div>
+            <div class="wt-metric-label">Records Logged</div>
+          </div>
+          <div class="wt-metric-card">
+            <div class="wt-metric-icon">📈</div>
+            <div class="wt-metric-val green">${deltaSign}${deltaVal} kg</div>
+            <div class="wt-metric-label">Since Last Record</div>
+          </div>
+          <div class="wt-metric-card highlight">
+            <div class="wt-metric-icon">🩺</div>
+            <div class="wt-metric-val">${whoStatus}</div>
+            <div class="wt-metric-label">WHO Growth Status</div>
+          </div>
+        </div>
 
-          <!-- Child Profile Banner -->
-          <div style="background: #F0FDF4; border: 1.5px solid #BBF7D0; border-radius: 14px; padding: 1.35rem; margin-bottom: 1.25rem;">
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem;">
-              <div style="display: flex; gap: 0.85rem; align-items: center;">
-                <div style="width: 48px; height: 48px; border-radius: 12px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.6rem;">
-                  ${child.sex === 'Female' ? '👧' : '👦'}
-                </div>
-                <div>
-                  <span style="font-size:0.75rem; color:#15803D; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;">
-                    Kasalukuyang Nakatala:
-                  </span>
-                  <h3 style="font-size:1.35rem; color:#0E3D26; margin:0.15rem 0; font-weight: 800;">
-                    ${child.name} (${child.ageMonths} buwan · ${child.sex})
-                  </h3>
-                  <p style="font-size:0.83rem; color:#475569; margin: 0;">
-                    📍 ${child.barangay || 'Barangay Manguiring'} • Magulang: <strong>${child.parentName || 'Maria Santos'}</strong>
-                    ${child.lastAssessed ? ` • Huling Sinuri: <strong>${child.lastAssessed}</strong>` : ''}
-                  </p>
-                </div>
+        <!-- Growth Chart Card -->
+        <div class="wt-chart-card">
+          <div class="wt-chart-header">
+            <h2 class="wt-chart-title">Growth Chart — ${childName}</h2>
+            <div class="wt-chart-legend">
+              <div class="wt-legend-item">
+                <span class="wt-legend-line-green"></span>
+                <span>Child weight</span>
               </div>
-              <div>
-                <span class="badge ${badgeClass}" style="font-size:0.88rem; padding:0.4rem 0.95rem; font-weight: 700;">
-                  ${statusLabel}
-                </span>
-              </div>
-            </div>
-
-            <!-- Anthropometric 3-Cards Grid -->
-            <div class="grid-3" style="margin-top: 1.25rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem;">
-              <!-- 1. Height-for-Age -->
-              <div style="background:#FFFFFF; padding:1.1rem; border-radius:12px; border:1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="font-size:0.74rem; color:#64748B; font-weight:700; text-transform: uppercase;">HEIGHT-FOR-AGE (Taas):</div>
-                <div style="font-size:1.55rem; font-weight:800; color:${child.hfaStatus === 'Stunted' ? '#EF4444' : '#15803D'}; margin:0.3rem 0;">
-                  ${child.heightCm} cm
-                </div>
-                <div style="font-size:0.76rem; color:#64748B;">
-                  WHO Target: <strong>&gt; ${hfaTarget} cm</strong> (${child.hfaStatus || 'Normal'})
-                </div>
-              </div>
-
-              <!-- 2. Weight-for-Age -->
-              <div style="background:#FFFFFF; padding:1.1rem; border-radius:12px; border:1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="font-size:0.74rem; color:#64748B; font-weight:700; text-transform: uppercase;">WEIGHT-FOR-AGE (Timbang):</div>
-                <div style="font-size:1.55rem; font-weight:800; color:${child.wfaStatus === 'Underweight' ? '#F59E0B' : '#15803D'}; margin:0.3rem 0;">
-                  ${child.weightKg} kg
-                </div>
-                <div style="font-size:0.76rem; color:#64748B;">
-                  WHO Target: <strong>&gt; ${wfaTarget} kg</strong> (${child.wfaStatus || 'Normal'})
-                </div>
-              </div>
-
-              <!-- 3. MUAC Circumference -->
-              <div style="background:#FFFFFF; padding:1.1rem; border-radius:12px; border:1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="font-size:0.74rem; color:#64748B; font-weight:700; text-transform: uppercase;">MUAC CIRCUMFERENCE:</div>
-                <div style="font-size:1.55rem; font-weight:800; color:#1F2937; margin:0.3rem 0; display:flex; align-items:center; gap:8px;">
-                  <span style="display:inline-block; width:12px; height:12px; border-radius:50%; background:${muacDotColor}; box-shadow: 0 0 6px ${muacDotColor};"></span>
-                  ${child.muacMm} mm
-                </div>
-                <div style="font-size:0.76rem; color:#64748B;">
-                  ${muacBandText} • Normal starts at 125 mm
-                </div>
-              </div>
-
-              <!-- 4. Deworming Status Card -->
-              <div style="background:#FFFFFF; padding:1.1rem; border-radius:12px; border:1px solid #E2E8F0; box-shadow: 0 1px 3px rgba(0,0,0,0.03);">
-                <div style="font-size:0.74rem; color:#64748B; font-weight:700; text-transform: uppercase;">💊 DEWORMING RECORD (Purga):</div>
-                <div style="font-size:1.25rem; font-weight:800; color:${(child.dewormingStatus === 'Due for Deworming' || child.dewormingStatus === 'Due') ? '#D97706' : '#15803D'}; margin:0.3rem 0; display:flex; align-items:center; gap:6px;">
-                  <span>${(child.dewormingStatus === 'Due for Deworming' || child.dewormingStatus === 'Due') ? '⚠️ Kailangan nang Purga' : '✓ Up to Date'}</span>
-                </div>
-                <div style="font-size:0.76rem; color:#64748B;">
-                  Huling Purga: <strong>${child.dewormingDate || 'Wala pang tala'}</strong> • Susunod: <strong>${child.dewormingNextDate || 'Tingnan sa Health Center'}</strong>
-                </div>
+              <div class="wt-legend-item">
+                <span class="wt-legend-line-dashed"></span>
+                <span>WHO median</span>
               </div>
             </div>
           </div>
+          <div class="wt-chart-svg-wrap">
+            ${chartSvg}
+          </div>
+        </div>
 
-          <!-- Nutritional Action Plan Guidance -->
-          <div style="background: #FFFFFF; border-left: 4px solid ${guidanceColor}; border-radius: 8px; padding: 1.15rem 1.35rem; margin-bottom: 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,0.04); border-top: 1px solid #E2E8F0; border-right: 1px solid #E2E8F0; border-bottom: 1px solid #E2E8F0;">
-            <div style="font-size: 0.95rem; font-weight: 700; color: #0E3D26; margin-bottom: 0.35rem;">
-              💡 Gabay sa Pagpapakain: ${guidanceTitle}
-            </div>
-            <div style="font-size: 0.86rem; color: #334155; line-height: 1.6;">
-              ${guidanceDesc}
-            </div>
-            ${child.notes ? `
-              <div style="margin-top: 0.75rem; padding-top: 0.65rem; border-top: 1px dashed #E2E8F0; font-size: 0.82rem; color: #64748B;">
-                <strong>Tala mula sa BHW / Community Worker:</strong> ${child.notes}
+        <!-- Bottom 2-Column Grid -->
+        <div class="wt-bottom-grid">
+          <!-- Log New Weight Form Card -->
+          <div class="wt-form-card">
+            <h2 class="wt-card-title">Log New Weight</h2>
+            <form onsubmit="ParentModule.saveNewWeightRecord(event)">
+              <div class="wt-field-group">
+                <label class="wt-field-label">Date *</label>
+                <input type="date" id="wt-input-date" class="wt-input" value="${todayStr}" required />
               </div>
-            ` : ''}
+              <div class="wt-field-group">
+                <label class="wt-field-label">Weight (kg) *</label>
+                <input type="number" id="wt-input-weight" class="wt-input" step="0.1" min="2" max="40" placeholder="e.g. 9.4" required />
+              </div>
+              <div class="wt-field-group">
+                <label class="wt-field-label">Note (optional)</label>
+                <input type="text" id="wt-input-note" class="wt-input" placeholder="e.g. After starting malunggay..." />
+              </div>
+              <button type="submit" class="btn-wt-save">Save Record</button>
+            </form>
+            <div class="wt-callout-box">
+              <span class="wt-callout-icon">💡</span>
+              <span>Weigh your child at the same time each measurement — ideally in the morning before eating, using the same scale. Monthly records give the clearest picture of growth.</span>
+            </div>
           </div>
 
-          <!-- Quick Navigation Buttons -->
-          <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-            <button class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('meal-planner')">
-              🥗 Pinggang Pinoy Meal Planner →
-            </button>
-            <button class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('try-at-home')">
-              🌱 Try It at Home Checklist →
-            </button>
-            <button class="btn btn-outline btn-sm" onclick="ParentModule.switchTab('learning')">
-              📖 Mga Aralin sa Nutrisyon →
-            </button>
+          <!-- Weight History Card -->
+          <div class="wt-history-card">
+            <h2 class="wt-card-title">Weight History</h2>
+            <div class="wt-history-list">
+              ${historyItemsHtml}
+            </div>
           </div>
         </div>
       </div>
+    `;
+  },
+
+  getChildWeightHistory(childId) {
+    if (!childId) return [];
+    try {
+      const stored = localStorage.getItem('nutrilearn_weight_history_' + childId);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    const defaultHistory = [
+      { id: 'wh-1', date: '2026-08-01', weight: 9.2, note: 'Check-up confirmed improving' },
+      { id: 'wh-2', date: '2026-07-01', weight: 9.0, note: '' },
+      { id: 'wh-3', date: '2026-06-01', weight: 8.7, note: 'Eating well' },
+      { id: 'wh-4', date: '2026-05-01', weight: 8.4, note: '' },
+      { id: 'wh-5', date: '2026-04-01', weight: 8.1, note: '' },
+      { id: 'wh-6', date: '2026-03-01', weight: 7.8, note: '' }
+    ];
+    try {
+      localStorage.setItem('nutrilearn_weight_history_' + childId, JSON.stringify(defaultHistory));
+    } catch (e) {}
+    return defaultHistory;
+  },
+
+  saveNewWeightRecord(event) {
+    if (event) event.preventDefault();
+    const dateInput = document.getElementById('wt-input-date');
+    const weightInput = document.getElementById('wt-input-weight');
+    const noteInput = document.getElementById('wt-input-note');
+
+    if (!dateInput || !weightInput) return;
+    const dateVal = dateInput.value;
+    const weightVal = parseFloat(weightInput.value);
+    const noteVal = noteInput ? noteInput.value.trim() : '';
+
+    if (!dateVal || isNaN(weightVal) || weightVal <= 0) {
+      if (typeof NutriApp !== 'undefined') {
+        NutriApp.showToast('Mangyaring ilagay ang wastong timbang (kg).', 'warning');
+      } else {
+        alert('Please enter a valid weight.');
+      }
+      return;
+    }
+
+    const child = this.getActiveChild();
+    if (!child) return;
+
+    const childId = child.id || 'ch-102';
+    const history = this.getChildWeightHistory(childId);
+    const newRecord = {
+      id: 'wh-' + Date.now(),
+      date: dateVal,
+      weight: parseFloat(weightVal.toFixed(1)),
+      note: noteVal
+    };
+
+    history.unshift(newRecord);
+    try {
+      localStorage.setItem('nutrilearn_weight_history_' + childId, JSON.stringify(history));
+    } catch (e) {}
+
+    child.weightKg = newRecord.weight;
+    if (typeof NutriStorage !== 'undefined' && typeof NutriStorage.saveChild === 'function') {
+      NutriStorage.saveChild(child);
+    }
+
+    if (typeof NutriApp !== 'undefined') {
+      NutriApp.showToast(`Matagumpay na naitala ang timbang (${newRecord.weight} kg)!`, 'success');
+    }
+
+    this.renderChildGrowth();
+  },
+
+  formatWeightDate(dateStr) {
+    if (!dateStr) return '';
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      const year = parts[0];
+      const monthIdx = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      if (months[monthIdx]) {
+        return `${months[monthIdx]} ${day}, ${year}`;
+      }
+    }
+    return dateStr;
+  },
+
+  generateWeightChartSvg(history, whoMedian = 9.2) {
+    if (!history || history.length === 0) {
+      return '<div style="text-align:center; padding:2rem; color:#64748B;">Walang sapat na datos para sa chart.</div>';
+    }
+
+    const points = [...history].sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    const weights = points.map(p => p.weight);
+    let minW = 7.6;
+    let maxW = 9.2;
+    if (Math.min(...weights) < 7.6) minW = Math.floor(Math.min(...weights) * 2) / 2;
+    if (Math.max(...weights) > 9.2) maxW = Math.ceil(Math.max(...weights) * 2) / 2;
+
+    const ticks = [];
+    const step = 0.4;
+    for (let w = maxW; w >= minW - 0.001; w -= step) {
+      ticks.push(parseFloat(w.toFixed(1)));
+    }
+
+    const svgWidth = 840;
+    const svgHeight = 250;
+    const padLeft = 60;
+    const padRight = 25;
+    const padTop = 20;
+    const padBottom = 35;
+    const plotW = svgWidth - padLeft - padRight;
+    const plotH = svgHeight - padTop - padBottom;
+
+    const getY = (w) => {
+      const pct = (w - minW) / (maxW - minW);
+      return (padTop + plotH) - (pct * plotH);
+    };
+
+    const getX = (idx) => {
+      if (points.length <= 1) return padLeft + plotW / 2;
+      return padLeft + (idx / (points.length - 1)) * plotW;
+    };
+
+    let gridLinesSvg = '';
+    ticks.forEach(tVal => {
+      const yPos = getY(tVal);
+      const formattedVal = (tVal % 1 === 0 ? tVal : tVal.toFixed(1)) + ' kg';
+      gridLinesSvg += `
+        <line x1="${padLeft}" y1="${yPos}" x2="${svgWidth - padRight}" y2="${yPos}" stroke="#EDE6DC" stroke-dasharray="3 3" stroke-width="1" />
+        <text x="${padLeft - 10}" y="${yPos + 4}" font-size="11" fill="#78716C" font-weight="500" text-anchor="end" font-family="'Inter', -apple-system, sans-serif">${formattedVal}</text>
+      `;
+    });
+
+    const whoY = getY(whoMedian);
+    const whoLineSvg = `
+      <line x1="${padLeft}" y1="${whoY}" x2="${svgWidth - padRight}" y2="${whoY}" stroke="#DC2626" stroke-dasharray="5 4" stroke-width="1.6" />
+    `;
+
+    const coords = points.map((p, idx) => ({
+      x: getX(idx),
+      y: getY(p.weight),
+      date: p.date,
+      weight: p.weight
+    }));
+
+    let vertLinesSvg = '';
+    coords.forEach(pt => {
+      const dateParts = pt.date.split('-');
+      const label = dateParts.length === 3 ? `${dateParts[1]} ${dateParts[2]}` : pt.date;
+      vertLinesSvg += `
+        <line x1="${pt.x}" y1="${padTop}" x2="${pt.x}" y2="${padTop + plotH}" stroke="#EDE6DC" stroke-dasharray="3 3" stroke-width="1" />
+        <text x="${pt.x}" y="${svgHeight - 10}" font-size="11" fill="#78716C" font-weight="500" text-anchor="middle" font-family="'Inter', -apple-system, sans-serif">${label}</text>
+      `;
+    });
+
+    const pathD = coords.reduce((acc, pt, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${pt.x} ${pt.y}`, '');
+    const linePathSvg = `
+      <path d="${pathD}" fill="none" stroke="#2E6845" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    `;
+
+    let pointsSvg = '';
+    coords.forEach(pt => {
+      pointsSvg += `
+        <circle cx="${pt.x}" cy="${pt.y}" r="3.5" fill="#2E6845" />
+      `;
+    });
+
+    return `
+      <svg class="wt-chart-svg" viewBox="0 0 ${svgWidth} ${svgHeight}" preserveAspectRatio="xMidYMid meet">
+        ${gridLinesSvg}
+        ${vertLinesSvg}
+        ${whoLineSvg}
+        ${linePathSvg}
+        ${pointsSvg}
+      </svg>
     `;
   },
 
