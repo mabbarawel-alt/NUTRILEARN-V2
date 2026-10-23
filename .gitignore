@@ -17,3 +17,4 @@ __pycache__/
 # Exclude oversized video files (>100MB)
 video/DJI_0442.MP4
 *.MP4
+!video/1018.mp4
