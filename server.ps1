@@ -32,6 +32,7 @@ $mimeTypes = @{
     ".svg"  = "image/svg+xml"
     ".webp" = "image/webp"
     ".ico"  = "image/x-icon"
+    ".mp4"  = "video/mp4"
 }
 
 while ($listener.IsListening) {

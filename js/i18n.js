@@ -89,6 +89,22 @@ const NutriI18n = {
       topLangTitle.textContent = lang === 'fil' ? '🌐 Wika:' : '🌐 Language:';
     }
 
+    // 0. Intro Video Hero Section
+    const introBadgeText = document.getElementById('intro-badge-text');
+    if (introBadgeText && t.intro_badge_text) introBadgeText.textContent = t.intro_badge_text;
+
+    const introHeroMainTitle = document.getElementById('intro-hero-main-title');
+    if (introHeroMainTitle && t.intro_hero_title) introHeroMainTitle.textContent = t.intro_hero_title;
+
+    const introHeroSubDesc = document.getElementById('intro-hero-sub-desc');
+    if (introHeroSubDesc && t.intro_hero_desc) introHeroSubDesc.textContent = t.intro_hero_desc;
+
+    const btnHeroLoginText = document.getElementById('btn-hero-login-text');
+    if (btnHeroLoginText && t.btn_hero_login_text) btnHeroLoginText.textContent = t.btn_hero_login_text;
+
+    const introScrollPromptText = document.getElementById('intro-scroll-prompt-text');
+    if (introScrollPromptText && t.intro_scroll_prompt_text) introScrollPromptText.textContent = t.intro_scroll_prompt_text;
+
     // 2. Startup Screen 1: Select Role for Sign In
     const signinMainTitle = document.getElementById('lbl-signin-main-title');
     if (signinMainTitle) signinMainTitle.textContent = t.signin_heading;
@@ -427,6 +443,11 @@ const NutriI18n = {
 
   translations: {
     fil: {
+      intro_badge_text: 'Proteksyon at Pagbawas sa Child Stunting',
+      intro_hero_title: 'E-Learning & Child Malnutrition Monitoring Platform',
+      intro_hero_desc: 'Pinag-isang digital na plataporma para sa mga Magulang, Barangay Nutrition Scholars (BNS), at Municipal Health Office para sa masigla at malusog na kinabukasan ng bawat batang Pilipino.',
+      btn_hero_login_text: 'Pumasok sa Portal / Mag-sign In',
+      intro_scroll_prompt_text: 'Mag-scroll pababa o pindutin para mag-sign in',
       lbl_select_language: 'Piliin ang Wika:',
       signin_role_select_title: 'Piliin ang iyong role para magpatuloy',
       card_parent_title: 'Magulang / Tagapag-alaga',
@@ -548,7 +569,7 @@ const NutriI18n = {
       nav_mho: {
         'dashboard': '📊 Executive Dashboard',
         'announcements': '📢 Opisyal na mga Anunsyo',
-        'kpis': '🎯 10% Stunting Target at KPIs',
+        'kpis': '🎯 Stunting Reduction at KPIs',
         'hotspots': '🗺️ Mga Hotspot na Barangay',
         'reports': '📥 Suriin at Aprubahan ang mga Ulat',
         'guidelines': '📜 Mga Patakaran ng WHO at PPAN',
@@ -558,6 +579,11 @@ const NutriI18n = {
       }
     },
     en: {
+      intro_badge_text: 'Child Stunting Prevention & Nutrition Monitoring',
+      intro_hero_title: 'E-Learning & Child Malnutrition Monitoring Platform',
+      intro_hero_desc: 'Unified digital platform empowering Parents, Barangay Nutrition Scholars (BNS), and Municipal Health Offices to eliminate child stunting and build a healthier future.',
+      btn_hero_login_text: 'Enter Portal / Sign In',
+      intro_scroll_prompt_text: 'Scroll down or click to sign in',
       lbl_select_language: 'Select Language:',
       signin_role_select_title: 'Select your role to continue',
       card_parent_title: 'Parent / Guardian',
@@ -679,7 +705,7 @@ const NutriI18n = {
       nav_mho: {
         'dashboard': '📊 Executive Dashboard',
         'announcements': '📢 Official Announcements',
-        'kpis': '🎯 10% Stunting Target & KPIs',
+        'kpis': '🎯 Stunting Reduction & KPIs',
         'hotspots': '🗺️ Barangay Hotspots & Burden',
         'reports': '📥 Review & Endorse BHW Reports',
         'guidelines': '📜 WHO & SDG Nutrition Guidelines',

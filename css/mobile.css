@@ -104,9 +104,8 @@
      2. STARTUP & LOGIN GATEWAY FITMENT (Screen 1 to 4)
      ============================================================================ */
   .startup-gate-screen {
-    padding: 1rem 0.85rem 2rem 0.85rem !important;
+    padding: 0 !important;
     min-height: 100vh !important;
-    align-items: flex-start !important;
   }
 
   .startup-container {

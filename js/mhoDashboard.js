@@ -1,6 +1,6 @@
 // ==========================================================================
 // NUTRILEARN - MUNICIPAL HEALTH OFFICE (MHO) & HIGHER-UPS DASHBOARD
-// Stunting Analytics, 10% Reduction KPI, Barangay Trends, Report Endorsement
+// Stunting Analytics, Reduction KPIs, Barangay Trends, Report Endorsement
 // ==========================================================================
 
 const MHODashboard = {
@@ -120,7 +120,7 @@ const MHODashboard = {
     }
   },
 
-  // Calculate and Render Executive KPIs & 10% Stunting Target
+  // Calculate and Render Executive KPIs & Stunting Reduction Progress
   renderKPIs() {
     let children = NutriStorage.getChildren();
     if (this.selectedBarangay && this.selectedBarangay !== 'ALL') {
@@ -136,11 +136,12 @@ const MHODashboard = {
 
     const currentStuntingRate = total > 0 ? ((stunted / total) * 100).toFixed(1) : '0.0';
 
-    // 10% Stunting Reduction Progress Calculation
+    // Stunting Reduction Progress Calculation
     const baselineRate = 22.0;
-    const targetReduction = 10.0;
     const actualReduction = (baselineRate - parseFloat(currentStuntingRate)).toFixed(1);
-    const reductionProgressPct = Math.min(100, Math.max(0, Math.round((parseFloat(actualReduction) / targetReduction) * 100)));
+    const reductionProgressPct = baselineRate > 0
+      ? Math.min(100, Math.max(0, Math.round((parseFloat(actualReduction) / baselineRate) * 100)))
+      : 0;
 
     // Element bindings
     const elTotal = document.getElementById('mho-kpi-total');
@@ -150,7 +151,7 @@ const MHODashboard = {
     const elImproved = document.getElementById('mho-kpi-improved');
     const elWasted = document.getElementById('mho-kpi-wasted');
 
-    const targetProgressHtml = `<span style="font-size: 1.25rem; font-weight: 800;">${actualReduction}% pts</span> <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">/ 10% Goal (${reductionProgressPct}%)</span>`;
+    const targetProgressHtml = `<span style="font-size: 1.25rem; font-weight: 800;">${parseFloat(actualReduction) > 0 ? '-' + actualReduction : '0.0'}% pts</span> <span style="font-size: 0.78rem; font-weight: 600; color: var(--text-muted);">(vs. ${baselineRate}% baseline)</span>`;
 
     if (elTotal) elTotal.textContent = total;
     if (elStuntingRate) elStuntingRate.textContent = `${currentStuntingRate}%`;
@@ -338,10 +339,10 @@ const MHODashboard = {
 
     const guidelines = [
       {
-        title: 'WHO 2025/2030 Global Nutrition Targets: 10% Stunting Reduction',
+        title: 'WHO 2025/2030 Global Nutrition Targets: Stunting Reduction',
         source: 'World Health Organization & UNICEF (2025)',
         status: 'Active Community Benchmark',
-        summary: 'Targeted parent education and localized complementary food interventions have been shown to reduce stunting prevalence by 10% to 15% across pilot communities within 12 months.'
+        summary: 'Targeted parent education and localized complementary food interventions have been shown to significantly reduce community stunting prevalence across pilot communities.'
       },
       {
         title: 'Philippine Plan of Action for Nutrition (PPAN): Pinggang Pinoy',

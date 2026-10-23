@@ -4,7 +4,7 @@ color 0A
 
 echo ===================================================================
 echo                     NUTRILEARN PLATFORM
-echo     E-Learning & Malnutrition Monitoring (10%% Stunting Target)
+echo     E-Learning & Malnutrition Monitoring (Child Nutrition & Growth)
 echo ===================================================================
 echo.
 echo Starting NutriLearn Application for Windows...

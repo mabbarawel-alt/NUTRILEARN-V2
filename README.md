@@ -1,6 +1,6 @@
 # 🌱 NutriLearn: E-Learning & Child Malnutrition Monitoring Platform
 
-**NutriLearn** is a digital health and nutrition application designed for parents, community health workers (BNS/BHW), and Municipal Health Offices. It translates evidence-based public health nutrition guidelines into interactive, actionable feeding practices to achieve a **10% annual reduction in child stunting**.
+**NutriLearn** is a digital health and nutrition application designed for parents, community health workers (BNS/BHW), and Municipal Health Offices. It translates evidence-based public health nutrition guidelines into interactive, actionable feeding practices to achieve sustained reduction in child stunting.
 
 ---
 
@@ -14,7 +14,7 @@
 
 ### 1. 👨‍👩‍👧 Parents Portal (Primary Users)
 - **5 Evidence-Based Learning Modules**:
-  1. *Understanding Malnutrition & Stunting*: Low height-for-age, lifelong cognitive impacts, 10% reduction benchmark.
+  1. *Understanding Malnutrition & Stunting*: Low height-for-age, lifelong cognitive impacts, stunting prevention.
   2. *The First 1,000 Days Golden Window*: Exclusive breastfeeding (0-6 months) and timely complementary foods.
   3. *Pinggang Pinoy: Local & Affordable Foods*: Malunggay, Monggo, Camote, Dilis, Tilapia, Saba banana, and Eggs.
   4. *Age-Appropriate Feeding (6-23 Months)*: Texture progression and portion control.
@@ -35,7 +35,7 @@
 
 ### 3. 🏛️ Municipal Health Office (MHO / Higher-Ups) Dashboard
 - **Executive Analytics**:
-  - Progress tracker toward the **10% Stunting Reduction Goal**.
+  - Progress tracker for child stunting reduction.
   - Current stunting prevalence vs baseline.
   - Malnutrition distribution breakdown.
 - **Barangay Hotspot Table**: Prioritization of high-burden communities.
@@ -74,7 +74,7 @@ NUTRILEARN/
 │   ├── data.js                # WHO standards, curricula, recipes, sample records
 │   ├── healthWorker.js        # Registry, growth calculator, report submission
 │   ├── parentLearning.js      # Lessons, quizzes, Pinggang Pinoy meal planner
-│   ├── mhoDashboard.js        # MHO analytics, 10% stunting target, report approvals
+│   ├── mhoDashboard.js        # MHO analytics, stunting reduction progress, report approvals
 │   └── exportUtils.js         # CSV export, printing, and LocalStorage persistence
 └── assets/
     └── icons/

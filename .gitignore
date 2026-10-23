@@ -13,6 +13,7 @@ Thumbs.db
 .agignore
 __pycache__/
 *.pyc
-video/
-*.mp4
+
+# Exclude oversized video files (>100MB)
+video/DJI_0442.MP4
 *.MP4

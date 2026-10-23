@@ -430,6 +430,19 @@
       "department": "Municipal Health Office",
       "designation": "Nutrition Officer",
       "initials": "VA"
+    },
+    {
+      "id": "usr-1792799105962",
+      "name": "Vane",
+      "email": "markfreelancer30@gmail.com",
+      "password": "111111",
+      "barangay": "Barangay Manguiring",
+      "role": "mho",
+      "status": "Active",
+      "registeredDate": "2026-10-23",
+      "department": "Municipal Health Office",
+      "designation": "Nutrition Officer",
+      "initials": "VA"
     }
   ],
   "modules": [

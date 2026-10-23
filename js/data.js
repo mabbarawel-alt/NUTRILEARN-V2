@@ -15,7 +15,7 @@ const NUTRI_DATA = {
       summary: 'Learn the critical differences between stunting, wasting, and underweight, and why early nutrition transforms a child’s future.',
       objectives: [
         'Differentiate stunting (low height-for-age) from wasting (low weight-for-height).',
-        'Understand how reducing stunting by 10% prevents irreversible cognitive delays.',
+        'Understand how preventing and reducing stunting protects cognitive and physical development.',
         'Identify common signs of micronutrient deficiency in young children.'
       ],
       content: `
@@ -31,8 +31,8 @@ const NUTRI_DATA = {
           </ul>
         </div>
 
-        <h3>Why the 10% Stunting Reduction Goal Matters</h3>
-        <p>Evidence from the Philippine Institute for Development Studies (PIDS) and the World Health Organization (WHO) proves that consistent caregiver education combined with affordable, locally sourced complementary feeding can reduce stunting by <strong>10% annually</strong>. This simple improvement prevents chronic school absenteeism, enhances intelligence, and breaks the cycle of generational poverty.</p>
+        <h3>Why Stunting Prevention Matters</h3>
+        <p>Evidence from the Philippine Institute for Development Studies (PIDS) and the World Health Organization (WHO) proves that consistent caregiver education combined with affordable, locally sourced complementary feeding can significantly reduce stunting prevalence. This crucial improvement prevents chronic school absenteeism, enhances intelligence, and breaks the cycle of generational poverty.</p>
       `,
       quiz: [
         {
@@ -49,15 +49,15 @@ const NUTRI_DATA = {
         },
         {
           id: 'q1-2',
-          question: 'According to WHO & Philippine health evidence, by how much can community education and better complementary feeding reduce stunting each year?',
+          question: 'According to WHO & Philippine health evidence, how can community caregiver education and localized complementary feeding address child stunting?',
           options: [
-            '1% to 2%',
-            'Around 10%',
-            'No reduction is possible without expensive imported medicine',
-            '50% in one month'
+            'It has no measurable effect on child growth',
+            'It significantly reduces stunting rates and promotes healthy linear growth',
+            'It only works if families purchase expensive imported vitamins',
+            'It only affects adult body height after puberty'
           ],
           answerIndex: 1,
-          explanation: 'Targeted parent education and localized complementary food interventions have been shown to reduce community stunting prevalence by 10% annually.'
+          explanation: 'Targeted parent education and localized complementary food interventions have been shown to significantly reduce community stunting and improve child health outcomes.'
         },
         {
           id: 'q1-3',

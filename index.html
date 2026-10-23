@@ -7,7 +7,7 @@
     content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#19532B">
   <meta name="description"
-    content="NutriLearn: Community e-learning and child malnutrition monitoring application for parents and health workers to reduce child stunting by 10%.">
+    content="NutriLearn: Community e-learning and child malnutrition monitoring application for parents and health workers to prevent and reduce child stunting.">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -26,13 +26,13 @@
     rel="stylesheet">
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css?v=9.6">
-  <link rel="stylesheet" href="css/components.css?v=9.7">
-  <link rel="stylesheet" href="css/admin.css?v=9.6">
-  <link rel="stylesheet" href="css/parent.css?v=9.7">
-  <link rel="stylesheet" href="css/bhw.css?v=9.6">
+  <link rel="stylesheet" href="css/styles.css?v=9.9">
+  <link rel="stylesheet" href="css/components.css?v=9.9">
+  <link rel="stylesheet" href="css/admin.css?v=9.9">
+  <link rel="stylesheet" href="css/parent.css?v=9.9">
+  <link rel="stylesheet" href="css/bhw.css?v=9.9">
   <!-- Dedicated Mobile UI/UX Stylesheet (Isolated Mobile Fitment & Ergonomics) -->
-  <link rel="stylesheet" href="css/mobile.css?v=9.6">
+  <link rel="stylesheet" href="css/mobile.css?v=9.9">
 
   <!-- Early Session Detection & Smooth Phase Restoration (Zero F5 Flash) -->
   <script>
@@ -90,7 +90,80 @@
 <body>
 
   <div id="startup-auth-screen" class="startup-gate-screen">
-    <div class="startup-container">
+    <!-- ====================================================================
+         SECTION 1: CINEMATIC INTRO VIDEO HERO (Wala munang Login Phase sa Bungad)
+         ==================================================================== -->
+    <section id="hero-intro-video" class="intro-video-hero-section">
+      <!-- Background Video Player -->
+      <div class="intro-video-media-wrap">
+        <video id="nutrilearn-intro-video" class="intro-video-element" autoplay loop muted playsinline preload="auto">
+          <source src="video/1018.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="intro-video-overlay"></div>
+      </div>
+
+      <!-- Video Control Floating Buttons (Top-Right) -->
+      <div class="intro-video-controls-bar">
+        <button type="button" id="btn-intro-mute" class="btn-video-control" onclick="NutriApp.toggleIntroVideoAudio()" title="I-on / I-off ang Tunog">
+          <span id="intro-mute-icon">🔇</span>
+          <span id="intro-mute-text" class="video-control-label">Muted</span>
+        </button>
+        <button type="button" id="btn-intro-play" class="btn-video-control" onclick="NutriApp.toggleIntroVideoPlay()" title="I-pause / I-play ang Video">
+          <span id="intro-play-icon">⏸</span>
+        </button>
+      </div>
+
+      <!-- Top Branding in Hero -->
+      <div class="intro-hero-top">
+        <div class="intro-brand-pill">
+          <img src="icon/logo.png?v=6.0" alt="NutriLearn Logo" class="intro-hero-logo">
+          <span class="intro-hero-brand-name">NutriLearn</span>
+        </div>
+      </div>
+
+      <!-- Center Hero Message & Action -->
+      <div class="intro-hero-center">
+        <div class="intro-badge-stunting">
+          <span>🌱</span>
+          <span id="intro-badge-text">Proteksyon at Pagbawas sa Child Stunting</span>
+        </div>
+        <h1 class="intro-hero-title" id="intro-hero-main-title">
+          E-Learning &amp; Child Malnutrition Monitoring Platform
+        </h1>
+        <p class="intro-hero-desc" id="intro-hero-sub-desc">
+          Pinag-isang digital na plataporma para sa mga Magulang, Barangay Nutrition Scholars (BNS), at Municipal Health Office para sa masigla at malusog na kinabukasan ng bawat batang Pilipino.
+        </p>
+
+        <!-- CTA Button to Scroll to Login Phase -->
+        <button type="button" class="btn-hero-scroll-login" onclick="NutriApp.scrollToLoginPhase()">
+          <span id="btn-hero-login-text">Pumasok sa Portal / Mag-sign In</span>
+          <span class="btn-hero-arrow">↓</span>
+        </button>
+      </div>
+
+      <!-- Bottom Bouncing Scroll Indicator -->
+      <div class="intro-hero-bottom" onclick="NutriApp.scrollToLoginPhase()" role="button" tabindex="0">
+        <div class="mouse-scroll-icon">
+          <div class="mouse-wheel"></div>
+        </div>
+        <span class="scroll-prompt-text" id="intro-scroll-prompt-text">Mag-scroll pababa o pindutin para mag-sign in</span>
+        <span class="bouncing-chevron">⌄</span>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: LOGIN & PORTAL ACCESS (Nasa ibaba / lalabas pag nag-click o nag-scroll)
+         ==================================================================== -->
+    <div id="auth-login-section" class="auth-login-section-wrap" style="display: none;">
+      <div class="startup-container">
+        <!-- Button to Return to Video -->
+        <div style="text-align: center; margin-bottom: 0.75rem;">
+          <button type="button" onclick="NutriApp.scrollToIntroVideo()" class="btn-back-to-video">
+            <span>↑</span> Panoorin muli ang Intro Video
+          </button>
+        </div>
+
       <!-- Upper Center Logo, App Name, Tagline & Description -->
       <div class="startup-brand-header">
         <img src="icon/logo.png?v=6.0" alt="NutriLearn Logo" class="startup-leaf-logo"
@@ -634,9 +707,10 @@
           </div>
         </div>
 
-      </div>
-    </div>
-  </div><!-- End #startup-auth-screen -->
+      </div><!-- End .startup-card -->
+    </div><!-- End .startup-container -->
+  </div><!-- End #auth-login-section -->
+</div><!-- End #startup-auth-screen -->
 
   <!-- ==========================================================================
        APPLICATION WORKSPACE (Hidden by default; unlocked ONLY after Login Phase)
@@ -967,7 +1041,7 @@
         <div class="sub-nav-container">
           <span class="sub-nav-link active mho-sub-link" data-tab="dashboard">📊 Executive Dashboard</span>
           <span class="sub-nav-link mho-sub-link" data-tab="announcements">📢 Official Announcements</span>
-          <span class="sub-nav-link mho-sub-link" data-tab="kpis">🎯 10% Stunting Target &amp; KPIs</span>
+          <span class="sub-nav-link mho-sub-link" data-tab="kpis">🎯 Stunting Reduction &amp; KPIs</span>
           <span class="sub-nav-link mho-sub-link" data-tab="hotspots">🗺️ Barangay Hotspots &amp; Burden</span>
           <span class="sub-nav-link mho-sub-link" data-tab="reports">📥 Review &amp; Endorse BHW Reports</span>
           <span class="sub-nav-link mho-sub-link" data-tab="guidelines">📜 WHO &amp; SDG Nutrition Guidelines</span>
@@ -1011,7 +1085,7 @@
                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                   </polygon>
                 </svg>
-                Target: 10% Stunting Reduction
+                Focus: Child Stunting Prevention
               </div>
               <div class="hero-badge">
                 <span>🇵🇭 Local Affordable Foods</span>
@@ -1054,7 +1128,7 @@
                 <div class="parent-hero-stat-pct" id="parent-hero-actions-pct">10%</div>
                 <div class="parent-hero-stat-label">Actions Tried</div>
               </div>
-              <div class="parent-hero-sprout-circle" title="10% Nutrition Target Milestone">
+              <div class="parent-hero-sprout-circle" title="Child Nutrition Milestone">
                 🌱
               </div>
             </div>
@@ -2332,7 +2406,7 @@
                 <div class="kpi-icon" style="background:#FEF2F2; color:#991B1B;">⚠️</div>
               </div>
               <div class="kpi-value" style="color:#EF4444;" id="chw-stat-stunted">0</div>
-              <div class="kpi-subtitle">Target: 10% reduction</div>
+              <div class="kpi-subtitle">Chronic undernutrition</div>
             </div>
 
             <div class="kpi-card">
@@ -2668,7 +2742,7 @@
             <h1>Municipal Nutrition Intelligence &amp; SDG Tracking</h1>
             <p>
               Official dashboard for Municipal Health Officers, nutrition program supervisors, and regional data
-              collectors. Monitoring progress toward the <strong>10% annual child stunting reduction benchmark</strong>.
+              collectors. Monitoring progress toward <strong>community child stunting reduction and recovery</strong>.
             </p>
             <div class="hero-meta">
               <div class="hero-badge hero-badge-highlight">
@@ -2677,7 +2751,7 @@
                     points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
                   </polygon>
                 </svg>
-                WHO &amp; PIDS 10% Stunting Benchmark
+                WHO &amp; PIDS Stunting Standards
               </div>
               <div class="hero-badge">
                 <span>🏛️ Municipal Health Office Central Registry</span>
@@ -3259,11 +3333,11 @@
           <div class="kpi-grid">
             <div class="kpi-card highlight-target">
               <div class="kpi-header">
-                <span class="kpi-title">10% Stunting Reduction Goal</span>
+                <span class="kpi-title">Stunting Reduction Progress</span>
                 <div class="kpi-icon" style="background:#DCFCE7; color:#166534;">🎯</div>
               </div>
-              <div class="kpi-value" id="admin-dash-kpi-target-progress">0%</div>
-              <div class="kpi-subtitle">Progress toward 10% reduction benchmark</div>
+              <div class="kpi-value" id="admin-dash-kpi-target-progress">0.0% pts</div>
+              <div class="kpi-subtitle">Net reduction from baseline prevalence</div>
               <div class="kpi-progress-bar">
                 <div class="kpi-progress-fill" id="admin-dash-kpi-target-bar" style="width: 0%;"></div>
               </div>
@@ -3304,7 +3378,7 @@
           <div class="dash-quick-grid">
             <div class="dash-action-card" onclick="NutriApp.switchMHOSubTab('kpis')">
               <span class="dash-action-icon" style="background:#DCFCE7; color:#166534;">🎯</span>
-              <div class="dash-action-title">10% Stunting Target</div>
+              <div class="dash-action-title">Stunting Reduction &amp; KPIs</div>
               <div class="dash-action-desc">Detailed indicators, sex &amp; age distribution analytics.</div>
               <span class="dash-action-link">View Target Analytics →</span>
             </div>
@@ -3603,11 +3677,11 @@
           <div class="kpi-grid">
             <div class="kpi-card highlight-target">
               <div class="kpi-header">
-                <span class="kpi-title">10% Stunting Reduction Goal</span>
+                <span class="kpi-title">Stunting Reduction Progress</span>
                 <div class="kpi-icon" style="background:#DCFCE7; color:#166534;">🎯</div>
               </div>
-              <div class="kpi-value" id="mho-kpi-target-progress">0%</div>
-              <div class="kpi-subtitle">Progress toward 10% reduction benchmark</div>
+              <div class="kpi-value" id="mho-kpi-target-progress">0.0% pts</div>
+              <div class="kpi-subtitle">Net reduction from baseline prevalence</div>
               <div class="kpi-progress-bar">
                 <div class="kpi-progress-fill" id="mho-kpi-target-bar" style="width: 0%;"></div>
               </div>
@@ -6428,7 +6502,7 @@
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=5.9"></script>
   <script src="js/mobileUX.js?v=6.3"></script>
-  <script src="js/app.js?v=6.3"></script>
+  <script src="js/app.js?v=9.9"></script>
 </body>
 
 </html>

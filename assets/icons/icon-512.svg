@@ -42,7 +42,7 @@
   <!-- Care Heart -->
   <path d="M 256 140 C 250 130, 234 120, 224 130 C 214 140, 224 156, 256 182 C 288 156, 298 140, 288 130 C 278 120, 262 130, 256 140 Z" fill="url(#goldGrad512)" />
 
-  <!-- Sparkle of Hope / 10% Stunting Reduction Goal -->
+  <!-- Sparkle of Hope / Stunting Reduction & Growth -->
   <circle cx="374" cy="144" r="12" fill="#FBBF24" />
   <path d="M 374 124 L 379 139 L 394 144 L 379 149 L 374 164 L 369 149 L 354 144 L 369 139 Z" fill="#FDE68A" />
 

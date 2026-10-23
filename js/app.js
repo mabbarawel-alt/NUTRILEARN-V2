@@ -21,6 +21,7 @@ const NutriApp = {
     this.bindGlobalEvents();
     this.updateUserHeaderBadge();
     this.initSubNavScroll();
+    this.initIntroHeroInteractions();
     this.checkUrlParams();
 
     // Initialize modules
@@ -94,7 +95,7 @@ const NutriApp = {
     const startupScreen = document.getElementById('startup-auth-screen');
     const workspace = document.getElementById('app-workspace');
     if (startupScreen) {
-      startupScreen.style.display = 'flex';
+      startupScreen.style.display = 'block';
       document.body.style.overflow = 'auto';
     }
     if (workspace) {
@@ -108,16 +109,23 @@ const NutriApp = {
     if (savedAuthRole) {
       this.currentAuthRole = savedAuthRole;
     }
-    if (savedAuthScreen === 'screen-role-signup') {
-      this.goToRoleSelectSignUp();
-    } else if (savedAuthScreen === 'screen-auth-signin') {
-      this.proceedToSignInCredentials(true);
-    } else if (savedAuthScreen === 'screen-auth-details') {
-      this.proceedToSignUpDetails();
-    } else if (savedAuthScreen === 'screen-auth-forgot') {
-      this.switchAuthScreen('screen-auth-forgot');
+
+    if (savedAuthScreen && savedAuthScreen !== 'screen-role-signin') {
+      this.scrollToLoginPhase();
+      if (savedAuthScreen === 'screen-role-signup') {
+        this.goToRoleSelectSignUp();
+      } else if (savedAuthScreen === 'screen-auth-signin') {
+        this.proceedToSignInCredentials(true);
+      } else if (savedAuthScreen === 'screen-auth-details') {
+        this.proceedToSignUpDetails();
+      } else if (savedAuthScreen === 'screen-auth-forgot') {
+        this.switchAuthScreen('screen-auth-forgot');
+      }
     } else {
-      this.goToRoleSelectSignIn();
+      // Default initial state: Pure Hero Intro Video, NO login visible
+      this.scrollToIntroVideo();
+      this.portalAction = 'signin';
+      this.updateRoleCardSelection('signin', this.currentAuthRole || 'parent');
     }
   },
 
@@ -125,6 +133,10 @@ const NutriApp = {
   hideStartupScreen() {
     const startupScreen = document.getElementById('startup-auth-screen');
     const workspace = document.getElementById('app-workspace');
+    const video = document.getElementById('nutrilearn-intro-video');
+    if (video) {
+      try { video.pause(); } catch (e) {}
+    }
     if (startupScreen) {
       startupScreen.style.display = 'none';
       document.body.style.overflow = '';
@@ -135,9 +147,141 @@ const NutriApp = {
     document.documentElement.classList.add('user-logged-in');
   },
 
-  // Quick toggle to pause/resume ambient video (no-op since video removed)
+  // Transition smoothly into the Login / Portal Access Phase
+  scrollToLoginPhase() {
+    const startupScreen = document.getElementById('startup-auth-screen');
+    const heroVideo = document.getElementById('hero-intro-video');
+    const loginSection = document.getElementById('auth-login-section');
+    const video = document.getElementById('nutrilearn-intro-video');
+
+    if (video) {
+      try { video.pause(); } catch (e) {}
+    }
+
+    if (startupScreen) {
+      startupScreen.classList.add('phase-login');
+      startupScreen.scrollTop = 0;
+    }
+    if (heroVideo) {
+      heroVideo.style.display = 'none';
+    }
+    if (loginSection) {
+      loginSection.style.display = 'flex';
+      try {
+        loginSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {}
+    }
+  },
+
+  // Transition smoothly back to the Hero Intro Video
+  scrollToIntroVideo() {
+    const startupScreen = document.getElementById('startup-auth-screen');
+    const heroVideo = document.getElementById('hero-intro-video');
+    const loginSection = document.getElementById('auth-login-section');
+    const video = document.getElementById('nutrilearn-intro-video');
+
+    if (startupScreen) {
+      startupScreen.classList.remove('phase-login');
+      startupScreen.scrollTop = 0;
+    }
+    if (loginSection) {
+      loginSection.style.display = 'none';
+    }
+    if (heroVideo) {
+      heroVideo.style.display = 'flex';
+    }
+    if (video) {
+      try {
+        const playPromise = video.play();
+        if (playPromise && typeof playPromise.catch === 'function') {
+          playPromise.catch(() => {});
+        }
+      } catch (e) {}
+    }
+  },
+
+  // Attach scroll, swipe, and key events to transition from Intro Hero Video to Login Phase
+  initIntroHeroInteractions() {
+    const heroSection = document.getElementById('hero-intro-video');
+    if (!heroSection) return;
+
+    // 1. Mouse wheel scroll down listener
+    heroSection.addEventListener('wheel', (e) => {
+      if (e.deltaY > 15) {
+        this.scrollToLoginPhase();
+      }
+    }, { passive: true });
+
+    // 2. Touch swipe up listener for mobile/tablet devices
+    let touchStartY = 0;
+    heroSection.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    heroSection.addEventListener('touchend', (e) => {
+      if (e.changedTouches && e.changedTouches[0]) {
+        const deltaY = touchStartY - e.changedTouches[0].clientY;
+        if (deltaY > 35) {
+          this.scrollToLoginPhase();
+        }
+      }
+    }, { passive: true });
+
+    // 3. Keyboard navigation listener (ArrowDown, PageDown, Space, Enter)
+    window.addEventListener('keydown', (e) => {
+      const startupScreen = document.getElementById('startup-auth-screen');
+      const isLoggedOut = !document.documentElement.classList.contains('user-logged-in');
+      const isHeroActive = startupScreen && 
+                           startupScreen.style.display !== 'none' && 
+                           !startupScreen.classList.contains('phase-login') &&
+                           heroSection.style.display !== 'none';
+
+      if (isLoggedOut && isHeroActive) {
+        if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter') {
+          e.preventDefault();
+          this.scrollToLoginPhase();
+        }
+      }
+    });
+  },
+
+  // Toggle Intro Video Audio (Unmute / Mute)
+  toggleIntroVideoAudio() {
+    const video = document.getElementById('nutrilearn-intro-video');
+    const muteIcon = document.getElementById('intro-mute-icon');
+    const muteText = document.getElementById('intro-mute-text');
+    if (!video) return;
+
+    video.muted = !video.muted;
+    if (muteIcon) {
+      muteIcon.textContent = video.muted ? '🔇' : '🔊';
+    }
+    if (muteText) {
+      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      muteText.textContent = video.muted ? (isFil ? 'Naka-mute' : 'Muted') : (isFil ? 'May Tunog' : 'Sound On');
+    }
+  },
+
+  // Toggle Intro Video Play / Pause
+  toggleIntroVideoPlay() {
+    const video = document.getElementById('nutrilearn-intro-video');
+    const playIcon = document.getElementById('intro-play-icon');
+    if (!video) return;
+
+    if (video.paused) {
+      video.play().catch(() => {});
+      if (playIcon) playIcon.textContent = '⏸';
+    } else {
+      video.pause();
+      if (playIcon) playIcon.textContent = '▶';
+    }
+  },
+
+  // Quick toggle to pause/resume ambient video
   toggleBgVideo() {
-    return;
+    this.toggleIntroVideoPlay();
   },
 
   // Switch between screens in the Auth Gateway
@@ -149,7 +293,19 @@ const NutriApp = {
       const el = document.getElementById(id);
       if (el) el.style.display = (id === screenId) ? 'block' : 'none';
     });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const startupScreen = document.getElementById('startup-auth-screen');
+    if (startupScreen && !startupScreen.classList.contains('phase-login')) {
+      startupScreen.classList.add('phase-login');
+    }
+    const heroVideo = document.getElementById('hero-intro-video');
+    if (heroVideo) heroVideo.style.display = 'none';
+    const loginSection = document.getElementById('auth-login-section');
+    if (loginSection) {
+      loginSection.style.display = 'flex';
+      try {
+        loginSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } catch (e) {}
+    }
   },
 
   // Toggle password visibility (Show/Hide Password)
