@@ -1,7 +1,7 @@
 import urllib.request, json
 
-SUPABASE_URL = "https://zvsajtnxthoahrujwfpf.supabase.co"
-ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp2c2FqdG54dGhvYWhydWp3ZnBmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkxNjQ0NjYsImV4cCI6MjEwNDc0MDQ2Nn0.OT1MjjVunkwJy23esw6nkWQ2a38RsEdTLX-aBD_ZojE"
+SUPABASE_URL = "https://ggtrarjaddeadolpbhsd.supabase.co"
+ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdndHJhcmphZGRlYWRvbHBiaHNkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI2MjYxODgsImV4cCI6MjEwODIwMjE4OH0.CqkbG4Gsk3KsW1qKa6j3fMHMH23fSdGqK2BkSTknDko"
 
 headers = {
     "apikey": ANON_KEY,
