@@ -147,49 +147,42 @@ const NutriApp = {
     document.documentElement.classList.add('user-logged-in');
   },
 
-  // Transition smoothly into the Login / Portal Access Phase
+  // Transition smoothly into the Login / Portal Access Phase (Vertical Slide Down)
   scrollToLoginPhase() {
-    const startupScreen = document.getElementById('startup-auth-screen');
-    const heroVideo = document.getElementById('hero-intro-video');
-    const loginSection = document.getElementById('auth-login-section');
-    const video = document.getElementById('nutrilearn-intro-video');
+    if (this.isPhaseTransitioning) return;
+    this.isPhaseTransitioning = true;
+    setTimeout(() => { this.isPhaseTransitioning = false; }, 700);
 
-    if (video) {
-      try { video.pause(); } catch (e) {}
-    }
+    const startupScreen = document.getElementById('startup-auth-screen');
+    const authLoginSection = document.getElementById('auth-login-section');
+    const video = document.getElementById('nutrilearn-intro-video');
 
     if (startupScreen) {
       startupScreen.classList.add('phase-login');
-      startupScreen.scrollTop = 0;
     }
-    if (heroVideo) {
-      heroVideo.style.display = 'none';
+
+    if (authLoginSection) {
+      authLoginSection.scrollTop = 0;
     }
-    if (loginSection) {
-      loginSection.style.display = 'flex';
-      try {
-        loginSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } catch (e) {}
-    }
+
+    // Pause video after the 650ms slide transition finishes to conserve resources
+    setTimeout(() => {
+      if (startupScreen && startupScreen.classList.contains('phase-login') && video) {
+        try { video.pause(); } catch (e) {}
+      }
+    }, 650);
   },
 
-  // Transition smoothly back to the Hero Intro Video
+  // Transition smoothly back up to the Hero Intro Video (Vertical Slide Up)
   scrollToIntroVideo() {
+    if (this.isPhaseTransitioning) return;
+    this.isPhaseTransitioning = true;
+    setTimeout(() => { this.isPhaseTransitioning = false; }, 700);
+
     const startupScreen = document.getElementById('startup-auth-screen');
-    const heroVideo = document.getElementById('hero-intro-video');
-    const loginSection = document.getElementById('auth-login-section');
     const video = document.getElementById('nutrilearn-intro-video');
 
-    if (startupScreen) {
-      startupScreen.classList.remove('phase-login');
-      startupScreen.scrollTop = 0;
-    }
-    if (loginSection) {
-      loginSection.style.display = 'none';
-    }
-    if (heroVideo) {
-      heroVideo.style.display = 'flex';
-    }
+    // Resume video playback immediately as it slides back down into view
     if (video) {
       try {
         const playPromise = video.play();
@@ -198,50 +191,94 @@ const NutriApp = {
         }
       } catch (e) {}
     }
+
+    if (startupScreen) {
+      startupScreen.classList.remove('phase-login');
+    }
   },
 
-  // Attach scroll, swipe, and key events to transition from Intro Hero Video to Login Phase
+  // Attach scroll, swipe, and key events to transition smoothly between Video Hero and Login Phase
   initIntroHeroInteractions() {
     const heroSection = document.getElementById('hero-intro-video');
-    if (!heroSection) return;
+    const authLoginSection = document.getElementById('auth-login-section');
+    if (!heroSection || !authLoginSection) return;
 
-    // 1. Mouse wheel scroll down listener
+    // --- PHASE 1 (HERO VIDEO) INTERACTIONS -> Go to Login (Slide Down) ---
+
+    // 1. Mouse wheel on hero -> Slide Down to login phase
     heroSection.addEventListener('wheel', (e) => {
       if (e.deltaY > 15) {
         this.scrollToLoginPhase();
       }
     }, { passive: true });
 
-    // 2. Touch swipe up listener for mobile/tablet devices
-    let touchStartY = 0;
+    // 2. Touch swipe on hero -> Slide Down to login phase
+    let heroTouchStartY = 0;
     heroSection.addEventListener('touchstart', (e) => {
       if (e.touches && e.touches[0]) {
-        touchStartY = e.touches[0].clientY;
+        heroTouchStartY = e.touches[0].clientY;
       }
     }, { passive: true });
 
     heroSection.addEventListener('touchend', (e) => {
       if (e.changedTouches && e.changedTouches[0]) {
-        const deltaY = touchStartY - e.changedTouches[0].clientY;
-        if (deltaY > 35) {
+        const deltaY = heroTouchStartY - e.changedTouches[0].clientY;
+        if (deltaY > 35) { // Swiped up on hero
           this.scrollToLoginPhase();
         }
       }
     }, { passive: true });
 
-    // 3. Keyboard navigation listener (ArrowDown, PageDown, Space, Enter)
+
+    // --- PHASE 2 (LOGIN SECTION) INTERACTIONS -> Return to Video (Slide Up) ---
+
+    // 3. Mouse wheel on login section -> If at top (scrollTop <= 5) and scrolling UP (deltaY < -15), slide back to video!
+    authLoginSection.addEventListener('wheel', (e) => {
+      if (authLoginSection.scrollTop <= 5 && e.deltaY < -15) {
+        this.scrollToIntroVideo();
+      }
+    }, { passive: true });
+
+    // 4. Touch swipe on login section -> If at top and swiping DOWN, slide back to video!
+    let loginTouchStartY = 0;
+    authLoginSection.addEventListener('touchstart', (e) => {
+      if (e.touches && e.touches[0]) {
+        loginTouchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    authLoginSection.addEventListener('touchend', (e) => {
+      if (e.changedTouches && e.changedTouches[0]) {
+        const deltaY = e.changedTouches[0].clientY - loginTouchStartY;
+        if (authLoginSection.scrollTop <= 5 && deltaY > 35) { // Swiped down at top of login
+          this.scrollToIntroVideo();
+        }
+      }
+    }, { passive: true });
+
+
+    // --- KEYBOARD NAVIGATION (Arrows, PageUp/Down) ---
     window.addEventListener('keydown', (e) => {
       const startupScreen = document.getElementById('startup-auth-screen');
       const isLoggedOut = !document.documentElement.classList.contains('user-logged-in');
-      const isHeroActive = startupScreen && 
-                           startupScreen.style.display !== 'none' && 
-                           !startupScreen.classList.contains('phase-login') &&
-                           heroSection.style.display !== 'none';
+      if (!isLoggedOut || !startupScreen || startupScreen.style.display === 'none') return;
 
-      if (isLoggedOut && isHeroActive) {
+      const isLoginPhase = startupScreen.classList.contains('phase-login');
+
+      // If in Hero Video Phase -> Down arrows go to Login Phase
+      if (!isLoginPhase) {
         if (e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter') {
           e.preventDefault();
           this.scrollToLoginPhase();
+        }
+      } else {
+        // If in Login Phase -> Up arrow at top goes back to Video Hero
+        if ((e.key === 'ArrowUp' || e.key === 'PageUp') && authLoginSection.scrollTop <= 5) {
+          const activeTag = document.activeElement ? document.activeElement.tagName : '';
+          if (activeTag !== 'INPUT' && activeTag !== 'TEXTAREA' && activeTag !== 'SELECT') {
+            e.preventDefault();
+            this.scrollToIntroVideo();
+          }
         }
       }
     });
@@ -297,14 +334,9 @@ const NutriApp = {
     if (startupScreen && !startupScreen.classList.contains('phase-login')) {
       startupScreen.classList.add('phase-login');
     }
-    const heroVideo = document.getElementById('hero-intro-video');
-    if (heroVideo) heroVideo.style.display = 'none';
     const loginSection = document.getElementById('auth-login-section');
     if (loginSection) {
-      loginSection.style.display = 'flex';
-      try {
-        loginSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } catch (e) {}
+      loginSection.scrollTop = 0;
     }
   },
 

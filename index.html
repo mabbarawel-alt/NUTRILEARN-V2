@@ -26,8 +26,8 @@
     rel="stylesheet">
 
   <!-- Core Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css?v=9.9">
-  <link rel="stylesheet" href="css/components.css?v=9.9">
+  <link rel="stylesheet" href="css/styles.css?v=10.0">
+  <link rel="stylesheet" href="css/components.css?v=10.0">
   <link rel="stylesheet" href="css/admin.css?v=9.9">
   <link rel="stylesheet" href="css/parent.css?v=9.9">
   <link rel="stylesheet" href="css/bhw.css?v=9.9">
@@ -43,7 +43,7 @@
           document.documentElement.classList.add('user-logged-in');
           var role = localStorage.getItem('nutrilearn_active_role');
           if (!role) {
-            try { role = JSON.parse(user).role; } catch (e) {}
+            try { role = JSON.parse(user).role; } catch (e) { }
           }
           if (role) {
             var normRole = (role === 'collector') ? 'chw' : role;
@@ -57,28 +57,35 @@
     html.user-logged-in #startup-auth-screen {
       display: none !important;
     }
+
     html.user-logged-in #app-workspace {
       display: block !important;
     }
+
     html.user-logged-in.role-parent #parent-top-taskbar {
       display: flex !important;
     }
+
     html.user-logged-in.role-parent #standard-header-container,
     html.user-logged-in.role-parent #admin-top-taskbar,
     html.user-logged-in.role-parent #bhw-top-taskbar {
       display: none !important;
     }
+
     html.user-logged-in.role-chw #bhw-top-taskbar {
       display: flex !important;
     }
+
     html.user-logged-in.role-chw #standard-header-container,
     html.user-logged-in.role-chw #admin-top-taskbar,
     html.user-logged-in.role-chw #parent-top-taskbar {
       display: none !important;
     }
+
     html.user-logged-in.role-mho #admin-top-taskbar {
       display: flex !important;
     }
+
     html.user-logged-in.role-mho #standard-header-container,
     html.user-logged-in.role-mho #parent-top-taskbar,
     html.user-logged-in.role-mho #bhw-top-taskbar {
@@ -90,10 +97,12 @@
 <body>
 
   <div id="startup-auth-screen" class="startup-gate-screen">
-    <!-- ====================================================================
-         SECTION 1: CINEMATIC INTRO VIDEO HERO (Wala munang Login Phase sa Bungad)
-         ==================================================================== -->
-    <section id="hero-intro-video" class="intro-video-hero-section">
+    <!-- Smooth Two-Phase Vertical Slider Track (Video Hero <-> Login Phase) -->
+    <div class="startup-phases-slider" id="startup-phases-slider">
+      <!-- ====================================================================
+           SECTION 1: CINEMATIC INTRO VIDEO HERO (Fullscreen Phase 1)
+           ==================================================================== -->
+      <section id="hero-intro-video" class="intro-video-hero-section">
       <!-- Background Video Player -->
       <div class="intro-video-media-wrap">
         <video id="nutrilearn-intro-video" class="intro-video-element" autoplay loop muted playsinline preload="auto">
@@ -105,11 +114,13 @@
 
       <!-- Video Control Floating Buttons (Top-Right) -->
       <div class="intro-video-controls-bar">
-        <button type="button" id="btn-intro-mute" class="btn-video-control" onclick="NutriApp.toggleIntroVideoAudio()" title="I-on / I-off ang Tunog">
+        <button type="button" id="btn-intro-mute" class="btn-video-control" onclick="NutriApp.toggleIntroVideoAudio()"
+          title="I-on / I-off ang Tunog">
           <span id="intro-mute-icon">🔇</span>
           <span id="intro-mute-text" class="video-control-label">Muted</span>
         </button>
-        <button type="button" id="btn-intro-play" class="btn-video-control" onclick="NutriApp.toggleIntroVideoPlay()" title="I-pause / I-play ang Video">
+        <button type="button" id="btn-intro-play" class="btn-video-control" onclick="NutriApp.toggleIntroVideoPlay()"
+          title="I-pause / I-play ang Video">
           <span id="intro-play-icon">⏸</span>
         </button>
       </div>
@@ -132,7 +143,8 @@
           E-Learning &amp; Child Malnutrition Monitoring Platform
         </h1>
         <p class="intro-hero-desc" id="intro-hero-sub-desc">
-          Pinag-isang digital na plataporma para sa mga Magulang, Barangay Nutrition Scholars (BNS), at Municipal Health Office para sa masigla at malusog na kinabukasan ng bawat batang Pilipino.
+          Pinag-isang digital na plataporma para sa mga Magulang, Barangay Health Workers (BHW), at Municipal Health
+          Office para sa masigla at malusog na kinabukasan ng bawat batang Pilipino.
         </p>
 
         <!-- CTA Button to Scroll to Login Phase -->
@@ -147,569 +159,579 @@
         <div class="mouse-scroll-icon">
           <div class="mouse-wheel"></div>
         </div>
-        <span class="scroll-prompt-text" id="intro-scroll-prompt-text">Mag-scroll pababa o pindutin para mag-sign in</span>
+        <span class="scroll-prompt-text" id="intro-scroll-prompt-text">Mag-scroll pababa o pindutin para mag-sign
+          in</span>
         <span class="bouncing-chevron">⌄</span>
       </div>
     </section>
 
-    <!-- ====================================================================
-         SECTION 2: LOGIN & PORTAL ACCESS (Nasa ibaba / lalabas pag nag-click o nag-scroll)
-         ==================================================================== -->
-    <div id="auth-login-section" class="auth-login-section-wrap" style="display: none;">
-      <div class="startup-container">
-        <!-- Button to Return to Video -->
-        <div style="text-align: center; margin-bottom: 0.75rem;">
-          <button type="button" onclick="NutriApp.scrollToIntroVideo()" class="btn-back-to-video">
-            <span>↑</span> Panoorin muli ang Intro Video
-          </button>
+      <!-- ====================================================================
+           SECTION 2: LOGIN & PORTAL ACCESS (Smooth Slide Up on Scroll/Click)
+           ==================================================================== -->
+      <div id="auth-login-section" class="auth-login-section-wrap">
+        <div class="startup-container">
+          <!-- Button & Indicator to Return to Video -->
+          <div style="text-align: center; margin-bottom: 0.75rem;">
+            <button type="button" onclick="NutriApp.scrollToIntroVideo()" class="btn-back-to-video"
+              title="I-scroll pataas o pindutin para bumalik sa video">
+              <span>↑</span> Panoorin muli ang Intro Video
+            </button>
+          </div>
+
+        <!-- Upper Center Logo, App Name, Tagline & Description -->
+        <div class="startup-brand-header">
+          <img src="icon/logo.png?v=6.0" alt="NutriLearn Logo" class="startup-leaf-logo"
+            onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Home" style="cursor: pointer;">
+          <h1 class="startup-brand-title" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;"
+            title="NutriLearn - Home">
+            <img src="icon/Name.png?v=6.0" alt="NutriLearn" class="startup-brand-name-img"
+              style="height: 22px; width: auto; max-width: 140px; object-fit: contain;">
+          </h1>
+          <div id="startup-db-status" class="db-status-badge"
+            style="margin-top: 0.35rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; padding: 2px 10px; border-radius: 9999px; background: #FEF3C7; color: #92400E; font-weight: 600; border: 1px solid #FDE68A;">
+            <span class="db-dot"
+              style="width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; display: inline-block;"></span>
+            <span id="startup-db-status-text">Database: Connecting...</span>
+          </div>
+
+          <!-- Top Language Selector Pill (Instantly visible without scrolling) -->
+          <div class="startup-top-lang-pill"
+            style="margin-top: 0.45rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #FFFFFF; padding: 2px 6px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
+            <span id="lbl-top-lang-title"
+              style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-left: 2px; margin-right: 2px;">
+              Wika:</span>
+            <button type="button" class="btn-lang-choice active" id="btn-lang-top-fil"
+              onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">
+              🇵🇭 Filipino
+            </button>
+            <button type="button" class="btn-lang-choice" id="btn-lang-top-en" onclick="NutriI18n.setLanguage('en')"
+              style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
+              🇺🇸 English
+            </button>
+          </div>
         </div>
 
-      <!-- Upper Center Logo, App Name, Tagline & Description -->
-      <div class="startup-brand-header">
-        <img src="icon/logo.png?v=6.0" alt="NutriLearn Logo" class="startup-leaf-logo"
-          onclick="NutriApp.navigateToMainDashboard()" title="NutriLearn - Home" style="cursor: pointer;">
-        <h1 class="startup-brand-title" onclick="NutriApp.navigateToMainDashboard()" style="cursor: pointer;"
-          title="NutriLearn - Home">
-          <img src="icon/Name.png?v=6.0" alt="NutriLearn" class="startup-brand-name-img"
-            style="height: 22px; width: auto; max-width: 140px; object-fit: contain;">
-        </h1>
-        <div id="startup-db-status" class="db-status-badge"
-          style="margin-top: 0.35rem; display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; padding: 2px 10px; border-radius: 9999px; background: #FEF3C7; color: #92400E; font-weight: 600; border: 1px solid #FDE68A;">
-          <span class="db-dot"
-            style="width: 7px; height: 7px; border-radius: 50%; background: #F59E0B; display: inline-block;"></span>
-          <span id="startup-db-status-text">Database: Connecting...</span>
-        </div>
-
-        <!-- Top Language Selector Pill (Instantly visible without scrolling) -->
-        <div class="startup-top-lang-pill"
-          style="margin-top: 0.45rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #FFFFFF; padding: 2px 6px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
-          <span id="lbl-top-lang-title"
-            style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-left: 2px; margin-right: 2px;">
-            Wika:</span>
-          <button type="button" class="btn-lang-choice active" id="btn-lang-top-fil"
-            onclick="NutriI18n.setLanguage('fil')"
-            style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">
-            🇵🇭 Filipino
-          </button>
-          <button type="button" class="btn-lang-choice" id="btn-lang-top-en" onclick="NutriI18n.setLanguage('en')"
-            style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
-            🇺🇸 English
-          </button>
-        </div>
-      </div>
-
-      <div class="startup-card">
-        <!-- ====================================================================
+        <div class="startup-card">
+          <!-- ====================================================================
              SCREEN 1: SELECT YOUR ROLE TO CONTINUE (SIGN IN FLOW)
              ==================================================================== -->
-        <div id="screen-role-signin">
-          <h2 class="auth-display-title" id="lbl-signin-main-title">Mag-sign In</h2>
-          <div class="auth-display-subtitle" id="lbl-signin-role-select-title">Piliin ang iyong role para magpatuloy
-          </div>
-
-          <div class="portal-choices-list">
-            <!-- Option 1: Parent / Guardian -->
-            <div class="portal-choice-card selected" data-role="parent"
-              onclick="NutriApp.selectRole('parent', 'signin')">
-              <div class="portal-card-icon">
-                <span style="font-size: 1.25rem;">👩‍👧</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signin-parent-title">Magulang / Tagapag-alaga</div>
-                <div class="portal-card-desc" id="card-signin-parent-desc">Makakuha ng mga aralin sa nutrisyon, mga
-                  plano sa pagkain, at subaybayan ang paglaki ng iyong anak.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
+          <div id="screen-role-signin">
+            <h2 class="auth-display-title" id="lbl-signin-main-title">Mag-sign In</h2>
+            <div class="auth-display-subtitle" id="lbl-signin-role-select-title">Piliin ang iyong role para magpatuloy
             </div>
 
-            <!-- Option 2: Health Worker -->
-            <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signin')">
-              <div class="portal-card-icon">
-                <span style="font-size: 1.25rem;">🩺</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signin-chw-title">Manggagawa sa Kalusugan (BHW)</div>
-                <div class="portal-card-desc" id="card-signin-chw-desc">Pamahalaan ang mga parent group, mag-post ng mga
-                  anunsyo, at magsumite ng child records.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
-            </div>
-
-            <!-- Option 3: Administrator -->
-            <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signin')">
-              <div class="portal-card-icon">
-                <span style="font-size: 1.25rem;">📊</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signin-mho-title">Administrator (MHO)</div>
-                <div class="portal-card-desc" id="card-signin-mho-desc">Tingnan ang mga tala ng field, analytics, at
-                  pamahalaan ang nilalaman ng programa.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Continue Button -->
-          <button type="button" id="btn-signin-role-continue" class="btn-auth-continue"
-            onclick="NutriApp.proceedToSignInCredentials()">
-            Magpatuloy
-          </button>
-
-          <!-- Footer Link to Register -->
-          <div class="auth-footer-prompt" id="footer-prompt-signin">
-            Wala kang account? <button type="button" onclick="NutriApp.goToRoleSelectSignUp()" id="link-goto-register"
-              style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
-              dito</button>
-          </div>
-        </div>
-
-        <!-- ====================================================================
-             SCREEN 2: CREATE ACCOUNT - WHO ARE YOU REGISTERING AS? (SIGN UP FLOW)
-             ==================================================================== -->
-        <div id="screen-role-signup" style="display: none;">
-          <h2 class="auth-display-title" id="lbl-signup-title">Gumawa ng Account</h2>
-          <div class="auth-display-subtitle" id="lbl-signup-subtitle">Sino ang nais mong irehistro?</div>
-
-          <div class="portal-choices-list">
-            <!-- Option 1: Parent / Guardian -->
-            <div class="portal-choice-card selected" data-role="parent"
-              onclick="NutriApp.selectRole('parent', 'signup')">
-              <div class="portal-card-icon">
-                <span style="font-size: 1.25rem;">👩‍👧</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signup-parent-title">Magulang / Tagapag-alaga</div>
-                <div class="portal-card-desc" id="card-signup-parent-desc">Subaybayan ang nutrisyon ng bata at i-access
-                  ang learning modules.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
-            </div>
-
-            <!-- Option 2: Health Worker -->
-            <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signup')">
-              <div class="portal-card-icon">
-                <span style="font-size: 1.25rem;">🩺</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signup-chw-title">Manggagawa sa Kalusugan (BHW)</div>
-                <div class="portal-card-desc" id="card-signup-chw-desc">Subaybayan ang mga pamilya, itala ang datos ng
-                  bata, at ipamahagi ang anunsyo.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
-            </div>
-
-            <!-- Option 3: Administrator -->
-            <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signup')">
-              <div class="portal-card-icon">
-                <span style="font-size: 1.25rem;">📊</span>
-              </div>
-              <div class="portal-card-text">
-                <div class="portal-card-title" id="card-signup-mho-title">Administrator (MHO)</div>
-                <div class="portal-card-desc" id="card-signup-mho-desc">Pamahalaan ang datos ng programa, mga gumagamit,
-                  at anunsyo sa kalusugan.</div>
-              </div>
-              <div class="portal-radio">
-                <div class="portal-radio-dot"></div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Continue Button -->
-          <button type="button" id="btn-signup-role-continue" class="btn-auth-continue"
-            onclick="NutriApp.proceedToSignUpDetails()">
-            Magpatuloy
-          </button>
-
-          <!-- Footer Link to Sign In -->
-          <div class="auth-footer-prompt" id="footer-prompt-signup">
-            May account ka na? <button type="button" onclick="NutriApp.goToRoleSelectSignIn()" id="link-goto-signin"
-              style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
-              in dito</button>
-          </div>
-        </div>
-
-        <!-- ====================================================================
-             SCREEN 3: YOUR DETAILS (CREATE ACCOUNT DETAILS FORM)
-             ==================================================================== -->
-        <div id="screen-auth-details" style="display: none;">
-          <button type="button" class="auth-back-btn" onclick="NutriApp.goToRoleSelectSignUp()"
-            id="btn-back-to-signup-roles">
-            ← Back
-          </button>
-
-          <h2 class="auth-display-title" id="lbl-details-title">Your details</h2>
-          <div class="auth-display-subtitle" id="lbl-details-subtitle">Create your NutriLearn account</div>
-
-          <form id="form-auth-details" onsubmit="NutriApp.submitRegistration(event)">
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label class="form-label" id="lbl-reg-fullname"
-                style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Full Name *
-              </label>
-              <input type="text" id="reg-fullname-input" name="regFullName" class="form-control" required
-                placeholder="e.g. Maria Santos"
-                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-            </div>
-
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label class="form-label" id="lbl-reg-barangay"
-                style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Barangay *
-              </label>
-              <select id="reg-barangay-input" name="regBarangayAddress" class="form-select" required
-                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-weight: 600; color: #1E293B; background: #fff; width: 100%;">
-                <option value="Barangay Manguiring">Barangay Manguiring</option>
-              </select>
-              <div id="tip-reg-barangay" style="font-size: 0.75rem; color: #64748B; margin-top: 0.35rem;">
-                🏛️ Tanging ang mga opisyal na Barangay na inirehistro ng Administrator ang magagamit sa sistema.
-              </div>
-            </div>
-
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label class="form-label" id="lbl-reg-email"
-                style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Email Address o Username *
-              </label>
-              <input type="text" id="reg-email-input" name="regEmailAddress" class="form-control" required
-                placeholder="Hal. maria@example.com o mariasantos"
-                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-            </div>
-
-            <div class="grid-2" style="margin-bottom: 1.25rem;">
-              <div class="form-group">
-                <label class="form-label" id="lbl-reg-password"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Password *
-                </label>
-                <input type="password" id="reg-password-input" name="regPassword" class="form-control" required
-                  placeholder="Hindi bababa sa 6 na karakter" minlength="6"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-              </div>
-              <div class="form-group">
-                <label class="form-label" id="lbl-reg-confirm-password"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Kumpirmahin ang Password *
-                </label>
-                <input type="password" id="reg-confirm-password-input" name="regConfirmPassword" class="form-control"
-                  required placeholder="Ulitin ang password" minlength="6"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-              </div>
-            </div>
-
-            <!-- Child Details Section for Parent Registration (Syncs to BHW & Admin) -->
-            <div id="reg-child-section"
-              style="margin-top: 1rem; margin-bottom: 1.25rem; padding: 1.15rem; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px;">
-              <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem;">
-                <div
-                  style="width: 32px; height: 32px; border-radius: 8px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
-                  👶
+            <div class="portal-choices-list">
+              <!-- Option 1: Parent / Guardian -->
+              <div class="portal-choice-card selected" data-role="parent"
+                onclick="NutriApp.selectRole('parent', 'signin')">
+                <div class="portal-card-icon">
+                  <span style="font-size: 1.25rem;">👩‍👧</span>
                 </div>
-                <div>
-                  <h4 style="font-size: 0.92rem; font-weight: 700; color: #0F172A; margin: 0;" id="lbl-reg-child-title">
-                    Impormasyon ng Bata (Opsyonal)</h4>
-                  <div style="font-size: 0.74rem; color: #64748B;" id="lbl-reg-child-desc">Maaaring punan ngayon o
-                    idagdag sa dashboard. Naka-sync sa BHW &amp; Admin.</div>
+                <div class="portal-card-text">
+                  <div class="portal-card-title" id="card-signin-parent-title">Magulang / Tagapag-alaga</div>
+                  <div class="portal-card-desc" id="card-signin-parent-desc">Makakuha ng mga aralin sa nutrisyon, mga
+                    plano sa pagkain, at subaybayan ang paglaki ng iyong anak.</div>
+                </div>
+                <div class="portal-radio">
+                  <div class="portal-radio-dot"></div>
                 </div>
               </div>
 
-              <div class="form-group" style="margin-bottom: 0.85rem;">
-                <label class="form-label" for="reg-child-name-input" id="lbl-reg-child-name"
-                  style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                  Buong Pangalan ng Bata (Opsyonal)
-                </label>
-                <input type="text" id="reg-child-name-input" name="regChildName" class="form-control"
-                  placeholder="Halimbawa: Ethan Kyle Santos"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
-              </div>
-
-              <div class="grid-2"
-                style="margin-bottom: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                <div class="form-group">
-                  <label class="form-label" for="reg-child-age-input" id="lbl-reg-child-age"
-                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Edad sa Buwan
-                  </label>
-                  <input type="number" id="reg-child-age-input" name="regChildAge" class="form-control" min="1" max="72"
-                    placeholder="Hal. 18"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+              <!-- Option 2: Health Worker -->
+              <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signin')">
+                <div class="portal-card-icon">
+                  <span style="font-size: 1.25rem;">🩺</span>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="reg-child-gender-select" id="lbl-reg-child-gender"
-                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Kasarian
-                  </label>
-                  <select id="reg-child-gender-select" name="regChildGender" class="form-control form-select"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
-                    <option value="Male" id="opt-gender-male">Lalaki</option>
-                    <option value="Female" id="opt-gender-female">Babae</option>
-                  </select>
+                <div class="portal-card-text">
+                  <div class="portal-card-title" id="card-signin-chw-title">Manggagawa sa Kalusugan (BHW)</div>
+                  <div class="portal-card-desc" id="card-signin-chw-desc">Pamahalaan ang mga parent group, mag-post ng
+                    mga
+                    anunsyo, at magsumite ng child records.</div>
+                </div>
+                <div class="portal-radio">
+                  <div class="portal-radio-dot"></div>
                 </div>
               </div>
 
-              <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-                <div class="form-group">
-                  <label class="form-label" for="reg-child-height-input" id="lbl-reg-child-height"
-                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Tangkad / Taas (cm)
-                  </label>
-                  <input type="number" id="reg-child-height-input" name="regChildHeight" step="0.1" min="30" max="150"
-                    class="form-control" placeholder="Hal. 76.5 cm"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+              <!-- Option 3: Administrator -->
+              <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signin')">
+                <div class="portal-card-icon">
+                  <span style="font-size: 1.25rem;">📊</span>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="reg-child-weight-input" id="lbl-reg-child-weight"
-                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
-                    Timbang (kg)
-                  </label>
-                  <input type="number" id="reg-child-weight-input" name="regChildWeight" step="0.1" min="2" max="50"
-                    class="form-control" placeholder="Hal. 9.4 kg"
-                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                <div class="portal-card-text">
+                  <div class="portal-card-title" id="card-signin-mho-title">Administrator (MHO)</div>
+                  <div class="portal-card-desc" id="card-signin-mho-desc">Tingnan ang mga tala ng field, analytics, at
+                    pamahalaan ang nilalaman ng programa.</div>
+                </div>
+                <div class="portal-radio">
+                  <div class="portal-radio-dot"></div>
                 </div>
               </div>
             </div>
 
-            <button type="submit" id="btn-details-submit" class="btn-auth-submit">
-              Kumpletuhin ang Pagrehistro →
+            <!-- Continue Button -->
+            <button type="button" id="btn-signin-role-continue" class="btn-auth-continue"
+              onclick="NutriApp.proceedToSignInCredentials()">
+              Magpatuloy
             </button>
 
-            <div class="auth-footer-prompt" id="footer-prompt-details">
-              May account ka na? <button type="button" onclick="NutriApp.goToRoleSelectSignIn()"
-                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
-                in dito</button>
-            </div>
-          </form>
-        </div>
-
-        <!-- ====================================================================
-             SCREEN 4: SIGN IN CREDENTIALS SCREEN
-             ==================================================================== -->
-        <div id="screen-auth-signin" style="display: none;">
-          <button type="button" class="auth-back-btn" onclick="NutriApp.goToRoleSelectSignIn()"
-            id="btn-back-to-signin-roles">
-            ← Back
-          </button>
-
-          <!-- Signing in as Badge (Screenshot 4) -->
-          <div class="signing-in-as-card">
-            <div class="signing-in-as-icon" id="signin-badge-icon">👩‍👧</div>
-            <div>
-              <div class="signing-in-as-title" id="signin-badge-title">Magulang / Tagapag-alaga</div>
-              <div class="signing-in-as-sub" id="signin-badge-sub">Pumapasok bilang</div>
-            </div>
-          </div>
-
-          <h2 class="auth-display-title" id="lbl-signin-title">Mag-sign In</h2>
-          <div class="auth-display-subtitle" id="lbl-signin-subtitle">Ilagay ang iyong credentials para ma-access ang
-            NutriLearn</div>
-
-          <form id="form-auth-signin" onsubmit="NutriApp.submitSignIn(event)">
-            <div class="form-group" style="margin-bottom: 1rem;">
-              <label class="form-label" id="lbl-signin-email"
-                style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                Email address o Username
-              </label>
-              <input type="text" id="input-signin-email" name="signinEmail" class="form-control" required
-                placeholder="Hal. maria@example.com o mariasantos"
-                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-            </div>
-
-            <div class="form-group" style="margin-bottom: 1.25rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
-                <label class="form-label" id="lbl-signin-password"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin: 0;">
-                  Password
-                </label>
-                <button type="button" onclick="NutriApp.goToForgotPassword(event)" id="link-forgot-password"
-                  style="background: transparent; border: none; padding: 0; font-size: 0.82rem; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">
-                  Nakalimutan ang password?
-                </button>
-              </div>
-              <input type="password" id="input-signin-password" name="signinPassword" class="form-control" required
-                placeholder="••••••••"
-                style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-            </div>
-
-            <button type="submit" id="btn-signin-submit" class="btn-auth-submit">
-              Mag-sign In
-            </button>
-
-
-            <div class="auth-footer-prompt" id="footer-prompt-signin-creds">
-              Wala kang account? <button type="button" onclick="NutriApp.proceedToSignUpDetails()"
+            <!-- Footer Link to Register -->
+            <div class="auth-footer-prompt" id="footer-prompt-signin">
+              Wala kang account? <button type="button" onclick="NutriApp.goToRoleSelectSignUp()" id="link-goto-register"
                 style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
                 dito</button>
             </div>
-          </form>
-        </div>
+          </div>
 
-        <!-- ====================================================================
+          <!-- ====================================================================
+             SCREEN 2: CREATE ACCOUNT - WHO ARE YOU REGISTERING AS? (SIGN UP FLOW)
+             ==================================================================== -->
+          <div id="screen-role-signup" style="display: none;">
+            <h2 class="auth-display-title" id="lbl-signup-title">Gumawa ng Account</h2>
+            <div class="auth-display-subtitle" id="lbl-signup-subtitle">Sino ang nais mong irehistro?</div>
+
+            <div class="portal-choices-list">
+              <!-- Option 1: Parent / Guardian -->
+              <div class="portal-choice-card selected" data-role="parent"
+                onclick="NutriApp.selectRole('parent', 'signup')">
+                <div class="portal-card-icon">
+                  <span style="font-size: 1.25rem;">👩‍👧</span>
+                </div>
+                <div class="portal-card-text">
+                  <div class="portal-card-title" id="card-signup-parent-title">Magulang / Tagapag-alaga</div>
+                  <div class="portal-card-desc" id="card-signup-parent-desc">Subaybayan ang nutrisyon ng bata at
+                    i-access
+                    ang learning modules.</div>
+                </div>
+                <div class="portal-radio">
+                  <div class="portal-radio-dot"></div>
+                </div>
+              </div>
+
+              <!-- Option 2: Health Worker -->
+              <div class="portal-choice-card" data-role="chw" onclick="NutriApp.selectRole('chw', 'signup')">
+                <div class="portal-card-icon">
+                  <span style="font-size: 1.25rem;">🩺</span>
+                </div>
+                <div class="portal-card-text">
+                  <div class="portal-card-title" id="card-signup-chw-title">Manggagawa sa Kalusugan (BHW)</div>
+                  <div class="portal-card-desc" id="card-signup-chw-desc">Subaybayan ang mga pamilya, itala ang datos ng
+                    bata, at ipamahagi ang anunsyo.</div>
+                </div>
+                <div class="portal-radio">
+                  <div class="portal-radio-dot"></div>
+                </div>
+              </div>
+
+              <!-- Option 3: Administrator -->
+              <div class="portal-choice-card" data-role="mho" onclick="NutriApp.selectRole('mho', 'signup')">
+                <div class="portal-card-icon">
+                  <span style="font-size: 1.25rem;">📊</span>
+                </div>
+                <div class="portal-card-text">
+                  <div class="portal-card-title" id="card-signup-mho-title">Administrator (MHO)</div>
+                  <div class="portal-card-desc" id="card-signup-mho-desc">Pamahalaan ang datos ng programa, mga
+                    gumagamit,
+                    at anunsyo sa kalusugan.</div>
+                </div>
+                <div class="portal-radio">
+                  <div class="portal-radio-dot"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Continue Button -->
+            <button type="button" id="btn-signup-role-continue" class="btn-auth-continue"
+              onclick="NutriApp.proceedToSignUpDetails()">
+              Magpatuloy
+            </button>
+
+            <!-- Footer Link to Sign In -->
+            <div class="auth-footer-prompt" id="footer-prompt-signup">
+              May account ka na? <button type="button" onclick="NutriApp.goToRoleSelectSignIn()" id="link-goto-signin"
+                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
+                in dito</button>
+            </div>
+          </div>
+
+          <!-- ====================================================================
+             SCREEN 3: YOUR DETAILS (CREATE ACCOUNT DETAILS FORM)
+             ==================================================================== -->
+          <div id="screen-auth-details" style="display: none;">
+            <button type="button" class="auth-back-btn" onclick="NutriApp.goToRoleSelectSignUp()"
+              id="btn-back-to-signup-roles">
+              ← Back
+            </button>
+
+            <h2 class="auth-display-title" id="lbl-details-title">Your details</h2>
+            <div class="auth-display-subtitle" id="lbl-details-subtitle">Create your NutriLearn account</div>
+
+            <form id="form-auth-details" onsubmit="NutriApp.submitRegistration(event)">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" id="lbl-reg-fullname"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Full Name *
+                </label>
+                <input type="text" id="reg-fullname-input" name="regFullName" class="form-control" required
+                  placeholder="e.g. Maria Santos"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" id="lbl-reg-barangay"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Barangay *
+                </label>
+                <select id="reg-barangay-input" name="regBarangayAddress" class="form-select" required
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-weight: 600; color: #1E293B; background: #fff; width: 100%;">
+                  <option value="Barangay Manguiring">Barangay Manguiring</option>
+                </select>
+                <div id="tip-reg-barangay" style="font-size: 0.75rem; color: #64748B; margin-top: 0.35rem;">
+                  🏛️ Tanging ang mga opisyal na Barangay na inirehistro ng Administrator ang magagamit sa sistema.
+                </div>
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" id="lbl-reg-email"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Email Address o Username *
+                </label>
+                <input type="text" id="reg-email-input" name="regEmailAddress" class="form-control" required
+                  placeholder="Hal. maria@example.com o mariasantos"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              </div>
+
+              <div class="grid-2" style="margin-bottom: 1.25rem;">
+                <div class="form-group">
+                  <label class="form-label" id="lbl-reg-password"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                    Password *
+                  </label>
+                  <input type="password" id="reg-password-input" name="regPassword" class="form-control" required
+                    placeholder="Hindi bababa sa 6 na karakter" minlength="6"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" id="lbl-reg-confirm-password"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                    Kumpirmahin ang Password *
+                  </label>
+                  <input type="password" id="reg-confirm-password-input" name="regConfirmPassword" class="form-control"
+                    required placeholder="Ulitin ang password" minlength="6"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+                </div>
+              </div>
+
+              <!-- Child Details Section for Parent Registration (Syncs to BHW & Admin) -->
+              <div id="reg-child-section"
+                style="margin-top: 1rem; margin-bottom: 1.25rem; padding: 1.15rem; background: #F8FAFC; border: 1.5px dashed #CBD5E1; border-radius: 14px;">
+                <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem;">
+                  <div
+                    style="width: 32px; height: 32px; border-radius: 8px; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.15rem;">
+                    👶
+                  </div>
+                  <div>
+                    <h4 style="font-size: 0.92rem; font-weight: 700; color: #0F172A; margin: 0;"
+                      id="lbl-reg-child-title">
+                      Impormasyon ng Bata (Opsyonal)</h4>
+                    <div style="font-size: 0.74rem; color: #64748B;" id="lbl-reg-child-desc">Maaaring punan ngayon o
+                      idagdag sa dashboard. Naka-sync sa BHW &amp; Admin.</div>
+                  </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0.85rem;">
+                  <label class="form-label" for="reg-child-name-input" id="lbl-reg-child-name"
+                    style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                    Buong Pangalan ng Bata (Opsyonal)
+                  </label>
+                  <input type="text" id="reg-child-name-input" name="regChildName" class="form-control"
+                    placeholder="Halimbawa: Ethan Kyle Santos"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                </div>
+
+                <div class="grid-2"
+                  style="margin-bottom: 0.85rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="reg-child-age-input" id="lbl-reg-child-age"
+                      style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                      Edad sa Buwan
+                    </label>
+                    <input type="number" id="reg-child-age-input" name="regChildAge" class="form-control" min="1"
+                      max="72" placeholder="Hal. 18"
+                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="reg-child-gender-select" id="lbl-reg-child-gender"
+                      style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                      Kasarian
+                    </label>
+                    <select id="reg-child-gender-select" name="regChildGender" class="form-control form-select"
+                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                      <option value="Male" id="opt-gender-male">Lalaki</option>
+                      <option value="Female" id="opt-gender-female">Babae</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                  <div class="form-group">
+                    <label class="form-label" for="reg-child-height-input" id="lbl-reg-child-height"
+                      style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                      Tangkad / Taas (cm)
+                    </label>
+                    <input type="number" id="reg-child-height-input" name="regChildHeight" step="0.1" min="30" max="150"
+                      class="form-control" placeholder="Hal. 76.5 cm"
+                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="reg-child-weight-input" id="lbl-reg-child-weight"
+                      style="font-size: 0.82rem; font-weight: 600; color: #334155; margin-bottom: 0.3rem; display: block;">
+                      Timbang (kg)
+                    </label>
+                    <input type="number" id="reg-child-weight-input" name="regChildWeight" step="0.1" min="2" max="50"
+                      class="form-control" placeholder="Hal. 9.4 kg"
+                      style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.7rem 0.9rem; background: #FFFFFF;">
+                  </div>
+                </div>
+              </div>
+
+              <button type="submit" id="btn-details-submit" class="btn-auth-submit">
+                Kumpletuhin ang Pagrehistro →
+              </button>
+
+              <div class="auth-footer-prompt" id="footer-prompt-details">
+                May account ka na? <button type="button" onclick="NutriApp.goToRoleSelectSignIn()"
+                  style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
+                  in dito</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ====================================================================
+             SCREEN 4: SIGN IN CREDENTIALS SCREEN
+             ==================================================================== -->
+          <div id="screen-auth-signin" style="display: none;">
+            <button type="button" class="auth-back-btn" onclick="NutriApp.goToRoleSelectSignIn()"
+              id="btn-back-to-signin-roles">
+              ← Back
+            </button>
+
+            <!-- Signing in as Badge (Screenshot 4) -->
+            <div class="signing-in-as-card">
+              <div class="signing-in-as-icon" id="signin-badge-icon">👩‍👧</div>
+              <div>
+                <div class="signing-in-as-title" id="signin-badge-title">Magulang / Tagapag-alaga</div>
+                <div class="signing-in-as-sub" id="signin-badge-sub">Pumapasok bilang</div>
+              </div>
+            </div>
+
+            <h2 class="auth-display-title" id="lbl-signin-title">Mag-sign In</h2>
+            <div class="auth-display-subtitle" id="lbl-signin-subtitle">Ilagay ang iyong credentials para ma-access ang
+              NutriLearn</div>
+
+            <form id="form-auth-signin" onsubmit="NutriApp.submitSignIn(event)">
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label class="form-label" id="lbl-signin-email"
+                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                  Email address o Username
+                </label>
+                <input type="text" id="input-signin-email" name="signinEmail" class="form-control" required
+                  placeholder="Hal. maria@example.com o mariasantos"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              </div>
+
+              <div class="form-group" style="margin-bottom: 1.25rem;">
+                <div
+                  style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+                  <label class="form-label" id="lbl-signin-password"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin: 0;">
+                    Password
+                  </label>
+                  <button type="button" onclick="NutriApp.goToForgotPassword(event)" id="link-forgot-password"
+                    style="background: transparent; border: none; padding: 0; font-size: 0.82rem; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">
+                    Nakalimutan ang password?
+                  </button>
+                </div>
+                <input type="password" id="input-signin-password" name="signinPassword" class="form-control" required
+                  placeholder="••••••••"
+                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+              </div>
+
+              <button type="submit" id="btn-signin-submit" class="btn-auth-submit">
+                Mag-sign In
+              </button>
+
+
+              <div class="auth-footer-prompt" id="footer-prompt-signin-creds">
+                Wala kang account? <button type="button" onclick="NutriApp.proceedToSignUpDetails()"
+                  style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
+                  dito</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- ====================================================================
              SCREEN 5: FORGOT & RESET PASSWORD SCREEN
              ==================================================================== -->
-        <div id="screen-auth-forgot" style="display: none;">
-          <button type="button" class="auth-back-btn" onclick="NutriApp.proceedToSignInCredentials()"
-            id="btn-back-to-signin">
-            ← Bumalik sa Sign In
-          </button>
+          <div id="screen-auth-forgot" style="display: none;">
+            <button type="button" class="auth-back-btn" onclick="NutriApp.proceedToSignInCredentials()"
+              id="btn-back-to-signin">
+              ← Bumalik sa Sign In
+            </button>
 
-          <div class="signing-in-as-card" style="background: #E8F5E9; border-left: 4px solid #2D6A4F;">
-            <div class="signing-in-as-icon" style="color: #2D6A4F;">🔐</div>
-            <div>
-              <div class="signing-in-as-title" id="lbl-forgot-badge-title">Seguridad ng Account</div>
-              <div class="signing-in-as-sub" id="lbl-forgot-badge-sub">Pagbawi at Pag-reset ng Password</div>
-            </div>
-          </div>
-
-          <h2 class="auth-display-title" id="lbl-forgot-title">Nakalimutan ang Password</h2>
-          <div class="auth-display-subtitle" id="lbl-forgot-subtitle">
-            Sundin ang simpleng hakbang upang ligtas na mai-reset ang iyong password.
-          </div>
-
-          <!-- Step Indicator -->
-          <div class="forgot-steps-bar">
-            <div class="forgot-step-pill active" id="forgot-step-pill-1">
-              1. Hanapin ang Account
-            </div>
-            <div class="forgot-step-pill" id="forgot-step-pill-2">
-              2. Kumpirmahin ang Code
-            </div>
-            <div class="forgot-step-pill" id="forgot-step-pill-3">
-              3. Bagong Password
-            </div>
-          </div>
-
-          <!-- STEP 1 CONTAINER: Enter Email / Username -->
-          <div id="forgot-stage-1">
-            <form onsubmit="NutriApp.handleForgotStep1(event)">
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label class="form-label" id="lbl-forgot-email"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Email Address o Username ng Account *
-                </label>
-                <input type="text" id="input-forgot-email" class="form-control" required
-                  placeholder="Halimbawa: maria@example.com o Maria Santos"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-                <div id="tip-forgot-email" style="font-size: 0.78rem; color: #64748B; margin-top: 0.4rem;">
-                  💡 Ilagay ang email o buong pangalan na ginamit noong nagparehistro ng account.
-                </div>
+            <div class="signing-in-as-card" style="background: #E8F5E9; border-left: 4px solid #2D6A4F;">
+              <div class="signing-in-as-icon" style="color: #2D6A4F;">🔐</div>
+              <div>
+                <div class="signing-in-as-title" id="lbl-forgot-badge-title">Seguridad ng Account</div>
+                <div class="signing-in-as-sub" id="lbl-forgot-badge-sub">Pagbawi at Pag-reset ng Password</div>
               </div>
+            </div>
 
-              <button type="submit" class="btn-auth-submit" id="btn-forgot-search">
-                Hanapin ang Account →
-              </button>
-            </form>
-          </div>
+            <h2 class="auth-display-title" id="lbl-forgot-title">Nakalimutan ang Password</h2>
+            <div class="auth-display-subtitle" id="lbl-forgot-subtitle">
+              Sundin ang simpleng hakbang upang ligtas na mai-reset ang iyong password.
+            </div>
 
-          <!-- STEP 2 CONTAINER: Verification Code / Confirmation -->
-          <div id="forgot-stage-2" style="display: none;">
-            <div id="forgot-account-found-badge"
-              style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
-              <div style="display: flex; align-items: center; gap: 0.75rem;">
-                <div
-                  style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700;">
-                  👤
-                </div>
-                <div>
-                  <div style="font-weight: 700; color: #0F172A; font-size: 0.95rem;" id="forgot-found-name">Maria Santos
+            <!-- Step Indicator -->
+            <div class="forgot-steps-bar">
+              <div class="forgot-step-pill active" id="forgot-step-pill-1">
+                1. Hanapin ang Account
+              </div>
+              <div class="forgot-step-pill" id="forgot-step-pill-2">
+                2. Kumpirmahin ang Code
+              </div>
+              <div class="forgot-step-pill" id="forgot-step-pill-3">
+                3. Bagong Password
+              </div>
+            </div>
+
+            <!-- STEP 1 CONTAINER: Enter Email / Username -->
+            <div id="forgot-stage-1">
+              <form onsubmit="NutriApp.handleForgotStep1(event)">
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label" id="lbl-forgot-email"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                    Email Address o Username ng Account *
+                  </label>
+                  <input type="text" id="input-forgot-email" class="form-control" required
+                    placeholder="Halimbawa: maria@example.com o Maria Santos"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+                  <div id="tip-forgot-email" style="font-size: 0.78rem; color: #64748B; margin-top: 0.4rem;">
+                    💡 Ilagay ang email o buong pangalan na ginamit noong nagparehistro ng account.
                   </div>
-                  <div style="font-size: 0.78rem; color: #64748B;" id="forgot-found-meta">Barangay Manguiring • Magulang
-                    / Tagapag-alaga</div>
+                </div>
+
+                <button type="submit" class="btn-auth-submit" id="btn-forgot-search">
+                  Hanapin ang Account →
+                </button>
+              </form>
+            </div>
+
+            <!-- STEP 2 CONTAINER: Verification Code / Confirmation -->
+            <div id="forgot-stage-2" style="display: none;">
+              <div id="forgot-account-found-badge"
+                style="background: #F8FAFC; border: 1.5px solid #CBD5E1; border-radius: 12px; padding: 0.85rem 1rem; margin-bottom: 1.25rem;">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                  <div
+                    style="width: 38px; height: 38px; border-radius: 50%; background: #DCFCE7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; font-weight: 700;">
+                    👤
+                  </div>
+                  <div>
+                    <div style="font-weight: 700; color: #0F172A; font-size: 0.95rem;" id="forgot-found-name">Maria
+                      Santos
+                    </div>
+                    <div style="font-size: 0.78rem; color: #64748B;" id="forgot-found-meta">Barangay Manguiring •
+                      Magulang
+                      / Tagapag-alaga</div>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <!-- OTP Simulation Notice -->
-            <div class="forgot-otp-box">
-              <div id="lbl-forgot-otp-title"
-                style="font-size: 0.82rem; font-weight: 700; color: #065F46; margin-bottom: 0.35rem;">
-                🔑 6-Digit Verification Code sa Seguridad:
-              </div>
-              <div id="forgot-generated-code-display" class="forgot-otp-code">
-                ------
-              </div>
-              <div id="tip-forgot-otp" style="font-size: 0.76rem; color: #047857; margin-bottom: 0.5rem;">
-                Ipinadala sa iyong account / nabuo para sa pagpapatunay.
-              </div>
-              <button type="button" id="btn-forgot-autofill" onclick="NutriApp.autoFillResetCode()"
-                style="background: #10B981; color: white; border: none; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease;">
-                📋 Gamitin ang Code na Ito
-              </button>
-            </div>
-
-            <form onsubmit="NutriApp.handleForgotStep2(event)">
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label class="form-label" id="lbl-forgot-code"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Ilagay ang 6-Digit Code *
-                </label>
-                <input type="text" id="input-forgot-code" class="form-control" required maxlength="6"
-                  placeholder="Halimbawa: 482910"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-size: 1.15rem; letter-spacing: 0.25em; text-align: center; font-weight: 700; color: #0F172A;">
-              </div>
-
-              <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
-                <button type="button" class="btn btn-outline" id="btn-forgot-back-step1"
-                  onclick="NutriApp.resetForgotFlowStage(1)"
-                  style="flex: 1; border-radius: 12px; padding: 0.8rem; border: 1.5px solid #CBD5E1; color: #475569; font-weight: 600; cursor: pointer;">
-                  ← Bumalik
-                </button>
-                <button type="submit" class="btn-auth-submit" id="btn-forgot-verify-code"
-                  style="flex: 2; margin-top: 0;">
-                  Kumpirmahin ang Code →
+              <!-- OTP Simulation Notice -->
+              <div class="forgot-otp-box">
+                <div id="lbl-forgot-otp-title"
+                  style="font-size: 0.82rem; font-weight: 700; color: #065F46; margin-bottom: 0.35rem;">
+                  🔑 6-Digit Verification Code sa Seguridad:
+                </div>
+                <div id="forgot-generated-code-display" class="forgot-otp-code">
+                  ------
+                </div>
+                <div id="tip-forgot-otp" style="font-size: 0.76rem; color: #047857; margin-bottom: 0.5rem;">
+                  Ipinadala sa iyong account / nabuo para sa pagpapatunay.
+                </div>
+                <button type="button" id="btn-forgot-autofill" onclick="NutriApp.autoFillResetCode()"
+                  style="background: #10B981; color: white; border: none; border-radius: 6px; padding: 0.35rem 0.85rem; font-size: 0.78rem; font-weight: 700; cursor: pointer; transition: background 0.15s ease;">
+                  📋 Gamitin ang Code na Ito
                 </button>
               </div>
-            </form>
-          </div>
 
-          <!-- STEP 3 CONTAINER: Set New Password -->
-          <div id="forgot-stage-3" style="display: none;">
-            <form onsubmit="NutriApp.handleForgotStep3(event)">
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label class="form-label" id="lbl-forgot-new-pass"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Bagong Password *
-                </label>
-                <input type="password" id="input-forgot-new-pass" class="form-control" required minlength="6"
-                  placeholder="Hindi bababa sa 6 na karakter"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-              </div>
+              <form onsubmit="NutriApp.handleForgotStep2(event)">
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label" id="lbl-forgot-code"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                    Ilagay ang 6-Digit Code *
+                  </label>
+                  <input type="text" id="input-forgot-code" class="form-control" required maxlength="6"
+                    placeholder="Halimbawa: 482910"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem; font-size: 1.15rem; letter-spacing: 0.25em; text-align: center; font-weight: 700; color: #0F172A;">
+                </div>
 
-              <div class="form-group" style="margin-bottom: 1.25rem;">
-                <label class="form-label" id="lbl-forgot-confirm-pass"
-                  style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
-                  Kumpirmahin ang Bagong Password *
-                </label>
-                <input type="password" id="input-forgot-confirm-pass" class="form-control" required minlength="6"
-                  placeholder="Ulitin ang bagong password"
-                  style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
-              </div>
+                <div style="display: flex; gap: 0.75rem; margin-top: 1rem;">
+                  <button type="button" class="btn btn-outline" id="btn-forgot-back-step1"
+                    onclick="NutriApp.resetForgotFlowStage(1)"
+                    style="flex: 1; border-radius: 12px; padding: 0.8rem; border: 1.5px solid #CBD5E1; color: #475569; font-weight: 600; cursor: pointer;">
+                    ← Bumalik
+                  </button>
+                  <button type="submit" class="btn-auth-submit" id="btn-forgot-verify-code"
+                    style="flex: 2; margin-top: 0;">
+                    Kumpirmahin ang Code →
+                  </button>
+                </div>
+              </form>
+            </div>
 
-              <button type="submit" class="btn-auth-submit" id="btn-forgot-save-pass">
-                ✓ I-save ang Bagong Password &amp; Mag-sign In
-              </button>
-            </form>
-          </div>
+            <!-- STEP 3 CONTAINER: Set New Password -->
+            <div id="forgot-stage-3" style="display: none;">
+              <form onsubmit="NutriApp.handleForgotStep3(event)">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                  <label class="form-label" id="lbl-forgot-new-pass"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                    Bagong Password *
+                  </label>
+                  <input type="password" id="input-forgot-new-pass" class="form-control" required minlength="6"
+                    placeholder="Hindi bababa sa 6 na karakter"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+                </div>
 
-          <div class="auth-footer-prompt" id="footer-prompt-forgot" style="margin-top: 1.5rem;">
-            Naaalala mo na ba ang iyong password? <button type="button"
-              onclick="NutriApp.proceedToSignInCredentials(event)"
-              style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
-              in dito</button>
-          </div>
-        </div>
+                <div class="form-group" style="margin-bottom: 1.25rem;">
+                  <label class="form-label" id="lbl-forgot-confirm-pass"
+                    style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.35rem; display: block;">
+                    Kumpirmahin ang Bagong Password *
+                  </label>
+                  <input type="password" id="input-forgot-confirm-pass" class="form-control" required minlength="6"
+                    placeholder="Ulitin ang bagong password"
+                    style="border: 1.5px solid #DDD7CD; border-radius: 10px; padding: 0.75rem 0.95rem;">
+                </div>
 
-      </div><!-- End .startup-card -->
-    </div><!-- End .startup-container -->
-  </div><!-- End #auth-login-section -->
+                <button type="submit" class="btn-auth-submit" id="btn-forgot-save-pass">
+                  ✓ I-save ang Bagong Password &amp; Mag-sign In
+                </button>
+              </form>
+            </div>
+
+            <div class="auth-footer-prompt" id="footer-prompt-forgot" style="margin-top: 1.5rem;">
+              Naaalala mo na ba ang iyong password? <button type="button"
+                onclick="NutriApp.proceedToSignInCredentials(event)"
+                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Mag-sign
+                in dito</button>
+            </div>
+          </div><!-- End #screen-auth-forgot -->
+
+        </div><!-- End .startup-card -->
+      </div><!-- End .startup-container -->
+    </div><!-- End #auth-login-section -->
+  </div><!-- End #startup-phases-slider -->
 </div><!-- End #startup-auth-screen -->
 
   <!-- ==========================================================================
@@ -1436,27 +1458,34 @@
               .try-home-page-container {
                 padding: 1rem 0.5rem 2.5rem;
               }
+
               .try-home-hero-banner {
                 padding: 1.5rem 1.25rem 1.35rem;
                 border-radius: 16px;
               }
+
               .try-home-hero-title {
                 font-size: 1.75rem;
               }
+
               .try-home-card {
                 padding: 1rem 0.95rem;
                 gap: 0.85rem;
                 border-radius: 14px;
               }
+
               .try-home-num-circle {
                 width: 38px;
                 height: 38px;
                 font-size: 0.95rem;
               }
+
               .try-home-item-title {
                 font-size: 0.98rem;
               }
-              .btn-try-action, .btn-edit-action {
+
+              .btn-try-action,
+              .btn-edit-action {
                 padding: 8px 14px;
                 font-size: 0.82rem;
               }
@@ -1469,7 +1498,8 @@
               <div class="try-home-hero-badge">LEARNING THROUGH EVERYDAY CARE</div>
               <h1 class="try-home-hero-title">Try It at Home</h1>
               <p class="try-home-hero-desc">
-                These 10 practical activities are provided by your Health Workers. Record what you tried, and use Edit if your answer changes.
+                These 10 practical activities are provided by your Health Workers. Record what you tried, and use Edit
+                if your answer changes.
               </p>
               <div class="try-home-progress-row">
                 <div class="try-home-progress-track">
@@ -1487,10 +1517,13 @@
             </div>
 
             <!-- Optional BHW Guidance & Self-Report Feedback Tray -->
-            <div style="margin-top: 2.5rem; background: #FFFFFF; border: 1.5px solid #EAE3D8; border-radius: 16px; padding: 1.5rem;">
-              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+            <div
+              style="margin-top: 2.5rem; background: #FFFFFF; border: 1.5px solid #EAE3D8; border-radius: 16px; padding: 1.5rem;">
+              <div
+                style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
                 <div>
-                  <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: #1E293B; margin: 0 0 0.25rem 0;">
+                  <h3
+                    style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.15rem; font-weight: 700; color: #1E293B; margin: 0 0 0.25rem 0;">
                     📬 Barangay Health Worker Guidance &amp; Reports
                   </h3>
                   <p style="font-size: 0.84rem; color: #64748B; margin: 0;">
@@ -1498,10 +1531,13 @@
                   </p>
                 </div>
                 <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                  <button type="button" class="btn btn-primary btn-sm" onclick="ParentModule.openSubmitActionReportModal()" style="background: #285A3A; border-color: #285A3A; font-weight: 600; padding: 7px 16px; border-radius: 8px;">
+                  <button type="button" class="btn btn-primary btn-sm"
+                    onclick="ParentModule.openSubmitActionReportModal()"
+                    style="background: #285A3A; border-color: #285A3A; font-weight: 600; padding: 7px 16px; border-radius: 8px;">
                     📝 Mag-Self-Report sa BHW
                   </button>
-                  <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.openDailyMealLogModal()" style="font-weight: 600; padding: 7px 16px; border-radius: 8px;">
+                  <button type="button" class="btn btn-outline btn-sm" onclick="ParentModule.openDailyMealLogModal()"
+                    style="font-weight: 600; padding: 7px 16px; border-radius: 8px;">
                     🍽️ I-log ang Kinain
                   </button>
                 </div>
@@ -1604,6 +1640,7 @@
               padding: 0.5rem 0 2.5rem 0 !important;
               box-sizing: border-box !important;
             }
+
             .weekly-meal-planner-header {
               display: flex !important;
               justify-content: space-between !important;
@@ -1612,10 +1649,12 @@
               flex-wrap: wrap !important;
               gap: 1rem !important;
             }
+
             .weekly-meal-title-group {
               flex: 1 !important;
               min-width: 280px !important;
             }
+
             .weekly-meal-main-title {
               font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
               font-size: 2.25rem !important;
@@ -1625,6 +1664,7 @@
               margin: 0 0 0.35rem 0 !important;
               line-height: 1.15 !important;
             }
+
             .weekly-meal-main-subtitle {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 0.95rem !important;
@@ -1632,12 +1672,14 @@
               margin: 0 !important;
               line-height: 1.45 !important;
             }
+
             .weekly-meal-header-badges {
               display: inline-flex !important;
               align-items: center !important;
               gap: 0.75rem !important;
               flex-wrap: wrap !important;
             }
+
             .meal-badge-age-target {
               background: #2D6A4F !important;
               color: #FFFFFF !important;
@@ -1651,6 +1693,7 @@
               display: inline-block !important;
               box-shadow: 0 1px 3px rgba(45, 106, 79, 0.2) !important;
             }
+
             .meal-badge-daily-total {
               background: transparent !important;
               border: 1.5px solid #2D6A4F !important;
@@ -1666,16 +1709,19 @@
               gap: 6px !important;
               letter-spacing: -0.01em !important;
             }
+
             .meal-badge-daily-total strong {
               font-weight: 700 !important;
               font-family: inherit !important;
             }
+
             .weekly-meal-cards-stack {
               display: flex !important;
               flex-direction: column !important;
               gap: 0.65rem !important;
               margin-bottom: 2.25rem !important;
             }
+
             .weekly-meal-row-card {
               background: #FFFFFF !important;
               border: 1px solid #EAE6DF !important;
@@ -1689,11 +1735,13 @@
               transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease !important;
               box-sizing: border-box !important;
             }
+
             .weekly-meal-row-card:hover {
               border-color: #D1D5DB !important;
               box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03) !important;
               transform: translateY(-1px) !important;
             }
+
             .weekly-meal-row-left {
               display: flex !important;
               align-items: center !important;
@@ -1701,6 +1749,7 @@
               flex: 1 !important;
               min-width: 0 !important;
             }
+
             .meal-custom-icon-wrapper {
               width: 32px !important;
               height: 32px !important;
@@ -1709,6 +1758,7 @@
               justify-content: center !important;
               flex-shrink: 0 !important;
             }
+
             .meal-period-badge {
               background: #ECE8E1 !important;
               color: #554F46 !important;
@@ -1723,10 +1773,12 @@
               flex-shrink: 0 !important;
               display: inline-block !important;
             }
+
             .meal-text-group {
               flex: 1 !important;
               min-width: 0 !important;
             }
+
             .meal-dish-title {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 0.98rem !important;
@@ -1735,6 +1787,7 @@
               letter-spacing: -0.01em !important;
               line-height: 1.3 !important;
             }
+
             .meal-nutrients-sub {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 0.8rem !important;
@@ -1742,6 +1795,7 @@
               margin-top: 2px !important;
               line-height: 1.35 !important;
             }
+
             .meal-price-badge {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 1.05rem !important;
@@ -1750,9 +1804,11 @@
               flex-shrink: 0 !important;
               padding-left: 0.5rem !important;
             }
+
             .superfoods-guide-section {
               margin-bottom: 1.75rem !important;
             }
+
             .superfoods-guide-title {
               font-family: 'Playfair Display', Georgia, 'Times New Roman', serif !important;
               font-size: 1.55rem !important;
@@ -1761,11 +1817,13 @@
               margin: 0 0 1.15rem 0 !important;
               letter-spacing: -0.015em !important;
             }
+
             .superfoods-guide-grid {
               display: grid !important;
               grid-template-columns: repeat(3, 1fr) !important;
               gap: 1.25rem !important;
             }
+
             .superfood-feature-card {
               background: #FFFFFF !important;
               border: 1px solid #EAE6DF !important;
@@ -1775,10 +1833,12 @@
               transition: transform 0.18s ease, box-shadow 0.18s ease !important;
               box-sizing: border-box !important;
             }
+
             .superfood-feature-card:hover {
               transform: translateY(-2px) !important;
               box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04) !important;
             }
+
             .superfood-card-icon {
               width: 36px !important;
               height: 36px !important;
@@ -1787,6 +1847,7 @@
               justify-content: flex-start !important;
               margin-bottom: 0.75rem !important;
             }
+
             .superfood-card-title {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 1rem !important;
@@ -1794,6 +1855,7 @@
               color: #1F2937 !important;
               margin: 0 0 0.85rem 0 !important;
             }
+
             .superfood-benefits-list {
               list-style: none !important;
               list-style-type: none !important;
@@ -1803,6 +1865,7 @@
               flex-direction: column !important;
               gap: 0.65rem !important;
             }
+
             .superfood-benefits-list li {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 0.82rem !important;
@@ -1814,6 +1877,7 @@
               list-style: none !important;
               list-style-type: none !important;
             }
+
             .sf-check {
               width: 18px !important;
               height: 18px !important;
@@ -1825,18 +1889,22 @@
               font-weight: 700 !important;
               flex-shrink: 0 !important;
             }
+
             .sf-check-green {
               background: #E8F5E9 !important;
               color: #2E7D32 !important;
             }
+
             .sf-check-yellow {
               background: #FEF9C3 !important;
               color: #CA8A04 !important;
             }
+
             .sf-check-blue {
               background: #EFF6FF !important;
               color: #2563EB !important;
             }
+
             .who-guidelines-banner-card {
               background: #FFFFFF !important;
               border: 1px solid #EAE6DF !important;
@@ -1849,6 +1917,7 @@
               margin-bottom: 1.5rem !important;
               box-sizing: border-box !important;
             }
+
             .who-tip-icon {
               width: 36px !important;
               height: 36px !important;
@@ -1858,9 +1927,11 @@
               flex-shrink: 0 !important;
               padding-top: 2px !important;
             }
+
             .who-tip-body {
               flex: 1 !important;
             }
+
             .who-tip-heading {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 0.95rem !important;
@@ -1868,6 +1939,7 @@
               color: #1F2937 !important;
               margin: 0 0 0.4rem 0 !important;
             }
+
             .who-tip-paragraph {
               font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
               font-size: 0.83rem !important;
@@ -1875,22 +1947,26 @@
               line-height: 1.55 !important;
               margin: 0 !important;
             }
+
             @media (max-width: 820px) {
               .superfoods-guide-grid {
                 grid-template-columns: 1fr !important;
                 gap: 0.85rem !important;
               }
+
               .weekly-meal-row-card {
                 flex-direction: column !important;
                 align-items: flex-start !important;
                 padding: 1rem 1.15rem !important;
                 gap: 0.75rem !important;
               }
+
               .weekly-meal-row-left {
                 flex-wrap: wrap !important;
                 gap: 0.65rem !important;
                 width: 100% !important;
               }
+
               .meal-price-badge {
                 align-self: flex-end !important;
                 padding-left: 0 !important;
@@ -1902,7 +1978,8 @@
             <div class="weekly-meal-planner-header">
               <div class="weekly-meal-title-group">
                 <h1 class="weekly-meal-main-title">Weekly Meal Plan</h1>
-                <p class="weekly-meal-main-subtitle">Nutritious, affordable meals using locally available Filipino ingredients</p>
+                <p class="weekly-meal-main-subtitle">Nutritious, affordable meals using locally available Filipino
+                  ingredients</p>
               </div>
               <div class="weekly-meal-header-badges">
                 <span class="meal-badge-age-target">For children 6–23 months</span>
@@ -1924,10 +2001,14 @@
                           <stop offset="100%" stop-color="#38BDF8" />
                         </linearGradient>
                       </defs>
-                      <rect width="32" height="32" rx="6" fill="url(#sunriseGrad)"/>
-                      <circle cx="16" cy="18" r="6.5" fill="#FEF08A"/>
-                      <path d="M0 20C4.5 19 8.5 21 13 20C17.5 19 22 21 26 20C28.5 19.5 30.5 20 32 20V26C32 29.314 29.314 32 26 32H6C2.686 32 0 29.314 0 26V20Z" fill="#1E40AF" fill-opacity="0.95"/>
-                      <path d="M0 24.5C5 23.5 9 25.5 14 24.5C19 23.5 23 25.5 28 24.5C30 24 31.5 24.5 32 24.5V26C32 29.314 29.314 32 26 32H6C2.686 32 0 29.314 0 26V24.5Z" fill="#172554"/>
+                      <rect width="32" height="32" rx="6" fill="url(#sunriseGrad)" />
+                      <circle cx="16" cy="18" r="6.5" fill="#FEF08A" />
+                      <path
+                        d="M0 20C4.5 19 8.5 21 13 20C17.5 19 22 21 26 20C28.5 19.5 30.5 20 32 20V26C32 29.314 29.314 32 26 32H6C2.686 32 0 29.314 0 26V20Z"
+                        fill="#1E40AF" fill-opacity="0.95" />
+                      <path
+                        d="M0 24.5C5 23.5 9 25.5 14 24.5C19 23.5 23 25.5 28 24.5C30 24 31.5 24.5 32 24.5V26C32 29.314 29.314 32 26 32H6C2.686 32 0 29.314 0 26V24.5Z"
+                        fill="#172554" />
                     </svg>
                   </div>
                   <span class="meal-period-badge">Breakfast</span>
@@ -1944,15 +2025,15 @@
                 <div class="weekly-meal-row-left">
                   <div class="meal-custom-icon-wrapper meal-icon-snack1" title="Morning Snack">
                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="16" cy="16" r="6.5" fill="#EAB308"/>
-                      <circle cx="16" cy="4" r="1.8" fill="#EAB308"/>
-                      <circle cx="16" cy="28" r="1.8" fill="#EAB308"/>
-                      <circle cx="4" cy="16" r="1.8" fill="#EAB308"/>
-                      <circle cx="28" cy="16" r="1.8" fill="#EAB308"/>
-                      <circle cx="7.5" cy="7.5" r="1.8" fill="#EAB308"/>
-                      <circle cx="24.5" cy="24.5" r="1.8" fill="#EAB308"/>
-                      <circle cx="7.5" cy="24.5" r="1.8" fill="#EAB308"/>
-                      <circle cx="24.5" cy="7.5" r="1.8" fill="#EAB308"/>
+                      <circle cx="16" cy="16" r="6.5" fill="#EAB308" />
+                      <circle cx="16" cy="4" r="1.8" fill="#EAB308" />
+                      <circle cx="16" cy="28" r="1.8" fill="#EAB308" />
+                      <circle cx="4" cy="16" r="1.8" fill="#EAB308" />
+                      <circle cx="28" cy="16" r="1.8" fill="#EAB308" />
+                      <circle cx="7.5" cy="7.5" r="1.8" fill="#EAB308" />
+                      <circle cx="24.5" cy="24.5" r="1.8" fill="#EAB308" />
+                      <circle cx="7.5" cy="24.5" r="1.8" fill="#EAB308" />
+                      <circle cx="24.5" cy="7.5" r="1.8" fill="#EAB308" />
                     </svg>
                   </div>
                   <span class="meal-period-badge">Morning Snack</span>
@@ -1969,12 +2050,13 @@
                 <div class="weekly-meal-row-left">
                   <div class="meal-custom-icon-wrapper meal-icon-lunch" title="Lunch">
                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M4 14C4 20.8 9 26 16 26C23 26 28 20.8 28 14H4Z" fill="#334155"/>
-                      <ellipse cx="16" cy="14" rx="12" ry="3.8" fill="#E11D48"/>
-                      <ellipse cx="13" cy="14" rx="4.5" ry="1.8" fill="#16A34A"/>
-                      <circle cx="20" cy="13.5" r="2.2" fill="#F59E0B"/>
-                      <circle cx="17" cy="14.8" r="1.2" fill="#FFFFFF"/>
-                      <line x1="2" y1="9.5" x2="29" y2="15" stroke="#92400E" stroke-width="2.2" stroke-linecap="round"/>
+                      <path d="M4 14C4 20.8 9 26 16 26C23 26 28 20.8 28 14H4Z" fill="#334155" />
+                      <ellipse cx="16" cy="14" rx="12" ry="3.8" fill="#E11D48" />
+                      <ellipse cx="13" cy="14" rx="4.5" ry="1.8" fill="#16A34A" />
+                      <circle cx="20" cy="13.5" r="2.2" fill="#F59E0B" />
+                      <circle cx="17" cy="14.8" r="1.2" fill="#FFFFFF" />
+                      <line x1="2" y1="9.5" x2="29" y2="15" stroke="#92400E" stroke-width="2.2"
+                        stroke-linecap="round" />
                     </svg>
                   </div>
                   <span class="meal-period-badge">Lunch</span>
@@ -1991,12 +2073,19 @@
                 <div class="weekly-meal-row-left">
                   <div class="meal-custom-icon-wrapper meal-icon-snack2" title="Afternoon Snack">
                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <circle cx="13" cy="12" r="6.5" fill="#EAB308"/>
-                      <line x1="13" y1="2" x2="13" y2="4.5" stroke="#EAB308" stroke-width="1.8" stroke-linecap="round"/>
-                      <line x1="4.5" y1="12" x2="2" y2="12" stroke="#EAB308" stroke-width="1.8" stroke-linecap="round"/>
-                      <line x1="6.5" y1="5.5" x2="8" y2="7" stroke="#EAB308" stroke-width="1.8" stroke-linecap="round"/>
-                      <path d="M10 24H24C26.5 24 28.5 22 28.5 19.5C28.5 17.2 26.8 15.3 24.5 15C24 12 21.3 9.8 18 9.8C15.2 9.8 12.8 11.4 11.8 13.7C11.5 13.6 11.1 13.5 10.7 13.5C8 13.5 5.8 15.6 5.8 18.2C5.8 20.9 7.8 24 10 24Z" fill="#CBD5E1"/>
-                      <path d="M9 25H23C25.5 25 27.5 23 27.5 20.5C27.5 18.2 25.8 16.3 23.5 16C23 13 20.3 10.8 17 10.8C14.2 10.8 11.8 12.4 10.8 14.7C10.5 14.6 10.1 14.5 9.7 14.5C7 14.5 4.8 16.6 4.8 19.2C4.8 21.9 6.8 25 9 25Z" fill="#F8FAFC"/>
+                      <circle cx="13" cy="12" r="6.5" fill="#EAB308" />
+                      <line x1="13" y1="2" x2="13" y2="4.5" stroke="#EAB308" stroke-width="1.8"
+                        stroke-linecap="round" />
+                      <line x1="4.5" y1="12" x2="2" y2="12" stroke="#EAB308" stroke-width="1.8"
+                        stroke-linecap="round" />
+                      <line x1="6.5" y1="5.5" x2="8" y2="7" stroke="#EAB308" stroke-width="1.8"
+                        stroke-linecap="round" />
+                      <path
+                        d="M10 24H24C26.5 24 28.5 22 28.5 19.5C28.5 17.2 26.8 15.3 24.5 15C24 12 21.3 9.8 18 9.8C15.2 9.8 12.8 11.4 11.8 13.7C11.5 13.6 11.1 13.5 10.7 13.5C8 13.5 5.8 15.6 5.8 18.2C5.8 20.9 7.8 24 10 24Z"
+                        fill="#CBD5E1" />
+                      <path
+                        d="M9 25H23C25.5 25 27.5 23 27.5 20.5C27.5 18.2 25.8 16.3 23.5 16C23 13 20.3 10.8 17 10.8C14.2 10.8 11.8 12.4 10.8 14.7C10.5 14.6 10.1 14.5 9.7 14.5C7 14.5 4.8 16.6 4.8 19.2C4.8 21.9 6.8 25 9 25Z"
+                        fill="#F8FAFC" />
                     </svg>
                   </div>
                   <span class="meal-period-badge">Afternoon Snack</span>
@@ -2013,7 +2102,9 @@
                 <div class="weekly-meal-row-left">
                   <div class="meal-custom-icon-wrapper meal-icon-dinner" title="Dinner">
                     <svg width="28" height="28" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M23.5 17.8C23.3 22.4 19.5 26.2 14.8 26.2C9.8 26.2 5.8 22.1 5.8 17.1C5.8 12.1 9.8 8 14.8 8C15.8 8 16.8 8.2 17.7 8.6C14.7 10.1 12.6 13.3 12.6 16.9C12.6 21.2 15.8 24.6 19.8 25C21.1 25.1 22.3 24.8 23.5 24.2C23.7 22.3 23.7 20.1 23.5 17.8Z" fill="#F59E0B"/>
+                      <path
+                        d="M23.5 17.8C23.3 22.4 19.5 26.2 14.8 26.2C9.8 26.2 5.8 22.1 5.8 17.1C5.8 12.1 9.8 8 14.8 8C15.8 8 16.8 8.2 17.7 8.6C14.7 10.1 12.6 13.3 12.6 16.9C12.6 21.2 15.8 24.6 19.8 25C21.1 25.1 22.3 24.8 23.5 24.2C23.7 22.3 23.7 20.1 23.5 17.8Z"
+                        fill="#F59E0B" />
                     </svg>
                   </div>
                   <span class="meal-period-badge">Dinner</span>
@@ -2034,12 +2125,12 @@
                 <div class="superfood-feature-card">
                   <div class="superfood-card-icon">
                     <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M7 29C13 24 19 17 27 7" stroke="#34A853" stroke-width="2.5" stroke-linecap="round"/>
-                      <path d="M12 24C10 20 11 16 15 16C17 20 15 24 12 24Z" fill="#34A853"/>
-                      <path d="M18 19C17 15 19 11 23 12C24 16 21 19 18 19Z" fill="#4CAF50"/>
-                      <path d="M22 15C24 11 28 11 29 14C27 17 23 17 22 15Z" fill="#81C784"/>
-                      <path d="M15 22C17 20 21 21 21 24C18 26 15 25 15 22Z" fill="#81C784"/>
-                      <path d="M27 7C28 3 32 4 33 7C31 10 28 10 27 7Z" fill="#2E7D32"/>
+                      <path d="M7 29C13 24 19 17 27 7" stroke="#34A853" stroke-width="2.5" stroke-linecap="round" />
+                      <path d="M12 24C10 20 11 16 15 16C17 20 15 24 12 24Z" fill="#34A853" />
+                      <path d="M18 19C17 15 19 11 23 12C24 16 21 19 18 19Z" fill="#4CAF50" />
+                      <path d="M22 15C24 11 28 11 29 14C27 17 23 17 22 15Z" fill="#81C784" />
+                      <path d="M15 22C17 20 21 21 21 24C18 26 15 25 15 22Z" fill="#81C784" />
+                      <path d="M27 7C28 3 32 4 33 7C31 10 28 10 27 7Z" fill="#2E7D32" />
                     </svg>
                   </div>
                   <h3 class="superfood-card-title">Malunggay (Moringa)</h3>
@@ -2054,14 +2145,16 @@
                 <div class="superfood-feature-card">
                   <div class="superfood-card-icon">
                     <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M7 11C10 6 18 7 24 13C30 19 31 27 26 30C21 33 13 31 8 25C3 19 4 15 7 11Z" fill="#E11D48"/>
-                      <path d="M8 12C11 8 18 8 23 14C27 18 28 24 25 27C21 23 15 18 8 12Z" fill="#FB923C"/>
-                      <path d="M9 14C12 11 16 12 19 16C17 19 13 18 9 14Z" fill="#FDE047"/>
+                      <path d="M7 11C10 6 18 7 24 13C30 19 31 27 26 30C21 33 13 31 8 25C3 19 4 15 7 11Z"
+                        fill="#E11D48" />
+                      <path d="M8 12C11 8 18 8 23 14C27 18 28 24 25 27C21 23 15 18 8 12Z" fill="#FB923C" />
+                      <path d="M9 14C12 11 16 12 19 16C17 19 13 18 9 14Z" fill="#FDE047" />
                     </svg>
                   </div>
                   <h3 class="superfood-card-title">Kamote (Sweet Potato)</h3>
                   <ul class="superfood-benefits-list">
-                    <li><span class="sf-check sf-check-yellow">✓</span> <span>Rich in Vitamin A (beta-carotene)</span></li>
+                    <li><span class="sf-check sf-check-yellow">✓</span> <span>Rich in Vitamin A (beta-carotene)</span>
+                    </li>
                     <li><span class="sf-check sf-check-yellow">✓</span> <span>Good source of Vitamin C</span></li>
                     <li><span class="sf-check sf-check-yellow">✓</span> <span>Supports immune function</span></li>
                   </ul>
@@ -2071,20 +2164,21 @@
                 <div class="superfood-feature-card">
                   <div class="superfood-card-icon">
                     <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <ellipse cx="14" cy="14" rx="4.5" ry="3" transform="rotate(-30 14 14)" fill="#78350F"/>
-                      <circle cx="14" cy="14" r="0.8" fill="#FEF3C7"/>
-                      <ellipse cx="22" cy="13" rx="4.5" ry="3" transform="rotate(35 22 13)" fill="#881337"/>
-                      <circle cx="22" cy="13" r="0.8" fill="#FCE7F3"/>
-                      <ellipse cx="18" cy="22" rx="5" ry="3.2" transform="rotate(-15 18 22)" fill="#78350F"/>
-                      <circle cx="18" cy="22" r="0.8" fill="#FEF3C7"/>
-                      <ellipse cx="10" cy="21" rx="4" ry="2.8" transform="rotate(40 10 21)" fill="#881337"/>
-                      <ellipse cx="26" cy="22" rx="4" ry="2.8" transform="rotate(-40 26 22)" fill="#881337"/>
+                      <ellipse cx="14" cy="14" rx="4.5" ry="3" transform="rotate(-30 14 14)" fill="#78350F" />
+                      <circle cx="14" cy="14" r="0.8" fill="#FEF3C7" />
+                      <ellipse cx="22" cy="13" rx="4.5" ry="3" transform="rotate(35 22 13)" fill="#881337" />
+                      <circle cx="22" cy="13" r="0.8" fill="#FCE7F3" />
+                      <ellipse cx="18" cy="22" rx="5" ry="3.2" transform="rotate(-15 18 22)" fill="#78350F" />
+                      <circle cx="18" cy="22" r="0.8" fill="#FEF3C7" />
+                      <ellipse cx="10" cy="21" rx="4" ry="2.8" transform="rotate(40 10 21)" fill="#881337" />
+                      <ellipse cx="26" cy="22" rx="4" ry="2.8" transform="rotate(-40 26 22)" fill="#881337" />
                     </svg>
                   </div>
                   <h3 class="superfood-card-title">Monggo (Mung Beans)</h3>
                   <ul class="superfood-benefits-list">
                     <li><span class="sf-check sf-check-blue">✓</span> <span>High plant-based protein</span></li>
-                    <li><span class="sf-check sf-check-blue">✓</span> <span>Rich in folate for brain development</span></li>
+                    <li><span class="sf-check sf-check-blue">✓</span> <span>Rich in folate for brain development</span>
+                    </li>
                     <li><span class="sf-check sf-check-blue">✓</span> <span>Affordable and widely available</span></li>
                   </ul>
                 </div>
@@ -2095,30 +2189,39 @@
             <div class="who-guidelines-banner-card">
               <div class="who-tip-icon">
                 <svg width="32" height="32" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 4C12.477 4 8 8.477 8 14C8 17.5 10 20.5 13 22.5V25C13 25.552 13.448 26 14 26H22C22.552 26 23 25.552 23 25V22.5C26 20.5 28 17.5 28 14C28 8.477 23.523 4 18 4Z" fill="#FBBF24"/>
-                  <path d="M14 28H22V29C22 29.552 21.552 30 21 30H15C14.448 30 14 29.552 14 29V28Z" fill="#9CA3AF"/>
-                  <path d="M15 26H21V28H15V26Z" fill="#D1D5DB"/>
-                  <path d="M15 15C15 13 16 11 18 11C20 11 21 13 21 15" stroke="#D97706" stroke-width="2" stroke-linecap="round"/>
+                  <path
+                    d="M18 4C12.477 4 8 8.477 8 14C8 17.5 10 20.5 13 22.5V25C13 25.552 13.448 26 14 26H22C22.552 26 23 25.552 23 25V22.5C26 20.5 28 17.5 28 14C28 8.477 23.523 4 18 4Z"
+                    fill="#FBBF24" />
+                  <path d="M14 28H22V29C22 29.552 21.552 30 21 30H15C14.448 30 14 29.552 14 29V28Z" fill="#9CA3AF" />
+                  <path d="M15 26H21V28H15V26Z" fill="#D1D5DB" />
+                  <path d="M15 15C15 13 16 11 18 11C20 11 21 13 21 15" stroke="#D97706" stroke-width="2"
+                    stroke-linecap="round" />
                 </svg>
               </div>
               <div class="who-tip-body">
                 <h4 class="who-tip-heading">Feeding Tip from WHO Guidelines</h4>
                 <p class="who-tip-paragraph">
-                  For children 6–8 months, start with 2–3 meals per day of thick porridge and mashed foods. Increase to 3–4 meals per day for children 9–23 months, adding snacks as desired. Always wash hands before preparing food and feeding your child.
+                  For children 6–8 months, start with 2–3 meals per day of thick porridge and mashed foods. Increase to
+                  3–4 meals per day for children 9–23 months, adding snacks as desired. Always wash hands before
+                  preparing food and feeding your child.
                 </p>
               </div>
             </div>
 
             <!-- 5. Interactive Pinggang Pinoy Calculator & Tested Community Recipes (Preserves existing functional logic) -->
             <div class="interactive-meal-tools-collapsible" style="margin-top: 2rem;">
-              <details class="interactive-tools-details" style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
-                <summary style="padding: 1rem 1.4rem; font-weight: 700; color: #19532B; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; background: #FAF7F2; border-bottom: 1px solid #EAE6DF;">
+              <details class="interactive-tools-details"
+                style="background: #FFFFFF; border: 1px solid #E6E1D8; border-radius: 16px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.02);">
+                <summary
+                  style="padding: 1rem 1.4rem; font-weight: 700; color: #19532B; cursor: pointer; display: flex; justify-content: space-between; align-items: center; user-select: none; background: #FAF7F2; border-bottom: 1px solid #EAE6DF;">
                   <span style="display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
                     <span>🛠️</span> <strong>Pinggang Pinoy Interactive Calculator &amp; Recipe Library</strong>
                   </span>
-                  <span style="font-size: 0.8rem; background: #E2ECE5; color: #19532B; padding: 2px 10px; border-radius: 9999px;">I-click para buksan / Click to open ▾</span>
+                  <span
+                    style="font-size: 0.8rem; background: #E2ECE5; color: #19532B; padding: 2px 10px; border-radius: 9999px;">I-click
+                    para buksan / Click to open ▾</span>
                 </summary>
-                
+
                 <div style="padding: 1.5rem;">
                   <div class="grid-2" style="align-items: center; margin-bottom: 2rem;">
                     <!-- Interactive Plate Visualizer -->
@@ -2138,13 +2241,16 @@
                         </div>
                       </div>
                       <p style="font-size:0.82rem; color:var(--text-muted); margin-top: 0.5rem;">
-                        <strong>Golden Rule:</strong> Half of the plate should always be colorful fruits and leafy green vegetables!
+                        <strong>Golden Rule:</strong> Half of the plate should always be colorful fruits and leafy green
+                        vegetables!
                       </p>
                     </div>
 
                     <!-- Custom Meal Cost Calculator -->
-                    <div style="background: var(--bg-surface-subtle); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
-                      <h3 style="font-size: 1.05rem; color: var(--color-primary-900); margin-bottom: 0.75rem;">Build Your Budget Meal:</h3>
+                    <div
+                      style="background: var(--bg-surface-subtle); padding: 1.5rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+                      <h3 style="font-size: 1.05rem; color: var(--color-primary-900); margin-bottom: 0.75rem;">Build
+                        Your Budget Meal:</h3>
 
                       <div class="form-group">
                         <label class="form-label">🟡 Pick GO Food (Energy):</label>
@@ -2177,11 +2283,15 @@
                         </select>
                       </div>
 
-                      <div style="background:#FFFFFF; border:1.5px solid var(--color-accent-400); border-radius:var(--radius-md); padding:1rem; display:flex; justify-content:space-between; align-items:center;">
+                      <div
+                        style="background:#FFFFFF; border:1.5px solid var(--color-accent-400); border-radius:var(--radius-md); padding:1rem; display:flex; justify-content:space-between; align-items:center;">
                         <div>
-                          <div style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">
+                          <div
+                            style="font-size:0.78rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">
                             Estimated Cost:</div>
-                          <div id="meal-calc-total" style="font-size:1.35rem; font-weight:800; color:var(--color-primary-800);">₱23 per serving</div>
+                          <div id="meal-calc-total"
+                            style="font-size:1.35rem; font-weight:800; color:var(--color-primary-800);">₱23 per serving
+                          </div>
                         </div>
                         <span class="badge badge-improved">100% Balanced</span>
                       </div>
@@ -2189,7 +2299,8 @@
                   </div>
 
                   <!-- Recipe Card Library -->
-                  <h3 style="font-size: 1.15rem; color: var(--color-primary-900); margin-bottom: 1rem;">Tested Low-Cost Community Recipes</h3>
+                  <h3 style="font-size: 1.15rem; color: var(--color-primary-900); margin-bottom: 1rem;">Tested Low-Cost
+                    Community Recipes</h3>
                   <div class="grid-2" id="recipes-container">
                     <!-- Populated by parentLearning.js -->
                   </div>
@@ -4540,11 +4651,13 @@
           <div class="grid-3" style="display: grid; grid-template-columns: 1.2fr 0.9fr 0.9fr; gap: 0.75rem;">
             <div class="form-group">
               <label class="form-label">Date of Birth (Kapanganakan) *:</label>
-              <input type="date" id="add-child-birthdate" name="childBirthDate" class="form-control" required onchange="NutriMobile.onBirthDateChange(this.value, 'add')">
+              <input type="date" id="add-child-birthdate" name="childBirthDate" class="form-control" required
+                onchange="NutriMobile.onBirthDateChange(this.value, 'add')">
             </div>
             <div class="form-group">
               <label class="form-label">Age (Buwan / Months) *:</label>
-              <input type="number" id="add-child-age" name="childAge" class="form-control" min="0" max="72" value="18" required oninput="NutriMobile.calcLiveZScore()">
+              <input type="number" id="add-child-age" name="childAge" class="form-control" min="0" max="72" value="18"
+                required oninput="NutriMobile.calcLiveZScore()">
             </div>
             <div class="form-group">
               <label class="form-label">Sex (Kasarian) *:</label>
@@ -4678,7 +4791,8 @@
         <div class="grid-2">
           <div class="form-group">
             <label class="form-label">Petsa ng Kapanganakan (DOB):</label>
-            <input type="date" id="edit-child-birthdate" class="form-control" onchange="NutriMobile.onBirthDateChange(this.value, 'edit')">
+            <input type="date" id="edit-child-birthdate" class="form-control"
+              onchange="NutriMobile.onBirthDateChange(this.value, 'edit')">
           </div>
           <div class="form-group">
             <label class="form-label">Updated Age (Months):</label>
@@ -4796,7 +4910,8 @@
             </div>
             <div class="form-group">
               <label class="form-label">Kapanganakan (DOB):</label>
-              <input type="date" id="admin-edit-child-birthdate" class="form-control" onchange="NutriMobile.onBirthDateChange(this.value, 'admin')">
+              <input type="date" id="admin-edit-child-birthdate" class="form-control"
+                onchange="NutriMobile.onBirthDateChange(this.value, 'admin')">
             </div>
             <div class="form-group">
               <label class="form-label">Edad (Buwan): *</label>
@@ -6410,45 +6525,64 @@
 
   <!-- Modal: Edit Try It at Home Activity -->
   <div id="modal-edit-try-activity" class="modal-backdrop">
-    <div class="modal-dialog" style="max-width: 440px; border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
-      <div class="modal-header" style="background: #FAF7F2; border-bottom: 1px solid #EAE3D8; padding: 1.15rem 1.4rem; display: flex; justify-content: space-between; align-items: center;">
+    <div class="modal-dialog"
+      style="max-width: 440px; border-radius: 18px; overflow: hidden; background: #FFFFFF; box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+      <div class="modal-header"
+        style="background: #FAF7F2; border-bottom: 1px solid #EAE3D8; padding: 1.15rem 1.4rem; display: flex; justify-content: space-between; align-items: center;">
         <div>
-          <div id="modal-edit-activity-context" style="font-size: 0.75rem; font-weight: 700; color: #2E6845; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">PRACTICAL FEEDING ACTION</div>
-          <div class="modal-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #1E2522;">
+          <div id="modal-edit-activity-context"
+            style="font-size: 0.75rem; font-weight: 700; color: #2E6845; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">
+            PRACTICAL FEEDING ACTION</div>
+          <div class="modal-title"
+            style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #1E2522;">
             I-edit ang Aktibidad
           </div>
         </div>
-        <button type="button" class="btn-modal-close" onclick="NutriApp.closeModal('modal-edit-try-activity')" style="background: none; border: none; font-size: 1.5rem; color: #64748B; cursor: pointer; line-height: 1;">×</button>
+        <button type="button" class="btn-modal-close" onclick="NutriApp.closeModal('modal-edit-try-activity')"
+          style="background: none; border: none; font-size: 1.5rem; color: #64748B; cursor: pointer; line-height: 1;">×</button>
       </div>
       <form onsubmit="ParentModule.saveActivityEdit(event)" style="margin: 0;">
         <div class="modal-body" style="padding: 1.35rem 1.4rem;">
           <!-- Activity preview card -->
-          <div style="background: #F8F5EE; border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; border: 1px solid #EAE3D8;">
-            <h4 id="modal-edit-activity-title" style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.05rem; font-weight: 700; color: #1E2522; margin: 0 0 0.25rem 0;"></h4>
-            <p id="modal-edit-activity-hint" style="font-size: 0.82rem; color: #64748B; margin: 0; line-height: 1.45;"></p>
+          <div
+            style="background: #F8F5EE; border-radius: 12px; padding: 0.9rem 1.1rem; margin-bottom: 1.25rem; border: 1px solid #EAE3D8;">
+            <h4 id="modal-edit-activity-title"
+              style="font-family: 'Playfair Display', Georgia, serif; font-size: 1.05rem; font-weight: 700; color: #1E2522; margin: 0 0 0.25rem 0;">
+            </h4>
+            <p id="modal-edit-activity-hint" style="font-size: 0.82rem; color: #64748B; margin: 0; line-height: 1.45;">
+            </p>
           </div>
 
           <!-- Status Selector: Only Tried or Not yet -->
           <div>
-            <label style="display: block; font-size: 0.86rem; font-weight: 700; color: #374151; margin-bottom: 0.65rem;">Katayuan (Status):</label>
+            <label
+              style="display: block; font-size: 0.86rem; font-weight: 700; color: #374151; margin-bottom: 0.65rem;">Katayuan
+              (Status):</label>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
-              <label id="label-edit-status-tried" style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1.5px solid #2E6845; border-radius: 10px; background: #F0FDF4; cursor: pointer; transition: all 0.2s;">
-                <input type="radio" name="modalEditStatus" id="modal-edit-status-tried" value="tried" checked onchange="ParentModule.updateEditStatusUI()" style="accent-color: #2E6845;">
+              <label id="label-edit-status-tried"
+                style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1.5px solid #2E6845; border-radius: 10px; background: #F0FDF4; cursor: pointer; transition: all 0.2s;">
+                <input type="radio" name="modalEditStatus" id="modal-edit-status-tried" value="tried" checked
+                  onchange="ParentModule.updateEditStatusUI()" style="accent-color: #2E6845;">
                 <span style="font-size: 0.9rem; font-weight: 600; color: #14532D;">✓ Tried</span>
               </label>
-              <label id="label-edit-status-untried" style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1px solid #D1D5DB; border-radius: 10px; background: #F9FAFB; cursor: pointer; transition: all 0.2s;">
-                <input type="radio" name="modalEditStatus" id="modal-edit-status-untried" value="untried" onchange="ParentModule.updateEditStatusUI()" style="accent-color: #2E6845;">
+              <label id="label-edit-status-untried"
+                style="display: flex; align-items: center; gap: 8px; padding: 12px 14px; border: 1px solid #D1D5DB; border-radius: 10px; background: #F9FAFB; cursor: pointer; transition: all 0.2s;">
+                <input type="radio" name="modalEditStatus" id="modal-edit-status-untried" value="untried"
+                  onchange="ParentModule.updateEditStatusUI()" style="accent-color: #2E6845;">
                 <span style="font-size: 0.9rem; font-weight: 500; color: #4B5563;">○ Not yet</span>
               </label>
             </div>
           </div>
         </div>
 
-        <div class="modal-footer" style="padding: 0.9rem 1.4rem; background: #FAF7F2; border-top: 1px solid #EAE3D8; display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;">
-          <button type="button" class="btn btn-ghost" style="color: #64748B; font-weight: 600; padding: 8px 16px;" onclick="NutriApp.closeModal('modal-edit-try-activity')">
+        <div class="modal-footer"
+          style="padding: 0.9rem 1.4rem; background: #FAF7F2; border-top: 1px solid #EAE3D8; display: flex; justify-content: flex-end; align-items: center; gap: 0.75rem;">
+          <button type="button" class="btn btn-ghost" style="color: #64748B; font-weight: 600; padding: 8px 16px;"
+            onclick="NutriApp.closeModal('modal-edit-try-activity')">
             Kanselahin (Cancel)
           </button>
-          <button type="submit" class="btn btn-primary" style="background: #2E6845; border-color: #2E6845; color: #FFFFFF; font-weight: 700; padding: 9px 22px; border-radius: 8px;">
+          <button type="submit" class="btn btn-primary"
+            style="background: #2E6845; border-color: #2E6845; color: #FFFFFF; font-weight: 700; padding: 9px 22px; border-radius: 8px;">
             I-save ang Pagbabago ✓
           </button>
         </div>
@@ -6468,11 +6602,15 @@
           Kusang Magla-logout ang Sesyon
         </h3>
         <p style="font-size: 0.88rem; color: #475569; line-height: 1.55; margin-bottom: 1rem;">
-          Alinsunod sa <em>Data Privacy at Child Protection Guidelines</em> (Chapter 2.2), ang mga sesyon ay kusang nagla-log out pagkatapos ng <strong>30 minuto</strong> na walang galaw upang maprotektahan ang pribadong datos ng pamilya at mga bata.
+          Alinsunod sa <em>Data Privacy at Child Protection Guidelines</em> (Chapter 2.2), ang mga sesyon ay kusang
+          nagla-log out pagkatapos ng <strong>30 minuto</strong> na walang galaw upang maprotektahan ang pribadong datos
+          ng pamilya at mga bata.
         </p>
-        <div style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 10px; padding: 0.85rem; margin-bottom: 1.25rem;">
+        <div
+          style="background: #FFFBEB; border: 1.5px solid #FDE68A; border-radius: 10px; padding: 0.85rem; margin-bottom: 1.25rem;">
           <span style="font-size: 0.88rem; color: #B45309; font-weight: 600;">
-            Magla-log out sa loob ng: <strong id="inactivity-countdown" style="font-size: 1.2rem; color: #B91C1C;">120</strong> segundo
+            Magla-log out sa loob ng: <strong id="inactivity-countdown"
+              style="font-size: 1.2rem; color: #B91C1C;">120</strong> segundo
           </span>
         </div>
         <div style="display: flex; gap: 0.75rem; justify-content: center;">
@@ -6502,7 +6640,7 @@
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=5.9"></script>
   <script src="js/mobileUX.js?v=6.3"></script>
-  <script src="js/app.js?v=9.9"></script>
+  <script src="js/app.js?v=10.0"></script>
 </body>
 
 </html>
