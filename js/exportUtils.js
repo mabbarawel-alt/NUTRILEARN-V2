@@ -717,7 +717,7 @@ const NutriStorage = {
   loginUser(emailOrName, password, role) {
     const users = this.getUsers();
     const rawInput = (emailOrName || '').trim();
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
 
     if (!rawInput) {
       return {

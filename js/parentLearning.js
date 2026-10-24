@@ -400,7 +400,7 @@ const ParentModule = {
     const container = document.getElementById('parent-modules-container');
     if (!container) return;
 
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
 
     container.innerHTML = this.nutritionModules.map(mod => {
       const completedCount = mod.lessons.filter(l => l.completed).length;

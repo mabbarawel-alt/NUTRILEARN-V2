@@ -296,7 +296,7 @@ const NutriApp = {
       muteIcon.textContent = video.muted ? '🔇' : '🔊';
     }
     if (muteText) {
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       muteText.textContent = video.muted ? (isFil ? 'Naka-mute' : 'Muted') : (isFil ? 'May Tunog' : 'Sound On');
     }
   },
@@ -352,7 +352,7 @@ const NutriApp = {
 
     if (btnEl) {
       btnEl.innerHTML = isPassword ? eyeSlashSvg : eyeOpenSvg;
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       const label = isPassword ? (isFil ? 'Itago ang password' : 'Hide password') : (isFil ? 'Ipakita ang password' : 'Show password');
       btnEl.title = label;
       btnEl.setAttribute('aria-label', label);
@@ -408,7 +408,7 @@ const NutriApp = {
 
   handleForgotStep1(event) {
     if (event) event.preventDefault();
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
     const emailInput = document.getElementById('input-forgot-email');
     const query = (emailInput?.value || '').trim().toLowerCase();
 
@@ -478,7 +478,7 @@ const NutriApp = {
     const codeInput = document.getElementById('input-forgot-code');
     if (codeInput && this.forgotPasswordState.generatedCode) {
       codeInput.value = this.forgotPasswordState.generatedCode;
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       this.showToast(isFil ? 'Nailagay na ang verification code.' : 'Verification code applied.', 'info');
       codeInput.focus();
     }
@@ -486,7 +486,7 @@ const NutriApp = {
 
   handleForgotStep2(event) {
     if (event) event.preventDefault();
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
     const codeInput = document.getElementById('input-forgot-code');
     const entered = (codeInput?.value || '').trim();
 
@@ -525,7 +525,7 @@ const NutriApp = {
 
   handleForgotStep3(event) {
     if (event) event.preventDefault();
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
     const newPassInput = document.getElementById('input-forgot-new-pass');
     const confirmPassInput = document.getElementById('input-forgot-confirm-pass');
 
@@ -647,7 +647,7 @@ const NutriApp = {
       mho: { en: 'Administrator', fil: 'Administrator (MHO)', icon: '📊' }
     };
     const info = roleNames[role] || roleNames.parent;
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
 
     const badgeIcon = document.getElementById('signin-badge-icon');
     const badgeTitle = document.getElementById('signin-badge-title');
@@ -674,7 +674,7 @@ const NutriApp = {
       NutriStorage.populateAllBarangayDropdowns();
     }
 
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
     const childSection = document.getElementById('reg-child-section');
     if (childSection) {
       childSection.style.display = (role === 'parent') ? 'block' : 'none';
@@ -708,7 +708,7 @@ const NutriApp = {
     }
 
     if (!email || !password) {
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       this.showToast(isFil ? 'Pakilagay ang email at password.' : 'Please enter your email and password.', 'warning');
       return;
     }
@@ -725,7 +725,7 @@ const NutriApp = {
       if (typeof InactivityManager !== 'undefined') {
         InactivityManager.resetTimer();
       }
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       const welcome = isFil
         ? `👋 Maligayang pagdating, ${result.user.name}! Naka-log in na.`
         : `👋 Welcome, ${result.user.name}! Portal unlocked.`;
@@ -759,7 +759,7 @@ const NutriApp = {
     if (!form) return;
 
     try {
-      const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       const name = (form.elements['regFullName']?.value || '').trim();
       const barangay = (form.elements['regBarangayAddress']?.value || '').trim() || 'Barangay Manguiring';
       const email = (form.elements['regEmailAddress']?.value || '').trim();
@@ -1015,7 +1015,7 @@ const NutriApp = {
 
   // Update Startup Form Banner and Fields based on chosen portal
   updateStartupFormDisplay(mode = 'signin') {
-    const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+    const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
     
     const titles = isFil ? {
       parent: 'Magulang / Tagapag-alaga',
@@ -2054,7 +2054,7 @@ const InactivityManager = {
     if (window.NutriApp) {
       NutriApp.logout();
       if (reason === 'timeout') {
-        const isFil = !window.NutriI18n || NutriI18n.currentLang === 'fil';
+        const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
         const msg = isFil
           ? '🔒 Kusang nag-log out ang sesyon dahil sa 30 minuto ng walang aktibidad upang maprotektahan ang pribadong datos ng pamilya.'
           : '🔒 Session timed out after 30 minutes of inactivity to protect family privacy.';

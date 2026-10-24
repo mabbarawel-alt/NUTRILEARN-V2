@@ -5,15 +5,15 @@
 // ==========================================================================
 
 const NutriI18n = {
-  LANG_KEY: 'nutrilearn_lang_v1',
-  currentLang: 'fil', // Default to Filipino
+  LANG_KEY: 'nutrilearn_lang_v2',
+  currentLang: 'en', // Default to English; Filipino is available as an option
 
   init() {
     const saved = localStorage.getItem(this.LANG_KEY);
     if (saved && (saved === 'fil' || saved === 'en')) {
       this.currentLang = saved;
     } else {
-      this.currentLang = 'fil';
+      this.currentLang = 'en';
     }
     this.applyLanguage(this.currentLang);
   },
@@ -34,17 +34,17 @@ const NutriI18n = {
   },
 
   toggleLanguage() {
-    const nextLang = this.currentLang === 'fil' ? 'en' : 'fil';
+    const nextLang = this.currentLang === 'en' ? 'fil' : 'en';
     this.setLanguage(nextLang);
   },
 
   get(key) {
-    const dict = this.translations[this.currentLang] || this.translations['fil'];
-    return dict[key] || this.translations['en']?.[key] || key;
+    const dict = this.translations[this.currentLang] || this.translations['en'];
+    return dict[key] || this.translations['fil']?.[key] || key;
   },
 
   applyLanguage(lang) {
-    const t = this.translations[lang] || this.translations['fil'];
+    const t = this.translations[lang] || this.translations['en'];
 
     // 1. Synchronize all language selector pill states across all phases
     const syncPillButtons = (btnFil, btnEn) => {

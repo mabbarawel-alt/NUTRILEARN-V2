@@ -137,19 +137,19 @@
       <div class="intro-hero-center">
         <div class="intro-badge-stunting">
           <span>🌱</span>
-          <span id="intro-badge-text">Proteksyon at Pagbawas sa Child Stunting</span>
+          <span id="intro-badge-text">Child Stunting Prevention &amp; Nutrition Monitoring</span>
         </div>
         <h1 class="intro-hero-title" id="intro-hero-main-title">
           E-Learning &amp; Child Malnutrition Monitoring Platform
         </h1>
         <p class="intro-hero-desc" id="intro-hero-sub-desc">
-          Pinag-isang digital na plataporma para sa mga Magulang, Barangay Health Workers (BHW), at Municipal Health
-          Office para sa masigla at malusog na kinabukasan ng bawat batang Pilipino.
+          Unified digital platform empowering Parents, Barangay Nutrition Scholars (BNS), and Municipal Health
+          Offices to eliminate child stunting and build a healthier future.
         </p>
 
         <!-- CTA Button to Scroll to Login Phase -->
         <button type="button" class="btn-hero-scroll-login" onclick="NutriApp.scrollToLoginPhase()">
-          <span id="btn-hero-login-text">Pumasok sa Portal / Mag-sign In</span>
+          <span id="btn-hero-login-text">Enter Portal / Sign In</span>
           <span class="btn-hero-arrow">↓</span>
         </button>
       </div>
@@ -159,8 +159,7 @@
         <div class="mouse-scroll-icon">
           <div class="mouse-wheel"></div>
         </div>
-        <span class="scroll-prompt-text" id="intro-scroll-prompt-text">Mag-scroll pababa o pindutin para mag-sign
-          in</span>
+        <span class="scroll-prompt-text" id="intro-scroll-prompt-text">Scroll down or click to sign in</span>
         <span class="bouncing-chevron">⌄</span>
       </div>
     </section>
@@ -187,20 +186,20 @@
             <span id="startup-db-status-text">Database: Connecting...</span>
           </div>
 
-          <!-- Top Language Selector Pill (Instantly visible without scrolling) -->
+          <!-- Top Language Selector Pill (English default, Filipino option) -->
           <div class="startup-top-lang-pill"
             style="margin-top: 0.45rem; display: inline-flex; align-items: center; justify-content: center; gap: 4px; background: #FFFFFF; padding: 2px 6px; border-radius: 9999px; border: 1.5px solid #CBD5E1; box-shadow: 0 2px 6px rgba(0,0,0,0.05);">
             <span id="lbl-top-lang-title"
               style="font-size: 0.72rem; font-weight: 700; color: #475569; margin-left: 2px; margin-right: 2px;">
-              Wika:</span>
-            <button type="button" class="btn-lang-choice active" id="btn-lang-top-fil"
-              onclick="NutriI18n.setLanguage('fil')"
+              Language:</span>
+            <button type="button" class="btn-lang-choice active" id="btn-lang-top-en" onclick="NutriI18n.setLanguage('en')"
               style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">
-              🇵🇭 Filipino
-            </button>
-            <button type="button" class="btn-lang-choice" id="btn-lang-top-en" onclick="NutriI18n.setLanguage('en')"
-              style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
               🇺🇸 English
+            </button>
+            <button type="button" class="btn-lang-choice" id="btn-lang-top-fil"
+              onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 9px; border-radius: 9999px; border: none; font-size: 0.74rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">
+              🇵🇭 Filipino
             </button>
           </div>
         </div>
@@ -210,9 +209,8 @@
              SCREEN 1: SELECT YOUR ROLE TO CONTINUE (SIGN IN FLOW)
              ==================================================================== -->
           <div id="screen-role-signin">
-            <h2 class="auth-display-title" id="lbl-signin-main-title">Mag-sign In</h2>
-            <div class="auth-display-subtitle" id="lbl-signin-role-select-title">Piliin ang iyong role para magpatuloy
-            </div>
+            <h2 class="auth-display-title" id="lbl-signin-main-title">Sign In</h2>
+            <div class="auth-display-subtitle" id="lbl-signin-role-select-title">Select your role to continue</div>
 
             <div class="portal-choices-list">
               <!-- Option 1: Parent / Guardian -->
@@ -222,9 +220,9 @@
                   <span style="font-size: 1.25rem;">👩‍👧</span>
                 </div>
                 <div class="portal-card-text">
-                  <div class="portal-card-title" id="card-signin-parent-title">Magulang / Tagapag-alaga</div>
-                  <div class="portal-card-desc" id="card-signin-parent-desc">Makakuha ng mga aralin sa nutrisyon, mga
-                    plano sa pagkain, at subaybayan ang paglaki ng iyong anak.</div>
+                  <div class="portal-card-title" id="card-signin-parent-title">Parent / Guardian</div>
+                  <div class="portal-card-desc" id="card-signin-parent-desc">Access nutrition lessons, meal plans, and
+                    track your child's growth.</div>
                 </div>
                 <div class="portal-radio">
                   <div class="portal-radio-dot"></div>
@@ -237,10 +235,9 @@
                   <span style="font-size: 1.25rem;">🩺</span>
                 </div>
                 <div class="portal-card-text">
-                  <div class="portal-card-title" id="card-signin-chw-title">Manggagawa sa Kalusugan (BHW)</div>
-                  <div class="portal-card-desc" id="card-signin-chw-desc">Pamahalaan ang mga parent group, mag-post ng
-                    mga
-                    anunsyo, at magsumite ng child records.</div>
+                  <div class="portal-card-title" id="card-signin-chw-title">Health Worker (BHW)</div>
+                  <div class="portal-card-desc" id="card-signin-chw-desc">Manage parent groups, post announcements, and
+                    submit child records.</div>
                 </div>
                 <div class="portal-radio">
                   <div class="portal-radio-dot"></div>
@@ -254,8 +251,8 @@
                 </div>
                 <div class="portal-card-text">
                   <div class="portal-card-title" id="card-signin-mho-title">Administrator (MHO)</div>
-                  <div class="portal-card-desc" id="card-signin-mho-desc">Tingnan ang mga tala ng field, analytics, at
-                    pamahalaan ang nilalaman ng programa.</div>
+                  <div class="portal-card-desc" id="card-signin-mho-desc">View field records, analytics, and manage
+                    program content.</div>
                 </div>
                 <div class="portal-radio">
                   <div class="portal-radio-dot"></div>
@@ -266,14 +263,14 @@
             <!-- Continue Button -->
             <button type="button" id="btn-signin-role-continue" class="btn-auth-continue"
               onclick="NutriApp.proceedToSignInCredentials()">
-              Magpatuloy
+              Continue
             </button>
 
             <!-- Footer Link to Register -->
             <div class="auth-footer-prompt" id="footer-prompt-signin">
-              Wala kang account? <button type="button" onclick="NutriApp.goToRoleSelectSignUp()" id="link-goto-register"
-                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Magparehistro
-                dito</button>
+              Don't have an account? <button type="button" onclick="NutriApp.goToRoleSelectSignUp()" id="link-goto-register"
+                style="background: transparent; border: none; padding: 0; color: #0D766E; font-weight: 600; cursor: pointer; text-decoration: underline;">Register
+                here</button>
             </div>
           </div>
 
@@ -766,12 +763,12 @@
           <!-- Language Selector Pill in Parent Taskbar -->
           <div class="taskbar-lang-pill"
             style="display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; padding: 2px 5px; border-radius: 9999px; border: 1px solid #CBD5E1;">
-            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
-              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇵🇭
-              Fil</button>
             <button type="button" class="btn-lang-pill-en" onclick="NutriI18n.setLanguage('en')"
-              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇺🇸
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇺🇸
               Eng</button>
+            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇵🇭
+              Fil</button>
           </div>
           <div class="parent-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
             title="View profile & settings">
@@ -851,12 +848,12 @@
           <!-- Language Selector Pill in Admin Taskbar -->
           <div class="taskbar-lang-pill"
             style="display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; padding: 2px 5px; border-radius: 9999px; border: 1px solid #CBD5E1;">
-            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
-              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇵🇭
-              Fil</button>
             <button type="button" class="btn-lang-pill-en" onclick="NutriI18n.setLanguage('en')"
-              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇺🇸
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇺🇸
               Eng</button>
+            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇵🇭
+              Fil</button>
           </div>
 
           <div class="admin-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
@@ -916,12 +913,12 @@
           <!-- Language Selector Pill in BHW Taskbar -->
           <div class="taskbar-lang-pill"
             style="display: inline-flex; align-items: center; gap: 3px; background: #FFFFFF; padding: 2px 5px; border-radius: 9999px; border: 1px solid #CBD5E1;">
-            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
-              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇵🇭
-              Fil</button>
             <button type="button" class="btn-lang-pill-en" onclick="NutriI18n.setLanguage('en')"
-              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇺🇸
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 700; cursor: pointer; background: #0E3D26; color: #FFFFFF; transition: all 0.2s;">🇺🇸
               Eng</button>
+            <button type="button" class="btn-lang-pill-fil" onclick="NutriI18n.setLanguage('fil')"
+              style="padding: 2px 8px; border-radius: 9999px; border: none; font-size: 0.72rem; font-weight: 600; cursor: pointer; background: transparent; color: #475569; transition: all 0.2s;">🇵🇭
+              Fil</button>
           </div>
           <div class="bhw-user-profile-clean" onclick="NutriApp.openAccountSettingsModal()"
             title="View profile & settings">
@@ -6631,9 +6628,9 @@
   <script src="js/parentLearning.js?v=6.4"></script>
   <script src="js/mhoDashboard.js?v=5.9"></script>
   <script src="js/announcements.js?v=5.9"></script>
-  <script src="js/i18n.js?v=5.9"></script>
+  <script src="js/i18n.js?v=6.0"></script>
   <script src="js/mobileUX.js?v=6.3"></script>
-  <script src="js/app.js?v=10.0"></script>
+  <script src="js/app.js?v=10.1"></script>
 </body>
 
 </html>
