@@ -1,0 +1,35 @@
+%% 4.1 System Architecture (revised to match the implementation)
+%% The paper shows a Java Spring Boot ("Sprint Boot") back end; the system is built on Python FastAPI (main.py).
+flowchart TB
+  subgraph FE["Front-end Layer (PWA · HTML, CSS, JavaScript)"]
+    direction LR
+    PP["Parent Portal<br/>lessons, meal guide, growth"]
+    HW["Health Worker Portal<br/>child records, follow-ups, reports"]
+    AD["MHO / Admin Portal<br/>reports, users, content"]
+  end
+  subgraph DEV["On the phone / browser"]
+    direction LR
+    LS[("localStorage<br/>offline copy of records")]
+    OB[("Sync outbox<br/>writes waiting for internet")]
+    SW["Service worker<br/>app works offline"]
+  end
+  API["FastAPI REST API (Python)<br/>validation · password hashing · reports"]
+  subgraph SB["Supabase (managed platform)"]
+    direction LR
+    PG[("PostgreSQL<br/>records, RLS policies")]
+    AU["Auth<br/>(planned, Phase 2)"]
+    ST["Storage<br/>lesson media"]
+  end
+  LDB[("local_db.json<br/>fallback store")]
+  EXT["External: Google Fonts"]
+
+  FE <--> DEV
+  FE -- "REST + JSON (fetch)<br/>queued while offline" --> API
+  FE -. "Supabase JS SDK (anon key)" .-> PG
+  API -- "service-role queries" --> PG
+  API -- "when Supabase is unreachable" --> LDB
+  FE -.-> EXT
+  AU -.- PG
+
+  classDef planned fill:#FFFFFF,stroke:#DC2626,stroke-dasharray:5 3,color:#7F1D1D
+  class AU planned

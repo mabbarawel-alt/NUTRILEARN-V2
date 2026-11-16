@@ -203,6 +203,63 @@ CREATE TABLE IF NOT EXISTS public.monthly_reports (
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
+-- 15. Table: Follow-up Visits (ERD Entity: Follow-up) — Thesis AD 3.2.2 "schedule follow-up"
+CREATE TABLE IF NOT EXISTS public.follow_ups (
+    id TEXT PRIMARY KEY,
+    child_id TEXT REFERENCES public.children(id) ON DELETE CASCADE,
+    scheduled_by_user_id TEXT REFERENCES public.users(id) ON DELETE SET NULL,
+    scheduled_date DATE NOT NULL,
+    guidance TEXT,
+    status TEXT DEFAULT 'Scheduled', -- 'Scheduled', 'Done'
+    completed_date DATE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 16. Table: Announcements (ERD Entity: Announcement) — posted by MHO, relayed by BHW
+CREATE TABLE IF NOT EXISTS public.announcements (
+    id TEXT PRIMARY KEY,
+    title TEXT NOT NULL,
+    content TEXT,
+    category TEXT,
+    target_audience TEXT,
+    barangay TEXT,
+    event_date DATE,
+    posted_by_user_id TEXT REFERENCES public.users(id) ON DELETE SET NULL,
+    status TEXT DEFAULT 'Published',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- 17. Table: Data Correction Requests (ERD Entity: Correction Request) — Thesis AD 3.2.3
+CREATE TABLE IF NOT EXISTS public.correction_requests (
+    id TEXT PRIMARY KEY,
+    child_id TEXT REFERENCES public.children(id) ON DELETE CASCADE,
+    requested_by_user_id TEXT REFERENCES public.users(id) ON DELETE SET NULL,
+    assigned_to TEXT,
+    message TEXT NOT NULL,
+    status TEXT DEFAULT 'Open', -- 'Open', 'Resolved'
+    requested_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    resolved_at TIMESTAMP WITH TIME ZONE
+);
+
+-- 18. Table: Audit Log (Data Requirements 2.3: audit and administration data)
+CREATE TABLE IF NOT EXISTS public.audit_logs (
+    id TEXT PRIMARY KEY,
+    user_id TEXT REFERENCES public.users(id) ON DELETE SET NULL,
+    action TEXT NOT NULL,
+    category TEXT,
+    details TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Columns used by the app since the workflow update (safe to re-run)
+ALTER TABLE public.children ADD COLUMN IF NOT EXISTS next_follow_up_date DATE;
+ALTER TABLE public.learning_progress ADD COLUMN IF NOT EXISTS last_accessed_at TIMESTAMP WITH TIME ZONE;
+ALTER TABLE public.lessons ALTER COLUMN status SET DEFAULT 'draft'; -- 'draft', 'review', 'published', 'archived'
+ALTER TABLE public.monthly_reports ADD COLUMN IF NOT EXISTS report_period TEXT;
+ALTER TABLE public.monthly_reports ADD COLUMN IF NOT EXISTS child_group TEXT;
+ALTER TABLE public.monthly_reports ADD COLUMN IF NOT EXISTS overdue_follow_ups INTEGER DEFAULT 0;
+ALTER TABLE public.monthly_reports ADD COLUMN IF NOT EXISTS submitted_by_user_id TEXT REFERENCES public.users(id) ON DELETE SET NULL;
+
 -- ==============================================================================
 -- ROW LEVEL SECURITY (RLS) POLICIES
 -- ==============================================================================
@@ -220,6 +277,10 @@ ALTER TABLE public.activity_logs ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.try_home_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.meal_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.monthly_reports ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.follow_ups ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.announcements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.correction_requests ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.audit_logs ENABLE ROW LEVEL SECURITY;
 
 -- Upgrade older installs: drop the plain-text password column
 ALTER TABLE public.users ADD COLUMN IF NOT EXISTS password_hash TEXT;
@@ -274,3 +335,14 @@ CREATE POLICY "Public MealTemplates Access" ON public.meal_templates FOR ALL USI
 
 DROP POLICY IF EXISTS "Public Reports Access" ON public.monthly_reports;
 CREATE POLICY "Public Reports Access" ON public.monthly_reports FOR ALL USING (true) WITH CHECK (true);
+
+-- New workflow tables follow the same prototype access as the tables above
+-- (audit_logs is server-only: no anon policy).
+DROP POLICY IF EXISTS "Public FollowUps Access" ON public.follow_ups;
+CREATE POLICY "Public FollowUps Access" ON public.follow_ups FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public Announcements Access" ON public.announcements;
+CREATE POLICY "Public Announcements Access" ON public.announcements FOR ALL USING (true) WITH CHECK (true);
+
+DROP POLICY IF EXISTS "Public CorrectionRequests Access" ON public.correction_requests;
+CREATE POLICY "Public CorrectionRequests Access" ON public.correction_requests FOR ALL USING (true) WITH CHECK (true);

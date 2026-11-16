@@ -1,0 +1,18 @@
+%% 3.3.1 Context-Level DFD (revised) — flows marked NEW were missing from the paper
+flowchart TB
+  P["Parent / Guardian"]:::ext
+  H["Community Health Worker"]:::ext
+  A["Municipal Health Officer / Administrator"]:::ext
+  S(("0<br/>NutriLearn<br/>System")):::proc
+
+  P -- "Registration & login details, lesson & quiz answers,<br/>'Try it at home' completions, meal-planning choices" --> S
+  S -- "Nutrition lessons, meal templates & guide,<br/>learning progress, child growth chart, announcements" --> P
+
+  H -- "Parent & child records, growth measurements,<br/>deworming data, follow-up schedules, report requests,<br/>NEW: relayed announcements, NEW: corrected records" --> S
+  S -- "Record confirmations & validation warnings,<br/>monitoring summaries, field reports,<br/>NEW: correction requests, NEW: announcements" --> H
+
+  A -- "Account & role updates, password resets,<br/>learning content updates, report filters,<br/>NEW: official announcements, NEW: correction requests" --> S
+  S -- "Filtered analytics & structured reports (PDF/print/CSV),<br/>data-quality warnings, submitted BHW reports, audit log" --> A
+
+  classDef ext fill:#FFFFFF,stroke:#0E3D26,stroke-width:2px,color:#0E3D26
+  classDef proc fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#052E16

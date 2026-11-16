@@ -1,0 +1,20 @@
+%% 4.3 Request flow (revised to match the implementation)
+%% The JWT check shown in the paper is not built yet; it is drawn dashed as Phase 2.
+flowchart TD
+  UI["User Interface<br/>lessons, meal plans, nutrition records"] --> SAVE["Save on the phone first<br/>(localStorage)"]
+  SAVE --> NET{"Internet / backend<br/>available?"}
+  NET -- "No" --> Q["Add to sync outbox"]
+  Q -- "on reconnection" --> NET
+  NET -- "Yes" --> REQ["REST request (JSON)"]
+  REQ --> JWT{"Phase 2: JWT verification<br/>& role check"}:::planned
+  JWT -- "No" --> ERR["Error response<br/>400 invalid input · 401 · 403 · 404"]
+  JWT -- "Yes" --> ROUTE["FastAPI route<br/>validate & process"]
+  ROUTE --> DATA{"Supabase<br/>reachable?"}
+  DATA -- "Yes" --> PG[("Supabase PostgreSQL")]
+  DATA -- "No" --> LDB[("local_db.json")]
+  PG --> RES["Response (JSON)"]
+  LDB --> RES
+  RES --> UI
+  ERR --> UI
+
+  classDef planned fill:#FFFFFF,stroke:#DC2626,stroke-width:2px,stroke-dasharray:5 3,color:#7F1D1D

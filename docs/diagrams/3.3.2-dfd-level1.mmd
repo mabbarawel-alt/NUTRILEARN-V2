@@ -1,0 +1,63 @@
+%% 3.3.2 Level-1 DFD (revised) — 7.0 and D7 were missing from the paper
+flowchart LR
+  P["Parent / Guardian"]:::ext
+  H["Community Health Worker"]:::ext
+  A["Municipal Health Officer /<br/>Administrator"]:::ext
+
+  P1(["1.0 User & Access<br/>Management"]):::proc
+  P2(["2.0 Child Nutrition<br/>Record Management"]):::proc
+  P3(["3.0 Nutrition Learning<br/>Management"]):::proc
+  P4(["4.0 Meal Planning"]):::proc
+  P5(["5.0 Learning Progress<br/>Monitoring"]):::proc
+  P6(["6.0 Report Generation<br/>& Administration"]):::proc
+  P7(["NEW · 7.0 Announcement<br/>Management"]):::added
+
+  D1[("D1 User Accounts")]:::store
+  D2[("D2 Parent & Child Records<br/>(growth, deworming, follow-ups)")]:::store
+  D3[("D3 Learning Materials")]:::store
+  D4[("D4 Meal Templates")]:::store
+  D5[("D5 Learning Progress &<br/>Activity Logs")]:::store
+  D6[("D6 Reports, Correction<br/>Requests & Audit Records")]:::store
+  D7[("NEW · D7 Announcements")]:::added
+
+  P -- "registration & login details" --> P1
+  H -- "login details" --> P1
+  A -- "account updates, role changes, password resets" --> P1
+  P1 <--> D1
+  P1 -- "authentication result & access permissions" --> P
+
+  H -- "child details, measurements, deworming, follow-ups" --> P2
+  P2 <--> D2
+  P2 -- "validated records & warnings" --> H
+
+  A -- "create / publish / archive content" --> P3
+  P3 <--> D3
+  P3 -- "published lessons (assigned first)" --> P
+  H -- "lesson assignments to groups" --> P3
+
+  P -- "meal-guide choices (age, budget, Go/Grow/Glow)" --> P4
+  P4 <--> D4
+  P4 -- "meal plan & preparation steps" --> P
+
+  P -- "lesson access, quiz answers, 'Try it at home' done" --> P5
+  P5 <--> D5
+  P5 -- "progress & completion summaries" --> P
+  P5 -- "caregiver action logs to evaluate" --> H
+
+  H -- "report requests (period / group)" --> P6
+  A -- "report filters, correction requests" --> P6
+  D2 --> P6
+  D5 --> P6
+  P6 <--> D6
+  P6 -- "field reports, correction requests" --> H
+  P6 -- "analytics, PDF / CSV reports, data-quality warnings" --> A
+
+  A -- "official announcements" --> P7
+  H -- "relayed announcements" --> P7
+  P7 <--> D7
+  P7 -- "announcements & schedules" --> P
+
+  classDef ext fill:#FFFFFF,stroke:#0E3D26,stroke-width:2px,color:#0E3D26
+  classDef proc fill:#DCFCE7,stroke:#16A34A,color:#052E16
+  classDef store fill:#F1F5F9,stroke:#475569,color:#0F172A
+  classDef added fill:#FFFFFF,stroke:#DC2626,stroke-width:2px,stroke-dasharray:5 3,color:#7F1D1D

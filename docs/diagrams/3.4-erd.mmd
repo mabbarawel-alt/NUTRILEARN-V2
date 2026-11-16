@@ -1,0 +1,170 @@
+%% 3.4 ERD (revised, Level 2 with attributes)
+%% Matches supabase_schema.sql. IDs are strings (TEXT) because records are created
+%% on the phone, also offline (e.g. "ch-1794862105452"), and synced later.
+%% NEW entities: FOLLOW_UP, ANNOUNCEMENT, MONTHLY_REPORT, CORRECTION_REQUEST, AUDIT_LOG.
+%% MEAL_TEMPLATE was already in Level 2 but missing from the paper's Level 1 ERD.
+erDiagram
+  USER ||--o{ CHILD : "responsible_for"
+  USER ||--o{ GROWTH_RECORD : "records"
+  CHILD ||--o{ GROWTH_RECORD : "has"
+  CHILD ||--o{ DEWORMING_RECORD : "has"
+  CHILD ||--o{ FOLLOW_UP : "NEW scheduled_for"
+  USER ||--o{ FOLLOW_UP : "NEW schedules"
+  USER ||--o{ PARENT_GROUP : "creates"
+  PARENT_GROUP ||--o{ GROUP_MEMBERSHIP : "contains"
+  USER ||--o{ GROUP_MEMBERSHIP : "joins"
+  USER ||--o{ LESSON : "manages"
+  LESSON ||--o{ ASSIGNED_LESSON : "is_assigned"
+  USER ||--o{ ASSIGNED_LESSON : "assigns"
+  USER |o--o{ ASSIGNED_LESSON : "parent_target"
+  PARENT_GROUP |o--o{ ASSIGNED_LESSON : "group_target"
+  LESSON ||--o{ LEARNING_PROGRESS : "tracks"
+  USER ||--o{ LEARNING_PROGRESS : "has"
+  LESSON ||--o{ PRACTICAL_ACTIVITY : "includes"
+  PRACTICAL_ACTIVITY ||--o{ ACTIVITY_LOG : "has"
+  USER ||--o{ ACTIVITY_LOG : "submits"
+  USER ||--o{ MEAL_TEMPLATE : "creates"
+  USER ||--o{ ANNOUNCEMENT : "NEW posts"
+  USER ||--o{ MONTHLY_REPORT : "NEW submits"
+  USER ||--o{ CORRECTION_REQUEST : "NEW requests"
+  CHILD ||--o{ CORRECTION_REQUEST : "NEW concerns"
+  USER ||--o{ AUDIT_LOG : "NEW performs"
+
+  USER {
+    string userId PK
+    string fullName
+    string email
+    string passwordHash "salted PBKDF2-SHA256"
+    string passwordSalt
+    string role "parent | chw | mho"
+    string barangay
+    string status "Active | Inactive"
+  }
+  CHILD {
+    string childId PK
+    string parentUserId FK
+    string fullName
+    date birthDate
+    string sex
+    string barangay
+    string status "Normal | Stunted | Wasted | Underweight | At Risk"
+    boolean improved
+    date nextFollowUpDate
+  }
+  GROWTH_RECORD {
+    string growthRecordId PK
+    string childId FK
+    string recordedByUserId FK
+    date recordDate
+    decimal weightKg
+    decimal heightCm
+    int muacMm
+  }
+  DEWORMING_RECORD {
+    string dewormingRecordId PK
+    string childId FK
+    date recordDate
+    string notes
+  }
+  FOLLOW_UP {
+    string followUpId PK
+    string childId FK
+    string scheduledByUserId FK
+    date scheduledDate
+    string guidance
+    string status "Scheduled | Done"
+    date completedDate
+  }
+  PARENT_GROUP {
+    string groupId PK
+    string groupName
+    string createdByUserId FK
+  }
+  GROUP_MEMBERSHIP {
+    string groupId PK, FK
+    string parentUserId PK, FK
+    date dateJoined
+  }
+  LESSON {
+    string lessonId PK
+    string title
+    string description
+    string content
+    string status "draft | review | published | archived"
+    string createdByUserId FK
+  }
+  ASSIGNED_LESSON {
+    string assignedLessonId PK
+    string lessonId FK
+    string assignedByUserId FK
+    string parentUserId FK "optional"
+    string groupId FK "optional"
+    date assignedDate
+  }
+  LEARNING_PROGRESS {
+    string progressId PK
+    string parentUserId FK
+    string lessonId FK
+    string status "In Progress | Completed"
+    datetime lastAccessedAt "NEW"
+    date completionDate
+  }
+  PRACTICAL_ACTIVITY {
+    string activityId PK
+    string lessonId FK
+    string title
+    string instructions
+  }
+  ACTIVITY_LOG {
+    string activityLogId PK
+    string activityId FK
+    string parentUserId FK
+    datetime completedAt
+    string status "Pending Review | Evaluated"
+    string notes
+    string bhwFeedback
+  }
+  MEAL_TEMPLATE {
+    string mealTemplateId PK
+    string title
+    string description
+    string instructions
+    string createdByUserId FK
+  }
+  ANNOUNCEMENT {
+    string announcementId PK
+    string postedByUserId FK
+    string title
+    string content
+    string targetAudience
+    date eventDate
+  }
+  MONTHLY_REPORT {
+    string reportId PK
+    string submittedByUserId FK
+    string barangay
+    string reportPeriod
+    string childGroup
+    int totalChildren
+    int stuntedCount
+    string stuntingRate
+    int overdueFollowUps
+    string status "Pending Review | Endorsed"
+  }
+  CORRECTION_REQUEST {
+    string requestId PK
+    string childId FK
+    string requestedByUserId FK
+    string message
+    string status "Open | Resolved"
+    datetime requestedAt
+    datetime resolvedAt
+  }
+  AUDIT_LOG {
+    string auditId PK
+    string userId FK
+    string action
+    string category
+    string details
+    datetime createdAt
+  }

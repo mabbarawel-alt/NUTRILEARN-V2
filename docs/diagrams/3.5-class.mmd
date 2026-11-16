@@ -1,0 +1,164 @@
+%% 3.5 Class Diagram (revised) — the paper's classes had no methods.
+%% Methods below are the operations the app actually performs (js/*.js, main.py).
+classDiagram
+  direction LR
+  class User {
+    +string userId
+    +string fullName
+    +string email
+    -string passwordHash
+    -string passwordSalt
+    +string role
+    +string status
+    +login(email, password) bool
+    +logout()
+    +changePassword(newPassword)
+    +resetPassword() string
+    +deactivate()
+    +hasRole(role) bool
+  }
+  class Child {
+    +string childId
+    +string fullName
+    +date birthDate
+    +string sex
+    +string status
+    +date nextFollowUpDate
+    +classifyNutritionalStatus() string
+    +validate() List~string~
+    +addGrowthRecord(record)
+    +scheduleFollowUp(date, guidance)
+  }
+  class GrowthRecord {
+    +string growthRecordId
+    +date recordDate
+    +decimal weightKg
+    +decimal heightCm
+    +int muacMm
+  }
+  class DewormingRecord {
+    +string dewormingRecordId
+    +date recordDate
+    +string notes
+  }
+  class FollowUp {
+    +string followUpId
+    +date scheduledDate
+    +string guidance
+    +string status
+    +markDone()
+    +isOverdue() bool
+  }
+  class ParentGroup {
+    +string groupId
+    +string groupName
+    +addMember(parent)
+    +assignLessons(lessons)
+  }
+  class GroupMembership {
+    +date dateJoined
+  }
+  class Lesson {
+    +string lessonId
+    +string title
+    +string content
+    +string status
+    +publish()
+    +archive()
+    +restore()
+  }
+  class AssignedLesson {
+    +string assignedLessonId
+    +date assignedDate
+  }
+  class LearningProgress {
+    +string progressId
+    +string status
+    +datetime lastAccessedAt
+    +date completionDate
+    +logAccess()
+    +markComplete()
+  }
+  class PracticalActivity {
+    +string activityId
+    +string title
+    +string instructions
+  }
+  class ActivityLog {
+    +string activityLogId
+    +datetime completedAt
+    +string status
+    +string notes
+    +markDone()
+    +evaluate(feedback)
+  }
+  class MealTemplate {
+    +string mealTemplateId
+    +string title
+    +string instructions
+    +calculateCost() int
+    +generatePreparationSteps(ageGroup) List~string~
+  }
+  class Announcement {
+    +string announcementId
+    +string title
+    +string content
+    +string targetAudience
+    +publish()
+    +relay(barangay)
+  }
+  class Report {
+    +string reportId
+    +string reportPeriod
+    +string barangay
+    +filter(criteria) List~Child~
+    +summarize() Summary
+    +exportPDF()
+    +exportCSV()
+    +submit()
+    +endorse()
+  }
+  class CorrectionRequest {
+    +string requestId
+    +string message
+    +string status
+    +resolve()
+  }
+  class AuditLog {
+    +string auditId
+    +string action
+    +datetime createdAt
+    +record(action, details)
+  }
+  class SyncQueue {
+    +enqueue(request)
+    +flush()
+    +pendingCount() int
+  }
+
+  User "1" --> "0..*" Child : responsible for
+  User "1" --> "0..*" GrowthRecord : records
+  Child "1" *-- "0..*" GrowthRecord : has
+  Child "1" *-- "0..*" DewormingRecord : has
+  Child "1" *-- "0..*" FollowUp : has
+  User "1" --> "0..*" ParentGroup : manages
+  ParentGroup "1" *-- "0..*" GroupMembership : contains
+  User "1" --> "0..*" GroupMembership : joins
+  User "1" --> "0..*" Lesson : manages
+  Lesson "1" --> "0..*" AssignedLesson : assigned in
+  User "1" --> "0..*" AssignedLesson : assigns
+  ParentGroup "0..1" --> "0..*" AssignedLesson : group target
+  Lesson "1" --> "0..*" LearningProgress : tracks
+  User "1" --> "0..*" LearningProgress : has
+  Lesson "1" --> "0..*" PracticalActivity : includes
+  PracticalActivity "1" --> "0..*" ActivityLog : has
+  User "1" --> "0..*" ActivityLog : submits
+  User "1" --> "0..*" MealTemplate : manages
+  User "1" --> "0..*" Announcement : posts
+  User "1" --> "0..*" Report : submits
+  Report ..> Child : aggregates
+  User "1" --> "0..*" CorrectionRequest : requests
+  CorrectionRequest --> Child : concerns
+  User "1" --> "0..*" AuditLog : performs
+  SyncQueue ..> Child : syncs offline changes
+  SyncQueue ..> ActivityLog : syncs offline changes

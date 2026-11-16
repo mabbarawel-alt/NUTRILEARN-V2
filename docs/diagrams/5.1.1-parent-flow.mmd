@@ -1,0 +1,12 @@
+%% Figure 5.1 Parent / Guardian interaction flow (revised)
+flowchart TD
+  A1(["Choose role: Parent"]) --> A2(["Sign in / Register"])
+  A2 -. "new account" .-> A3(["Child registration"])
+  A2 --> A4(["Parent dashboard<br/>+ announcements"])
+  A4 --> B1(["Nutrition modules<br/>📌 assigned by BHW first"])
+  A4 --> B2(["Meals: step-by-step guide<br/>+ weekly meal plan"])
+  A4 --> B3(["Try It at Home"])
+  A4 --> B4(["Weight tracker (view)"])
+  B1 --> C1(["Lesson content → quiz"])
+  C1 --> C2(["Tap 'Done' on home action"])
+  B2 --> C3(["Age → budget → Go/Grow/Glow<br/>→ preparation → save / print"])
