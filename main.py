@@ -1,5 +1,8 @@
 import os
 import json
+import hashlib
+import hmac
+import secrets
 from typing import Optional, List, Dict, Any
 from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request, Response
@@ -61,6 +64,57 @@ def save_local_db(data: Dict[str, Any]):
             json.dump(data, f, indent=2)
     except Exception as e:
         print("Error saving local db:", e)
+
+# ==============================================================================
+# PASSWORD SECURITY (Thesis Chapter 2.2: Security & Privacy)
+# Same PBKDF2-HMAC-SHA256 scheme as js/security.js, so hashes made in the
+# browser can be verified here and vice versa. Plain-text passwords are never
+# stored or returned by the API.
+# ==============================================================================
+PASSWORD_ITERATIONS = 10000
+SECRET_USER_FIELDS = ("password", "passwordHash", "passwordSalt", "passwordAlgo", "passwordIterations")
+PUBLIC_ENV_KEYS = ("SUPABASE_URL", "SUPABASE_ANON_KEY", "ENVIRONMENT")
+
+def hash_password(password: str, salt: Optional[str] = None, iterations: int = PASSWORD_ITERATIONS) -> Dict[str, Any]:
+    salt = salt or secrets.token_hex(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt.encode("utf-8"), iterations).hex()
+    return {
+        "passwordHash": digest,
+        "passwordSalt": salt,
+        "passwordAlgo": "pbkdf2-sha256",
+        "passwordIterations": iterations,
+    }
+
+def verify_password(password: str, user: Dict[str, Any]) -> bool:
+    if not user.get("passwordHash") or not user.get("passwordSalt"):
+        return False
+    iterations = int(user.get("passwordIterations") or PASSWORD_ITERATIONS)
+    candidate = hash_password(password, user["passwordSalt"], iterations)["passwordHash"]
+    return hmac.compare_digest(candidate, user["passwordHash"])
+
+def secure_user(user: Dict[str, Any]) -> Dict[str, Any]:
+    """Replace a plain-text password with a salted hash (mutates and returns user)."""
+    plain = user.pop("password", None)
+    if isinstance(plain, str) and plain:
+        user.update(hash_password(plain))
+    return user
+
+def public_user(user: Dict[str, Any]) -> Dict[str, Any]:
+    """Copy of a user record without any credential fields, safe to return to clients."""
+    return {k: v for k, v in user.items() if k not in SECRET_USER_FIELDS}
+
+def migrate_local_passwords():
+    """One-time upgrade: hash any plain-text passwords left in local_db.json."""
+    db = get_local_db()
+    users = db.get("users", [])
+    if any("password" in u for u in users):
+        for u in users:
+            secure_user(u)
+        db["users"] = users
+        save_local_db(db)
+        print("[security] Migrated plain-text passwords in local_db.json to salted hashes.")
+
+migrate_local_passwords()
 
 # ==============================================================================
 # API ENDPOINTS
@@ -333,22 +387,46 @@ async def delete_announcement(ann_id: str):
 @app.get("/api/users")
 async def get_users():
     db = get_local_db()
-    return db.get("users", [])
+    # Never expose passwords or password hashes
+    return [public_user(u) for u in db.get("users", [])]
 
 @app.post("/api/users")
 async def save_user(user: Dict[str, Any]):
     db = get_local_db()
     users = db.get("users", [])
-    user_id = user.get("id") or f"usr-{int(Path(__file__).stat().st_mtime * 1000)}"
+    secure_user(user)
+    user_id = user.get("id") or f"usr-{secrets.token_hex(6)}"
     user["id"] = user_id
     existing_idx = next((i for i, u in enumerate(users) if u.get("id") == user_id), None)
     if existing_idx is not None:
         users[existing_idx] = {**users[existing_idx], **user}
+        saved = users[existing_idx]
     else:
         users.append(user)
+        saved = user
     db["users"] = users
     save_local_db(db)
-    return user
+    return public_user(saved)
+
+@app.post("/api/auth/login")
+async def login(payload: Dict[str, Any]):
+    email = str(payload.get("email") or "").strip().lower()
+    password = str(payload.get("password") or "")
+    role = payload.get("role")
+    if not email or not password:
+        raise HTTPException(status_code=400, detail="Email and password are required.")
+
+    db = get_local_db()
+    user = next((u for u in db.get("users", [])
+                 if (u.get("email") or "").lower() == email or (u.get("name") or "").lower() == email), None)
+    # Same message for unknown account and wrong password (no account enumeration)
+    if not user or not verify_password(password, user):
+        raise HTTPException(status_code=401, detail="Incorrect email or password.")
+    if (user.get("status") or "Active") != "Active":
+        raise HTTPException(status_code=403, detail="This account is deactivated. Please contact the Municipal Health Office.")
+    if role and user.get("role") != role and not (role == "chw" and user.get("role") == "collector"):
+        raise HTTPException(status_code=403, detail="This account is registered under a different portal.")
+    return {"user": public_user(user)}
 
 # ------------------------------------------------------------------------------
 # 5. MODULES ENDPOINTS (Req #11)
@@ -484,18 +562,27 @@ async def service_worker():
     raise HTTPException(status_code=404)
 
 @app.get("/.env")
-async def env_file():
-    # Only return public frontend configuration
-    f = BASE_DIR / ".env"
-    if f.exists():
-        return FileResponse(f, media_type="text/plain")
-    raise HTTPException(status_code=404)
+async def public_env():
+    # js/config.js reads its settings from "/.env". The real .env file is NEVER
+    # sent: only the browser-safe values are generated here. The service-role key
+    # stays on the server.
+    lines = [f"{key}={os.getenv(key, '')}" for key in PUBLIC_ENV_KEYS]
+    return Response("\n".join(lines) + "\n", media_type="text/plain",
+                    headers={"Cache-Control": "no-store"})
+
+# Only these top-level files may be downloaded; folders above are mounted
+# separately. Everything else (local_db.json, main.py, .env, .git, SQL, scripts)
+# falls through to index.html instead of being served.
+PUBLIC_ROOT_FILES = {"index.html", "nutrilearn-dashboard.html", "NutriLearn.apk"}
 
 @app.get("/{full_path:path}")
 async def serve_spa(full_path: str):
-    file_path = BASE_DIR / full_path
-    if file_path.exists() and file_path.is_file():
-        return FileResponse(file_path)
+    if full_path in PUBLIC_ROOT_FILES:
+        file_path = BASE_DIR / full_path
+        if file_path.is_file():
+            return FileResponse(file_path)
+    if full_path.startswith("api/"):
+        raise HTTPException(status_code=404)
     return FileResponse(BASE_DIR / "index.html")
 
 if __name__ == "__main__":

@@ -5269,8 +5269,8 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Password: <span style="color: #DC2626;">*</span></label>
-            <input type="password" name="accPass" id="acc-settings-pass" class="form-control" required>
+            <label class="form-label">New Password:</label>
+            <input type="password" name="accPass" id="acc-settings-pass" class="form-control" minlength="6" autocomplete="new-password" placeholder="Leave blank to keep current password">
           </div>
 
           <div class="form-group">
@@ -6620,21 +6620,22 @@
   </div>
 
   <!-- Scripts -->
-  <script src="js/config.js?v=5.9"></script>
+  <script src="js/config.js?v=6.0"></script>
   <!-- Supabase Official Client Library & NutriLearn Database Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabaseClient.js?v=5.9"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=5.9"></script>
+  <script src="js/apiClient.js?v=6.0"></script>
+  <script src="js/security.js?v=1.0"></script>
   <script src="js/data.js?v=5.9"></script>
-  <script src="js/exportUtils.js?v=5.9"></script>
+  <script src="js/exportUtils.js?v=6.0"></script>
   <script src="js/healthWorker.js?v=5.9"></script>
   <script src="js/parentLearning.js?v=6.4"></script>
-  <script src="js/mhoDashboard.js?v=5.9"></script>
+  <script src="js/mhoDashboard.js?v=6.0"></script>
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=6.0"></script>
   <script src="js/mobileUX.js?v=6.3"></script>
-  <script src="js/app.js?v=10.1"></script>
+  <script src="js/app.js?v=10.2"></script>
 </body>
 
 </html>

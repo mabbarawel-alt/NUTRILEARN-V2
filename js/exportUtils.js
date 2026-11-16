@@ -543,15 +543,24 @@ const NutriStorage = {
   getCurrentUser() {
     try {
       const data = localStorage.getItem(this.CURRENT_USER_KEY);
-      return data ? JSON.parse(data) : null;
+      if (!data) return null;
+      const user = JSON.parse(data);
+      // Legacy sessions may still carry credentials; scrub them on read
+      if (user && NutriSecurity.SECRET_FIELDS.some(f => f in user)) {
+        const clean = NutriSecurity.publicUser(user);
+        localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(clean));
+        return clean;
+      }
+      return user;
     } catch (e) {
       return null;
     }
   },
 
+  // Session copy never contains a password or password hash (Chapter 2.2)
   setCurrentUser(user) {
     if (user) {
-      localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(user));
+      localStorage.setItem(this.CURRENT_USER_KEY, JSON.stringify(NutriSecurity.publicUser(user)));
     } else {
       localStorage.removeItem(this.CURRENT_USER_KEY);
     }
@@ -560,13 +569,29 @@ const NutriStorage = {
   getUsers() {
     try {
       const data = localStorage.getItem(this.USERS_KEY);
-      return data ? JSON.parse(data) : [];
+      const users = data ? JSON.parse(data) : [];
+      // One-time migration: hash any account still holding a plain-text password
+      if (users.some(u => u && typeof u.password === 'string')) {
+        users.forEach(u => NutriSecurity.secureUser(u));
+        localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+      }
+      return users;
     } catch (e) {
       return [];
     }
   },
 
-  registerUser(userData) {
+  // Account status values that may sign in (Inactive / Suspended accounts are blocked)
+  isUserActive(user) {
+    const status = (user && user.status) || 'Active';
+    return status === 'Active';
+  },
+
+  // options.login = false lets an administrator create accounts without
+  // switching the current session to the newly created user.
+  registerUser(userData, options = {}) {
+    const shouldLogin = options.login !== false;
+    NutriSecurity.secureUser(userData);
     const users = this.getUsers();
     userData.id = userData.id || ('usr-' + Date.now());
     userData.status = userData.status || 'Active';
@@ -587,7 +612,7 @@ const NutriStorage = {
     }
 
     localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
-    this.setCurrentUser(userData);
+    if (shouldLogin) this.setCurrentUser(userData);
     this.logAudit('User Account Created', 'Account Management', `Registered account for ${userData.name} (${userData.role ? userData.role.toUpperCase() : 'USER'})`);
 
     // Live sync to backend API if available
@@ -595,11 +620,12 @@ const NutriStorage = {
       NutriApi.saveUser(userData);
     }
 
-    return userData;
+    return NutriSecurity.publicUser(userData);
   },
 
   updateUser(updatedUser) {
     if (!updatedUser) return null;
+    NutriSecurity.secureUser(updatedUser);
     let users = this.getUsers();
     if (!updatedUser.id) {
       updatedUser.id = 'usr-' + Date.now();
@@ -618,9 +644,19 @@ const NutriStorage = {
     }
     localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
     const savedUser = idx !== -1 ? users[idx] : updatedUser;
-    this.setCurrentUser(savedUser);
+    // Only refresh the session when the signed-in user edited their own account.
+    // (Previously an admin editing someone else was switched into that account.)
+    const current = this.getCurrentUser();
+    if (current && (current.id === savedUser.id ||
+        (current.email && savedUser.email && current.email.toLowerCase() === savedUser.email.toLowerCase()))) {
+      this.setCurrentUser(savedUser);
+    }
+    // Keep the backend copy in sync (credentials travel only as a salted hash)
+    if (window.NutriApi && typeof NutriApi.saveUser === 'function') {
+      NutriApi.saveUser(savedUser);
+    }
     this.logAudit('User Account Updated', 'Account Management', `Updated profile/credentials for ${savedUser.name} (${savedUser.role})`);
-    return savedUser;
+    return NutriSecurity.publicUser(savedUser);
   },
 
   deleteUser(userId) {
@@ -744,8 +780,17 @@ const NutriStorage = {
       };
     }
 
-    // 2. Strict password validation
-    if (matchedUser.password !== password) {
+    // 2. Strict password validation (salted PBKDF2 hash, never plain text)
+    if (!matchedUser.passwordHash) {
+      return {
+        success: false,
+        needsServerCheck: true,
+        message: isFil
+          ? '🔑 Hindi ma-verify ang account sa device na ito. Kumonekta sa internet at subukang muli.'
+          : '🔑 This account cannot be verified on this device yet. Please connect to the internet and try again.'
+      };
+    }
+    if (!NutriSecurity.verifyPassword(password, matchedUser)) {
       return {
         success: false,
         message: isFil
@@ -754,8 +799,8 @@ const NutriStorage = {
       };
     }
 
-    // 3. Status check: Ensure account is not suspended
-    if (matchedUser.status === 'Suspended') {
+    // 3. Status check: deactivated (Inactive) or Suspended accounts cannot sign in
+    if (!this.isUserActive(matchedUser)) {
       return {
         success: false,
         message: isFil
@@ -797,7 +842,29 @@ const NutriStorage = {
       `User ${matchedUser.name} (${(matchedUser.role || '').toUpperCase()}) successfully logged in`,
       { name: matchedUser.name, role: matchedUser.role }
     );
-    return { success: true, user: matchedUser };
+    return { success: true, user: NutriSecurity.publicUser(matchedUser) };
+  },
+
+  // Accept an account the backend verified (/api/auth/login) when this device
+  // has no local password hash for it, e.g. an account created on another phone.
+  // `credentials` is the salted hash computed locally so the next sign-in works offline.
+  completeServerLogin(serverUser, credentials) {
+    if (!serverUser || !serverUser.id) return null;
+    const users = this.getUsers();
+    const idx = users.findIndex(u => u.id === serverUser.id ||
+      (u.email && serverUser.email && u.email.toLowerCase() === serverUser.email.toLowerCase()));
+    const merged = { ...(idx !== -1 ? users[idx] : {}), ...NutriSecurity.publicUser(serverUser), ...(credentials || {}) };
+    if (!merged.initials) merged.initials = this.calculateInitials(merged.name);
+    if (idx !== -1) users[idx] = merged; else users.push(merged);
+    localStorage.setItem(this.USERS_KEY, JSON.stringify(users));
+    this.setCurrentUser(merged);
+    this.logAudit(
+      'User Login',
+      'Security & Access',
+      `User ${merged.name} (${(merged.role || '').toUpperCase()}) logged in (verified by server)`,
+      { name: merged.name, role: merged.role }
+    );
+    return NutriSecurity.publicUser(merged);
   },
 
   // ==========================================================================
@@ -1161,7 +1228,8 @@ const NutriStorage = {
             let addedCount = 0;
             apiUsers.forEach(au => {
               if (!merged.some(lu => (lu.id && lu.id === au.id) || (lu.email && au.email && lu.email.toLowerCase() === au.email.toLowerCase()))) {
-                merged.push(au);
+                // The API never returns credentials; strip defensively anyway
+                merged.push(NutriSecurity.publicUser(au));
                 addedCount++;
               }
             });

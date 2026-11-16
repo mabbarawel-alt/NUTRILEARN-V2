@@ -46,9 +46,16 @@ while ($listener.IsListening) {
             $localPath = "index.html"
         }
 
-        $filePath = Join-Path $path $localPath
+        $filePath = [System.IO.Path]::GetFullPath((Join-Path $path $localPath))
 
-        if (Test-Path $filePath -PathType Leaf) {
+        # Block path traversal and private files (database, source, secrets, git)
+        $isOutside = -not $filePath.StartsWith([System.IO.Path]::GetFullPath($path), [System.StringComparison]::OrdinalIgnoreCase)
+        $leaf = [System.IO.Path]::GetFileName($filePath).ToLower()
+        $isPrivate = $localPath.StartsWith('.') -or $localPath -match '(^|[\\/])\.' -or
+                     $leaf -eq 'local_db.json' -or
+                     @('.py', '.ps1', '.bat', '.sql', '.yaml', '.txt', '.md') -contains [System.IO.Path]::GetExtension($leaf)
+
+        if (-not $isOutside -and -not $isPrivate -and (Test-Path $filePath -PathType Leaf)) {
             $ext = [System.IO.Path]::GetExtension($filePath).ToLower()
             $ct = $mimeTypes[$ext]
             if (-not $ct) { $ct = "application/octet-stream" }

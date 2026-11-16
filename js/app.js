@@ -558,16 +558,8 @@ const NutriApp = {
       return;
     }
 
-    // Update user's password in NutriStorage
-    user.password = newPass;
-    NutriStorage.updateUser(user);
-
-    // Also update current user in storage if matching
-    const cur = NutriStorage.getCurrentUser();
-    if (cur && (cur.id === user.id || cur.email === user.email)) {
-      cur.password = newPass;
-      NutriStorage.setCurrentUser(cur);
-    }
+    // Update user's password in NutriStorage (updateUser stores a salted hash only)
+    NutriStorage.updateUser({ id: user.id, email: user.email, password: newPass });
 
     // Log security audit trail
     NutriStorage.logAudit(
@@ -691,7 +683,7 @@ const NutriApp = {
   },
 
   // Submit Sign In (Screen 4 & Modal)
-  submitSignIn(event) {
+  async submitSignIn(event) {
     if (event) event.preventDefault();
     const screenForm = document.getElementById('form-auth-signin');
     const modalForm = document.getElementById('auth-signin-form');
@@ -713,7 +705,23 @@ const NutriApp = {
       return;
     }
 
-    const result = NutriStorage.loginUser(email, password, this.currentAuthRole || 'parent');
+    let result = NutriStorage.loginUser(email, password, this.currentAuthRole || 'parent');
+
+    // Account unknown on this device (or no local hash yet): ask the backend to verify it
+    const notFoundLocally = !result.success && !NutriStorage.getUsers().some(u =>
+      (u.email && u.email.toLowerCase() === email.toLowerCase()) ||
+      (u.name && u.name.toLowerCase() === email.toLowerCase()));
+    if (!result.success && (result.needsServerCheck || notFoundLocally) &&
+        window.NutriApi && typeof NutriApi.login === 'function') {
+      const server = await NutriApi.login(email, password, this.currentAuthRole || 'parent');
+      if (server && server.success) {
+        const user = NutriStorage.completeServerLogin(server.user, NutriSecurity.hashPassword(password));
+        result = { success: true, user };
+      } else if (server && server.message && !notFoundLocally) {
+        result = { success: false, message: server.message };
+      }
+    }
+
     if (result.success) {
       this.hideStartupScreen();
       this.closeModal('modal-auth');
@@ -1654,7 +1662,14 @@ const NutriApp = {
 
     if (nameInput) nameInput.value = user.name || '';
     if (emailInput) emailInput.value = user.email || '';
-    if (passInput) passInput.value = user.password || '';
+    // Passwords are stored only as hashes, so the field starts empty (blank = keep current)
+    if (passInput) {
+      passInput.value = '';
+      passInput.removeAttribute('required');
+      passInput.placeholder = (window.NutriI18n && NutriI18n.currentLang === 'fil')
+        ? 'Iwanang blangko kung hindi papalitan'
+        : 'Leave blank to keep current password';
+    }
     if (roleBadge) roleBadge.textContent = (user.role || 'User').toUpperCase();
     if (barangayInput) barangayInput.value = user.barangay || 'Barangay Manguiring, Calabanga';
 
@@ -1679,14 +1694,18 @@ const NutriApp = {
     const barangay = form.elements['accBarangay'] ? form.elements['accBarangay'].value : (user.barangay || 'Barangay Manguiring, Calabanga');
 
     // Validation (Req #14)
-    if (!name || !email || !pass) {
-      this.showToast('Name, email, and password cannot be empty.', 'warning');
+    if (!name || !email) {
+      this.showToast('Name and email cannot be empty.', 'warning');
+      return;
+    }
+    if (pass && pass.length < 6) {
+      this.showToast('Password must be at least 6 characters.', 'warning');
       return;
     }
 
     user.name = name;
     user.email = email;
-    user.password = pass;
+    if (pass) user.password = pass; // hashed by NutriStorage.updateUser
     user.barangay = barangay;
     user.initials = NutriStorage.calculateInitials(name);
 

@@ -1721,7 +1721,8 @@ const MHODashboard = {
       registeredDate: new Date().toISOString().split('T')[0]
     };
 
-    NutriStorage.registerUser(newUser);
+    // login:false keeps the administrator signed in as themselves
+    NutriStorage.registerUser(newUser, { login: false });
     NutriStorage.setUserOnlinePresence(newId, true);
     form.reset();
     NutriApp.closeModal('modal-admin-add-user');

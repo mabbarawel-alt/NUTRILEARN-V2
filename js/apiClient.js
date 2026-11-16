@@ -218,6 +218,25 @@
         }
       }
       return userData;
+    },
+
+    // Server-side password check for accounts that have no hash on this device.
+    // Returns { success, user?, message? } or null when the backend is unreachable.
+    async login(email, password, role) {
+      if (!this.isAvailable) return null;
+      try {
+        const res = await fetch(`${this.baseUrl}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password, role })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.ok && data && data.user) return { success: true, user: data.user };
+        return { success: false, message: data.detail || null };
+      } catch (e) {
+        console.warn('API login error:', e);
+        return null;
+      }
     }
   };
 

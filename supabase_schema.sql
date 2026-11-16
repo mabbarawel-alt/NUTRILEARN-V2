@@ -11,7 +11,9 @@ CREATE TABLE IF NOT EXISTS public.users (
     email TEXT UNIQUE,
     role TEXT DEFAULT 'parent', -- 'parent', 'chw', 'mho'
     barangay TEXT DEFAULT 'Barangay Manguiring',
-    password TEXT,
+    -- Passwords are never stored in plain text (Chapter 2.2): salted PBKDF2-SHA256
+    password_hash TEXT,
+    password_salt TEXT,
     status TEXT DEFAULT 'Active',
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -219,9 +221,20 @@ ALTER TABLE public.try_home_submissions ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.meal_templates ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.monthly_reports ENABLE ROW LEVEL SECURITY;
 
--- Allow anonymous public access for prototype / community health portal
+-- Upgrade older installs: drop the plain-text password column
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS password_hash TEXT;
+ALTER TABLE public.users ADD COLUMN IF NOT EXISTS password_salt TEXT;
+ALTER TABLE public.users DROP COLUMN IF EXISTS password;
+
+-- User accounts: NO anonymous access. RLS is enabled with no policy for the
+-- anon/authenticated roles, so only the backend (service-role key, which
+-- bypasses RLS) can read or write accounts. The browser never queries this table.
 DROP POLICY IF EXISTS "Public Users Access" ON public.users;
-CREATE POLICY "Public Users Access" ON public.users FOR ALL USING (true) WITH CHECK (true);
+
+-- PROTOTYPE NOTE: the tables below still allow anonymous access because the
+-- browser talks to them directly with the anon key and the app does not use
+-- Supabase Auth yet. Phase 2 replaces these with per-role policies based on
+-- auth.uid() (parents: own children; BHW: assigned barangay; MHO: aggregates).
 
 DROP POLICY IF EXISTS "Public Children Access" ON public.children;
 CREATE POLICY "Public Children Access" ON public.children FOR ALL USING (true) WITH CHECK (true);
