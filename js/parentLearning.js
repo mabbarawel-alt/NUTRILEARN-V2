@@ -396,6 +396,13 @@ const ParentModule = {
   },
 
   // Render Parent Learning Modules Cards (2x2 Grid)
+  // Only published modules reach parents; drafts, items under review and
+  // archived modules stay in the Administrator's content manager.
+  getVisibleModules() {
+    const hidden = ['draft', 'review', 'archived'];
+    return this.nutritionModules.filter(m => !hidden.includes(String(m.status || 'published').toLowerCase()));
+  },
+
   // Module IDs a Health Worker assigned to this parent: directly on the child
   // record, or through a parent group the child is enrolled in (ERD: ASSIGNED_LESSON).
   getAssignedModuleIds() {
@@ -435,8 +442,9 @@ const ParentModule = {
     // Assigned modules come first and are labelled; the rest stay available
     // as optional self-paced lessons (Chapter 2.1).
     const assignedIds = this.getAssignedModuleIds();
-    const assigned = this.nutritionModules.filter(m => assignedIds.has(m.id));
-    const others = this.nutritionModules.filter(m => !assignedIds.has(m.id));
+    const visible = this.getVisibleModules();
+    const assigned = visible.filter(m => assignedIds.has(m.id));
+    const others = visible.filter(m => !assignedIds.has(m.id));
     const sectionTitle = (text) =>
       `<div class="module-section-heading" style="grid-column: 1 / -1; font-weight: 700; color: #14532D; margin: 0.5rem 0 0;">${text}</div>`;
 
@@ -501,7 +509,7 @@ const ParentModule = {
     };
 
     if (assigned.length === 0) {
-      container.innerHTML = this.nutritionModules.map(renderCard).join('');
+      container.innerHTML = visible.map(renderCard).join('');
       return;
     }
     container.innerHTML =

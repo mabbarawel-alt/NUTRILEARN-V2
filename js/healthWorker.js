@@ -366,6 +366,7 @@ const CHWModule = {
 
   // Render BHW Dashboard matching the user mockup
   renderBHWDashboard() {
+    if (window.NutriReports) NutriReports.renderCorrectionRequestsForBHW();
     const user = NutriStorage.getCurrentUser() || {
       name: 'Nurse Ana Reyes',
       role: 'chw',
@@ -785,7 +786,8 @@ const CHWModule = {
     };
 
     newChild.id = 'ch-' + Date.now();
-    this.appendGrowthHistory(newChild);
+    newChild.submittedBy = (NutriStorage.getCurrentUser() || {}).name || 'Barangay Health Worker';
+    this.appendGrowthHistory(newChild, newChild.submittedBy);
     this.scheduleFollowUp(newChild, followUpDate, followUpGuidance);
 
     NutriStorage.addChild(newChild);
@@ -876,59 +878,101 @@ const CHWModule = {
   },
 
   // Open Community Report Submission Modal with auto-calculated values
+  // Thesis AD 3.2.2: "Select report period or group of children → System
+  // generates report automatically → Download, print, or submit"
+  getReportSelection() {
+    const brgy = document.getElementById('report-barangay-select')?.value || 'Barangay Manguiring';
+    const period = document.getElementById('report-period-select')?.value || '';   // YYYY-MM
+    const groupId = document.getElementById('report-group-select')?.value || 'ALL';
+    const filters = { barangay: brgy };
+    if (period) {
+      const [y, m] = period.split('-').map(Number);
+      const last = new Date(y, m, 0).getDate();
+      filters.dateFrom = `${period}-01`;
+      filters.dateTo = `${period}-${String(last).padStart(2, '0')}`;
+    }
+    const group = groupId !== 'ALL' ? NutriStorage.getGroups().find(g => g.id === groupId) : null;
+    if (group) {
+      filters.childIds = group.enrolledChildIds || [];
+      filters.groupName = group.name;
+    }
+    return { brgy, period, group, filters, children: NutriReports.filterChildren(filters) };
+  },
+
   openReportModal() {
-    const barangaySelect = document.getElementById('report-barangay-select');
-    const selectedBrgy = barangaySelect ? barangaySelect.value : 'Barangay Manguiring';
-
-    const children = NutriStorage.getChildren().filter(c => c.barangay === selectedBrgy);
-    const total = children.length;
-    const stunted = children.filter(c => c.status === 'Stunted' && !c.improved).length;
-    const wasted = children.filter(c => c.status === 'Wasted' && !c.improved).length;
-    const underweight = children.filter(c => c.status === 'Underweight' && !c.improved).length;
-    const improved = children.filter(c => c.improved === true).length;
-    const stuntingRate = total > 0 ? ((stunted / total) * 100).toFixed(1) + '%' : '0.0%';
-
-    document.getElementById('rep-calc-total').textContent = total;
-    document.getElementById('rep-calc-stunted').textContent = stunted;
-    document.getElementById('rep-calc-wasted').textContent = wasted;
-    document.getElementById('rep-calc-underweight').textContent = underweight;
-    document.getElementById('rep-calc-improved').textContent = improved;
-    document.getElementById('rep-calc-rate').textContent = stuntingRate;
-
+    const groupSelect = document.getElementById('report-group-select');
+    if (groupSelect) {
+      const current = groupSelect.value || 'ALL';
+      groupSelect.innerHTML = '<option value="ALL">Lahat ng bata sa barangay</option>' +
+        NutriStorage.getGroups().map(g => `<option value="${g.id}">${NutriReports.esc(g.name)}</option>`).join('');
+      groupSelect.value = [...groupSelect.options].some(o => o.value === current) ? current : 'ALL';
+    }
+    const nameInput = document.getElementById('report-chw-name');
+    if (nameInput && !nameInput.value) {
+      nameInput.value = (NutriStorage.getCurrentUser() || {}).name || '';
+    }
+    this.refreshReportPreview();
     NutriApp.openModal('modal-submit-report');
+  },
+
+  refreshReportPreview() {
+    const s = NutriReports.summarize(this.getReportSelection().children);
+    document.getElementById('rep-calc-total').textContent = s.total;
+    document.getElementById('rep-calc-stunted').textContent = s.stunted;
+    document.getElementById('rep-calc-wasted').textContent = s.wasted;
+    document.getElementById('rep-calc-underweight').textContent = s.underweight;
+    document.getElementById('rep-calc-improved').textContent = s.improved;
+    document.getElementById('rep-calc-rate').textContent = s.stuntingRate;
+  },
+
+  printReport() {
+    const sel = this.getReportSelection();
+    const form = document.getElementById('chw-submit-report-form');
+    NutriReports.openPrintableReport({
+      title: 'Barangay Child Nutrition Field Report',
+      subtitle: `${sel.brgy} — para sa Municipal Health Office`,
+      filters: sel.filters,
+      children: sel.children,
+      preparedBy: (form && form.elements['reportChwName'].value.trim()) || (NutriStorage.getCurrentUser() || {}).name,
+      notes: form ? form.elements['reportNotes'].value.trim() : ''
+    });
   },
 
   // Submit report to Municipal Health Office (Higher-ups)
   handleSubmitReport(form) {
-    const brgy = document.getElementById('report-barangay-select').value;
-    const chwName = form.elements['reportChwName'].value.trim() || 'Sister Teresa Lim, BNS';
+    const sel = this.getReportSelection();
+    const chwName = form.elements['reportChwName'].value.trim() || (NutriStorage.getCurrentUser() || {}).name || 'Barangay Health Worker';
     const notes = form.elements['reportNotes'].value.trim();
+    const s = NutriReports.summarize(sel.children);
 
-    const children = NutriStorage.getChildren().filter(c => c.barangay === brgy);
-    const total = children.length;
-    const stunted = children.filter(c => c.status === 'Stunted' && !c.improved).length;
-    const wasted = children.filter(c => c.status === 'Wasted' && !c.improved).length;
-    const underweight = children.filter(c => c.status === 'Underweight' && !c.improved).length;
-    const improved = children.filter(c => c.improved === true).length;
-    const stuntingRate = total > 0 ? ((stunted / total) * 100).toFixed(1) + '%' : '0.0%';
+    // Change in stunting rate versus this barangay's previous report (if any)
+    const previous = (NutriStorage.getReports ? NutriStorage.getReports() : [])
+      .filter(r => r.barangay === sel.brgy && r.stuntingRate)
+      .sort((a, b) => String(b.dateSubmitted || b.date || '').localeCompare(String(a.dateSubmitted || a.date || '')))[0];
+    const change = previous
+      ? (parseFloat(s.stuntingRate) - parseFloat(previous.stuntingRate)).toFixed(1) + '%'
+      : 'N/A (first report)';
 
     const newReport = {
-      barangay: brgy,
+      barangay: sel.brgy,
       chwName: chwName,
-      totalChildren: total,
-      stuntedCount: stunted,
-      wastedCount: wasted,
-      underweightCount: underweight,
-      improvedCount: improved,
-      stuntingRate: stuntingRate,
-      stuntingReductionAchieved: '-2.4%',
+      reportPeriod: sel.period || 'All dates',
+      childGroup: sel.group ? sel.group.name : 'All children',
+      totalChildren: s.total,
+      stuntedCount: s.stunted,
+      wastedCount: s.wasted,
+      underweightCount: s.underweight,
+      improvedCount: s.improved,
+      stuntingRate: s.stuntingRate,
+      overdueFollowUps: s.followUpsOverdue,
+      stuntingReductionAchieved: change,
       notes: notes
     };
 
     NutriStorage.submitReport(newReport);
     NutriApp.closeModal('modal-submit-report');
-    NutriApp.showToast(`✅ Malnutrition report for ${brgy} submitted to Municipal Health Office!`, 'success');
-    
+    NutriApp.showToast(`✅ Malnutrition report for ${sel.brgy} submitted to Municipal Health Office!`, 'success');
+
     // Refresh MHO if available
     if (window.MHODashboard) MHODashboard.init();
   },

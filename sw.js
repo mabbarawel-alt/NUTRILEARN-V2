@@ -1,5 +1,5 @@
-// NutriLearn Service Worker - v7.5.0
-const CACHE_NAME = 'nutrilearn-v7.5.0';
+// NutriLearn Service Worker - v7.6.0
+const CACHE_NAME = 'nutrilearn-v7.6.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -17,6 +17,7 @@ const ASSETS_TO_CACHE = [
   './js/announcements.js',
   './js/security.js',
   './js/exportUtils.js',
+  './js/reports.js',
   './icon/logo.png',
   './icon/Name.png',
   './assets/icons/logo.png',

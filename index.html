@@ -816,6 +816,12 @@
               <span class="admin-tab-icon">🏛️</span>
               <span class="admin-tab-label">Barangays</span>
             </button>
+            <button type="button" class="admin-tab-btn" data-tab="reports"
+              onclick="NutriApp.switchMHOSubTab('reports')"
+              title="Program reports with filters, data-quality checks and printable/PDF export">
+              <span class="admin-tab-icon">📊</span>
+              <span class="admin-tab-label">Reports</span>
+            </button>
             <button type="button" class="admin-tab-btn" data-tab="announcements"
               onclick="NutriApp.switchMHOSubTab('announcements')">
               <span class="admin-tab-icon">📢</span>
@@ -2349,6 +2355,13 @@
             <h1 class="bhw-greeting-title" id="bhw-greeting-title">Good morning, Reyes 👋</h1>
             <p class="bhw-greeting-sub" id="bhw-greeting-sub">Manguring Health Center, Zone 2, Calabanga - Monday,
               October 12, 2026</p>
+          </div>
+
+          <!-- Thesis AD 3.2.3: "Request correction from Health Worker" (shown only when there are open requests) -->
+          <div id="bhw-correction-requests-card"
+            style="display:none; background:#FFFBEB; border:1px solid #FCD34D; border-radius:12px; padding:0.85rem 1rem; margin-bottom:1rem;">
+            <div style="font-weight:800; color:#92400E; margin-bottom:0.25rem;">📨 Mga Hiling na Pagwawasto mula sa MHO (Correction Requests)</div>
+            <div id="bhw-correction-requests"></div>
           </div>
 
           <!-- Alert / Relay Announcements Banner (Warm Rust-Orange) -->
@@ -3885,6 +3898,79 @@
 
         <!-- Tab Pane 3: Submitted Reports Queue -->
         <div class="mho-tab-pane" data-tab="reports" style="display: none;">
+          <!-- Thesis AD 3.2.3 / UC-03: filtered program report, data quality, PDF/print export -->
+          <div class="card" style="margin-bottom: 1.25rem;">
+            <div class="card-header" style="flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <h2 class="card-title">📊 Program Report</h2>
+                <p class="card-subtitle">I-filter ayon sa petsa, barangay, health worker, edad at status, saka i-print o i-save bilang PDF.</p>
+              </div>
+              <div style="display:flex; gap:0.5rem; flex-wrap: wrap;">
+                <button class="btn btn-outline btn-sm" onclick="NutriReports.resetAdminFilters()">Reset Filters</button>
+                <button class="btn btn-outline btn-sm" onclick="NutriReports.exportAdminCSV()">Export CSV</button>
+                <button class="btn btn-primary btn-sm" onclick="NutriReports.printAdminReport()">🖨️ Print / Save as PDF</button>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:0.6rem; padding: 0 1rem 1rem;">
+              <div class="form-group" style="margin:0;"><label class="form-label">Mula (Date from)</label>
+                <input type="date" id="rpt-filter-from" class="form-control" onchange="NutriReports.renderAdminReports()"></div>
+              <div class="form-group" style="margin:0;"><label class="form-label">Hanggang (Date to)</label>
+                <input type="date" id="rpt-filter-to" class="form-control" onchange="NutriReports.renderAdminReports()"></div>
+              <div class="form-group" style="margin:0;"><label class="form-label">Barangay</label>
+                <select id="rpt-filter-barangay" class="form-select" onchange="NutriReports.renderAdminReports()"><option value="ALL">Lahat ng Barangay</option></select></div>
+              <div class="form-group" style="margin:0;"><label class="form-label">Health Worker</label>
+                <select id="rpt-filter-worker" class="form-select" onchange="NutriReports.renderAdminReports()"><option value="ALL">Lahat ng Health Worker</option></select></div>
+              <div class="form-group" style="margin:0;"><label class="form-label">Edad (Age group)</label>
+                <select id="rpt-filter-age" class="form-select" onchange="NutriReports.renderAdminReports()">
+                  <option value="ALL">Lahat ng edad</option>
+                  <option value="0-5">0–5 buwan</option>
+                  <option value="6-11">6–11 buwan</option>
+                  <option value="12-23">12–23 buwan</option>
+                  <option value="24-59">24–59 buwan</option>
+                  <option value="60+">60+ buwan</option>
+                </select></div>
+              <div class="form-group" style="margin:0;"><label class="form-label">Nutrition Status</label>
+                <select id="rpt-filter-status" class="form-select" onchange="NutriReports.renderAdminReports()">
+                  <option value="ALL">Lahat ng status</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Stunted">Stunted</option>
+                  <option value="Wasted">Wasted</option>
+                  <option value="Underweight">Underweight</option>
+                  <option value="At Risk">At Risk</option>
+                  <option value="Improved">Improved</option>
+                </select></div>
+              <div class="form-group" style="margin:0;"><label class="form-label">Follow-up</label>
+                <select id="rpt-filter-followup" class="form-select" onchange="NutriReports.renderAdminReports()">
+                  <option value="ALL">Lahat</option>
+                  <option value="scheduled">Naka-schedule</option>
+                  <option value="overdue">Overdue</option>
+                  <option value="none">Wala</option>
+                </select></div>
+            </div>
+            <div id="rpt-summary" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:0.6rem; padding: 0 1rem 1rem;"></div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Bata</th><th>Barangay</th><th>Health Worker</th><th>Sukat</th><th>Status</th><th>Huling Sukat</th><th>Follow-up</th>
+                  </tr>
+                </thead>
+                <tbody id="rpt-results-tbody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card" style="margin-bottom: 1.25rem;">
+            <div class="card-header" style="flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <h2 class="card-title">🩺 Data Quality Check</h2>
+                <p class="card-subtitle">Kulang na data, kakaibang halaga, overdue na follow-up at inactive na users. Magpadala ng correction request sa Health Worker.</p>
+              </div>
+              <div id="rpt-quality-counts"></div>
+            </div>
+            <div id="rpt-quality-list" style="max-height: 360px; overflow: auto;"></div>
+          </div>
+
           <div class="card">
             <div class="card-header">
               <div>
@@ -3963,6 +4049,8 @@
                 onclick="MHODashboard.filterContentModules('review')">Review</button>
               <button type="button" class="admin-content-pill-btn" data-filter="draft" id="pill-content-draft"
                 onclick="MHODashboard.filterContentModules('draft')">Draft</button>
+              <button type="button" class="admin-content-pill-btn" data-filter="archived" id="pill-content-archived"
+                onclick="MHODashboard.filterContentModules('archived')">Archived</button>
             </div>
 
             <!-- Modules List Container matching Screenshot -->
@@ -5111,14 +5199,29 @@
         <div class="modal-body">
           <div class="form-group">
             <label class="form-label">Select Barangay to Report:</label>
-            <select id="report-barangay-select" class="form-select" onchange="CHWModule.openReportModal()">
+            <select id="report-barangay-select" class="form-select" onchange="CHWModule.refreshReportPreview()">
               <option value="Barangay Manguiring">Barangay Manguiring</option>
             </select>
           </div>
 
+          <!-- Thesis AD 3.2.2: "Select report period or group of children" -->
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">Panahon ng Ulat (Report period):</label>
+              <input type="month" id="report-period-select" class="form-control" onchange="CHWModule.refreshReportPreview()">
+              <div style="font-size:0.72rem; color:var(--text-muted);">Iwanang blangko para sa lahat ng petsa</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Grupo ng mga Bata (Group):</label>
+              <select id="report-group-select" class="form-select" onchange="CHWModule.refreshReportPreview()">
+                <option value="ALL">Lahat ng bata sa barangay</option>
+              </select>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label">Submitting Health Worker / BNS Name:</label>
-            <input type="text" name="reportChwName" class="form-control" value="Sister Teresa Lim, BNS" required>
+            <input type="text" name="reportChwName" id="report-chw-name" class="form-control" value="" required>
           </div>
 
           <!-- Automated Summary Display -->
@@ -5146,6 +5249,7 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-outline"
             onclick="NutriApp.closeModal('modal-submit-report')">Cancel</button>
+          <button type="button" class="btn btn-outline" onclick="CHWModule.printReport()">🖨️ Print / Save as PDF</button>
           <button type="submit" class="btn btn-accent">Submit Official Report</button>
         </div>
       </form>
@@ -6664,13 +6768,14 @@
   <script src="js/security.js?v=1.0"></script>
   <script src="js/data.js?v=5.9"></script>
   <script src="js/exportUtils.js?v=6.2"></script>
-  <script src="js/healthWorker.js?v=6.1"></script>
-  <script src="js/parentLearning.js?v=6.6"></script>
-  <script src="js/mhoDashboard.js?v=6.0"></script>
+  <script src="js/reports.js?v=1.0"></script>
+  <script src="js/healthWorker.js?v=6.2"></script>
+  <script src="js/parentLearning.js?v=6.7"></script>
+  <script src="js/mhoDashboard.js?v=6.2"></script>
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=6.0"></script>
   <script src="js/mobileUX.js?v=6.3"></script>
-  <script src="js/app.js?v=10.3"></script>
+  <script src="js/app.js?v=10.4"></script>
 </body>
 
 </html>

@@ -733,6 +733,14 @@ const NutriApp = {
       if (typeof InactivityManager !== 'undefined') {
         InactivityManager.resetTimer();
       }
+      // Account was given a temporary password by the Administrator: ask for a new one
+      const account = NutriStorage.getUsers().find(u => u.id === result.user.id);
+      if (account && account.mustChangePassword) {
+        setTimeout(() => {
+          this.openAccountSettingsModal();
+          this.showToast('🔑 Pansamantala ang iyong password. Maglagay ng bagong password. / Your password is temporary — please set a new one.', 'warning');
+        }, 400);
+      }
       const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
       const welcome = isFil
         ? `👋 Maligayang pagdating, ${result.user.name}! Naka-log in na.`
@@ -1560,6 +1568,11 @@ const NutriApp = {
       MHODashboard.renderUsersTable();
     } else if (targetTab === 'audit' && window.MHODashboard) {
       MHODashboard.renderAuditLogsTable();
+    } else if (targetTab === 'reports') {
+      if (window.NutriReports) NutriReports.renderAdminReports();
+      if (window.MHODashboard && typeof MHODashboard.renderIncomingReports === 'function') {
+        MHODashboard.renderIncomingReports();
+      }
     } else if (targetTab === 'announcements' && window.AnnouncementsModule) {
       if (typeof AnnouncementsModule.showListView === 'function') {
         AnnouncementsModule.showListView();
@@ -1744,7 +1757,10 @@ const NutriApp = {
 
     user.name = name;
     user.email = email;
-    if (pass) user.password = pass; // hashed by NutriStorage.updateUser
+    if (pass) {
+      user.password = pass; // hashed by NutriStorage.updateUser
+      user.mustChangePassword = false;
+    }
     user.barangay = barangay;
     user.initials = NutriStorage.calculateInitials(name);
 

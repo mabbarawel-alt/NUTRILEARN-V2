@@ -529,7 +529,8 @@ const MHODashboard = {
   saveNutritionModules(modules) {
     localStorage.setItem('nutrilearn_content_modules_v5', JSON.stringify(modules));
     localStorage.setItem('nutrilearn_parent_modules_data_v3', JSON.stringify(modules));
-    if (window.ParentModule) {
+    // ParentModule is a top-level const, so it is not on window; check it directly
+    if (typeof ParentModule !== 'undefined') {
       ParentModule.nutritionModules = modules;
       if (typeof ParentModule.renderModuleCards === 'function') {
         ParentModule.renderModuleCards();
@@ -603,6 +604,15 @@ const MHODashboard = {
                 Publish
               </button>
             ` : ''}
+            ${status === 'archived' ? `
+              <button type="button" class="btn-module-edit" onclick="MHODashboard.setModuleArchived('${m.id}', false)" title="Restore this module as a draft">
+                Restore
+              </button>
+            ` : `
+              <button type="button" class="btn-module-edit" onclick="MHODashboard.setModuleArchived('${m.id}', true)" title="Archive: hide from parents without deleting">
+                Archive
+              </button>
+            `}
           </div>
         </div>
       `;
@@ -1613,6 +1623,9 @@ const MHODashboard = {
               <button type="button" class="btn-user-action ${toggleBtnClass}" onclick="MHODashboard.toggleUserActiveStatus('${u.id}')">
                 ${toggleBtnText}
               </button>
+              <button type="button" class="btn-user-action btn-user-edit" onclick="MHODashboard.resetUserPassword('${u.id}')" title="Issue a temporary password">
+                Reset Password
+              </button>
             </div>
           </td>
         </tr>
@@ -1692,6 +1705,42 @@ const MHODashboard = {
       this.renderUsersTable();
       NutriApp.showToast(`User ${name} updated successfully!`, 'success');
     }
+  },
+
+  // Admin Activity Diagram 3.2.3: "Create account, assign role, reset password, or deactivate"
+  resetUserPassword(userId) {
+    const user = NutriStorage.getUsers().find(u => String(u.id) === String(userId));
+    if (!user) return;
+    if (!confirm(`Reset the password for ${user.name}? Their current password will stop working.`)) return;
+
+    // Readable temporary password (no 0/O/1/l look-alikes)
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789';
+    const bytes = new Uint8Array(10);
+    window.crypto.getRandomValues(bytes);
+    const temp = Array.from(bytes, b => chars[b % chars.length]).join('');
+
+    NutriStorage.updateUser({ id: user.id, email: user.email, password: temp, mustChangePassword: true });
+    NutriStorage.logAudit('Password Reset by Administrator', 'Security & Access',
+      `Temporary password issued for ${user.name} (${user.role}); user must change it at next sign-in`);
+
+    // Shown once; only the salted hash is stored
+    alert(`Temporary password for ${user.name}:\n\n${temp}\n\nGive this to the user in person. It is shown only once, and they will be asked to change it after signing in.`);
+    this.renderUsersTable();
+  },
+
+  // Admin Activity Diagram 3.2.3: "Create, edit, archive, or publish learning module"
+  setModuleArchived(moduleId, archived) {
+    const modules = this.getNutritionModules();
+    const mod = modules.find(m => m.id === moduleId);
+    if (!mod) return;
+    mod.status = archived ? 'archived' : 'draft';
+    this.saveNutritionModules(modules);
+    NutriStorage.logAudit(archived ? 'Module Archived' : 'Module Restored', 'Content Management',
+      `${mod.title} ${archived ? 'archived (hidden from parents)' : 'restored as draft'}`);
+    NutriApp.showToast(archived
+      ? `📦 "${mod.title}" archived. Parents no longer see it.`
+      : `↩️ "${mod.title}" restored as a draft.`, 'success');
+    this.renderContentManagerModules();
   },
 
   handleCreateUserAdmin(form) {
