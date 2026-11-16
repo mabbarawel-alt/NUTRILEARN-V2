@@ -4750,8 +4750,22 @@
               </select>
             </div>
             <div class="form-group">
-              <label class="form-label">Petsa ng Huling Purga (Deworming Date):</label>
+              <label class="form-label">Petsa ng Huling Purga (Deworming Date): <span style="color:#DC2626;">*</span></label>
               <input type="date" name="childDewormingDate" class="form-control">
+            </div>
+          </div>
+
+          <!-- Thesis Activity Diagram 3.2.2: guidance + scheduled follow-up for children needing support -->
+          <div class="grid-2">
+            <div class="form-group">
+              <label class="form-label">📅 Susunod na Follow-up (kung kailangan ng suporta):</label>
+              <input type="date" id="add-child-followup-date" name="childFollowUpDate" class="form-control"
+                onfocus="CHWModule.suggestFollowUpDate('add-child-followup-date')">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Gabay na Ibinigay sa Magulang (Guidance):</label>
+              <input type="text" name="childFollowUpGuidance" class="form-control"
+                placeholder="e.g. Dagdagan ng itlog at malunggay araw-araw">
             </div>
           </div>
 
@@ -4760,6 +4774,9 @@
             <textarea name="childNotes" class="form-control" rows="2"
               placeholder="e.g. Family has low access to animal protein; advised on monggo and malunggay."></textarea>
           </div>
+
+          <div id="add-child-errors" role="alert"
+            style="display:none; background:#FEF2F2; border:1px solid #FCA5A5; color:#991B1B; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.82rem;"></div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-outline" onclick="NutriApp.closeModal('modal-add-child')">Cancel</button>
@@ -4845,10 +4862,28 @@
             <input type="date" id="edit-child-deworming-date" class="form-control">
           </div>
         </div>
+        <!-- Thesis Activity Diagram 3.2.2: guidance + scheduled follow-up for children needing support -->
+        <div class="grid-2">
+          <div class="form-group">
+            <label class="form-label">📅 Susunod na Follow-up:</label>
+            <input type="date" id="edit-child-followup-date" class="form-control">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gabay na Ibinigay sa Magulang (Guidance):</label>
+            <input type="text" id="edit-child-followup-guidance" class="form-control"
+              placeholder="e.g. Bumalik para timbangin pagkatapos ng 30 araw">
+          </div>
+        </div>
         <div class="form-group">
           <label class="form-label">Follow-up Notes:</label>
           <textarea id="edit-child-notes" class="form-control" rows="2"></textarea>
         </div>
+        <div class="form-group">
+          <label class="form-label">📈 Kasaysayan ng Sukat at Follow-up (Growth &amp; Follow-up History):</label>
+          <div id="edit-child-history" style="max-height: 180px; overflow:auto; background:#F7FAF8; border-radius:8px; padding:0.5rem 0.6rem; font-size:0.8rem;"></div>
+        </div>
+        <div id="edit-child-errors" role="alert"
+          style="display:none; background:#FEF2F2; border:1px solid #FCA5A5; color:#991B1B; border-radius:8px; padding:0.6rem 0.8rem; font-size:0.82rem;"></div>
       </div>
       <div class="modal-footer">
         <button class="btn btn-outline" onclick="NutriApp.closeModal('modal-edit-child')">Cancel</button>
@@ -6628,14 +6663,14 @@
   <script src="js/apiClient.js?v=6.0"></script>
   <script src="js/security.js?v=1.0"></script>
   <script src="js/data.js?v=5.9"></script>
-  <script src="js/exportUtils.js?v=6.0"></script>
-  <script src="js/healthWorker.js?v=5.9"></script>
-  <script src="js/parentLearning.js?v=6.4"></script>
+  <script src="js/exportUtils.js?v=6.2"></script>
+  <script src="js/healthWorker.js?v=6.1"></script>
+  <script src="js/parentLearning.js?v=6.6"></script>
   <script src="js/mhoDashboard.js?v=6.0"></script>
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=6.0"></script>
   <script src="js/mobileUX.js?v=6.3"></script>
-  <script src="js/app.js?v=10.2"></script>
+  <script src="js/app.js?v=10.3"></script>
 </body>
 
 </html>

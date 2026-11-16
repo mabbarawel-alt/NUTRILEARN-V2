@@ -314,6 +314,7 @@ const CHWModule = {
           </td>
           <td>
             <div style="font-size: 0.8rem; color: var(--text-muted);">${c.lastAssessed || 'Recent'}</div>
+            ${this.renderFollowUpBadge(c)}
           </td>
           <td>
             <div class="table-actions">
@@ -520,6 +521,18 @@ const CHWModule = {
     document.getElementById('edit-child-weight').value = child.weightKg;
     document.getElementById('edit-child-muac').value = child.muacMm;
     document.getElementById('edit-child-notes').value = child.notes || '';
+    const fuDate = document.getElementById('edit-child-followup-date');
+    const fuGuide = document.getElementById('edit-child-followup-guidance');
+    if (fuDate) fuDate.value = child.nextFollowUpDate || '';
+    if (fuGuide) {
+      const open = (child.followUps || []).find(f => f.status === 'Scheduled');
+      fuGuide.value = open ? open.guidance : '';
+    }
+    if (!child.nextFollowUpDate && this.needsFollowUp(child.status, child.improved)) {
+      this.suggestFollowUpDate('edit-child-followup-date');
+    }
+    this.renderGrowthHistoryList(child);
+    this.showFormErrors('edit-child-errors', []);
 
     const birthDateEl = document.getElementById('edit-child-birthdate');
     if (birthDateEl) birthDateEl.value = child.birthDate || '';
@@ -534,20 +547,204 @@ const CHWModule = {
     NutriApp.openModal('modal-edit-child');
   },
 
+  // ==========================================================================
+  // RECORD VALIDATION, GROWTH HISTORY & FOLLOW-UP
+  // Thesis Activity Diagram 3.2.2 / UC-01: "Required fields complete and values
+  // valid? → No → inline warning and block submission", "System saves record and
+  // updates follow-up history", "Child needs additional support? → Provide
+  // guidance and schedule follow-up".
+  // ==========================================================================
+
+  // Children whose classification needs a scheduled follow-up visit
+  needsFollowUp(status, improved) {
+    if (improved) return false;
+    return !['Normal', 'Improved'].includes(status);
+  },
+
+  // Local calendar date (YYYY-MM-DD); toISOString() would give the UTC date,
+  // which is a day behind in the Philippines before 8:00 AM.
+  localISO(d) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+  },
+
+  todayISO() {
+    return this.localISO(new Date());
+  },
+
+  addDaysISO(days) {
+    const d = new Date();
+    d.setDate(d.getDate() + days);
+    return this.localISO(d);
+  },
+
+  // Returns a list of human-readable problems; empty list means the record is valid
+  validateChildRecord(r) {
+    const errors = [];
+    const today = this.todayISO();
+    if (r.name !== undefined && !r.name) errors.push('Pangalan ng bata (Child name) ay kailangan.');
+    if (r.birthDate !== undefined) {
+      if (!r.birthDate) {
+        errors.push('Petsa ng kapanganakan (Date of birth) ay kailangan.');
+      } else if (r.birthDate > today) {
+        errors.push('Hindi maaaring nasa hinaharap ang petsa ng kapanganakan.');
+      } else {
+        const months = (new Date() - new Date(r.birthDate)) / (1000 * 60 * 60 * 24 * 30.44);
+        if (months > 72) errors.push('Ang petsa ng kapanganakan ay higit sa 6 na taon na ang nakalipas — pakisuri (program covers under-5 children).');
+      }
+    }
+    if (isNaN(r.ageMonths) || r.ageMonths < 0 || r.ageMonths > 72) errors.push('Edad (months) ay dapat 0 hanggang 72.');
+    if (isNaN(r.height)) errors.push('Taas (Height) ay kailangan.');
+    else if (r.height < 40 || r.height > 130) errors.push(`Hindi kapani-paniwala ang taas na ${r.height} cm (dapat 40–130 cm).`);
+    if (isNaN(r.weight)) errors.push('Timbang (Weight) ay kailangan.');
+    else if (r.weight < 1.5 || r.weight > 35) errors.push(`Hindi kapani-paniwala ang timbang na ${r.weight} kg (dapat 1.5–35 kg).`);
+    if (!isNaN(r.muac) && r.muac !== 0 && (r.muac < 80 || r.muac > 220)) errors.push(`Hindi kapani-paniwala ang MUAC na ${r.muac} mm (dapat 80–220 mm).`);
+    if (!r.dewormingStatus) errors.push('Katayuan sa pagpupurga (Deworming status) ay kailangan.');
+    if (r.dewormingStatus === 'Up to Date') {
+      if (!r.dewormingDate) errors.push('Ilagay ang petsa ng huling purga kapag "Up to Date".');
+      else if (r.dewormingDate > today) errors.push('Hindi maaaring nasa hinaharap ang petsa ng huling purga.');
+    }
+    if (r.requiresFollowUp) {
+      if (!r.followUpDate) errors.push('Kailangan ng follow-up date dahil ang bata ay nangangailangan ng karagdagang suporta.');
+      else if (r.followUpDate < today) errors.push('Ang follow-up date ay dapat ngayon o sa hinaharap.');
+    }
+    return errors;
+  },
+
+  // Inline warning box inside the form (blocks submission until corrected)
+  showFormErrors(containerId, errors) {
+    const box = document.getElementById(containerId);
+    if (!box) {
+      if (errors.length) NutriApp.showToast('⚠️ ' + errors[0], 'warning');
+      return;
+    }
+    if (!errors.length) {
+      box.style.display = 'none';
+      box.innerHTML = '';
+      return;
+    }
+    box.innerHTML = `<strong>⚠️ Pakiayos bago i-save:</strong><ul style="margin: 0.35rem 0 0 1.1rem; padding: 0;">${errors.map(e => `<li>${e}</li>`).join('')}</ul>`;
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  },
+
+  // Append a dated measurement (ERD: GROWTH_RECORD) and deworming entry
+  // (ERD: DEWORMING_RECORD) instead of overwriting the previous values.
+  appendGrowthHistory(child, recordedBy) {
+    const date = this.todayISO();
+    child.growthRecords = child.growthRecords || [];
+    child.growthRecords = child.growthRecords.filter(g => g.recordDate !== date);
+    child.growthRecords.unshift({
+      id: 'gr-' + Date.now(),
+      recordDate: date,
+      weightKg: child.weightKg,
+      heightCm: child.heightCm,
+      muacMm: child.muacMm,
+      status: child.status,
+      recordedBy: recordedBy || 'Barangay Health Worker'
+    });
+
+    if (child.dewormingDate) {
+      child.dewormingRecords = child.dewormingRecords || [];
+      if (!child.dewormingRecords.some(d => d.recordDate === child.dewormingDate)) {
+        child.dewormingRecords.unshift({
+          id: 'dw-' + Date.now(),
+          recordDate: child.dewormingDate,
+          notes: child.dewormingStatus || ''
+        });
+      }
+    }
+
+    // Keep the parent's weight tracker in step with BHW measurements
+    try {
+      const key = 'nutrilearn_weight_history_' + child.id;
+      const history = JSON.parse(localStorage.getItem(key) || '[]').filter(h => h.date !== date);
+      history.unshift({ id: 'wh-' + Date.now(), date, weight: child.weightKg, note: 'Sinukat ng BHW (Operation Timbang)' });
+      localStorage.setItem(key, JSON.stringify(history));
+    } catch (e) {}
+  },
+
+  // Record a scheduled follow-up with the guidance given to the parent
+  scheduleFollowUp(child, followUpDate, guidance) {
+    if (!followUpDate) return;
+    child.followUps = child.followUps || [];
+    // Any earlier open follow-up is considered done once a new visit is recorded
+    child.followUps.forEach(f => { if (f.status === 'Scheduled') { f.status = 'Done'; f.completedDate = this.todayISO(); } });
+    child.followUps.unshift({
+      id: 'fu-' + Date.now(),
+      scheduledDate: followUpDate,
+      guidance: guidance || '',
+      status: 'Scheduled',
+      createdDate: this.todayISO(),
+      createdBy: (NutriStorage.getCurrentUser() || {}).name || 'Barangay Health Worker'
+    });
+    child.nextFollowUpDate = followUpDate;
+  },
+
+  renderFollowUpBadge(c) {
+    if (!c.nextFollowUpDate) return '';
+    const overdue = c.nextFollowUpDate < this.todayISO();
+    const style = overdue
+      ? 'background:#FEE2E2; color:#B91C1C;'
+      : 'background:#DCFCE7; color:#166534;';
+    return `<div style="margin-top:3px;"><span class="badge" style="${style} font-size:0.69rem; padding:1px 6px;">
+      📅 ${overdue ? 'Overdue follow-up' : 'Follow-up'}: ${c.nextFollowUpDate}</span></div>`;
+  },
+
+  // Measurement & follow-up history shown inside the Update Child modal
+  renderGrowthHistoryList(child) {
+    const box = document.getElementById('edit-child-history');
+    if (!box) return;
+    const growth = (child.growthRecords || []).slice(0, 6);
+    const followUps = (child.followUps || []).slice(0, 4);
+    if (!growth.length && !followUps.length) {
+      box.innerHTML = '<div style="color: var(--text-muted);">Wala pang naitalang kasaysayan (No history yet).</div>';
+      return;
+    }
+    const growthRows = growth.map(g => `
+      <tr><td>${g.recordDate}</td><td>${g.heightCm} cm</td><td>${g.weightKg} kg</td><td>${g.muacMm || '—'} mm</td><td>${g.status || ''}</td></tr>`).join('');
+    const fuRows = followUps.map(f => `
+      <li><strong>${f.scheduledDate}</strong> — ${f.status}${f.guidance ? ': ' + f.guidance : ''}</li>`).join('');
+    box.innerHTML = `
+      ${growth.length ? `<table style="width:100%; font-size:0.76rem; border-collapse:collapse;">
+        <thead><tr style="text-align:left; color:var(--text-muted);"><th>Petsa</th><th>Taas</th><th>Timbang</th><th>MUAC</th><th>Status</th></tr></thead>
+        <tbody>${growthRows}</tbody></table>` : ''}
+      ${followUps.length ? `<div style="margin-top:0.4rem; font-weight:600;">Follow-ups:</div><ul style="margin:0.2rem 0 0 1.1rem; padding:0;">${fuRows}</ul>` : ''}`;
+  },
+
+  // Prefill the follow-up date when the live classification shows the child needs support
+  suggestFollowUpDate(inputId) {
+    const input = document.getElementById(inputId);
+    if (input && !input.value) input.value = this.addDaysISO(30);
+  },
+
   // Save new child
   handleSaveChild(form) {
     const name = form.elements['childName'].value.trim();
     const barangay = form.elements['childBarangay'].value;
     const birthDate = form.elements['childBirthDate'] ? form.elements['childBirthDate'].value : '';
+    const age = parseInt(form.elements['childAge'].value, 10);
+    const sex = form.elements['childSex'].value;
+    const height = parseFloat(form.elements['childHeight'].value);
+    const weight = parseFloat(form.elements['childWeight'].value);
+    const muac = parseInt(form.elements['childMuac'].value, 10);
+    const dewormingStatus = form.elements['childDewormingStatus'] ? form.elements['childDewormingStatus'].value : '';
+    const dewormingDate = form.elements['childDewormingDate'] ? form.elements['childDewormingDate'].value : '';
+    const dewormingNextDate = form.elements['childDewormingNextDate'] ? form.elements['childDewormingNextDate'].value : '';
+    const followUpDate = form.elements['childFollowUpDate'] ? form.elements['childFollowUpDate'].value : '';
+    const followUpGuidance = form.elements['childFollowUpGuidance'] ? form.elements['childFollowUpGuidance'].value.trim() : '';
 
-    // Validation & Duplicate Checking (Thesis UC-01 Step 4 & Appendix D interview pain point)
-    if (birthDate) {
-      const bDate = new Date(birthDate);
-      if (bDate > new Date()) {
-        NutriApp.showToast('⚠️ Maling Petsa: Hindi maaaring sa hinaharap ang petsa ng kapanganakan ng bata.', 'warning');
-        return;
-      }
-    }
+    // Validation (Thesis UC-01 Step 4): required fields + plausible values, shown inline
+    const classification = (!isNaN(height) && !isNaN(weight))
+      ? this.calculateNutritionalStatus(age, sex, height, weight, muac)
+      : { overallStatus: 'Normal' };
+    const errors = this.validateChildRecord({
+      name, birthDate, ageMonths: age, height, weight, muac, dewormingStatus, dewormingDate,
+      requiresFollowUp: this.needsFollowUp(classification.overallStatus, false),
+      followUpDate
+    });
+    this.showFormErrors('add-child-errors', errors);
+    if (errors.length) return;
 
     const existingChildren = NutriStorage.getChildren();
     const isDuplicate = existingChildren.some(c => 
@@ -556,20 +753,9 @@ const CHWModule = {
     );
 
     if (isDuplicate) {
-      NutriApp.showToast(`⚠️ May umiiral nang talaan para kay "${name}" sa ${barangay}. Mangyaring buksan ang umiiral na rekord upang maiwasan ang duplicate entries (Operation Timbang standards).`, 'warning');
+      this.showFormErrors('add-child-errors', [`May umiiral nang talaan para kay "${name}" sa ${barangay}. Buksan ang umiiral na rekord upang maiwasan ang duplicate entries (Operation Timbang standards).`]);
       return;
     }
-
-    const age = parseInt(form.elements['childAge'].value, 10);
-    const sex = form.elements['childSex'].value;
-    const height = parseFloat(form.elements['childHeight'].value);
-    const weight = parseFloat(form.elements['childWeight'].value);
-    const muac = parseInt(form.elements['childMuac'].value, 10);
-    const dewormingStatus = form.elements['childDewormingStatus'] ? form.elements['childDewormingStatus'].value : 'Up to Date';
-    const dewormingDate = form.elements['childDewormingDate'] ? form.elements['childDewormingDate'].value : new Date().toISOString().split('T')[0];
-    const dewormingNextDate = form.elements['childDewormingNextDate'] ? form.elements['childDewormingNextDate'].value : '';
-
-    const classification = this.calculateNutritionalStatus(age, sex, height, weight, muac);
 
     const newChild = {
       name: name,
@@ -598,7 +784,12 @@ const CHWModule = {
       notes: form.elements['childNotes'].value.trim()
     };
 
+    newChild.id = 'ch-' + Date.now();
+    this.appendGrowthHistory(newChild);
+    this.scheduleFollowUp(newChild, followUpDate, followUpGuidance);
+
     NutriStorage.addChild(newChild);
+    this.showFormErrors('add-child-errors', []);
     form.reset();
     NutriApp.closeModal('modal-add-child');
     NutriApp.showToast(`Child record for ${newChild.name} successfully registered.`, 'success');
@@ -622,15 +813,30 @@ const CHWModule = {
     const notes = document.getElementById('edit-child-notes').value;
 
     const birthDateInput = document.getElementById('edit-child-birthdate');
-    if (birthDateInput && birthDateInput.value) {
-      child.birthDate = birthDateInput.value;
-    }
+    const birthDate = birthDateInput ? birthDateInput.value : '';
 
-    const dewormStatus = document.getElementById('edit-child-deworming-status')?.value || 'Up to Date';
+    const dewormStatus = document.getElementById('edit-child-deworming-status')?.value || '';
     const dewormDate = document.getElementById('edit-child-deworming-date')?.value || '';
     const dewormNext = document.getElementById('edit-child-deworming-next-date')?.value || '';
+    const followUpDate = document.getElementById('edit-child-followup-date')?.value || '';
+    const followUpGuidance = (document.getElementById('edit-child-followup-guidance')?.value || '').trim();
 
-    const classification = this.calculateNutritionalStatus(age, child.sex, height, weight, muac);
+    const classification = (!isNaN(height) && !isNaN(weight))
+      ? this.calculateNutritionalStatus(age, child.sex, height, weight, muac)
+      : { overallStatus: child.status };
+
+    // Validation (Thesis UC-01 Step 4) — inline warning, record is not saved
+    const errors = this.validateChildRecord({
+      birthDate: birthDate || undefined,
+      ageMonths: age, height, weight, muac,
+      dewormingStatus: dewormStatus, dewormingDate: dewormDate,
+      requiresFollowUp: this.needsFollowUp(classification.overallStatus, child.improved),
+      followUpDate
+    });
+    this.showFormErrors('edit-child-errors', errors);
+    if (errors.length) return;
+
+    if (birthDate) child.birthDate = birthDate;
 
     child.ageMonths = age;
     child.heightCm = height;
@@ -647,14 +853,19 @@ const CHWModule = {
     child.notes = notes;
     child.lastAssessed = new Date().toISOString().split('T')[0];
 
-    NutriStorage.saveChildren(children);
+    // Keep the measurement history instead of overwriting it (ERD: GROWTH_RECORD)
+    this.appendGrowthHistory(child, (NutriStorage.getCurrentUser() || {}).name);
+    if (followUpDate && followUpDate !== child.nextFollowUpDate) {
+      this.scheduleFollowUp(child, followUpDate, followUpGuidance);
+    } else if (!followUpDate && child.nextFollowUpDate) {
+      // Follow-up cleared (child no longer needs support): close the open visit
+      (child.followUps || []).forEach(f => { if (f.status === 'Scheduled') { f.status = 'Done'; f.completedDate = this.todayISO(); } });
+      child.nextFollowUpDate = '';
+    }
 
-    NutriStorage.logAudit(
-      'Child Measurements & Deworming Updated',
-      'Field Health Record',
-      `BHW updated measurements for ${child.name}: Height ${child.heightCm}cm, Weight ${child.weightKg}kg, MUAC ${child.muacMm}mm, Deworming: ${child.dewormingStatus}`,
-      { name: 'Barangay Health Worker', role: 'chw' }
-    );
+    // updateChild saves locally, writes the audit trail and syncs to the backend
+    NutriStorage.updateChild(child);
+    this.showFormErrors('edit-child-errors', []);
 
     NutriApp.closeModal('modal-edit-child');
     NutriApp.showToast(`Updated health measurements for ${child.name}.`, 'success');

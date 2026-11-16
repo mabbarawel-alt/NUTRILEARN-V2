@@ -1208,7 +1208,46 @@ const NutriApp = {
   },
 
   // Switch Stakeholder Role & Isolate Features
+  // Role the signed-in account is actually allowed to use. Read from the stored
+  // account record (not the session copy) so editing the session cannot grant access.
+  getAuthorizedRole() {
+    const current = NutriStorage.getCurrentUser();
+    if (!current) return null;
+    const account = NutriStorage.getUsers().find(u =>
+      (current.id && u.id === current.id) ||
+      (current.email && u.email && u.email.toLowerCase() === current.email.toLowerCase()));
+    if (account && !NutriStorage.isUserActive(account)) return null;
+    return (account && account.role) || current.role || null;
+  },
+
+  // Thesis Activity Diagram 3.2.3: "Role authorized? → No → System denies access"
+  isRoleAllowed(role) {
+    const allowed = this.getAuthorizedRole();
+    if (!allowed) return false;
+    if (role === allowed) return true;
+    return role === 'chw' && allowed === 'collector'; // Data Collector uses the BHW portal
+  },
+
   switchRole(role, targetSubTab = null) {
+    if (!this.isRoleAllowed(role)) {
+      const allowed = this.getAuthorizedRole();
+      const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
+      NutriStorage.logAudit(
+        'Access Denied',
+        'Security & Access',
+        `Blocked attempt to open the "${role}" portal (account role: ${allowed || 'not signed in'})`
+      );
+      this.showToast(isFil
+        ? '⛔ Walang pahintulot: hindi para sa iyong account ang portal na ito.'
+        : '⛔ Access denied: this portal is not available to your account.', 'warning');
+      if (!allowed) {
+        NutriStorage.setCurrentUser(null);
+        this.showStartupScreen();
+        return;
+      }
+      role = allowed;
+      targetSubTab = null;
+    }
     this.currentRole = role;
 
     // Persist active role

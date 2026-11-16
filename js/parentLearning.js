@@ -396,13 +396,51 @@ const ParentModule = {
   },
 
   // Render Parent Learning Modules Cards (2x2 Grid)
+  // Module IDs a Health Worker assigned to this parent: directly on the child
+  // record, or through a parent group the child is enrolled in (ERD: ASSIGNED_LESSON).
+  getAssignedModuleIds() {
+    const user = NutriStorage.getCurrentUser();
+    const children = this.getChildrenForParent(user);
+    const childIds = new Set(children.map(c => String(c.id)));
+    const ids = new Set();
+    children.forEach(c => (c.assignedModules || []).forEach(id => ids.add(id)));
+    (NutriStorage.getGroups() || []).forEach(g => {
+      const enrolled = (g.enrolledChildIds || []).map(String);
+      if (enrolled.some(id => childIds.has(id))) {
+        (g.assignedModules || []).forEach(id => ids.add(id));
+      }
+    });
+    // Older records use positional IDs ("mod-1" … "mod-5"). Once the Administrator
+    // publishes modules with named IDs, map "mod-N" to the N-th published module.
+    const known = new Set(this.nutritionModules.map(m => m.id));
+    const resolved = new Set();
+    ids.forEach(id => {
+      const legacy = /^mod-(\d+)$/.exec(id);
+      if (!known.has(id) && legacy && this.nutritionModules[legacy[1] - 1]) {
+        resolved.add(this.nutritionModules[legacy[1] - 1].id);
+      } else {
+        resolved.add(id);
+      }
+    });
+    return resolved;
+  },
+
   renderModuleCards() {
     const container = document.getElementById('parent-modules-container');
     if (!container) return;
 
     const isFil = window.NutriI18n && NutriI18n.currentLang === 'fil';
 
-    container.innerHTML = this.nutritionModules.map(mod => {
+    // Thesis Activity Diagram 3.2.1: "Parent selects assigned lesson".
+    // Assigned modules come first and are labelled; the rest stay available
+    // as optional self-paced lessons (Chapter 2.1).
+    const assignedIds = this.getAssignedModuleIds();
+    const assigned = this.nutritionModules.filter(m => assignedIds.has(m.id));
+    const others = this.nutritionModules.filter(m => !assignedIds.has(m.id));
+    const sectionTitle = (text) =>
+      `<div class="module-section-heading" style="grid-column: 1 / -1; font-weight: 700; color: #14532D; margin: 0.5rem 0 0;">${text}</div>`;
+
+    const renderCard = (mod) => {
       const completedCount = mod.lessons.filter(l => l.completed).length;
       const totalCount = mod.lessons.length;
       const pct = Math.round((completedCount / totalCount) * 100);
@@ -431,11 +469,16 @@ const ParentModule = {
       const lessonsLabel = isFil ? `${totalCount} aralin` : `${totalCount} lessons`;
       const pctLabel = isFil ? `${pct}% tapos na` : `${pct}% complete`;
 
+      const assignedBadge = assignedIds.has(mod.id)
+        ? `<span class="module-status-badge" style="left: auto; right: 8px; background: #14532D; color: #FFFFFF;">${isFil ? '📌 Itinalaga ng BHW' : '📌 Assigned by BHW'}</span>`
+        : '';
+
       return `
         <div class="nutrition-module-card" onclick="ParentModule.openModuleDrawer('${mod.id}')">
           <div class="module-img-container">
             <img src="${mod.image || 'assets/images/module-malnutrition.jpg'}" alt="${mod.title}" class="module-card-img" loading="lazy" onerror="this.src='assets/images/module-malnutrition.jpg'">
             ${statusBadge}
+            ${assignedBadge}
           </div>
           <div class="module-card-content">
             <div class="module-card-title">${mod.title}</div>
@@ -455,7 +498,18 @@ const ParentModule = {
           </div>
         </div>
       `;
-    }).join('');
+    };
+
+    if (assigned.length === 0) {
+      container.innerHTML = this.nutritionModules.map(renderCard).join('');
+      return;
+    }
+    container.innerHTML =
+      sectionTitle(isFil ? '📌 Mga Aralin na Itinalaga ng Iyong Health Worker' : '📌 Lessons Assigned by Your Health Worker') +
+      assigned.map(renderCard).join('') +
+      (others.length
+        ? sectionTitle(isFil ? '📚 Iba Pang Aralin (Opsyonal)' : '📚 Other Lessons (Optional)') + others.map(renderCard).join('')
+        : '');
   },
 
   // Open the interactive module lesson accordion drawer (Screenshot 2)
@@ -466,6 +520,8 @@ const ParentModule = {
       localStorage.setItem('nutrilearn_active_module', moduleId);
     } catch (e) {}
     const mod = this.nutritionModules.find(m => m.id === moduleId) || this.nutritionModules[0];
+    // Activity Diagram 3.2.1: "Parent studies lesson; system logs lesson access"
+    if (mod) NutriStorage.logLessonAccess(mod.id, null, mod.title);
     const drawer = document.getElementById('parent-module-lesson-drawer');
     const grid = document.getElementById('parent-modules-container');
     const heading = document.getElementById('parent-modules-grid-heading');
@@ -763,6 +819,10 @@ const ParentModule = {
       item.classList.add('active');
       body.style.display = 'block';
       if (arrow) arrow.textContent = '▲';
+      // Opening a lesson counts as accessing it (Activity Diagram 3.2.1)
+      const mod = this.nutritionModules.find(m => m.id === moduleId);
+      const lesson = mod && mod.lessons[index];
+      NutriStorage.logLessonAccess(moduleId, index, lesson ? lesson.title : '');
     }
   },
 

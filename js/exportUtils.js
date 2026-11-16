@@ -86,7 +86,10 @@ const NutriStorage = {
     // Initialize registered users array with seed users if not already present or missing seed users
     const currentUsers = localStorage.getItem(this.USERS_KEY);
     if (!currentUsers || !currentUsers.includes('Nurse Ana Reyes')) {
-      localStorage.setItem(this.USERS_KEY, JSON.stringify(NUTRI_DATA.initialUsers || []));
+      // Seed accounts live under WHO_STANDARDS in data.js (historical placement)
+      const seedUsers = NUTRI_DATA.initialUsers ||
+        (typeof WHO_STANDARDS !== 'undefined' && WHO_STANDARDS.initialUsers) || [];
+      localStorage.setItem(this.USERS_KEY, JSON.stringify(seedUsers));
     }
 
     // Initialize "Try It at Home" self-reported practical submissions
@@ -175,6 +178,43 @@ const NutriStorage = {
       console.error('Error adding parent group item:', e);
       return null;
     }
+  },
+
+  // ==========================================================================
+  // LESSON ACCESS LOG (Thesis Activity Diagram 3.2.1: "system logs lesson access")
+  // ==========================================================================
+  LESSON_ACCESS_KEY: 'nutrilearn_lesson_access_v1',
+
+  getLessonAccessLog(userId = null) {
+    try {
+      const log = JSON.parse(localStorage.getItem(this.LESSON_ACCESS_KEY) || '[]');
+      return userId ? log.filter(e => String(e.userId) === String(userId)) : log;
+    } catch (e) {
+      return [];
+    }
+  },
+
+  logLessonAccess(moduleId, lessonIndex, lessonTitle) {
+    const user = this.getCurrentUser();
+    if (!user) return null;
+    const log = this.getLessonAccessLog();
+    const now = new Date();
+    // Ignore repeat opens of the same lesson within one minute
+    const last = log.find(e => String(e.userId) === String(user.id) &&
+      e.moduleId === moduleId && e.lessonIndex === lessonIndex);
+    if (last && now - new Date(last.accessedAt) < 60 * 1000) return last;
+    const entry = {
+      id: 'acc-' + now.getTime(),
+      userId: user.id,
+      userName: user.name,
+      moduleId,
+      lessonIndex,
+      lessonTitle: lessonTitle || '',
+      accessedAt: now.toISOString()
+    };
+    log.unshift(entry);
+    localStorage.setItem(this.LESSON_ACCESS_KEY, JSON.stringify(log.slice(0, 500)));
+    return entry;
   },
 
   // ==========================================================================
