@@ -1,5 +1,5 @@
-// NutriLearn Service Worker - v7.7.0
-const CACHE_NAME = 'nutrilearn-v7.7.0';
+// NutriLearn Service Worker - v7.8.0
+const CACHE_NAME = 'nutrilearn-v7.8.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -10,6 +10,7 @@ const ASSETS_TO_CACHE = [
   './css/parent.css',
   './css/bhw.css',
   './css/mobile.css',
+  './css/mobile-fixes.css',
   './js/config.js',
   './js/supabaseClient.js',
   './js/apiClient.js',

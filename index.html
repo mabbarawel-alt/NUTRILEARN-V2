@@ -33,6 +33,7 @@
   <link rel="stylesheet" href="css/bhw.css?v=9.9">
   <!-- Dedicated Mobile UI/UX Stylesheet (Isolated Mobile Fitment & Ergonomics) -->
   <link rel="stylesheet" href="css/mobile.css?v=9.9">
+  <link rel="stylesheet" href="css/mobile-fixes.css?v=1.1">
 
   <!-- Early Session Detection & Smooth Phase Restoration (Zero F5 Flash) -->
   <script>
@@ -4305,10 +4306,10 @@
           <span class="mobile-nav-icon">👶</span>
           <span class="mobile-nav-label">Registry</span>
         </button>
-        <button type="button" class="mobile-nav-item bhw-pill-btn" data-tab="announcements"
-          onclick="NutriApp.switchCHWSubTab('announcements')">
-          <span class="mobile-nav-icon">📢</span>
-          <span class="mobile-nav-label">Notices</span>
+        <button type="button" class="mobile-nav-item mobile-nav-more" data-more-tabs="announcements,evaluations"
+          onclick="NutriMobile.openMoreSheet('bhw')" aria-haspopup="dialog" aria-label="More sections">
+          <span class="mobile-nav-icon">☰</span>
+          <span class="mobile-nav-label">More</span>
         </button>
       </div>
 
@@ -4348,23 +4349,34 @@
           <span class="mobile-nav-icon">📋</span>
           <span class="mobile-nav-label">Records</span>
         </button>
-        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="barangays"
-          onclick="NutriApp.switchMHOSubTab('barangays')">
-          <span class="mobile-nav-icon">🏛️</span>
-          <span class="mobile-nav-label">Barangay</span>
-        </button>
-        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="announcements"
-          onclick="NutriApp.switchMHOSubTab('announcements')">
-          <span class="mobile-nav-icon">📢</span>
-          <span class="mobile-nav-label">Notices</span>
+        <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="reports"
+          onclick="NutriApp.switchMHOSubTab('reports')">
+          <span class="mobile-nav-icon">📈</span>
+          <span class="mobile-nav-label">Reports</span>
         </button>
         <button type="button" class="mobile-nav-item admin-tab-btn" data-tab="users"
           onclick="NutriApp.switchMHOSubTab('users')">
           <span class="mobile-nav-icon">👥</span>
           <span class="mobile-nav-label">Users</span>
         </button>
+        <button type="button" class="mobile-nav-item mobile-nav-more" data-more-tabs="barangays,announcements,content,audit"
+          onclick="NutriMobile.openMoreSheet('mho')" aria-haspopup="dialog" aria-label="More sections">
+          <span class="mobile-nav-icon">☰</span>
+          <span class="mobile-nav-label">More</span>
+        </button>
       </div>
     </nav>
+
+    <!-- Mobile "More" sheet: sections that do not fit in the bottom bar -->
+    <div id="mobile-more-backdrop" class="mobile-more-backdrop" hidden onclick="NutriMobile.closeMoreSheet()"></div>
+    <div id="mobile-more-sheet" class="mobile-more-sheet" role="dialog" aria-modal="true" aria-labelledby="mobile-more-title" hidden>
+      <div class="mobile-more-handle" aria-hidden="true"></div>
+      <div class="mobile-more-head">
+        <div id="mobile-more-title" class="mobile-more-title">Iba pang Seksyon</div>
+        <button type="button" class="mobile-more-close" onclick="NutriMobile.closeMoreSheet()" aria-label="Close">✕</button>
+      </div>
+      <div id="mobile-more-list" class="mobile-more-list"></div>
+    </div>
   </div><!-- End #app-workspace -->
 
   <!-- ==========================================================================
@@ -6784,7 +6796,7 @@
   <script src="js/mhoDashboard.js?v=6.2"></script>
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=6.0"></script>
-  <script src="js/mobileUX.js?v=6.3"></script>
+  <script src="js/mobileUX.js?v=7.1"></script>
   <script src="js/app.js?v=10.4"></script>
 </body>
 
