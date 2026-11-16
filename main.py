@@ -155,12 +155,24 @@ async def get_children(barangay: Optional[str] = None):
         children = [c for c in children if c.get("barangay") == barangay]
     return children
 
+# Fields the app keeps per child that are not columns in the Supabase table
+CHILD_EXTRA_FIELDS = ("birthDate", "zone", "submittedBy", "growthRecords", "dewormingRecords",
+                      "followUps", "nextFollowUpDate", "assignedModules", "completedModules")
+
+def child_extras(child: Dict[str, Any]) -> Dict[str, Any]:
+    return {k: child[k] for k in CHILD_EXTRA_FIELDS if k in child}
+
 @app.post("/api/children")
 async def save_child(child: Dict[str, Any]):
     first_name = child.get("name", "").split()[0] if child.get("name") else child.get("first_name", "Child")
     last_name = " ".join(child.get("name", "").split()[1:]) if child.get("name") else child.get("last_name", "")
     full_name = child.get("name") or f"{first_name} {last_name}".strip()
+    # Use the id the phone generated so later updates (including ones queued
+    # while offline) find the same record. Previously the server made its own
+    # "ch-<count>" id, which could collide and broke every later update.
+    child_id = str(child.get("id") or f"ch-{secrets.token_hex(6)}")
     payload = {
+        "id": child_id,
         "name": full_name,
         "first_name": first_name,
         "last_name": last_name,
@@ -197,12 +209,17 @@ async def save_child(child: Dict[str, Any]):
         except Exception as e:
             print("Supabase insert child error:", e)
 
-    # Local fallback
+    # Local fallback (also keeps app-only fields such as growth history and follow-ups)
     db = get_local_db()
-    payload["id"] = f"ch-{len(db.get('children', [])) + 1}"
-    db.setdefault("children", []).insert(0, payload)
+    children = db.setdefault("children", [])
+    record = {**child_extras(child), **payload}
+    existing = next((i for i, c in enumerate(children) if str(c.get("id")) == child_id), None)
+    if existing is None:
+        children.insert(0, record)
+    else:
+        children[existing] = {**children[existing], **record}   # replayed offline create
     save_local_db(db)
-    return payload
+    return record
 
 @app.put("/api/children/{child_id}")
 async def update_child(child_id: str, child: Dict[str, Any]):
@@ -221,12 +238,7 @@ async def update_child(child_id: str, child: Dict[str, Any]):
 
     if is_supabase_configured():
         try:
-            url = f"{SUPABASE_URL}/rest/v1/children"
-            if child_id.isdigit():
-                url += f"?id=eq.{child_id}"
-            else:
-                first_name = child.get("name", "").split()[0] if child.get("name") else child.get("first_name", "")
-                url += f"?first_name=eq.{first_name}"
+            url = f"{SUPABASE_URL}/rest/v1/children?id=eq.{child_id}"
             async with httpx.AsyncClient(timeout=10.0) as client:
                 resp = await client.patch(url, json=update_data, headers=get_supabase_headers())
                 if resp.status_code in [200, 204]:
@@ -238,10 +250,11 @@ async def update_child(child_id: str, child: Dict[str, Any]):
     db = get_local_db()
     for item in db.get("children", []):
         if str(item.get("id")) == str(child_id):
+            item.update(child_extras(child))
             item.update(update_data)
             save_local_db(db)
             return item
-    return {"success": True, "updated": update_data}
+    raise HTTPException(status_code=404, detail="Child record not found.")
 
 @app.delete("/api/children/{child_id}")
 async def delete_child(child_id: str):
@@ -306,10 +319,45 @@ async def submit_report(report: Dict[str, Any]):
         except Exception as e:
             print("Supabase submit report error:", e)
 
+    # Report period, child group and overdue follow-ups (Thesis AD 3.2.2) are kept
+    # in the local store; the Supabase monthly_reports table has no such columns.
+    extras = {
+        "report_period": report.get("reportPeriod") or report.get("report_period") or "",
+        "child_group": report.get("childGroup") or report.get("child_group") or "",
+        "overdue_follow_ups": int(report.get("overdueFollowUps") or report.get("overdue_follow_ups") or 0),
+    }
     db = get_local_db()
-    db.setdefault("monthly_reports", []).insert(0, payload)
+    db.setdefault("monthly_reports", []).insert(0, {**payload, **extras})
     save_local_db(db)
-    return payload
+    return {**payload, **extras}
+
+# ------------------------------------------------------------------------------
+# 2b. "TRY IT AT HOME" ACTIVITY LOGS (ERD: ACTIVITY_LOG; Thesis AD 3.2.1 / UC-02)
+# Parents' self-reported feeding actions, synced from the phone (also when the
+# phone was offline and reconnects) so Health Workers can review them.
+# ------------------------------------------------------------------------------
+@app.get("/api/activity-logs")
+async def get_activity_logs(barangay: Optional[str] = None):
+    logs = get_local_db().get("activity_logs", [])
+    if barangay:
+        logs = [l for l in logs if l.get("barangay") == barangay]
+    return logs
+
+@app.post("/api/activity-logs")
+async def save_activity_log(entry: Dict[str, Any]):
+    if not entry.get("id"):
+        raise HTTPException(status_code=400, detail="Activity log id is required.")
+    db = get_local_db()
+    logs = db.setdefault("activity_logs", [])
+    idx = next((i for i, l in enumerate(logs) if l.get("id") == entry["id"]), None)
+    if idx is None:
+        logs.insert(0, entry)
+        saved = entry
+    else:
+        logs[idx] = {**logs[idx], **entry}   # e.g. BHW evaluation added later
+        saved = logs[idx]
+    save_local_db(db)
+    return saved
 
 # ------------------------------------------------------------------------------
 # 3. ANNOUNCEMENTS ENDPOINTS

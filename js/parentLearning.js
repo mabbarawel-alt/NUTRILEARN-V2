@@ -759,7 +759,8 @@ const ParentModule = {
     const actionTip = lesson.tryHomeAction || this.getLessonPracticalAction(mod.id, lesson.title);
 
     try {
-      NutriStorage.saveTryHomeSubmission({
+      // (was saveTryHomeSubmission, which does not exist, so completions were silently lost)
+      NutriStorage.addTryHomeSubmission({
         childId: child ? child.id : 'ch-102',
         childName: child ? child.name : (currentUser?.childName || 'Child'),
         parentName: currentUser ? currentUser.name : 'Parent',

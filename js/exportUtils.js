@@ -245,8 +245,14 @@ const NutriStorage = {
     submission.dateSubmitted = submission.dateSubmitted || new Date().toISOString().split('T')[0];
     submission.timeSubmitted = submission.timeSubmitted || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     submission.evaluationStatus = submission.evaluationStatus || 'Pending Review';
+    submission.completedAt = submission.completedAt || new Date().toISOString();
     subs.unshift(submission);
     this.saveTryHomeSubmissions(subs);
+
+    // AD 3.2.1: saved on the phone first, sent now or synced on reconnection
+    if (window.NutriApi && typeof NutriApi.saveActivityLog === 'function') {
+      NutriApi.saveActivityLog(submission);
+    }
 
     this.logAudit(
       'Feeding Action Self-Reported',
@@ -268,6 +274,9 @@ const NutriStorage = {
     item.evaluatedAt = new Date().toISOString().split('T')[0] + ' ' + new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
     this.saveTryHomeSubmissions(subs);
+    if (window.NutriApi && typeof NutriApi.saveActivityLog === 'function') {
+      NutriApi.saveActivityLog(item);
+    }
 
     this.logAudit(
       'Feeding Practice Evaluated',
@@ -1041,7 +1050,7 @@ const NutriStorage = {
     );
 
     // Live sync to FastAPI Backend (Render/Local)
-    if (window.NutriApi && window.NutriApi.isAvailable) {
+    if (window.NutriApi) { // sent now, or queued until back online
       window.NutriApi.saveChild(child).catch(e => console.warn('NutriApi save error:', e));
     }
     // Live sync to Supabase Cloud
@@ -1071,7 +1080,7 @@ const NutriStorage = {
       );
 
       // Live sync to FastAPI Backend
-      if (window.NutriApi && window.NutriApi.isAvailable) {
+      if (window.NutriApi) { // sent now, or queued until back online
         window.NutriApi.updateChild(children[index]).catch(e => console.warn('NutriApi update error:', e));
       }
       // Live sync to Supabase Cloud
@@ -1098,7 +1107,7 @@ const NutriStorage = {
       'Administrator'
     );
     // Live sync to FastAPI Backend
-    if (window.NutriApi && window.NutriApi.isAvailable) {
+    if (window.NutriApi) { // sent now, or queued until back online
       window.NutriApi.deleteChild(childId).catch(e => console.warn('NutriApi delete error:', e));
     }
     // Live sync to Supabase Cloud
@@ -1133,7 +1142,7 @@ const NutriStorage = {
     this.logAudit('Report Submitted', 'Report & Endorsement', `Submitted report ${report.reportId} for ${report.barangay} (${report.totalChildren} assessed)`);
 
     // Live sync to FastAPI Backend
-    if (window.NutriApi && window.NutriApi.isAvailable) {
+    if (window.NutriApi) { // sent now, or queued until back online
       window.NutriApi.submitReport(report).catch(e => console.warn('NutriApi report submit error:', e));
     }
     // Live sync to Supabase Cloud
@@ -1179,7 +1188,7 @@ const NutriStorage = {
     this.saveAnnouncements(list);
 
     // Live sync to FastAPI Backend
-    if (window.NutriApi && window.NutriApi.isAvailable) {
+    if (window.NutriApi) { // sent now, or queued until back online
       window.NutriApi.createAnnouncement(post).catch(e => console.warn('NutriApi announcement submit error:', e));
     }
     // Live sync to Supabase Cloud
@@ -1194,7 +1203,7 @@ const NutriStorage = {
     list = list.filter(a => String(a.id) !== String(id));
     this.saveAnnouncements(list);
 
-    if (window.NutriApi && window.NutriApi.isAvailable) {
+    if (window.NutriApi) { // sent now, or queued until back online
       window.NutriApi.deleteAnnouncement(id).catch(e => console.warn('NutriApi delete announcement error:', e));
     }
     return true;
@@ -1206,7 +1215,7 @@ const NutriStorage = {
     if (idx !== -1) {
       list[idx] = { ...list[idx], ...updatedPost };
       this.saveAnnouncements(list);
-      if (window.NutriApi && window.NutriApi.isAvailable) {
+      if (window.NutriApi) { // sent now, or queued until back online
         window.NutriApi.createAnnouncement(list[idx]).catch(e => console.warn('NutriApi announcement update error:', e));
       }
       return list[idx];

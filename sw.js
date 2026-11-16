@@ -1,5 +1,5 @@
-// NutriLearn Service Worker - v7.6.0
-const CACHE_NAME = 'nutrilearn-v7.6.0';
+// NutriLearn Service Worker - v7.7.0
+const CACHE_NAME = 'nutrilearn-v7.7.0';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -8,11 +8,18 @@ const ASSETS_TO_CACHE = [
   './css/components.css',
   './css/admin.css',
   './css/parent.css',
+  './css/bhw.css',
+  './css/mobile.css',
+  './js/config.js',
+  './js/supabaseClient.js',
+  './js/apiClient.js',
+  './js/mobileUX.js',
   './js/i18n.js',
   './js/app.js',
   './js/data.js',
   './js/healthWorker.js',
   './js/parentLearning.js',
+  './js/mealGuide.js',
   './js/mhoDashboard.js',
   './js/announcements.js',
   './js/security.js',
@@ -62,6 +69,11 @@ self.addEventListener('activate', (event) => {
 // Fetch Event - NETWORK-FIRST with offline cache fallback
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  // API calls always go to the network. The app keeps its own offline copy in
+  // localStorage and an outbox for writes; a cached /api/health would make an
+  // offline phone think it is online.
+  const url = new URL(event.request.url);
+  if (url.origin === self.location.origin && url.pathname.startsWith('/api/')) return;
 
   event.respondWith(
     fetch(event.request)
@@ -76,7 +88,8 @@ self.addEventListener('fetch', (event) => {
       })
       .catch(() => {
         // Fallback to cache when offline
-        return caches.match(event.request).then((cachedResponse) => {
+        // Scripts are requested with ?v= cache-busting; fall back to the precached file
+        return caches.match(event.request).then((exact) => exact || caches.match(event.request, { ignoreSearch: true })).then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
           }

@@ -95,6 +95,11 @@
 </head>
 
 <body>
+  <!-- Offline / pending-sync status (Thesis AD 3.2.1 & 3.2.2: save locally, sync on reconnection) -->
+  <div id="nutri-sync-indicator" role="status" aria-live="polite"
+    style="display:none; position:fixed; left:50%; transform:translateX(-50%); bottom:84px; z-index:10050; align-items:center; gap:0.4rem; padding:0.45rem 0.9rem; border-radius:999px; font-size:0.8rem; font-weight:700; box-shadow:0 4px 14px rgba(0,0,0,0.15); cursor:pointer;"
+    onclick="NutriApi.checkHealth()" title="Tap to retry sync"></div>
+
 
   <div id="startup-auth-screen" class="startup-gate-screen">
     <!-- Smooth Two-Phase Vertical Slider Track (Video Hero <-> Login Phase) -->
@@ -1986,6 +1991,10 @@
                 <span class="meal-badge-daily-total"><strong style="font-family: inherit;">₱96/day</strong> total</span>
               </div>
             </div>
+
+            <!-- Thesis AD 3.2.1: step-by-step meal-planning guide (rendered by js/mealGuide.js) -->
+            <div id="meal-guide-root"
+              style="background:#FFFFFF; border:1px solid #DCFCE7; border-left:5px solid #16A34A; border-radius:14px; padding:1rem 1.1rem; margin-bottom:1.25rem; box-shadow:0 1px 3px rgba(0,0,0,0.05);"></div>
 
             <!-- 2. Daily Meals Schedule List (5 Items) -->
             <div class="weekly-meal-cards-stack">
@@ -6764,13 +6773,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="js/supabaseClient.js?v=5.9"></script>
   <!-- Unified FastAPI / Render Backend API Client -->
-  <script src="js/apiClient.js?v=6.0"></script>
+  <script src="js/apiClient.js?v=7.0"></script>
   <script src="js/security.js?v=1.0"></script>
   <script src="js/data.js?v=5.9"></script>
-  <script src="js/exportUtils.js?v=6.2"></script>
+  <script src="js/exportUtils.js?v=6.3"></script>
   <script src="js/reports.js?v=1.0"></script>
   <script src="js/healthWorker.js?v=6.2"></script>
-  <script src="js/parentLearning.js?v=6.7"></script>
+  <script src="js/parentLearning.js?v=6.8"></script>
+  <script src="js/mealGuide.js?v=1.0"></script>
   <script src="js/mhoDashboard.js?v=6.2"></script>
   <script src="js/announcements.js?v=5.9"></script>
   <script src="js/i18n.js?v=6.0"></script>
